@@ -1,0 +1,20 @@
+# Dependencies and build outputs
+node_modules/
+.next/
+dist/
+coverage/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+*.log
+tmp/
+.DS_Store
+
+# Uploaded evidence must never be committed
+uploads/
+evidence/
+
