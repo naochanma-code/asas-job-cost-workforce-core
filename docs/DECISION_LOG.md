@@ -1,5 +1,9 @@
 # DECISION LOG
 
+## D-014 — เริ่ม Milestone 1 Foundation (2026-09-21)
+
+Owner สั่ง “เริ่มได้เลยค่ะ” หลังข้อเสนอ M1 และยืนยันว่ามี OA/กลุ่มทดสอบแยกแล้ว Codex รับผิดชอบ codex/milestone-1-foundation ตาม [ADR-010](adr/010-foundation-implementation.md) อนุญาต implementation และ local tests ไม่ใช่การอนุมัติ production/ส่ง LINE จริงหรือเริ่ม M2 สถานะ D-013 ที่ยังไม่เริ่ม M1 เป็นประวัติก่อนคำสั่งนี้ Gate LINE จริงยังคงเดิม
+
 ## D-001 — สร้างระบบใหม่แยกจากแอปเก่า
 
 - สถานะ: Accepted

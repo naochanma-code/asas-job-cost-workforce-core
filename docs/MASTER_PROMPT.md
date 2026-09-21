@@ -638,6 +638,8 @@ PROJECT_STATUS ต้องเขียนเป็นภาษาไทยแ�
 
 ## 19. คำสั่งเริ่มงานสำหรับ Codex
 
+อัปเดต 2026-09-21: Milestone 0 ได้รับ Owner Acceptance และ Merge PR #1 แล้ว Owner สั่ง “เริ่มได้เลยค่ะ” ตามข้อเสนอ [Milestone 1 Foundation](M1_FOUNDATION_PROPOSAL.md) จึงอนุญาต implementation M1 บน branch แยกตาม Gate §14 และ [ADR-010](adr/010-foundation-implementation.md) ข้อความเริ่ม M0 ด้านล่างเป็นคำสั่งเริ่มต้นในอดีต ไม่ห้ามงาน M1 ที่อนุมัติใหม่ ยังไม่อนุญาต production deployment หรือเริ่ม M2; การทดสอบ LINE จริงต้องระบุ OA/กลุ่ม/environment และตั้ง secret ภายนอก Git ก่อน
+
 เริ่ม Milestone 0 เท่านั้น สร้าง repository กลางและใส่ Master Prompt ฉบับนี้เป็น `docs/MASTER_PROMPT.md` ก่อน จากนั้นจัดทำ wireflow, state diagrams, data dictionary, permission matrix, architecture decision records, Payroll calculation examples, accounting evidence export specification และ pilot acceptance script ใช้ข้อมูลสมมติที่ทำเครื่องหมายชัดเจน ห้าม deploy production หรือเชื่อม LINE OA จริงใน milestone นี้
 
 เมื่อเอกสารและ clickable prototype พร้อม ให้ Owner ตรวจ task จริง 7 งาน ได้แก่ ดูงานของฉัน, ลงวันทำงาน, ลง OT, ส่งค่าใช้จ่ายพร้อมรูป, Admin ตรวจเวลา และค่าใช้จ่าย; Owner ดู Budget vs Actual, เปิดหลักฐานบัญชีรายเดือน และตรวจรอบค่าจ้าง จากนั้นปรับ flow ให้ผ่านก่อนเริ่ม Milestone 1

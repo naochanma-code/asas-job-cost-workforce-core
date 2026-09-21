@@ -1,44 +1,33 @@
 # PROJECT STATUS
 
-2026-09-21 · MASTER v2.5 · M0-R4 · ผู้ดูแลเอกสาร/ต้นแบบ Codex
+2026-09-21 · MASTER v2.5 + คำสั่งเริ่ม M1 §19 · ผู้รับผิดชอบ Codex
 
-**Milestone 0: OWNER_ACCEPTED / MERGED**
+**Milestone 0: OWNER_ACCEPTED / MERGED** — PR #1 merge a7e5c9e08a4d2c8185a12ef65f705a190c243a8d; main 0d5da8a รวมบันทึกหลัง merge เอกสาร/prototype ครบ หลักฐาน [M0_ACCEPTANCE](M0_ACCEPTANCE.md), [TEST_EVIDENCE](TEST_EVIDENCE.md)
 
-Owner ยืนยันผ่านทั้ง7งานรวมfeedbackล่าสุดเมื่อทดสอบผ่านแล้ว ผลแยกรายงานใน [M0_ACCEPTANCE](M0_ACCEPTANCE.md) Codexตรวจซ้ำผ่าน ไม่ใช่การอ้างreal pilotหรือproduction UAT
+**Milestone 1: AUTHORIZED / IN_PROGRESS** — Owner สั่ง “เริ่มได้เลยค่ะ” และยืนยันมี OA/กลุ่มทดสอบแยกแล้ว Codex รับผิดชอบ Web/API/schema/tests/docs บน `codex/milestone-1-foundation` ไม่มีผู้แก้ร่วม ขอบเขต [M1 Foundation](M1_FOUNDATION_PROPOSAL.md), [ADR-010](adr/010-foundation-implementation.md)
 
-## ผลงานปัจจุบัน
+## ใช้งานและตรวจได้บนเครื่อง
 
-- ครบwireflow Web/LINE, state diagrams, dictionary/schema, permission matrix, payroll cases, evidence export, pilot script และADR001–009
-- Projectเป็นหลัก Site/Joboptional ไม่มีJobไม่ถาม; Owner3บัญชีแยกactor
-- PM/Admin/Ownerลงเวลาแทนพนักงานได้ เก็บผู้กรอกกับพนักงานแยกกัน PMจำกัดProjectที่assigned TECHลงตนเอง
-- ทุกroleส่งexpenseได้ PMเห็นเงิน/รูปเฉพาะของตน Adminตรวจรายรายการได้แต่ไม่เห็นต้นทุนรวม/Payroll LINEทุกroleรอAdmin/Ownerอนุมัติทุกครั้ง Webคงขั้นรอตรวจ
-- Adminapproveเวลาแล้วไม่ส่งOwnerตรวจซ้ำ ปิดเวลาคำนวณอัตโนมัติ Ownerตรวจยอดจ่าย OTทีละ0.5ย้อนหลังได้ สองProjectแบ่งครึ่งวัน
-- รูป/PDF1–5ไฟล์10MB/ไฟล์ หมวด9ประเภท Ownerดาวน์โหลดZIPเดือน; policyเก็บ2ปีเป็นdesign
+Login บัญชีจริง 4 roles (ไม่ใช่ role selector), Owner หลายบัญชี, Customer/Project/optional Site/Job, ทีมงาน/สิทธิ์ PM, audit, health, SQL migrations, persistence และ backup/restore พร้อม [Runbook](OPERATIONS_RUNBOOK.md) Project ไม่มี Job มอบหมายได้โดยไม่ถาม Job ไม่มีโมดูลเงินหรือข้อมูลค่าจ้างใน M1
 
-## สถานะแยก
+| Workstream | DESIGNED | CODED | TESTED_LOCAL | TESTED_INTEGRATION | DEPLOYED_STAGING | UAT_PASSED | PRODUCTION_READY |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| M0 เอกสาร/ต้นแบบ | YES | MOCK_ONLY | PASS 45 checks + ZIP + browser | NOT_APPLICABLE | NO | OWNER_ACCEPTED ทั้ง7งาน | NO |
+| M1 Web/API/identity/project/team | YES | YES | PASS API+browser | Native PostgreSQL CI pending | NO | NOT_RUN | NO |
+| M1 persistence/backup | YES | YES | PASS PGlite disk restart/restore | staging NOT_RUN | NO | NOT_RUN | NO |
+| M1 LINE link/group/my projects | YES | YES | PASS simulated transport | REAL_LINE_NOT_RUN | NO | NOT_RUN | NO |
+| M2+ time/OT/expense/payroll | M0 design | NOT_STARTED | NOT_RUN | NOT_RUN | NO | NOT_RUN | NO |
 
-| Workstream | DESIGNED | CODED | TESTED_LOCAL | OWNER_ACCEPTANCE | INTEGRATION / REAL UAT | DEPLOYED |
-| --- | --- | --- | --- | --- | --- | --- |
-| เอกสาร/Process prototype M0 | YES | MOCK_ONLY | 45checks + ZIP +7งานและfeedbackregression PASS | PASSทั้ง7 ตามOwner | NOT_RUN | NO |
-| Production Web/API/DB/LINE | design only | NOT_STARTED | NOT_RUN | ไม่ใช่ขอบเขตM0 | NOT_RUN | NO |
-| Persistence/retention/backup/real pilot | spec only | NOT_STARTED | NOT_RUN | ไม่ใช่ขอบเขตM0 | NOT_RUN | NO |
+หลักฐาน [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md) แยก automated tests, browser และรายการ NOT_RUN ชัดเจน migrations 001_foundation / 002_line_outbox ใช้ checksum ไม่มีฐานเดิมหรือ legacy code
 
-## Repositoryและการส่งมอบ
+## ข้อจำกัดและสิ่งที่รอ
 
-Repository naochanma-code/asas-job-cost-workforce-core; Ownerสั่งMerge PR#1จากcodex/milestone-0-process-designเข้าmainแล้ว merge commit a7e5c9e08a4d2c8185a12ef65f705a190c243a8d; ยังไม่เริ่มMilestone1
+Local ใช้ PGlite PostgreSQL บน disk process เดียว ไม่ใช่ native service; staging/LINE worker บังคับ DATABASE_URL และ HTTPS ไม่มี deploy/ส่ง LINE จริง ยังไม่ปิด Gate M1 จนช่างเห็นงานตนผ่าน LINE จริงและ Owner ทดสอบ
 
-ฐานก่อนรอบ4: 1ce069297731383c918df2b30b3c06158be1175c; artifactรอบ4ที่ทดสอบ cf615b00e97f1d2fdaa71b4501c7c0340d6cc2c3; หลักฐานใน [TEST_EVIDENCE](TEST_EVIDENCE.md) พร้อมตรวจremote head
+Owner ยืนยันว่ามี OA/กลุ่มทดสอบแล้ว แต่ยังไม่ระบุชื่อ/IDs, ผู้ทดลอง, server/domain หรืองบ deployment ต้องรับข้อมูลนี้และตั้ง secrets นอกแชท/Gitก่อนทดสอบจริง ยังไม่มี password recovery/MFA/role-change/group-rebind UI, automated backup schedule หรือ DEAD payload cleanup ก่อน pilotต้องประเมิน/runbookให้ครบ
 
-## ข้อจำกัดที่ยอมรับในM0
-
-Role/channelจำลอง ทุกข้อมูลอยู่memory refreshแล้วหาย ไม่มีLINEจริง/serverauthorization/database/retentionworker/backuprestore ไม่มีrateeditor/manualadjustment/reopenlateUI/requiredJobmode/productionexport
-
-OTไม่มีWork, Jobbudgetallocation, เดือนอ้างอิงexportและจุดเริ่มนับ2ปีเป็นรายละเอียดก่อนimplementation ไม่ใช่คำถามซ้ำเรื่องสิทธิ์หรือOT0.5 ทุกข้ออยู่ [OWNER_QUESTIONS](OWNER_QUESTIONS.md)
+ข้อถามเรื่อง OT ไม่มี Work/Job budget/month export และจุดเริ่มนับหลักฐาน 2 ปีใน [OWNER_QUESTIONS](OWNER_QUESTIONS.md) เป็น milestone ถัดไป ไม่ขวาง Foundation และไม่ถามซ้ำเรื่องสิทธิ์ที่ Owner ตอบแล้ว
 
 ## ขั้นตอนถัดไป
 
-รอOwnerอนุมัติขอบเขตและสั่งเริ่มMilestone1แยกต่างหาก ข้อเสนอ [M1_FOUNDATION_PROPOSAL](M1_FOUNDATION_PROPOSAL.md) เป็นเอกสารเท่านั้น ยังไม่มีapplication/migration/environment/LINEจริงของM1
-
-## ตรวจหลังMerge
-
-mainหลังmergeมีAGENTS/README/docsตรงกับPRhead22b8f32706396cbac31bfb87f77598613b1bc857 ไม่มีไฟล์ตกหล่น (git diffเท่ากัน); รัน24+14+7=45checksและindependentZIPผ่าน เอกสารบันทึกผลหลังMergeไม่เปลี่ยนprototypeหรือสูตร
+ส่ง draft PR ของ M1 พร้อมผลตรวจ; ตรวจ CI PostgreSQL และแก้ปัญหาที่พบเฉพาะ Foundation จากนั้นเตรียม staging/LINE pilot เมื่อ Owner ระบุ environment และขอบเขตที่อนุญาต ยังไม่ merge M1 หรือเริ่ม M2

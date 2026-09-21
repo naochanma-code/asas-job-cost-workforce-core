@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-09-21 — เริ่ม Milestone 1 Foundation
+
+- Owner อนุมัติเริ่มและยืนยัน OA/กลุ่มทดสอบแยก; บันทึก MASTER §19, D-014/ADR-010 และปรับ proposal เป็น AUTHORIZED
+- เพิ่ม Next.js/Fastify, session login/4 roles/multiple Owners, Customer/Project/optional Site/Job/team assignment, audit/health และ migrations พร้อม constraints
+- เพิ่ม PGlite local persistence และ native PostgreSQL adapter, backup/restore ฐานว่าง, CI และ lockfile; เพิ่ม scripts bootstrap/seed เฉพาะฐานว่าง
+- เพิ่ม LINE account link/unlink, signed webhook/inbox/outbox/worker, group code, งานของฉัน, encrypted payload และ pilot allowlists; LINE จริงยัง NOT_RUN
+- เพิ่ม API contract, runbook และ M1 test evidence; ทดสอบบนเครื่องรวม UI ด้วยข้อมูลสมมติ ไม่มี production deploy/M2/M1 merge
+
 ## 2026-09-21 — Merge Milestone 0 เข้า main
 
 - OwnerยืนยันรับM0และสั่งMerge PR#1; merge commit a7e5c9e08a4d2c8185a12ef65f705a190c243a8d (PRhead22b8f32706396cbac31bfb87f77598613b1bc857)

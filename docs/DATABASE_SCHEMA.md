@@ -1,6 +1,6 @@
 # DATABASE SCHEMA — Design Rules
 
-สถานะ: Draft; ยังไม่ใช่ migration
+สถานะ: Target design ของระบบทั้งหมด ไม่ใช่ migration ทั้งระบบ; M1 เริ่ม executable subset ใน packages/database/migrations/001_foundation.sql และ 002_line_outbox.sql ดู [implemented dictionary/API contract](M1_API_CONTRACT.md) และ [ADR-010](adr/010-foundation-implementation.md) ตารางการเงิน/เวลา/หลักฐานด้านล่างยังไม่ implement
 
 ## Scope rule
 

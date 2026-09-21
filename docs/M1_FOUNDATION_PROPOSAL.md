@@ -1,6 +1,6 @@
-# ข้อเสนอ Milestone 1 Foundation — ยังไม่เริ่มงาน
+# Milestone 1 Foundation — ขอบเขตที่อนุมัติแล้ว
 
-สถานะ PROPOSED / NOT_STARTED; ไม่เปลี่ยนMASTERv2.5 ไม่ใช่คำอนุญาตdeployหรือเชื่อมLINEจริง ผู้รับผิดชอบimplementationยังไม่มอบหมาย
+สถานะ AUTHORIZED / IN_PROGRESS วันที่ 2026-09-21 ตามคำสั่ง Owner “เริ่มได้เลยค่ะ”; Codex รับผิดชอบ implementation บน codex/milestone-1-foundation ใช้ Gate MASTER เดิม ไม่ใช่คำอนุญาต deploy หรือส่ง LINE จริง รายละเอียด [ADR-010](adr/010-foundation-implementation.md)
 
 ## ผลใช้งานที่เล็กที่สุดตามGateเดิม
 
@@ -30,4 +30,4 @@ Adminเข้าเว็บด้วยบัญชีจริง สร้�
 
 ## ก่อนเริ่ม
 
-Ownerอนุมัติขอบเขตและสั่งเริ่มM1แยกต่างหาก; ก่อนเปิดstagingหรือLINEจริงต้องระบุenvironment/OA/กลุ่มทดสอบ ผู้ทดสอบ และงบที่อนุญาต ไม่ต้องส่งsecretในแชท ไม่มีการสร้างenvironmentหรือเชื่อมบริการจากข้อเสนอฉบับนี้
+Owner อนุมัติเริ่มแล้ว และยืนยันว่ามี OA/กลุ่มทดสอบแยก ก่อนเปิด staging หรือ LINE จริงยังต้องระบุ environment/OA/กลุ่ม ผู้ทดสอบและงบที่อนุญาต ไม่ส่ง secret ในแชท ใช้ [Operations Runbook](OPERATIONS_RUNBOOK.md) สำหรับเตรียม environment
