@@ -11,6 +11,7 @@
 - อัปเดต PROJECT_STATUS, DECISION_LOG และ DATABASE_SCHEMA; เก็บ Master Prompt/PAYROLL_POLICY accepted baseline เดิม
 - ใช้ branch codex/milestone-0-process-design; ไม่มี migration/deploy/LINE OA จริง/บริการเสียเงิน
 - ตรวจ local fixtures/documents 24 ข้อผ่าน และ browser smoke 8 กรณี; แก้ Job B1 option markup และรักษา click handlers ของ export/payroll ระหว่างตรวจต้นแบบ ผลนี้ไม่ใช่ Owner UAT
+- บันทึก artifact commit ที่ตรวจ `be4bfc6137394f34e0b1f5399f98e8a864298f9c` และผล fetch/rebase main (up to date) เพื่อให้ตรวจซ้ำได้
 
 ## 2026-09-21 — Master Prompt v2.2
 

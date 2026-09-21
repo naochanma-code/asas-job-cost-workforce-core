@@ -2,6 +2,8 @@
 
 วันที่ 2026-09-21 · ผู้ตรวจ Codex · artifact M0-2026-09-21 · baseline main `dd7cbcc2e5379b7fb83c283833332e2710bba936`
 
+Artifact commit ที่ตรวจ: `be4bfc6137394f34e0b1f5399f98e8a864298f9c`; fetch origin/main แล้ว rebase ได้ผล up to date ไม่เกิด conflict ผล local checks 24/24 PASS; `git diff --check` ผ่าน Commit ถัดจากนี้บันทึก provenance/status เท่านั้น ไม่เปลี่ยนสูตรหรือต้นแบบ
+
 ## ขอบเขตและ environment
 
 Windows workspace, Node.js ในเครื่อง, HTML process prototype ผ่าน Codex in-app browser ที่ localhost; fixture สมมติทั้งหมด ไม่มี PostgreSQL/LINE/API/production application หรือเงินจริง

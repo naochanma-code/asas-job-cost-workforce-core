@@ -29,7 +29,7 @@ TESTED_LOCAL หมายถึงเฉพาะสิ่งที่ระบ�
 
 - Master Prompt v2.2; base main ตรวจแล้ว: `dd7cbcc2e5379b7fb83c283833332e2710bba936`
 - Branch: `codex/milestone-0-process-design`; repository `naochanma-code/asas-job-cost-workforce-core` (Private)
-- Artifact version: M0-2026-09-21; commit ตรวจรับระบุใน TEST_EVIDENCE/PR
+- Artifact version: M0-2026-09-21; artifact commit ที่ตรวจ `be4bfc6137394f34e0b1f5399f98e8a864298f9c`; fetch/rebase main แล้ว up to date; รายละเอียด [TEST_EVIDENCE](TEST_EVIDENCE.md)
 - Migration: ไม่มี; environment: local HTML + Node fixture checks เท่านั้น
 - Deployment: NOT_DEPLOYED; real LINE: NOT_RUN; Owner UAT: NOT_RUN
 
