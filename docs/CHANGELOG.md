@@ -2,6 +2,8 @@
 
 ## 2026-09-21 — M0 รอบ4 / ตรวจปิดงาน
 
+Artifact cf615b00e97f1d2fdaa71b4501c7c0340d6cc2c3 pushแล้ว; PR#1 Ready for review (draft=false) GitHubmergeable=true/clean ไม่merge ไม่เปิดauto-merge; commitปิดหลักฐานถัดมาปรับเฉพาะเอกสาร
+
 - PM/Admin/Owner ลงวันทำงานและ OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ โดยเก็บผู้กรอกแยกจากพนักงาน ทุกบทบาทส่งค่าใช้จ่ายได้ PM เห็นยอดและรูปเฉพาะรายการที่ตนส่ง LINE expense ทุกบทบาทต้องรอ Admin หรือ Owner กดอนุมัติแยกทุกครั้งก่อนเป็น Actual; Web คงขั้นรอตรวจเดิม ไม่มี auto-approve
 - เพิ่มADR-009/D-011 ปรับMASTERv2.5, permissions, schema/audit, wireflow/state, prototype; ตรวจOwnerAcceptanceแยกจากCodex
 - ปิดM0 OWNER_ACCEPTED / READY_TO_MERGE: Ownerยืนยัน7งาน; 45checks+ZIP+browser7งานและfeedbackregressionPASS; แก้ย้อนสรุปแล้วเปลี่ยนพนักงาน/ช่องทางไม่อัปเดตและตรวจซ้ำผ่าน ไม่merge/M1/deploy/LINEจริง

@@ -28,3 +28,36 @@ Windows / Codex in-app browser / localhost4174; ข้อมูลและPNG1x
 ไม่มีbackend authentication/persistence/production permission/LINEจริง/เก็บไฟล์2ปีจริง/backup restore การเลือกroleและช่องทางเป็นsimulation ไม่ใช่real UAT ข้อเสนอrequiredJob/budgetallocation/OTไม่มีWorkยังเป็นรายละเอียดออกแบบก่อนimplementation ไม่บล็อกM0processที่Ownerรับแล้ว
 
 การปิดM0อนุญาตให้PRพร้อมreviewเท่านั้น ห้ามmerge เริ่มM1 deploy หรือเปิดLINEจริงจนOwnerสั่งใหม่
+
+Artifactที่ตรวจ cf615b00e97f1d2fdaa71b4501c7c0340d6cc2c3; GitHub PR#1 Ready for review, mergeable=true/clean, merged=false, auto_merge=null ตรวจหลังpush งานยังอยู่branchเดิม รอOwnerสั่งmerge
+
+## ไฟล์ที่เปลี่ยนรอบ4 (28ไฟล์)
+
+- AGENTS.md
+- README.md
+- docs/ACCOUNTING_EVIDENCE.md
+- docs/CHANGELOG.md
+- docs/DATABASE_SCHEMA.md
+- docs/DATA_DICTIONARY.md
+- docs/DECISION_LOG.md
+- docs/M0_ACCEPTANCE.md
+- docs/MASTER_PROMPT.md
+- docs/MILESTONE_0.md
+- docs/OWNER_QUESTIONS.md
+- docs/PAYROLL_CALCULATION_TEST_CASES.md
+- docs/PAYROLL_POLICY.md
+- docs/PERMISSION_MATRIX.md
+- docs/PILOT_ACCEPTANCE_SCRIPT.md
+- docs/PROJECT_STATUS.md
+- docs/STATE_DIAGRAMS.md
+- docs/TEST_EVIDENCE.md
+- docs/WIREFLOWS.md
+- docs/adr/008-admin-review-ot-retention.md
+- docs/adr/009-delegated-entry-and-expense-review.md
+- docs/adr/README.md
+- docs/prototype/model.js
+- docs/prototype/ui.js
+- docs/verification/check-r2.mjs
+- docs/verification/check-r4.mjs
+- docs/verification/m0-closeout-results.json
+- docs/verification/m0-closeout-zip.json

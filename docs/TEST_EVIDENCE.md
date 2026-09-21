@@ -4,7 +4,7 @@
 
 สถานะ OWNER_ACCEPTED / READY_TO_MERGE ตาม [M0_ACCEPTANCE](M0_ACCEPTANCE.md); Ownerยืนยันผ่าน7งานและรวมfeedbackล่าสุดเมื่อทดสอบผ่าน คำยืนยันOwnerแยกจากผลCodex ไม่มีการแต่งเวลา/assistanceหรืออ้างreal UAT
 
-Artifactรอบ4: รอบันทึกcommit SHAหลังcommit (ผลรอบก่อนด้านล่างเป็นประวัติ)
+Artifactรอบ4ที่ทดสอบ: cf615b00e97f1d2fdaa71b4501c7c0340d6cc2c3; fetch/rebase origin/main up to date ฐานdd7cbcc2e5379b7fb83c283833332e2710bba936; GitHub RESTยืนยัน PR#1 draft=false, merged=false, mergeable=true, mergeable_state=clean, auto_merge=null; commitถัดมาบันทึกหลักฐานเฉพาะเอกสาร (ผลรอบก่อนด้านล่างเป็นประวัติ)
 
 | Command/check | Result |
 | --- | --- |

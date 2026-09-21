@@ -25,9 +25,9 @@ Owner ยืนยันผ่านทั้ง7งานรวมfeedbackล�
 
 ## Repositoryและการส่งมอบ
 
-Repository naochanma-code/asas-job-cost-workforce-core; branch codex/milestone-0-process-design; PR#1 รอเปลี่ยนจากDraftเป็นReady for reviewหลังpushครบ ไม่มีmerge ไม่มีM1
+Repository naochanma-code/asas-job-cost-workforce-core; branch codex/milestone-0-process-design; PR#1 เปลี่ยนเป็นReady for reviewแล้ว (draft=false); GitHubรายงานmergeable=true/clean และauto_merge=null ไม่มีmerge ไม่มีM1
 
-ฐานก่อนรอบ4: 1ce069297731383c918df2b30b3c06158be1175c; artifactรอบ4จะบันทึกSHAหลังcommitใน [TEST_EVIDENCE](TEST_EVIDENCE.md) พร้อมตรวจremote head
+ฐานก่อนรอบ4: 1ce069297731383c918df2b30b3c06158be1175c; artifactรอบ4ที่ทดสอบ cf615b00e97f1d2fdaa71b4501c7c0340d6cc2c3; หลักฐานใน [TEST_EVIDENCE](TEST_EVIDENCE.md) พร้อมตรวจremote head
 
 ## ข้อจำกัดที่ยอมรับในM0
 
