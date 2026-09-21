@@ -7,7 +7,7 @@
 | Workstream | สถานะ | หลักฐาน/หมายเหตุ | Owner |
 | --- | --- | --- | --- |
 | Master requirement v2.2 | DESIGNED | `docs/MASTER_PROMPT.md` | Owner + Codex |
-| Repository structure | CODED | มีเอกสารกลางและ Git history เริ่มต้น | Codex |
+| Repository structure | CODED | Private GitHub Repository พร้อมเอกสารกลางบน `main` | Codex |
 | UX/Wireflow | NOT_STARTED | Milestone 0 | Unassigned |
 | Database/Contracts | NOT_STARTED | มีเพียงข้อกำหนดระดับหลักการ | Unassigned |
 | Web/LINE application | NOT_STARTED | ยังไม่มี source code | Unassigned |
@@ -28,14 +28,16 @@
 - Baseline Git commit: `1ca4e08774959a7870271e54df7935597f31b740`
 - Branch: `main`
 - Migration: ยังไม่มี
-- Remote repository: ยังไม่เชื่อม
+- Remote repository: `naochanma-code/asas-job-cost-workforce-core` (Private)
+- Remote branch: `main`
+- Remote publish commit ล่าสุดของชุดเริ่มต้น: `886b2094867758242983b4b2ef27af6afcff9a1c`
 
 ## Blocker / ต้องยืนยัน
 
-- Remote Git repository ยังไม่เชื่อม; local repository ต้อง push ไป private remote ก่อน Codex/Work ต่าง session จะใช้ร่วมกันได้
+- ยังไม่มี blocker สำหรับเริ่ม Milestone 0
 
 ## ขั้นตอนถัดไป
 
-1. เชื่อม private remote repository
-2. ทำ Milestone 0: wireflow, state diagrams, data dictionary, permission matrix และ test acceptance script
-3. ทดสอบ Payroll calendar ตัวอย่าง รวมวันสุดท้ายของเดือนและ late adjustment
+1. ทำ Milestone 0: wireflow, state diagrams, data dictionary, permission matrix และ test acceptance script
+2. ทดสอบ Payroll calendar ตัวอย่าง รวมวันสุดท้ายของเดือนและ late adjustment
+3. ให้ Owner ตรวจ flow และคำศัพท์ก่อนเริ่มเขียน application code
