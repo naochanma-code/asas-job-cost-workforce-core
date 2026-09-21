@@ -2,6 +2,8 @@
 
 ## ผลตรวจรอบ2 — M0-R2-2026-09-21
 
+Artifact commit: `5f96422eb23151022c789441deb83a4c7eeb3312`; fetch/rebase origin/main แล้ว up to date ไม่มี conflict Commit บันทึก provenance ถัดมาปรับเฉพาะเอกสาร ไม่เปลี่ยนต้นแบบที่ทดสอบ
+
 คำตอบ Owner บันทึกใน ADR-007; code เป็น prototype เท่านั้น ไม่ใช่ backend security หลักฐานเก่าด้านล่างเป็นประวัติรอบแรก บางflowถูกแทนที่โดยรอบ2 โดยเฉพาะ Adminห้ามเห็นเงินและExpense reviewย้ายOwner
 
 - node docs/verification/check-m0.mjs: 24/24 PASS (สูตรเดิม/ลิงก์/JavaScript syntax/no remote dependency)

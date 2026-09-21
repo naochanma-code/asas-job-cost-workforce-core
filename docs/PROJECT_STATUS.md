@@ -35,6 +35,7 @@ Owner เตรียมผู้ร่วมทดลองจริงภา�
 - Repository: naochanma-code/asas-job-cost-workforce-core (Private)
 - Branch: codex/milestone-0-process-design; Draft PR #1
 - Base main: dd7cbcc2e5379b7fb83c283833332e2710bba936; MASTER v2.3 / artifact M0-R2-2026-09-21
+- Artifact commit ที่ตรวจ: 5f96422eb23151022c789441deb83a4c7eeb3312; fetch/rebase main แล้ว up to date
 - ต้นแบบเปิดจาก docs/prototype/index.html หรือรัน node docs/verification/serve-m0.mjs แล้วเปิด http://127.0.0.1:4174/prototype/index.html
 - Migration: ไม่มี; deploy: ไม่มี;เงินจริง/ข้อมูลจริง/การส่งLINEจริง: ไม่มี
 

@@ -8,6 +8,7 @@
 - แยก UI/time projection ของ Admin/PM ไม่เปิดเงินหรือรูปบิล; ตรวจวันซ้ำและfreezeสรุปเวลาของรอบจำลอง
 - 24 baseline checks +13 R2 checksผ่าน; ZIPอ่านด้วย .NET ผ่าน counts/bytes/total; browser smoke8กรณีตาม TEST_EVIDENCE
 - Update PROJECT_STATUS; ไม่มี production application, migration, deployment, LINEจริง หรือข้อมูลจริง
+- บันทึก artifact commit รอบ2ที่ตรวจ 5f96422eb23151022c789441deb83a4c7eeb3312 พร้อมผล fetch/rebase main up to date
 
 
 ## 2026-09-21 — อธิบายคำถามสำหรับโอ๋ให้อ่านง่าย
