@@ -1,0 +1,102 @@
+{
+  "scope": "M0 fixtures and document consistency only; not production/integration/UAT",
+  "checks": 24,
+  "results": [
+    {
+      "name": "P-01",
+      "result": "PASS"
+    },
+    {
+      "name": "P-02",
+      "result": "PASS"
+    },
+    {
+      "name": "P-03",
+      "result": "PASS"
+    },
+    {
+      "name": "P-04",
+      "result": "PASS"
+    },
+    {
+      "name": "P-05",
+      "result": "PASS"
+    },
+    {
+      "name": "P-06",
+      "result": "PASS"
+    },
+    {
+      "name": "P-07",
+      "result": "PASS"
+    },
+    {
+      "name": "P-08",
+      "result": "PASS"
+    },
+    {
+      "name": "P-09",
+      "result": "PASS"
+    },
+    {
+      "name": "P-10",
+      "result": "PASS"
+    },
+    {
+      "name": "P-11",
+      "result": "PASS"
+    },
+    {
+      "name": "P-12",
+      "result": "PASS"
+    },
+    {
+      "name": "P-13",
+      "result": "PASS"
+    },
+    {
+      "name": "P-15",
+      "result": "PASS"
+    },
+    {
+      "name": "P-16",
+      "result": "PASS"
+    },
+    {
+      "name": "P-14 effective-rate example arithmetic",
+      "result": "PASS"
+    },
+    {
+      "name": "970 hourly rounding 243/364",
+      "result": "PASS"
+    },
+    {
+      "name": "monthly Payroll 568500 / cost 613500",
+      "result": "PASS"
+    },
+    {
+      "name": "E-01 evidence rows do not duplicate expense total",
+      "result": "PASS"
+    },
+    {
+      "name": "calendar fixtures, not application date logic",
+      "result": "PASS"
+    },
+    {
+      "name": "Markdown local links exist",
+      "result": "PASS"
+    },
+    {
+      "name": "Mermaid fences balanced",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype JavaScript parses and has no remote dependency",
+      "result": "PASS"
+    },
+    {
+      "name": "required deliverables present",
+      "result": "PASS"
+    }
+  ]
+}

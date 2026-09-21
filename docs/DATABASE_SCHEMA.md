@@ -20,3 +20,16 @@
 
 รายละเอียด entity, constraint และ index ต้องจัดทำใน Milestone 0 ก่อนสร้าง migration แรก
 
+## Milestone 0 logical design — 2026-09-21
+
+รายละเอียดเสนอแล้วใน [DATA_DICTIONARY](DATA_DICTIONARY.md) และ [ADR index](adr/README.md); ยังไม่มี DDL, migration หรือฐานข้อมูลที่ apply แล้ว
+
+- UUID internal ID และ human code คงที่; Project transaction มี project_id NOT NULL, job_id nullable พร้อม composite foreign key ป้องกัน Job ข้าม Project
+- Rate/policy effective intervals ไม่ overlap; immutable snapshot สำหรับ ledger/run; เงิน integer satang และ exact arithmetic ตาม [golden cases](PAYROLL_CALCULATION_TEST_CASES.md)
+- Approval/source revision มี typed FK; unique source/revision/component ป้องกัน retry ซ้ำ โดย Work มี LABOR+MEAL components; reverses_id unique ป้องกัน reversal ซ้ำ
+- Payroll run revision และ payroll ledger แยก Cost Ledger; approved source set/snapshot frozen, late adjustment ไม่แก้ run เดิม
+- Evidence/private object metadata แยก binary; accounting export items snapshot และ immutable package revision
+- Dictionary เพิ่ม supporting entities สำหรับ policy version, binding code, manual cost adjustment และ commitment ตาม requirement ที่มีอยู่; Opportunity เป็น logical future boundary ยังไม่สร้าง speculative migration
+- Q-01–06 ใน [OWNER_QUESTIONS](OWNER_QUESTIONS.md) ระบุส่วนที่ยังตัดสินไม่ได้ โดยเฉพาะ visibility ต้นทุน, OT precision, หลาย Project ต่อวันและ Budget allocation; ห้าม implement โดยถือข้อเสนอเป็น Accepted
+
+Query-driven indexes, concurrency, FK/exclusion enforcement และ restore ต้องทดสอบกับ PostgreSQL จริงใน milestone ถัดไป M0 ไม่มีหลักฐาน TESTED_INTEGRATION
