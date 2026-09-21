@@ -50,6 +50,8 @@ Prototype ไม่มี required-job mode, durable save, file upload/ZIP gener
 
 ## ขั้นตอนถัดไป
 
+คำอธิบายสำหรับโอ๋: ตอนนี้ขอคำตอบเฉพาะ Q-01 เรื่องข้อมูลต้นทุนที่ฟ้า/Admin และ PM เห็นได้ ไม่ต้องตอบทุกข้อพร้อมกัน Q-02 เป็นการจัดข้อความให้ตรงกติกาเดิม ส่วน Q-03–07 ค่อยคุยตามเรื่อง ก่อนจบ Milestone 0 ยังต้องให้โอ๋ลองต้นแบบ 7 งาน การขอให้อธิบายคำถามให้เข้าใจง่ายไม่ถือเป็นการอนุมัติข้อเสนอใด
+
 1. Owner ตรวจ Q-01 ก่อน (คำแนะนำ: non-pay category view สำหรับ Admin/PM) และพิจารณาคำถามอื่นทีละข้อ
 2. Owner ทดลอง 7 tasks ตาม [PILOT_ACCEPTANCE_SCRIPT](PILOT_ACCEPTANCE_SCRIPT.md) พร้อมจด evidence/assistance ไม่ให้ Codex ลงชื่อผ่านแทน
 3. Codex ปรับเอกสาร/ต้นแบบตามผล review, update status/changelog/ADR; ยังไม่เริ่ม Milestone 1 จน process gate ผ่าน

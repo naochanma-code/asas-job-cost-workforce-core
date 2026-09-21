@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-09-21 — อธิบายคำถามสำหรับโอ๋ให้อ่านง่าย
+
+- เพิ่มคำอธิบายภาษาง่ายใน OWNER_QUESTIONS พร้อมระบุว่าตอนนี้ขอคำตอบเฉพาะ Q-01 และยกตัวอย่างการหาค่าแรงจากยอดต้นทุนรวม
+- แยกเรื่องที่คุยภายหลังและอธิบายการลองต้นแบบ 7 งานก่อนจบ Milestone 0
+- อัปเดต PROJECT_STATUS ให้ตรงกัน ไม่เปลี่ยนสูตร สิทธิ์ หรือบันทึกว่า Owner อนุมัติแล้ว
+
 ## 2026-09-21 — Milestone 0 process design (รอ Owner review)
 
 - เพิ่ม wireflow Web/LINE ทั้ง 5 actions, state diagrams, data dictionary และ permission matrix
