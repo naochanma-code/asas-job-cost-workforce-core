@@ -1,5 +1,8 @@
 # ADR-003 — แยก ledger และ snapshot การคำนวณ
 
+สถานะประวัติ: ข้อเสนอในฉบับนี้ถูกแทนที่เฉพาะส่วนที่ Owner ตอบใน [ADR-007](007-owner-decisions-m0-r2.md) ได้แก่สิทธิ์เงิน/หลายOwner/optionalJob/วันที่OT/แบ่งครึ่งวัน/ขอบเขตexport ห้ามนำข้อความเดิมที่รอ Q-01/Q-02/Q-04 ไปใช้เป็นนโยบายปัจจุบัน
+
+
 - วันที่ 2026-09-21; baseline D-004/D-006, MASTER §5/5.1/6; additional key/precision design Proposed
 - Context: เวลาเดียวกันใช้คิดต้นทุนและจ่ายค่าจ้าง แต่บวก Payroll เข้า Actual ซ้ำไม่ได้ การ retry ต้องไม่เพิ่มเงิน และประวัติต้องตรวจย้อนกลับหลัง rate เปลี่ยน
 - Proposal: approved source revision มี posting group เดียว; WORK แตก LABOR+MEAL components, OT แตก OT, expense แตก EXPENSE มี unique typed source/revision/component; transaction approval+ledger+outbox เดียวกัน; reversal ผูก original unique และใช้ยอดตรงข้ามเดิม

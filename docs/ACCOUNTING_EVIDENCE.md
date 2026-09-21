@@ -1,6 +1,10 @@
 # Accounting Evidence Export Specification
 
-DESIGNED; baseline MASTER §10/13, D-003; รายละเอียด revision/schema Proposed ADR-005; Q-06 รอยืนยันเดือน/retention ผู้ใช้ของ spec คือ Owner/Admin ที่มีสิทธิ์ค่าใช้จ่าย ไม่ใช่การ export สรุปค่าจ้าง
+DESIGNED; baseline MASTER §10/13, D-003; รายละเอียด revision/schema Proposed ADR-005; Q-06 รอยืนยันเดือน/retention ผู้ใช้ของ spec คือ OWNER หลายบัญชีเท่านั้น (ADMIN/PM ไม่มีสิทธิ์รูปบิลหรือเงิน) ไม่ใช่การ export สรุปค่าจ้าง
+
+## ขอบเขตรอบ2ที่ Owner ยืนยัน
+
+เป้าหมายคือภาพรวมเงินรายเดือนและดาวน์โหลด folder เก็บบิล/ใบเสร็จ/สลิปค่าใช้จ่าย กันบิลหาย; SMEMOVE ทำบัญชีแยก ไม่มี sync ใน M0 ต้นแบบเลือกภาพ/PDFจากเครื่องและดาวน์โหลด ZIP จริงแบบ local ซึ่งมี expense register CSV หนึ่งrowต่อexpense; ไม่มี XLSX/hash/versioned storage จริงใน M0 ส่วนสเปก packageเต็มด้านล่างเป็นแบบสำหรับระบบถัดไป ไม่ใช่เงื่อนไขให้โอ๋ต้องตรวจตอนนี้ รายละเอียดตาม [ADR-007](adr/007-owner-decisions-m0-r2.md)
 
 ## ขอบเขตและการเลือกข้อมูล
 
@@ -76,4 +80,4 @@ DEMO-EXPORT-202609-r001.zip
 | E-08 | source ถูกอนุมัติหลัง cutoff, expense_date เดือนก่อน | r001 ไม่เปลี่ยน; r002 จึงรวมและแสดงเวลาที่มาช้า |
 | E-09 | metadata+binary restore เข้า environment ใหม่ | counts, total, hashes, FK และ openability ตรง; ไม่ใช้ Drive เพื่อผ่าน |
 
-M0 ส่ง specification/fixture เท่านั้น ไม่มี export จากบิลจริงหรือ XLSX/ZIP production; tests E-01–09 ต้องรันกับระบบใน M3–M6 ก่อนอ้างพร้อมบัญชี ระยะเก็บ default 7 ปีรอยืนยัน Owner/บัญชี
+M0 มี local ZIP จากไฟล์ทดสอบที่เลือกจริง แต่ไม่มี XLSX/ZIP production หรือข้อมูลจริง; tests E-01–09 ต้องรันกับระบบใน M3–M6 ก่อนอ้างพร้อมบัญชี ระยะเก็บ default 7 ปีรอยืนยัน Owner/บัญชี

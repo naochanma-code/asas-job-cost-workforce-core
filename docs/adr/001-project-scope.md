@@ -1,5 +1,8 @@
 # ADR-001 — Project เป็นหน่วยหลัก
 
+สถานะประวัติ: ข้อเสนอในฉบับนี้ถูกแทนที่เฉพาะส่วนที่ Owner ตอบใน [ADR-007](007-owner-decisions-m0-r2.md) ได้แก่สิทธิ์เงิน/หลายOwner/optionalJob/วันที่OT/แบ่งครึ่งวัน/ขอบเขตexport ห้ามนำข้อความเดิมที่รอ Q-01/Q-02/Q-04 ไปใช้เป็นนโยบายปัจจุบัน
+
+
 - วันที่ 2026-09-21; baseline D-002/MASTER §3/6/7 ยืนยันแล้ว; รายละเอียดที่เพิ่ม Proposed
 - Context: Project ไม่มี Site/Job ต้องทำ assignment, budget, time, OT, expense, cost, payroll ได้ครบ ไม่ให้ optional FK กลายเป็นเงื่อนไข UI
 - Decision proposal: project_id NOT NULL + job_id nullable และ composite FK scope; Project assignment ใช้ job_assignments ที่ job=null; Site ของ Project nullable; human code ไม่เปลี่ยนตามชื่อ

@@ -1,57 +1,53 @@
 # PROJECT STATUS
 
-อัปเดตล่าสุด: 21 กันยายน 2026 · ขอบเขตปัจจุบัน Milestone 0 เท่านั้น
+อัปเดต 21 กันยายน 2026 · Milestone 0 รอบ2เท่านั้น · Owner ของเอกสาร/ต้นแบบ: Codex
 
-## ภาพรวมและสิ่งที่ใช้งานได้จริง
+## สิ่งที่ใช้งานได้ในต้นแบบ
 
-มีเอกสารและต้นแบบ HTML ที่เปิดทดลอง flow ในเครื่องได้ด้วยข้อมูลสมมติ ยังไม่มี production application, backend, database, migration, environment ที่ deploy หรือ LINE OA จริง เริ่มอ่าน [MILESTONE_0](MILESTONE_0.md)
+- Project เป็นหลัก A ไม่มี Site/Job; B เพิ่มงานย่อยได้ ไม่บังคับเลือก
+- Admin/PM ดูจำนวนคน วันเข้างาน วันทำงานและชั่วโมง OT ไม่เห็นเงินทุกประเภทหรือรูปบิล
+- Owner มีบัญชีจำลองแยก3คน ดูเงิน ตรวจและอนุมัติค่าใช้จ่าย พร้อมบันทึกผู้ทำ
+- ช่างลง OT เป็นชั่วโมงพร้อมวันที่ย้อนหลังได้ ไม่แยกเที่ยงคืน; สอง Project ใช้เช้า/บ่ายอย่างละครึ่งวัน ป้องกันลงช่วงวันซ้ำ
+- เลือกภาพ/PDFจากเครื่อง 1–5 ไฟล์ สูงสุด10MB/ไฟล์ ดูภาพก่อนส่ง ลบหรือเพิ่มแทนได้ มี9ประเภทรายจ่าย
+- Owner ดูค่าใช้จ่ายรายเดือนรวมทุกProject และดาวน์โหลด ZIP ที่แตกเป็น folder ของไฟล์ที่เลือกจริง พร้อมทะเบียน expense
 
-| Workstream | DESIGNED | CODED | TESTED_LOCAL | TESTED_INTEGRATION | DEPLOYED_STAGING | UAT_PASSED | PRODUCTION_READY | Owner / หลักฐาน |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Master requirement v2.2 | YES baseline | N/A | N/A | N/A | NO | NO | NO | Owner / [MASTER_PROMPT](MASTER_PROMPT.md) |
-| UX/Wireflow + state | YES proposed | N/A docs | consistency checked | NOT_RUN | NO | NO | NO | Codex / [WIREFLOWS](WIREFLOWS.md), [STATE_DIAGRAMS](STATE_DIAGRAMS.md) |
-| Database/contracts/permission | YES proposed | NOT_STARTED | docs only | NOT_RUN | NO | NO | NO | Codex / [dictionary](DATA_DICTIONARY.md), [matrix](PERMISSION_MATRIX.md), [ADR](adr/README.md) |
-| Payroll examples/export/pilot specs | YES proposed | N/A docs | arithmetic fixtures only | NOT_RUN | NO | NO | NO | Codex / [TEST_EVIDENCE](TEST_EVIDENCE.md) |
-| Clickable process prototype | YES | MOCK_ONLY | browser smoke | N/A no backend | NO | NO | NO | Codex / [prototype](prototype/index.html) |
-| Web/LINE production application | NOT_STARTED | NOT_STARTED | NOT_RUN | NOT_RUN | NO | NO | NO | Unassigned until M0 gate |
-| Staging/production/real pilot | NOT_STARTED | N/A | NOT_RUN | NOT_RUN | NO | NO | NO | Owner must authorize later scope |
+ทั้งหมดเป็น local HTML simulation ไม่มี Production Application, backend, database, migration, upload server, LINE OA หรือ deployment ไฟล์อยู่ในหน่วยความจำ browser Refresh แล้วหาย ไม่ใช้ข้อมูลจริง
 
-TESTED_LOCAL หมายถึงเฉพาะสิ่งที่ระบุใน [TEST_EVIDENCE](TEST_EVIDENCE.md) ไม่ใช่การทดสอบ API/permission/database/real LINE. M0 ยังเป็น OWNER_REVIEW_PENDING ไม่ผ่าน process gate จากการตรวจของ Codex แทน Owner
+## คำตอบ Owner และขอบเขตที่ยืนยัน
 
-## งานในรอบนี้
+[OWNER_QUESTIONS](OWNER_QUESTIONS.md) เปลี่ยนเป็นทะเบียนคำตอบแล้ว ไม่ต้องถาม Q-01/02/03เรื่องวันที่/04/05เรื่องสิทธิ์/06เรื่องfolder ซ้ำ ใช้ [ADR-007](adr/007-owner-decisions-m0-r2.md), D-009 และ MASTER v2.3 แทนข้อเสนอ non-pay visibility รอบแรก ค่าใช้จ่าย/Budget ย้ายให้ Owner ตรวจเพราะ Admin/PM ไม่เห็นเงิน
 
-- ส่งมอบ wireflow Web/LINE, state diagrams, field-level dictionary, permission matrix, Payroll calculation tests, accounting evidence specification, pilot acceptance script และ ADR 6 ฉบับ
-- ต้นแบบจำลอง Project A ไม่มี Site/Job และ Project B มี Site/สอง Jobs พร้อมผู้ส่งสองคน; browser smoke A ครบ flow และ B เลือก Job/แยกผู้ส่งผ่าน; local fixture/document checks 24 ข้อผ่าน ไม่มีการใช้ข้อมูลจริง
-- Codex รับผิดชอบ docs/schema logical design/prototype ชุดนี้ทั้งหมด; Work ยังไม่มี assignment ร่วม ห้ามแก้ module/schema เดียวกันพร้อมกันโดยไม่ตกลง
-- Baseline D-001–D-007 คงเดิม; D-008 และ ADR แยก Proposed จาก Accepted; ไม่แก้ Master Prompt/PAYROLL_POLICY เพื่อกลบข้อขัดแย้ง
+Owner เตรียมผู้ร่วมทดลองจริงภายหลัง (Q-07) ยังไม่ถือว่าผ่าน UAT จากการตอบคำถามนี้ Work ยังไม่ได้รับมอบหมายให้แก้ module/schema คู่ขนาน
 
-## Version / Commit / Environment
+## สถานะแยกตามหลักฐาน
 
-- Master Prompt v2.2; base main ตรวจแล้ว: `dd7cbcc2e5379b7fb83c283833332e2710bba936`
-- Branch: `codex/milestone-0-process-design`; repository `naochanma-code/asas-job-cost-workforce-core` (Private)
-- Artifact version: M0-2026-09-21; artifact commit ที่ตรวจ `be4bfc6137394f34e0b1f5399f98e8a864298f9c`; fetch/rebase main แล้ว up to date; รายละเอียด [TEST_EVIDENCE](TEST_EVIDENCE.md)
-- Migration: ไม่มี; environment: local HTML + Node fixture checks เท่านั้น
-- Deployment: NOT_DEPLOYED; real LINE: NOT_RUN; Owner UAT: NOT_RUN
+| Workstream | DESIGNED | CODED | TESTED_LOCAL | TESTED_INTEGRATION | DEPLOYED_STAGING | UAT_PASSED | PRODUCTION_READY |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| เอกสาร MASTER v2.3 / schema / permission / ADR | YES (business decisions Accepted; implementation draft) | N/A | consistency checks | NOT_RUN | NO | NO | NO |
+| Process prototype รอบ2 | YES | MOCK_ONLY | 24 baseline + 13 R2 checks, independent ZIP check, browser smoke8กรณี | NOT_RUN | NO | NO | NO |
+| Production Web/API/worker/LINE | design only | NOT_STARTED | NOT_RUN | NOT_RUN | NO | NO | NO |
+| Backup/restore/real pilot | spec only | NOT_STARTED | NOT_RUN | NOT_RUN | NO | NO | NO |
 
-## Blocker / known issues / ต้องยืนยัน
+หลักฐาน [TEST_EVIDENCE](TEST_EVIDENCE.md) แยกรอบใหม่กับผลเก่าที่ถูกแทนที่แล้ว ไม่มีการอ้างว่า mock role switch เป็น server security
 
-รายละเอียดพร้อมแหล่งข้อกำหนดและทางเลือกอยู่ [OWNER_QUESTIONS](OWNER_QUESTIONS.md)
+## Version / Repository
 
-1. **Q-01** ADMIN/PM ดูต้นทุน Project แต่ต้องไม่อนุมานค่าจ้าง: หยุด final aggregate visibility; ต้นแบบใช้ non-pay FUEL subset ติดป้าย
-2. **Q-02** ตัวอย่าง “ไม่มี Job” เป็น exception ใน MASTER §11 ขัด optional Job: หยุด exception wording; Project A ยังคงไม่ถาม Job ตาม hard rule
-3. **Q-03** OT รายนาที/เศษสตางค์/ข้ามคืน/ไม่มี Work: หยุดเฉพาะ formula edge policy; golden whole/half hour ใช้สูตรยืนยันแล้ว
-4. **Q-04** วันทำงาน/ค่ากินหลาย Project ต่อวัน: หยุด allocation policy ที่ยังไม่ยืนยัน
-5. **Q-05** นิยาม Budget allocation vs additional: เสนอ envelope ไม่บวกซ้ำ รอ Owner
-6. **Q-06** เดือน export และ retention 7 ปี: รอ Owner/บัญชีก่อน production
-7. **Q-07** งาน/คน/งบ/การจ่าย/restore owner สำหรับ real pilot: checklist รอ milestone ที่เหมาะสม
+- Repository: naochanma-code/asas-job-cost-workforce-core (Private)
+- Branch: codex/milestone-0-process-design; Draft PR #1
+- Base main: dd7cbcc2e5379b7fb83c283833332e2710bba936; MASTER v2.3 / artifact M0-R2-2026-09-21
+- ต้นแบบเปิดจาก docs/prototype/index.html หรือรัน node docs/verification/serve-m0.mjs แล้วเปิด http://127.0.0.1:4174/prototype/index.html
+- Migration: ไม่มี; deploy: ไม่มี;เงินจริง/ข้อมูลจริง/การส่งLINEจริง: ไม่มี
 
-ส่วนที่ไม่ติดคำตอบได้จัดทำต่อครบตาม scope เอกสาร ไม่มีการตัดสินเรื่องเงิน/สิทธิ์แทน Owner
-Prototype ไม่มี required-job mode, durable save, file upload/ZIP generation, effective-rate editor, manual adjustment, reopen/late resolution, API authorization หรือ concurrent worker; flows เหล่านี้มี spec สำหรับ review/implementation ถัดไป ห้ามเรียกว่า tested production feature
+## ข้อจำกัดและเรื่องที่ค่อยยืนยัน
+
+- OT เศษย่อยกว่า0.5ชั่วโมงและกรณีไม่มี Work Entry ยังไม่กำหนดนโยบายจริง ต้นแบบรับชั่วโมงเต็ม/ครึ่งชั่วโมง ไม่ตีความว่าคำตอบย้อนหลังอนุมัติกรณีเหล่านี้ด้วย
+- วิธีแบ่ง/เพิ่ม Job budget, เดือนอ้างอิง export และ retention จริงยังเป็นข้อเสนอ ไม่ถือว่า Owner ยืนยันทั้งหมดเมื่อบอกว่าใช้ SMEMOVE แยก
+- required-Job mode, rate editor, manual payroll adjustment, reopen/late resolution, server authorization, concurrent transactions, persistent storage/backup และ production export ยังไม่ได้พัฒนา
+- Snapshot payroll ในต้นแบบ freeze source เมื่อ Admin ส่งตรวจ; late source ไม่เปลี่ยนผลเดิม แต่ยังไม่มีหน้าตัดสิน late adjustment
+- ไม่ต้องรอคำตอบเรื่องเหล่านี้เพื่อทดลองเลือกรูป/หมวด/กำลังคน/OTย้อนหลังในรอบนี้
 
 ## ขั้นตอนถัดไป
 
-คำอธิบายสำหรับโอ๋: ตอนนี้ขอคำตอบเฉพาะ Q-01 เรื่องข้อมูลต้นทุนที่ฟ้า/Admin และ PM เห็นได้ ไม่ต้องตอบทุกข้อพร้อมกัน Q-02 เป็นการจัดข้อความให้ตรงกติกาเดิม ส่วน Q-03–07 ค่อยคุยตามเรื่อง ก่อนจบ Milestone 0 ยังต้องให้โอ๋ลองต้นแบบ 7 งาน การขอให้อธิบายคำถามให้เข้าใจง่ายไม่ถือเป็นการอนุมัติข้อเสนอใด
-
-1. Owner ตรวจ Q-01 ก่อน (คำแนะนำ: non-pay category view สำหรับ Admin/PM) และพิจารณาคำถามอื่นทีละข้อ
-2. Owner ทดลอง 7 tasks ตาม [PILOT_ACCEPTANCE_SCRIPT](PILOT_ACCEPTANCE_SCRIPT.md) พร้อมจด evidence/assistance ไม่ให้ Codex ลงชื่อผ่านแทน
-3. Codex ปรับเอกสาร/ต้นแบบตามผล review, update status/changelog/ADR; ยังไม่เริ่ม Milestone 1 จน process gate ผ่าน
+1. โอ๋ลองต้นแบบรอบ2 โดยเฉพาะรูปบิล หมวดรายจ่าย OTย้อนหลัง และข้อมูลแต่ละบทบาท
+2. บันทึกผลเจ็ดงานตาม [PILOT_ACCEPTANCE_SCRIPT](PILOT_ACCEPTANCE_SCRIPT.md); ปรับตามfeedbackก่อนถือว่า M0ผ่าน
+3. ยังไม่เริ่ม Milestone1/LINEจริง/deploy จากคำตอบนโยบายครั้งนี้

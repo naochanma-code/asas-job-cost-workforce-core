@@ -1,16 +1,16 @@
 # Payroll calculation test cases — golden specification
 
-DESIGNED; สูตรจาก MASTER §5/5.1/17 และ PAYROLL_POLICY ใช้ข้อมูลสมมติทั้งหมด ไม่ใช่อัตราจริงหรือคำรับรองความถูกต้องตามกฎหมาย การทดสอบใน M0 เป็น arithmetic fixture checks ไม่ใช่ application tests
+DESIGNED; คำตอบรอบ2ตาม ADR-007: OTอ้างวันที่เลือกไม่แยกข้ามวัน สองProjectแบ่งครึ่ง OWNERหลายบัญชี ADMIN/PMไม่เห็นเงินทุกประเภท; สูตรจาก MASTER §5/5.1/17 และ PAYROLL_POLICY ใช้ข้อมูลสมมติทั้งหมด ไม่ใช่อัตราจริงหรือคำรับรองความถูกต้องตามกฎหมาย การทดสอบใน M0 เป็น arithmetic fixture checks ไม่ใช่ application tests
 
 ## Oracle และ snapshot
 
 daily = integer satang; fraction FULL=1, AM/PM=1/2; holiday = Sunday OR calendar holiday (ไม่บวก multiplier ซ้ำ); base = daily × fraction × (holiday?2:1); meal = 12000 × fraction เมื่อ approved Work เท่านั้น
 
-OT hourly baht = ROUND_HALF_UP((daily_satang / 100 / 8) × (holiday?3:2)); OT satang = hourly_baht × 100 × minutes / 60. คูณหลังปัด hourly เท่านั้น; cases ที่มีเศษต่ำกว่า 1 สตางค์ยัง pending Q-03 ไม่เดาผล final
+OT hourly baht = ROUND_HALF_UP((daily_satang / 100 / 8) × (holiday?3:2)); OT satang = hourly_baht × 100 × hours. คูณหลังปัด hourly เท่านั้น; cases ที่มีเศษต่ำกว่า 1 สตางค์ยัง pending Q-03 ไม่เดาผล final
 
 Net = sum(LABOR+MEAL+OT approved source) + signed manual adjustments; pending/rejected/cancelled ไม่เข้าผล; payroll total ไม่รวมใน Project Actual อีกครั้ง Missing/overlap rate หรือ policy ห้ามคำนวณ fallback เงียบ
 
-Snapshot ขั้นต่ำ: source_id/revision, employee_id/name, work date/day part/minutes, holiday classification/calendar version, rate/policy IDs + effective interval + value, exact expression, hourly rounded rate, component amount_satang, input digest, run revision, calculator contract version
+Snapshot ขั้นต่ำ: source_id/revision, employee_id/name, work date/day part/hours, holiday classification/calendar version, rate/policy IDs + effective interval + value, exact expression, hourly rounded rate, component amount_satang, input digest, run revision, calculator contract version
 
 ## Golden cases (บาท แสดงเพื่ออ่าน; persisted expected = ×100 สตางค์)
 
@@ -57,8 +57,8 @@ Cost จาก work/OT = **5,635 บาท**; manual payroll adjustment 50 ส�
 | P-28 | Project A ไม่มี Job/Site; Work/OT approved | source project_id=A, job_id=null ผ่านทั้งหมด ไม่เตือน missing Job |
 | P-29 | A ส่ง job_id=B1 | reject ก่อน source/ledger; no partial posting |
 | P-30 | payroll approve/lock/pay ซ้ำ | net payroll immutable; Cost Actual เท่าเดิม; payment reference ไม่สร้าง payment ซ้ำ |
-| P-31 | ทำ AM A + PM B วันเดียว | PENDING_OWNER Q-04: ข้อเสนอรวม 1 day, meal120 กระจาย60/60; ห้ามรายงาน passed |
-| P-32 | OT 1 นาที/ข้ามวัน/ไม่มี Work | PENDING_OWNER Q-03: กำหนด unit/round/split/review ก่อน expected amount |
+| P-31 | ทำ AM A + PM B วันเดียว ปกติ970 | Ownerยืนยันแบ่งครึ่ง: labour485+485, meal60+60; รวม1090บาท, 1man-day/1วันเข้างานจริง |
+| P-32 | ระบุ21ก.ย.2026 OT8ชม. แม้ทำถึง22 ลงย้อนหลังวันที่23 | ใช้วันที่21ทั้งรายการ; hourly243 ×8 =1944บาท; ถ้าปิดรอบแล้วเข้าlate queue ไม่ย้ายไปวันที่22 |
 | P-33 | paid amount หลัง deduct มากกว่ายอด base | block สำหรับ Owner review จน policy negative net ยืนยัน; ไม่โอนยอดติดลบอัตโนมัติ |
 
-ผลที่รันจริงและคำสั่งอยู่ [TEST_EVIDENCE](TEST_EVIDENCE.md); P-17–33 เป็น acceptance specs ไม่อ้างผ่านระบบที่ยังไม่ได้สร้าง
+ผลที่รันจริงและคำสั่งอยู่ [TEST_EVIDENCE](TEST_EVIDENCE.md); P-17–30/P-33 เป็น acceptance specs; P-31/32 ตรวจ arithmetic ได้ในround2 แต่ backendยังNOT_RUN และกรณี OT เศษย่อย/ไม่มีWorkยังเปิดอยู่; ข้อเหล่านี้ ไม่อ้างผ่านระบบที่ยังไม่ได้สร้าง

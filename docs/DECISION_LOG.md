@@ -54,3 +54,9 @@
 - บันทึกข้อขัดแย้ง/ช่องว่าง Q-01–Q-07 ใน [OWNER_QUESTIONS](OWNER_QUESTIONS.md); ไม่เดากติกาเงิน/สิทธิ์เพิ่มเติม ไม่เปลี่ยน Master Prompt หรือ Accepted Payroll Policy
 - Admin/PM prototype ใช้ non-pay category view พร้อม label รอ Q-01; Project ไม่มี Job ไม่ถาม Job ตามข้อกำหนดที่ยืนยันแล้ว; ไม่มี-Job exception รอปรับถ้อยคำ Q-02
 - ต้นแบบเป็น local HTML simulation ไม่มี application/backend/migration/deployment/LINE จริง; Milestone 0 gate รอ Owner ทดลอง 7 tasks ตาม MASTER §19
+
+## D-009 — คำตอบ Owner รอบ2 (Accepted, 2026-09-21)
+
+ดู [ADR-007](adr/007-owner-decisions-m0-r2.md): Admin/PM ไม่เห็นเงินทุกประเภทและรูปบิล; Ownerหลายบัญชีสำหรับหุ้นส่วน3คน; Expense/BudgetตรวจโดยOwner; Projectไม่มีJobเป็นปกติ; OTdate+hoursย้อนหลังได้ไม่แยกเที่ยงคืน; สองProjectต่อวันแบ่งครึ่ง; Ownerดูค่าใช้จ่ายรายเดือนและfolderหลักฐาน; SMEMOVEแยก; Ownerเตรียมpilotภายหลัง
+
+ใช้แทนข้อเสนอnon-pay visibilityของ D-008 และปรับ MASTER เป็นv2.3/PAYROLL_POLICY/schema/permissionตามคำตอบโดยตรง ไม่มีการอนุมัติUAT/deploy หรือกติกาOTเศษย่อย/Job allocation/retentionแทนOwner

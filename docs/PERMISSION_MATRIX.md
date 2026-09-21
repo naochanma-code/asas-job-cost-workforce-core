@@ -1,51 +1,46 @@
-# Permission matrix
+# Permission matrix — Owner decisions รอบ2
 
-DESIGNED; baseline MASTER §4/5/9/10 และ PAYROLL_POLICY; Q-01 เปิดรอ Owner ขอบเขต deny-by-default นี้เป็นข้อเสนอใน ADR-002 ไม่ใช่การเพิ่มสิทธิ์ให้ role
+กติกาธุรกิจ Accepted ตาม [ADR-007](adr/007-owner-decisions-m0-r2.md) / MASTER v2.3; การบังคับสิทธิ์จริงยัง DESIGNED ไม่ได้มี backend
 
-O = OWNER ทุก Project; A = ADMIN ทุก Project ตามงานธุรการ; P = PM เฉพาะ assigned Project; T = TECH เฉพาะ assigned Project และรายการตนเอง; X = สมาชิกกลุ่มภายนอก ไม่มีบัญชีธุรกิจ
+OWNER รองรับหลายบัญชีสำหรับหุ้นส่วน3คน สิทธิ์เท่ากัน audit แยก actor ไม่ใช้บัญชีร่วม ADMIN ทำงานธุรการ PM จำกัด assigned Project TECH จำกัดงานและรายการตนเอง สมาชิกกลุ่มภายนอกไม่มีสิทธิ์ธุรกิจ
 
-| Resource/action | O | A | P | T | X |
+| Resource/action | OWNER | ADMIN | PM | TECH | ภายนอก |
 | --- | --- | --- | --- | --- | --- |
-| Project/site/job/master data | read/write | read/write | assigned read/manage ตาม policy | assigned read แบบจำกัด | deny |
-| Project assignment/group binding | allow | allow | deny default | deny | deny |
-| Budget non-pay categories | allow | allow | assigned ตาม policy | deny | deny |
-| Budget/Actual รวมค่าจ้าง, profit/margin | allow | deny รอ Q-01 | deny รอ Q-01 | deny | deny |
-| Actual expense non-pay categories | allow | allow | assigned read | own expense เท่านั้น | deny |
-| วัน/ชั่วโมง/จำนวนคน | allow | allow | assigned | own | deny |
-| Work/OT/Expense submit | allow ตาม actor audit | allow ในนามพร้อม audit | assigned ตาม policy | own assigned | deny |
-| Review/approve Work/OT/Expense | allow | allow | assigned เฉพาะ Owner enable | deny | deny |
-| Review แก้ยอด Expense | allow + reason | allow + reason | เมื่อ policy enable + reason | แก้ draft ของตน | deny |
-| Manual Cost Ledger adjustment | allow + reason | deny | deny | deny | deny |
-| Signed evidence/download/export Expense | allow | allow scoped non-pay | assigned ตาม policy; default deny bulk | own evidence; deny bulk | deny |
-| PAYROLL_INPUT_TIME | allow | allow | deny default | own submission เท่านั้น | deny |
-| PAYROLL_VIEW_AMOUNT | allow | deny | deny | deny | deny |
-| PAYROLL_EDIT_RATE | allow | deny | deny | deny | deny |
-| PAYROLL_ADJUST_AMOUNT | allow | deny | deny | deny | deny |
-| PAYROLL_APPROVE (รวม lock/reopen) | allow | deny | deny | deny | deny |
-| PAYROLL_PAY | allow | deny | deny | deny | deny |
-| Payroll export/payment proof/rate snapshot | allow | deny | deny | deny | deny |
-| Audit | all ใน secure view | non-pay operational | assigned non-pay | own status history | deny |
-| LINE group response | สถานะรายการขั้นต่ำทุก role; ไม่มีข้อมูลจำกัดสิทธิ์ในกลุ่ม | เช่นเดียวกัน | เช่นเดียวกัน | เช่นเดียวกัน | อ่านข้อความสถานะได้แต่สั่งธุรกิจไม่ได้ |
+| Project/site/job/team/master ที่ไม่มีเงิน | ทุกProject | จัดการ | assigned ตามpolicy | assigned read | deny |
+| จำนวนคน / วันเข้างาน / วันทำงาน / OT | ทุกProject | ดู/ตรวจ | assigned ดู/ตรวจเมื่อเปิดpolicy | own | deny |
+| Work/OT submit | มีactor audit | กรอกแทนพร้อมaudit | ตามpolicy | own assigned | deny |
+| Work/OT approve | allow | allow | assigned เมื่อOwner enable | deny | deny |
+| Budget / expense amount / Actual / ค่าแรง / กำไร / Payroll | allow | denyทั้งหมด | denyทั้งหมด | เฉพาะexpenseที่ตนส่ง ไม่เห็นเงินประเภทอื่น | deny |
+| Expense submit + รูปหลักฐาน | allow | denyในต้นแบบ | denyในต้นแบบ | own assigned | deny |
+| Expense แก้ยอด / approve / reject | allowพร้อมเหตุผล | deny | deny | แก้draftตนเอง | deny |
+| รูปบิล / ใบเสร็จ / สลิป / raw description / original filenames | allow | deny | deny | own expense | deny |
+| Expense folder ZIP / manifest / สรุปเงินรายเดือน | allow | deny | deny | deny | deny |
+| PAYROLL_INPUT_TIME | allow | allow | deny default | ส่งเวลาตนเอง | deny |
+| PAYROLL_VIEW_AMOUNT / EDIT_RATE / ADJUST_AMOUNT | allow | deny | deny | deny | deny |
+| PAYROLL_APPROVE / lock / reopen / PAY | allow | deny | deny | deny | deny |
+| Payment proof / financial audit | allow | deny | deny | deny | deny |
+| Operational audit / status | all | nonfinancial | assigned nonfinancial | own | deny |
 
-## Contract projections (ตัวอย่างชื่อเพื่อออกแบบ ไม่ได้สร้าง API)
+## ไม่มีช่องทางเห็นเงินสำหรับ Admin/PM
 
-Admin time row allowlist: entry_id, employee_display_name, project_code, nullable job_code, work_date, day_part, minutes, review_status, exception_code, version; ไม่ส่ง rate_id, daily_rate_satang, hourly_rate, wage/meal/OT/net/gross amount, rate/policy expression, financial snapshot หรือ payroll checksum ที่ dereference ได้
+ห้ามส่ง amount, rate, budget, actual, profit, variance, remaining, monetary utilization/forecast, financial snapshot, raw expense note, ชื่อไฟล์ผู้ใช้ หรือ receipt bytes/URLs ผ่านหน้าเว็บ API export search notification error audit หรือตารางรวม รูปบิลอาจมีราคาแม้ซ่อน field amount แล้ว จึงไม่ให้ signed URL ด้วย
 
-Owner amount projection แยก capability และ request; default mask ในหน้าจอจน Owner เปิดดู ตาม MASTER §11 การ mask ไม่ทดแทน authorization
+Admin time projection allowlist: entry_id, employee_display_name, project_code, nullable job_code, work_date, day_part, hours, review_status, exception_code, version จำนวนวันเข้างานใช้ distinct(employee,date); man-days sum day_fraction; headcount distinct employee ไม่ส่ง field เงินเพื่อซ่อน CSS ทีหลัง
 
-Admin expense row เห็น expense_amount_satang ได้เพราะเป็นรายจ่ายตรวจบิล แต่ payroll-derived meal allowance และ labour component ไม่ใช้ serializer เดียวกัน ห้ามเอาข้อมูลแรงงานไปใส่ field amount ทั่วไป
+Owner เงินเปิดดูหลังยืนยัน role/capability; masking เป็น UX ไม่ใช่ authorization ทุกOwnerมี user_id ของตนและ optimistic version/unique action key ป้องกันอนุมัติหรือจ่ายซ้ำพร้อมกัน ไม่ได้กำหนดให้ทั้ง3คนต้องอนุมัติร่วม
 
-Q-01 pending: Admin Dashboard แสดง “เฉพาะหมวดค่าใช้จ่ายที่มีสิทธิ์” ไม่แสดง Project total, remaining, variance, utilization, forecast หรือ downloadable report ที่รวม restricted labour แม้ซ่อนแถว LABOR/OT แล้ว ตัวเลขคนเดียวก็ยัง restricted
+TECH กรอกเงินและเห็นหลักฐานของตนใน private view ตาม expense flow; group confirmation ไม่มีราคา/PII/Budget/Payroll แม้ผู้ส่งเป็นOwner
 
-## Enforcement ทุกช่องทาง
+## Enforcement ที่ต้องทำในระบบจริง
 
-ตรวจ role + capability + Project membership + ownership + resource state ที่ application service และ query projection ก่อน serialize ทุกครั้ง รวม URL เดา ID, batch endpoint, error, search, notification, worker export และ signed URL issuance ห้ามใช้ client role switch เป็นสิทธิ์จริง
+ตรวจ role+capability+project membership+ownership+state ที่ application service ก่อน query/serialize และซ้ำที่ export worker/download การถอนสิทธิ์ต้อง deny download ใหม่ สิทธิ์เก่า/เดา ID ไม่ให้ผ่าน Logs ไม่มีไฟล์หรือข้อมูลเงินจริง Financial audit เก็บใน secure datastore
 
-- Export ตรวจตอนขอ/ตอน worker build/ตอน download; ถ้าถูกถอนสิทธิ์ระหว่างทำให้หยุดหรือ deny download ไม่ใช้สิทธิ์เก่าค้าง
-- LINE group ห้าม Budget, Actual รวม, Profit/Margin, ค่าแรง, ข้อมูลส่วนบุคคล และหลักฐานที่มี PII; ให้ลิงก์ private authenticated view เฉพาะผู้มีสิทธิ์
-- Logs มี correlation ID, opaque source ID, error category ไม่มี raw payload, receipt, credentials, employee rates หรือหมายเลขบัญชี; audit ที่จำเป็นต้องเก็บค่าเงินจริงอยู่ secure data store ไม่ใช่ operational log
-- Payroll financial audit และ payment evidence เป็น Owner-only แยกจากศูนย์หลักฐาน expense ของ Admin
+ต้นแบบ role switch เป็น simulation ที่ทุกคนเปิดดู source ได้ จึงไม่ใช่ความปลอดภัยจริง ใช้ข้อมูลสมมติและไม่มีการเข้าถึงบัญชีจริง
 
-## Negative acceptance ที่ต้องพิสูจน์เมื่อมี backend
+## Acceptance
 
-PM ของ B เดา Project A ID ถูก deny; TECH เดาอีกคน entry/evidence ถูก deny; Admin เรียก rate/payroll API และ export ถูก deny แม้รู้ ID; Admin time JSON ไม่มี forbidden fields; pagination/search/error ไม่ leak; Admin กรองเหลือคนเดียวหรือหัก total กับ expense ไม่อนุมานค่าแรง; notification/group ไม่มี restricted amount; download หลัง revoke deny ข้อเหล่านี้เป็น test specifications ยังไม่ผ่าน integration
+- ADMIN/PM เปิดทุกหน้าที่เข้าได้: ไม่มีบาท/rate/expense amount/Budget/ภาพบิล/ZIP link หรือ notesที่มีเงิน
+- ADMIN/PM เดา evidence/export/payroll API IDs ต้อง deny ใน backend tests (NOT_RUN)
+- TECH T2 ไม่เห็น expense/files ของ T1; PM ของBไม่เห็นA
+- OWNER1/2/3 ดูเงินและทำactionได้ตามrole แต่ event audit ต้องตรงactor; duplicate/concurrent pay ลงครั้งเดียวใน DB tests (NOT_RUN)
+- Admin เห็น AM A + PM B เป็นจำนวนงานครึ่งวันตามProject สรุปทั้งคนรวม1วันเข้างาน/1man-day ไม่เห็นค่ากิน60/120

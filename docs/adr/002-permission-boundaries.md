@@ -1,5 +1,8 @@
 # ADR-002 — จำกัดข้อมูลค่าจ้างทุกช่องทาง
 
+สถานะประวัติ: ข้อเสนอในฉบับนี้ถูกแทนที่เฉพาะส่วนที่ Owner ตอบใน [ADR-007](007-owner-decisions-m0-r2.md) ได้แก่สิทธิ์เงิน/หลายOwner/optionalJob/วันที่OT/แบ่งครึ่งวัน/ขอบเขตexport ห้ามนำข้อความเดิมที่รอ Q-01/Q-02/Q-04 ไปใช้เป็นนโยบายปัจจุบัน
+
+
 - วันที่ 2026-09-21; baseline D-004/PAYROLL_POLICY ยืนยัน; แนวทาง aggregate visibility Proposed Q-01
 - Context: การซ่อน rate แต่เปิด Actual รวมของงานคนเดียวทำให้หาค่าแรงด้วยการลบ expense ได้; Admin ต้องตรวจเวลาได้โดยไม่รับยอดเงิน
 - Proposal: time projection แบบ allowlist แยก Owner financial projection; capability server-side ทั้ง API/export/notification/LINE/audit; Admin/PM ไม่มี payroll amount/rate/derived formula; deny cost aggregate ที่เปิดเผย labour จน Owner ตอบ Q-01

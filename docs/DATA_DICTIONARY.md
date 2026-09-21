@@ -1,6 +1,6 @@
 # Data Dictionary — logical design M0
 
-DESIGNED / PROPOSED; ไม่ใช่ SQL migration อ้าง MASTER §7 และ [ADR](adr/README.md) ชื่อ field ด้านล่างเป็น contract proposal ที่ต้อง review ก่อน M1 รายการตัวอย่างทุกค่าคือข้อมูลสมมติ
+DESIGNED / PROPOSED implementation; business decisions ล่าสุดตาม [ADR-007](adr/007-owner-decisions-m0-r2.md) Accepted; ไม่ใช่ SQL migration อ้าง MASTER §7 และ [ADR](adr/README.md) ชื่อ field ด้านล่างเป็น contract proposal ที่ต้อง review ก่อน M1 รายการตัวอย่างทุกค่าคือข้อมูลสมมติ
 
 ## ประเภทและการอ่าน
 
@@ -16,7 +16,7 @@ Project transaction ใช้ `project_id:ref(projects)` เสมอและ `
 
 | Entity | Fields เพิ่มจาก common | Constraint / index / classification |
 | --- | --- | --- |
-| users | auth_subject:text, role:OWNER/ADMIN/PM/TECH, status:ACTIVE/DISABLED | UNIQUE(auth_subject); role ไม่ได้มาจาก LINE display name; OP/PII |
+| users | auth_subject:text, role:OWNER/ADMIN/PM/TECH, status:ACTIVE/DISABLED | UNIQUE(auth_subject); role ไม่ได้มาจาก LINE display name; OWNER มีหลาย users ได้ ไม่มี unique(role); audit เก็บผู้กระทำรายบัญชี; OP/PII |
 | employees | user_id:ref(users)?, code:text, display_name:text, active:boolean | UNIQUE(user_id) เมื่อไม่ null, UNIQUE(code); disable ไม่ลบ history; PII |
 | employee_rate_versions | employee_id:ref(employees), valid_from:date, valid_to:date?, daily_rate_satang:money, reason:text, approved_by:ref(users) | rate>0; [from,to) ไม่ overlap ต่อ employee; index(employee_id,valid_from); PAY |
 | line_accounts | user_id:ref(users), channel_id:text, line_user_id:text, linked_at:timestamptz, revoked_at:timestamptz? | UNIQUE(channel_id,line_user_id) active; linking proof single-use ใน secure store; PII/SYS |
@@ -37,12 +37,12 @@ Project transaction ใช้ `project_id:ref(projects)` เสมอและ `
 | cost_categories | code:text, label:text, enabled:boolean, sort_order:int | UNIQUE(code); 11 codes ตาม MASTER §5; used code ไม่เปลี่ยนความหมาย; OP |
 | budgets | project_id:ref(projects), revision:int, status:DRAFT/APPROVED/SUPERSEDED, approved_at:timestamptz?, approved_by:ref(users)?, reason:text?, supersedes_id:ref(budgets)? | UNIQUE(project_id,revision); หนึ่ง active APPROVED/project; FIN/PAY ตามหมวด |
 | budget_lines | budget_id:ref(budgets), project_id, job_id?, category_id:ref(cost_categories), amount_satang:money, kind:ENVELOPE/ADDITIONAL/ALLOCATION, parent_line_id:ref(budget_lines)? | amount>=0; budget/project ตรงกัน; allocation มี parent envelope เดียว project/category; index(budget_id,category_id,job_id); Q-05; FIN/PAY |
-| work_entries | project_id, job_id?, employee_id:ref(employees), work_date:date, day_part:FULL/AM/PM, note:text?, status:DRAFT/SUBMITTED/APPROVED/REJECTED/CANCELLED, revision:int, supersedes_id:ref(work_entries)?, submitted_at:timestamptz?, reviewed_at:timestamptz?, reviewed_by:ref(users)?, reason:text? | index(employee_id,work_date), (project_id,status,work_date); active FULL กัน AM/PM overlap (Q-04); OP/PII |
-| overtime_entries | project_id, job_id?, employee_id:ref(employees), work_date:date, started_at:timestamptz, ended_at:timestamptz, duration_minutes:int, work_entry_id:ref(work_entries)?, reason:text, status:same Work, revision:int, supersedes_id:ref(overtime_entries)?, submitted_at:timestamptz?, reviewed_by:ref(users)?, reviewed_at:timestamptz? | minutes>0, end>start; no overlapping approved intervals/employee; work reference employee/project match; missing work exception Q-03; index(employee_id,work_date),(project_id,status); OP |
+| work_entries | project_id, job_id?, employee_id:ref(employees), work_date:date, day_part:FULL/AM/PM, note:text?, status:DRAFT/SUBMITTED/APPROVED/REJECTED/CANCELLED, revision:int, supersedes_id:ref(work_entries)?, submitted_at:timestamptz?, reviewed_at:timestamptz?, reviewed_by:ref(users)?, reason:text? | index(employee_id,work_date), (project_id,status,work_date); active FULL กัน AM/PM overlap; สอง Project ใช้ AM/PM อย่างละครึ่งรวม1วัน (Q-04 Accepted); OP/PII |
+| overtime_entries | project_id, job_id?, employee_id:ref(employees), work_date:date, hours:decimal(8,2), work_entry_id:ref(work_entries)?, reason:text, status:same Work, revision:int, supersedes_id:ref(overtime_entries)?, submitted_at:timestamptz?, reviewed_by:ref(users)?, reviewed_at:timestamptz? | hours>0; work_date เป็นวันที่เลือก (ย้อนหลังได้), ไม่แยกข้ามเที่ยงคืน, ไม่บังคับ start/end; precision/เศษชั่วโมงเล็กสุดรอยืนยัน; work reference employee/project match; missing work exception Q-03; index(employee_id,work_date),(project_id,status); OP |
 | holiday_calendars | calendar_version:int, holiday_date:date, label:text, is_holiday:boolean, reason:text | UNIQUE(calendar_version,holiday_date); version snapshot; Sunday default ไม่คูณซ้ำเมื่อเป็นวันหยุดด้วย; OP |
 | payroll_policy_versions (เพิ่มเพื่อรองรับข้อกำหนด version) | code:text, valid_from:date, valid_to:date?, formula_schema_version:int, parameters:json, approved_by:ref(users) | ไม่ overlap ต่อ code; params เช่น multipliers, meal, hourly rounding; published immutable; PAY |
 
-FULL/AM/PM ไม่ใช้ float สัดส่วนเป็น rational 1 หรือ 1/2 การอนุมัติหลายรายการวันเดียวต้องล็อก employee/date และตรวจ overlap ใน transaction จริงก่อนใช้ เกณฑ์นี้เป็น Q-04 ยังไม่สร้าง constraint migration
+FULL/AM/PM ไม่ใช้ float สัดส่วนเป็น rational 1 หรือ 1/2 การอนุมัติหลายรายการวันเดียวต้องล็อก employee/date และตรวจ overlap ใน transaction จริงก่อนใช้ Owner ยืนยันการแบ่งครึ่งวันแล้ว; ยังไม่สร้าง constraint migration
 
 ## Expense และต้นทุน
 

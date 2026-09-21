@@ -1,5 +1,8 @@
 # ADR-005 — หลักฐานใน Core และ export ที่ตรวจย้อนกลับได้
 
+สถานะประวัติ: ข้อเสนอในฉบับนี้ถูกแทนที่เฉพาะส่วนที่ Owner ตอบใน [ADR-007](007-owner-decisions-m0-r2.md) ได้แก่สิทธิ์เงิน/หลายOwner/optionalJob/วันที่OT/แบ่งครึ่งวัน/ขอบเขตexport ห้ามนำข้อความเดิมที่รอ Q-01/Q-02/Q-04 ไปใช้เป็นนโยบายปัจจุบัน
+
+
 - วันที่ 2026-09-21; baseline D-003/MASTER §10; month/retention details Proposed Q-06
 - Context: LINE/Drive ไม่ควรเป็นที่เก็บต้นฉบับถาวร; expense หลายภาพทำให้ sum manifest ซ้ำได้
 - Proposal: private S3-compatible binary + PostgreSQL metadata/hash; typed amount, no OCR requirement; object IDs ไม่มี PII; authorized short-lived signed downloads; immutable replacement lineage

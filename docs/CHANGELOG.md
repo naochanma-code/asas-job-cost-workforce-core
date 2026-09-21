@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-09-21 — Milestone 0 รอบ2ตามคำตอบ Owner
+
+- ยืนยัน Q-01/02/03วันที่/04/05สิทธิ์/06ขอบเขต: Admin/PMไม่มีเงินทุกประเภท, Ownerหลายบัญชีสำหรับหุ้นส่วน3คน, optional Job, OTdate+hoursย้อนหลังไม่แยกวัน, สองProjectแบ่งครึ่ง และfolderหลักฐานรายเดือน
+- เพิ่ม ADR-007/D-009 และปรับ MASTER v2.3, AGENTS, Payroll policy, dictionary/schema, permission matrix, wireflow, state, export และ pilot script ให้ตรงคำตอบ; ไม่เปลี่ยนส่วนที่ Owner ยังไม่ยืนยัน
+- เพิ่มเลือกไฟล์จริง/preview/ลบและเพิ่มไฟล์ก่อนส่ง, หมวดexpenseครบ9, Owner-only local ZIP รายเดือนและ3Owner selectors
+- แยก UI/time projection ของ Admin/PM ไม่เปิดเงินหรือรูปบิล; ตรวจวันซ้ำและfreezeสรุปเวลาของรอบจำลอง
+- 24 baseline checks +13 R2 checksผ่าน; ZIPอ่านด้วย .NET ผ่าน counts/bytes/total; browser smoke8กรณีตาม TEST_EVIDENCE
+- Update PROJECT_STATUS; ไม่มี production application, migration, deployment, LINEจริง หรือข้อมูลจริง
+
+
 ## 2026-09-21 — อธิบายคำถามสำหรับโอ๋ให้อ่านง่าย
 
 - เพิ่มคำอธิบายภาษาง่ายใน OWNER_QUESTIONS พร้อมระบุว่าตอนนี้ขอคำตอบเฉพาะ Q-01 และยกตัวอย่างการหาค่าแรงจากยอดต้นทุนรวม
