@@ -2,6 +2,7 @@
 
 ## 2026-09-21 — Master Prompt v2.2
 
+- เผยแพร่เอกสารกลางขึ้น Private GitHub Repository `naochanma-code/asas-job-cost-workforce-core`
 - ยืนยันรอบค่าจ้างวันที่ 1 ถึงวันสุดท้ายของเดือน
 - กำหนดโอนเงินไม่เกินวันที่ 1 ของเดือนถัดไป
 - เพิ่ม workflow ปิดข้อมูลเวลา, Owner approval และ payment recording
