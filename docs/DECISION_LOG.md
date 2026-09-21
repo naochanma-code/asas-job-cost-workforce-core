@@ -37,3 +37,11 @@
 - Admin ปิดตรวจข้อมูลเวลาไม่เกิน 10:00 น. วันที่ 1 โดยไม่เห็นจำนวนเงิน
 - Owner ตรวจยอด อนุมัติ lock และบันทึกการโอนภายในวันที่ 1
 - ข้อมูลมาช้าต้องใช้ late adjustment/revision ห้ามแก้ยอดที่อนุมัติแล้วแบบเงียบ
+
+## D-007 — ใช้ Private GitHub Repository เป็นแหล่งข้อมูลกลาง
+
+- สถานะ: Accepted
+- Repository: `naochanma-code/asas-job-cost-workforce-core`
+- Default branch: `main`
+- Codex และ Work ต้องอ่าน `AGENTS.md` และเอกสารใน repo ก่อนเริ่มงาน
+- แชทและไฟล์สำเนานอก Repository ไม่ใช่ source of truth เมื่อข้อมูลขัดกัน
