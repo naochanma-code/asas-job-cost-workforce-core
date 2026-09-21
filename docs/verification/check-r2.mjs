@@ -1,0 +1,37 @@
+// Test synthetic prototype contracts. Not a production authorization or payroll test.
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const root=path.resolve(import.meta.dirname,'../..');
+const context=vm.createContext({TextEncoder,Uint8Array,DataView});
+vm.runInContext(fs.readFileSync(path.join(root,'docs/prototype/model.js'),'utf8'),context);
+const M=context.M0, results=[];
+function check(name,fn){fn();results.push({name,result:'PASS'});}
+const base={kind:'work',sender:'DEMO-T1',project:'A',job:null,date:'2026-09-21',part:'AM',status:'APPROVED'};
+const split=[base,{...base,project:'B',part:'PM'}];
+check('two projects = one person / attendance day / man-day',()=>{assert.equal(M.metrics(split).people,1);assert.equal(M.metrics(split).attendance,1);assert.equal(M.metrics(split).manDays,1);});
+check('split work 545+545 =1090, no double meal',()=>assert.equal(split.reduce((s,r)=>s+M.amount(r),0),109000));
+check('AM/AM or FULL overlap blocked across projects; AM/PM allowed',()=>{assert.equal(M.overlap([base],{...base,project:'B'}),true);assert.equal(M.overlap([base],{...base,project:'B',part:'FULL'}),true);assert.equal(M.overlap([base],{...base,project:'B',part:'PM'}),false);});
+check('8h dated21 uses 243x8=1944; date unchanged',()=>{const r={kind:'ot',date:'2026-09-21',hours:8};assert.equal(M.amount(r),194400);assert.equal(r.date,'2026-09-21');});
+check('Sunday date controls entire 8h at364',()=>assert.equal(M.amount({kind:'ot',date:'2026-09-27',hours:8}),291200));
+const png=new Uint8Array(Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl6ZAAAAABJRU5ErkJggg==','base64'));
+check('signature sniff rejects renamed text',()=>{assert.equal(M.mime(png)[0],'image/png');assert.throws(()=>M.mime(new TextEncoder().encode('not a png')));});
+const attachment={bytes:png,ext:'png'};
+const expense={id:'DEMO-001',kind:'expense',sender:'DEMO-T1',date:'2026-09-21',project:'A',job:null,category:'FUEL',amount:50000,status:'APPROVED',attachments:[attachment,attachment],note:'price 500',rate:97000};
+check('Admin item expense allowed, PM denied; Owner and own TECH allowed',()=>{assert.equal(M.canSeeExpense('ADMIN','DEMO-T1',expense),true);assert.equal(M.canSeeExpense('PM','DEMO-PM',expense),false);assert.equal(M.canSeeExpense('OWNER','x',expense),true);assert.equal(M.canSeeExpense('TECH','DEMO-T1',expense),true);assert.equal(M.canSeeExpense('TECH','DEMO-T2',expense),false);});
+check('time projection omits amounts, note, rate and attachment bytes',()=>{const r=M.timeProjection({...base,amount:97000,rate:97000,note:'salary970',attachments:[attachment]});for(const key of ['amount','rate','note','attachments'])assert.ok(!(key in r));});
+check('nine expense types; labour/OT not entered twice',()=>{assert.equal(M.categories.length,9);assert.equal(new Set(M.categories.map(c=>c[0])).size,9);assert.ok(!M.categories.some(c=>['LABOR','OT'].includes(c[0])));});
+const rows=[expense,{...expense,id:'DEMO-002',project:'B',job:'B1',amount:130000,attachments:[attachment]}, {...expense,id:'DEMO-003',status:'PENDING_REVIEW'}, {...expense,id:'DEMO-004',date:'2026-10-01'}];
+const entries=M.archiveEntries(rows,'2026-09'),zip=M.zip(entries);
+check('monthly folder includes 3 approved files and one expense register only',()=>{assert.equal(entries.length,4);assert.ok(entries.some(e=>e.name.includes('/DEMO-JOB-B1/')));assert.ok(!entries.some(e=>e.name.includes('DEMO-003')||e.name.includes('DEMO-004')));const csv=Buffer.from(entries.at(-1).data).toString('utf8');assert.equal(csv.trim().split('\r\n').length,3);assert.ok(csv.includes(',50000,2'));assert.ok(csv.includes(',130000,1'));});
+check('ZIP CRC known vector / traversal rejected',()=>{assert.equal(M.crc32(new TextEncoder().encode('123456789')),0xcbf43926);assert.throws(()=>M.zip([{name:'../outside.png',data:png}]));});
+check('three distinct Owner accounts are selectable',()=>{const html=fs.readFileSync(path.join(root,'docs/prototype/index.html'),'utf8');for(const id of ['DEMO-OWNER-1','DEMO-OWNER-2','DEMO-OWNER-3'])assert.ok(html.includes(id));});
+check('prototype UI parses',()=>new vm.Script(fs.readFileSync(path.join(root,'docs/prototype/ui.js'),'utf8')));
+check('half-hour OT and exact calculation',()=>{for(const h of [0.5,2,2.5,8])assert.equal(M.validOtHours(h),true);for(const h of [0,-1,2.25,2.1,NaN,Infinity]){assert.equal(M.validOtHours(h),false);assert.throws(()=>M.amount({kind:'ot',date:'2026-09-21',hours:h}));}assert.equal(M.amount({kind:'ot',date:'2026-09-21',hours:2.5}),60750);assert.equal(M.amount({kind:'ot',date:'2026-09-27',hours:2.5}),91000);});
+const folder=fs.mkdtempSync(path.join(os.tmpdir(),'asas-m0-r2-'));
+fs.writeFileSync(path.join(folder,'sample.png'),png);
+fs.writeFileSync(path.join(folder,'invalid.png'),'this is not an image');
+fs.writeFileSync(path.join(folder,'evidence.zip'),zip);
+process.stdout.write(JSON.stringify({scope:'M0-R4 prototype contracts, synthetic files only',checks:results.length,results,temporaryFixtureDirectory:folder},null,2)+'\n');

@@ -1,0 +1,207 @@
+{
+  "artifact": "M0-R4",
+  "totalChecks": 45,
+  "results": [
+    {
+      "script": "check-m0.mjs",
+      "scope": "M0 fixtures and document consistency only; not production/integration/UAT",
+      "checks": 24,
+      "results": [
+        {
+          "name": "P-01",
+          "result": "PASS"
+        },
+        {
+          "name": "P-02",
+          "result": "PASS"
+        },
+        {
+          "name": "P-03",
+          "result": "PASS"
+        },
+        {
+          "name": "P-04",
+          "result": "PASS"
+        },
+        {
+          "name": "P-05",
+          "result": "PASS"
+        },
+        {
+          "name": "P-06",
+          "result": "PASS"
+        },
+        {
+          "name": "P-07",
+          "result": "PASS"
+        },
+        {
+          "name": "P-08",
+          "result": "PASS"
+        },
+        {
+          "name": "P-09",
+          "result": "PASS"
+        },
+        {
+          "name": "P-10",
+          "result": "PASS"
+        },
+        {
+          "name": "P-11",
+          "result": "PASS"
+        },
+        {
+          "name": "P-12",
+          "result": "PASS"
+        },
+        {
+          "name": "P-13",
+          "result": "PASS"
+        },
+        {
+          "name": "P-15",
+          "result": "PASS"
+        },
+        {
+          "name": "P-16",
+          "result": "PASS"
+        },
+        {
+          "name": "P-14 effective-rate example arithmetic",
+          "result": "PASS"
+        },
+        {
+          "name": "970 hourly rounding 243/364",
+          "result": "PASS"
+        },
+        {
+          "name": "monthly Payroll 568500 / cost 613500",
+          "result": "PASS"
+        },
+        {
+          "name": "E-01 evidence rows do not duplicate expense total",
+          "result": "PASS"
+        },
+        {
+          "name": "calendar fixtures, not application date logic",
+          "result": "PASS"
+        },
+        {
+          "name": "Markdown local links exist",
+          "result": "PASS"
+        },
+        {
+          "name": "Mermaid fences balanced",
+          "result": "PASS"
+        },
+        {
+          "name": "prototype JavaScript parses and has no remote dependency",
+          "result": "PASS"
+        },
+        {
+          "name": "required deliverables present",
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "script": "check-r2.mjs",
+      "scope": "M0-R4 prototype contracts, synthetic files only",
+      "checks": 14,
+      "results": [
+        {
+          "name": "two projects = one person / attendance day / man-day",
+          "result": "PASS"
+        },
+        {
+          "name": "split work 545+545 =1090, no double meal",
+          "result": "PASS"
+        },
+        {
+          "name": "AM/AM or FULL overlap blocked across projects; AM/PM allowed",
+          "result": "PASS"
+        },
+        {
+          "name": "8h dated21 uses 243x8=1944; date unchanged",
+          "result": "PASS"
+        },
+        {
+          "name": "Sunday date controls entire 8h at364",
+          "result": "PASS"
+        },
+        {
+          "name": "signature sniff rejects renamed text",
+          "result": "PASS"
+        },
+        {
+          "name": "Admin item expense allowed, PM denied; Owner and own TECH allowed",
+          "result": "PASS"
+        },
+        {
+          "name": "time projection omits amounts, note, rate and attachment bytes",
+          "result": "PASS"
+        },
+        {
+          "name": "nine expense types; labour/OT not entered twice",
+          "result": "PASS"
+        },
+        {
+          "name": "monthly folder includes 3 approved files and one expense register only",
+          "result": "PASS"
+        },
+        {
+          "name": "ZIP CRC known vector / traversal rejected",
+          "result": "PASS"
+        },
+        {
+          "name": "three distinct Owner accounts are selectable",
+          "result": "PASS"
+        },
+        {
+          "name": "prototype UI parses",
+          "result": "PASS"
+        },
+        {
+          "name": "half-hour OT and exact calculation",
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "script": "check-r4.mjs",
+      "scope": "M0-R4 delegate and submission contracts",
+      "checks": 7,
+      "results": [
+        {
+          "name": "manager delegate in allowed project; TECH cannot impersonate",
+          "result": "PASS"
+        },
+        {
+          "name": "PM outside assigned project and unknown employee denied",
+          "result": "PASS"
+        },
+        {
+          "name": "PM owns only submitted expense; employee identity not an ownership bypass",
+          "result": "PASS"
+        },
+        {
+          "name": "submission status never auto approves, separate reviewer capability",
+          "result": "PASS"
+        },
+        {
+          "name": "overlap uses employee across different submitters",
+          "result": "PASS"
+        },
+        {
+          "name": "time projection keeps attribution without money",
+          "result": "PASS"
+        },
+        {
+          "name": "pending LINE expenses from every role excluded from monthly archive",
+          "result": "PASS"
+        }
+      ]
+    }
+  ]
+}

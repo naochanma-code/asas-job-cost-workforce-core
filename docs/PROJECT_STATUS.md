@@ -1,43 +1,40 @@
 # PROJECT STATUS
 
-อัปเดตล่าสุด: 21 กันยายน 2026
+2026-09-21 · MASTER v2.5 · M0-R4 · ผู้ดูแลเอกสาร/ต้นแบบ Codex
 
-## ภาพรวม
+**Milestone 0: OWNER_ACCEPTED / READY_TO_MERGE**
 
-| Workstream | สถานะ | หลักฐาน/หมายเหตุ | Owner |
-| --- | --- | --- | --- |
-| Master requirement v2.2 | DESIGNED | `docs/MASTER_PROMPT.md` | Owner + Codex |
-| Repository structure | CODED | Private GitHub Repository พร้อมเอกสารกลางบน `main` | Codex |
-| UX/Wireflow | NOT_STARTED | Milestone 0 | Unassigned |
-| Database/Contracts | NOT_STARTED | มีเพียงข้อกำหนดระดับหลักการ | Unassigned |
-| Web/LINE application | NOT_STARTED | ยังไม่มี source code | Unassigned |
-| Integration tests | NOT_STARTED | ยังไม่มีระบบให้ทดสอบ | Unassigned |
-| Staging/Production | NOT_DEPLOYED | ห้ามอ้างว่าใช้งานได้ | Unassigned |
+Owner ยืนยันผ่านทั้ง7งานรวมfeedbackล่าสุดเมื่อทดสอบผ่านแล้ว ผลแยกรายงานใน [M0_ACCEPTANCE](M0_ACCEPTANCE.md) Codexตรวจซ้ำผ่าน ไม่ใช่การอ้างreal pilotหรือproduction UAT
 
-## Decisions ล่าสุด
+## ผลงานปัจจุบัน
 
-- สร้างระบบและ Repository ใหม่ ไม่ปนกับแอปเก่า
-- Project เป็นหน่วยหลัก; Site และ Job optional
-- Project ที่ไม่มี Job ลง Assignment, Budget, Time, OT, Expense และ Cost ได้โดยตรง
-- Admin กรอก/ตรวจข้อมูลเวลา แต่ไม่เห็นยอด Payroll; Owner กรอกอัตราและอนุมัติ
-- ภาษีและประกันสังคมเลื่อนไป phase ถัดไป
+- ครบwireflow Web/LINE, state diagrams, dictionary/schema, permission matrix, payroll cases, evidence export, pilot script และADR001–009
+- Projectเป็นหลัก Site/Joboptional ไม่มีJobไม่ถาม; Owner3บัญชีแยกactor
+- PM/Admin/Ownerลงเวลาแทนพนักงานได้ เก็บผู้กรอกกับพนักงานแยกกัน PMจำกัดProjectที่assigned TECHลงตนเอง
+- ทุกroleส่งexpenseได้ PMเห็นเงิน/รูปเฉพาะของตน Adminตรวจรายรายการได้แต่ไม่เห็นต้นทุนรวม/Payroll LINEทุกroleรอAdmin/Ownerอนุมัติทุกครั้ง Webคงขั้นรอตรวจ
+- Adminapproveเวลาแล้วไม่ส่งOwnerตรวจซ้ำ ปิดเวลาคำนวณอัตโนมัติ Ownerตรวจยอดจ่าย OTทีละ0.5ย้อนหลังได้ สองProjectแบ่งครึ่งวัน
+- รูป/PDF1–5ไฟล์10MB/ไฟล์ หมวด9ประเภท Ownerดาวน์โหลดZIPเดือน; policyเก็บ2ปีเป็นdesign
 
-## Version / Commit
+## สถานะแยก
 
-- Master Prompt: v2.2
-- Baseline Git commit: `1ca4e08774959a7870271e54df7935597f31b740`
-- Branch: `main`
-- Migration: ยังไม่มี
-- Remote repository: `naochanma-code/asas-job-cost-workforce-core` (Private)
-- Remote branch: `main`
-- Remote publish commit ล่าสุดของชุดเริ่มต้น: `886b2094867758242983b4b2ef27af6afcff9a1c`
+| Workstream | DESIGNED | CODED | TESTED_LOCAL | OWNER_ACCEPTANCE | INTEGRATION / REAL UAT | DEPLOYED |
+| --- | --- | --- | --- | --- | --- | --- |
+| เอกสาร/Process prototype M0 | YES | MOCK_ONLY | 45checks + ZIP +7งานและfeedbackregression PASS | PASSทั้ง7 ตามOwner | NOT_RUN | NO |
+| Production Web/API/DB/LINE | design only | NOT_STARTED | NOT_RUN | ไม่ใช่ขอบเขตM0 | NOT_RUN | NO |
+| Persistence/retention/backup/real pilot | spec only | NOT_STARTED | NOT_RUN | ไม่ใช่ขอบเขตM0 | NOT_RUN | NO |
 
-## Blocker / ต้องยืนยัน
+## Repositoryและการส่งมอบ
 
-- ยังไม่มี blocker สำหรับเริ่ม Milestone 0
+Repository naochanma-code/asas-job-cost-workforce-core; branch codex/milestone-0-process-design; PR#1 เปลี่ยนเป็นReady for reviewแล้ว (draft=false); GitHubรายงานmergeable=true/clean และauto_merge=null ไม่มีmerge ไม่มีM1
+
+ฐานก่อนรอบ4: 1ce069297731383c918df2b30b3c06158be1175c; artifactรอบ4ที่ทดสอบ cf615b00e97f1d2fdaa71b4501c7c0340d6cc2c3; หลักฐานใน [TEST_EVIDENCE](TEST_EVIDENCE.md) พร้อมตรวจremote head
+
+## ข้อจำกัดที่ยอมรับในM0
+
+Role/channelจำลอง ทุกข้อมูลอยู่memory refreshแล้วหาย ไม่มีLINEจริง/serverauthorization/database/retentionworker/backuprestore ไม่มีrateeditor/manualadjustment/reopenlateUI/requiredJobmode/productionexport
+
+OTไม่มีWork, Jobbudgetallocation, เดือนอ้างอิงexportและจุดเริ่มนับ2ปีเป็นรายละเอียดก่อนimplementation ไม่ใช่คำถามซ้ำเรื่องสิทธิ์หรือOT0.5 ทุกข้ออยู่ [OWNER_QUESTIONS](OWNER_QUESTIONS.md)
 
 ## ขั้นตอนถัดไป
 
-1. ทำ Milestone 0: wireflow, state diagrams, data dictionary, permission matrix และ test acceptance script
-2. ทดสอบ Payroll calendar ตัวอย่าง รวมวันสุดท้ายของเดือนและ late adjustment
-3. ให้ Owner ตรวจ flow และคำศัพท์ก่อนเริ่มเขียน application code
+รอOwnerอนุญาตMergeโดยชัดเจน การพร้อมMergeไม่ใช่คำสั่งMerge และไม่เริ่มMilestone1จากการปิดงานครั้งนี้

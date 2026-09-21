@@ -45,3 +45,30 @@
 - Default branch: `main`
 - Codex และ Work ต้องอ่าน `AGENTS.md` และเอกสารใน repo ก่อนเริ่มงาน
 - แชทและไฟล์สำเนานอก Repository ไม่ใช่ source of truth เมื่อข้อมูลขัดกัน
+
+## D-008 — Milestone 0 process design (2026-09-21)
+
+- สถานะ: Proposed / Owner review pending; ไม่แทนที่ D-001–D-007 ที่ Accepted
+- จัดทำ [wireflows](WIREFLOWS.md), [state diagrams](STATE_DIAGRAMS.md), [dictionary](DATA_DICTIONARY.md), [permissions](PERMISSION_MATRIX.md), [payroll cases](PAYROLL_CALCULATION_TEST_CASES.md), [accounting export](ACCOUNTING_EVIDENCE.md) และ [pilot script](PILOT_ACCEPTANCE_SCRIPT.md)
+- ADR-001–006 ใน [ADR index](adr/README.md) แยก baseline กับรายละเอียดที่ยังเสนอ: Project scope, permission boundaries, ledgers/payroll, LINE durability, evidence และ modular monolith
+- บันทึกข้อขัดแย้ง/ช่องว่าง Q-01–Q-07 ใน [OWNER_QUESTIONS](OWNER_QUESTIONS.md); ไม่เดากติกาเงิน/สิทธิ์เพิ่มเติม ไม่เปลี่ยน Master Prompt หรือ Accepted Payroll Policy
+- Admin/PM prototype ใช้ non-pay category view พร้อม label รอ Q-01; Project ไม่มี Job ไม่ถาม Job ตามข้อกำหนดที่ยืนยันแล้ว; ไม่มี-Job exception รอปรับถ้อยคำ Q-02
+- ต้นแบบเป็น local HTML simulation ไม่มี application/backend/migration/deployment/LINE จริง; Milestone 0 gate รอ Owner ทดลอง 7 tasks ตาม MASTER §19
+
+## D-009 — คำตอบ Owner รอบ2 (Accepted, 2026-09-21)
+
+ดู [ADR-007](adr/007-owner-decisions-m0-r2.md): Admin/PM ไม่เห็นเงินทุกประเภทและรูปบิล; Ownerหลายบัญชีสำหรับหุ้นส่วน3คน; Expense/BudgetตรวจโดยOwner; Projectไม่มีJobเป็นปกติ; OTdate+hoursย้อนหลังได้ไม่แยกเที่ยงคืน; สองProjectต่อวันแบ่งครึ่ง; Ownerดูค่าใช้จ่ายรายเดือนและfolderหลักฐาน; SMEMOVEแยก; Ownerเตรียมpilotภายหลัง
+
+ใช้แทนข้อเสนอnon-pay visibilityของ D-008 และปรับ MASTER เป็นv2.3/PAYROLL_POLICY/schema/permissionตามคำตอบโดยตรง ไม่มีการอนุมัติUAT/deploy หรือกติกาOTเศษย่อย/Job allocation/retentionแทนOwner
+
+## D-010 — คำตอบ Owner รอบ3 (2026-09-21)
+
+Accepted ตาม [ADR-008](adr/008-admin-review-ot-retention.md): Admin ตรวจ แก้ไข และอนุมัติค่าใช้จ่ายรายรายการได้ รวมจำนวน รายละเอียด เงิน และรูป แต่ไม่เห็นยอดรวมต้นทุน/ยอดใช้ไปของโครงการ อัตราค่าแรงหรือ Payroll; PM ยังไม่เห็นเงินหรือรูปบิล; Adminอนุมัติวัน/OTแล้วไม่ส่งOwnerตรวจซ้ำ ปิดข้อมูลเวลาแล้วคำนวณอัตโนมัติ Ownerอนุมัติเงินตามเดิม; OTทีละ0.5ชั่วโมงไม่รับเศษนาที; หลักฐานเก็บ2ปี เป็นM0design/local prototype ไม่มีproductionหรือการลบไฟล์จริง แทนD-009เฉพาะส่วนที่เปลี่ยน
+
+## D-011 — ลงเวลาแทนและค่าใช้จ่ายทุกบทบาท (Accepted)
+
+PM/Admin/Owner ลงวันทำงานและ OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ โดยเก็บผู้กรอกแยกจากพนักงาน ทุกบทบาทส่งค่าใช้จ่ายได้ PM เห็นยอดและรูปเฉพาะรายการที่ตนส่ง LINE expense ทุกบทบาทต้องรอ Admin หรือ Owner กดอนุมัติแยกทุกครั้งก่อนเป็น Actual; Web คงขั้นรอตรวจเดิม ไม่มี auto-approve รายละเอียด [ADR-009](adr/009-delegated-entry-and-expense-review.md) ไม่เปลี่ยนข้อห้ามaggregate/Payroll ไม่อนุญาตmerge/M1จากการปิดM0
+
+## D-012 — ปิด Milestone 0 (2026-09-21)
+
+Owner ยืนยัน “ยืนยันผ่านทั้ง 7 งาน รวมการแก้ล่าสุดเมื่อทดสอบผ่าน” ในtaskนี้; Codexตรวจ7งานและfeedbackล่าสุดผ่าน ทดสอบ45checksและZIPผ่าน สถานะOWNER_ACCEPTED / READY_TO_MERGE ตาม [M0_ACCEPTANCE](M0_ACCEPTANCE.md) ไม่มีการแต่งassistance/time ของOwner PRพร้อมreviewหลังpush ไม่merge/M1จนOwnerยืนยันใหม่
