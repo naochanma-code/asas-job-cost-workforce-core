@@ -1,12 +1,12 @@
 # Payroll calculation test cases — golden specification
 
-DESIGNED; คำตอบรอบ2ตาม ADR-007: OTอ้างวันที่เลือกไม่แยกข้ามวัน สองProjectแบ่งครึ่ง OWNERหลายบัญชี ADMIN/PMไม่เห็นเงินทุกประเภท; สูตรจาก MASTER §5/5.1/17 และ PAYROLL_POLICY ใช้ข้อมูลสมมติทั้งหมด ไม่ใช่อัตราจริงหรือคำรับรองความถูกต้องตามกฎหมาย การทดสอบใน M0 เป็น arithmetic fixture checks ไม่ใช่ application tests
+DESIGNED; คำตอบรอบ2ตาม ADR-007: OTอ้างวันที่เลือกไม่แยกข้ามวัน สองProjectแบ่งครึ่ง OWNERหลายบัญชี Adminเห็นexpenseรายรายการได้ แต่ไม่เห็นยอดค่าจ้าง/ต้นทุนรวม; PMไม่เห็นเงิน ตามADR-008; สูตรจาก MASTER §5/5.1/17 และ PAYROLL_POLICY ใช้ข้อมูลสมมติทั้งหมด ไม่ใช่อัตราจริงหรือคำรับรองความถูกต้องตามกฎหมาย การทดสอบใน M0 เป็น arithmetic fixture checks ไม่ใช่ application tests
 
 ## Oracle และ snapshot
 
 daily = integer satang; fraction FULL=1, AM/PM=1/2; holiday = Sunday OR calendar holiday (ไม่บวก multiplier ซ้ำ); base = daily × fraction × (holiday?2:1); meal = 12000 × fraction เมื่อ approved Work เท่านั้น
 
-OT hourly baht = ROUND_HALF_UP((daily_satang / 100 / 8) × (holiday?3:2)); OT satang = hourly_baht × 100 × hours. คูณหลังปัด hourly เท่านั้น; cases ที่มีเศษต่ำกว่า 1 สตางค์ยัง pending Q-03 ไม่เดาผล final
+OT hourly baht = ROUND_HALF_UP((daily_satang / 100 / 8) × (holiday?3:2)); OT satang = hourly_baht × 100 × hours. คูณหลังปัด hourly เท่านั้น; hours ต้องบวกและเพิ่มทีละ0.5 จึงไม่เกิดเศษต่ำกว่า1สตางค์หลังคูณ hourly บาทเต็ม
 
 Net = sum(LABOR+MEAL+OT approved source) + signed manual adjustments; pending/rejected/cancelled ไม่เข้าผล; payroll total ไม่รวมใน Project Actual อีกครั้ง Missing/overlap rate หรือ policy ห้ามคำนวณ fallback เงียบ
 
@@ -45,7 +45,7 @@ Cost จาก work/OT = **5,635 บาท**; manual payroll adjustment 50 ส�
 | --- | --- | --- |
 | P-17 | entry 09-30 เวลาไทยก่อนเที่ยงคืน; entry 10-01 00:00 | แรกอยู่กันยายน หลังอยู่ตุลาคม; 2026-09-30T17:00:00Z = ตุลาคม ไม่ใช้ UTC month |
 | P-18 | รอบ February 2028/2027 และ December 2026 | จบ 29/28 และข้ามปีถูก; ไม่ hard-code 30 วัน |
-| P-19 | Admin ส่ง Owner 10-01 09:59; Owner approve/lock/pay วันที่ 1 | state ตามลำดับ; Admin response มีแต่ counts/time/status; paid_at จริงภายในวันครบ SLA |
+| P-19 | Admin ปิดเวลา 10-01 09:59 ระบบคำนวณอัตโนมัติ ไม่ต้อง Owner ตรวจเวลา; Owner approve/lock/pay วันที่ 1 | state ตามลำดับ; Admin response มีแต่ counts/time/status; paid_at จริงภายในวันครบ SLA |
 | P-20 | วันที่ 1 เป็นวันหยุด | due date ยังวันที่ 1; electronic transfer; ธนาคาร fail เก็บ incident ไม่ auto PAID |
 | P-21 | after TIME_REVIEWED ส่งเพิ่ม FULL ปกติ 970 | late queue; ยอดเดิมไม่เปลี่ยน; ก่อนจ่าย Owner reopen+revision delta 1090; approved old ledger reversal ครั้งเดียว |
 | P-22 | P-21 หลัง PAID | default target next period delta 1090; original paid run immutable; correction payment ต้อง Owner ระบุแยก |
@@ -61,4 +61,11 @@ Cost จาก work/OT = **5,635 บาท**; manual payroll adjustment 50 ส�
 | P-32 | ระบุ21ก.ย.2026 OT8ชม. แม้ทำถึง22 ลงย้อนหลังวันที่23 | ใช้วันที่21ทั้งรายการ; hourly243 ×8 =1944บาท; ถ้าปิดรอบแล้วเข้าlate queue ไม่ย้ายไปวันที่22 |
 | P-33 | paid amount หลัง deduct มากกว่ายอด base | block สำหรับ Owner review จน policy negative net ยืนยัน; ไม่โอนยอดติดลบอัตโนมัติ |
 
-ผลที่รันจริงและคำสั่งอยู่ [TEST_EVIDENCE](TEST_EVIDENCE.md); P-17–30/P-33 เป็น acceptance specs; P-31/32 ตรวจ arithmetic ได้ในround2 แต่ backendยังNOT_RUN และกรณี OT เศษย่อย/ไม่มีWorkยังเปิดอยู่; ข้อเหล่านี้ ไม่อ้างผ่านระบบที่ยังไม่ได้สร้าง
+ผลที่รันจริงและคำสั่งอยู่ [TEST_EVIDENCE](TEST_EVIDENCE.md); P-17–30/P-33 เป็น acceptance specs; P-31/32 ตรวจ arithmetic ได้ในround2 แต่ backendยังNOT_RUN และกรณี OTไม่มีWorkยังเปิดอยู่; เศษย่อยที่ไม่ใช่0.5ถูกปฏิเสธ; ข้อเหล่านี้ ไม่อ้างผ่านระบบที่ยังไม่ได้สร้าง
+
+| เพิ่มเติมรอบ3 | Input | Expected |
+| --- | --- | --- |
+| P-34 | OTปกติ2.5ชม. rate970 | hourly243 ×2.5 =607.50 บาท |
+| P-35 | OTวันหยุด2.5ชม. rate970 | hourly364 ×2.5 =910 บาท |
+| P-36 | OT2.25/2.1/0/ค่าติดลบ | reject ไม่ปัดเงียบ |
+| P-37 | Admin approveเวลาแล้วปิดเดือน | sourceผ่านครั้งเดียว ระบบคำนวณ Ownerอนุมัติเงิน ไม่มี Owner time approval |

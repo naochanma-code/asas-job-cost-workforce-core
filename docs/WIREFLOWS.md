@@ -1,6 +1,6 @@
 # Wireflow — Web และ LINE
 
-DESIGNED; คำตอบ Owner รอบ2ตาม [ADR-007](adr/007-owner-decisions-m0-r2.md) ใช้กับทุกflow; ใช้ [fixtures](MILESTONE_0.md) เท่านั้น อ้าง MASTER §2–6, §10–11, §14/19; permission ตาม [matrix](PERMISSION_MATRIX.md)
+DESIGNED; คำตอบ Owner รอบ3ตาม [ADR-008](adr/008-admin-review-ot-retention.md) ใช้กับทุกflow; ใช้ [fixtures](MILESTONE_0.md) เท่านั้น อ้าง MASTER §2–6, §10–11, §14/19; permission ตาม [matrix](PERMISSION_MATRIX.md)
 
 ## กฎร่วมทุกช่องทาง
 
@@ -38,11 +38,11 @@ flowchart TD
 | W-03 Project detail | Overview → Time & OT / Expenses / Budget vs Actual / Activity; Jobs tab เมื่อมีงานย่อย | empty state บอกเพิ่มทีม/เริ่มลงงาน ไม่บังคับสร้าง Job |
 | W-04 Budget (Owner) | Owner ตั้งหมวด/ยอด → draft version → อนุมัติ baseline → version ใหม่เมื่อแก้ | Admin/PM ไม่มีหน้า Budget; Job allocation ยังเป็น proposal Q-05 |
 | W-05 Assignment | Project → เลือกช่าง → มอบหมายระดับ Project → ระบุ Job เฉพาะเมื่อจำเป็น | ช่างถูกถอนสิทธิ์ draft ต้องตรวจใหม่; ห้ามเลือก Job ต่าง Project |
-| W-06 ตรวจรายการ | Admin ตรวจวัน/OT; Owner ตรวจ Expense ดูภาพจริง แก้ยอดพร้อมเหตุผล แล้วอนุมัติ/ปฏิเสธ | Admin/PM ไม่รับยอด/description/receipt URL ของexpense; ก่อนอนุมัติไม่เป็น Actual |
-| W-07 Dashboard | Admin/PM เห็น headcount, distinct employee/date, man-days, OT; Owner เห็น Budget/Actual และ drill-down | เงินทุกประเภท Owner-only; pending ไม่รวม Actual; Payroll ไม่บวกซ้ำ |
+| W-06 ตรวจรายการ | Admin ตรวจวัน/OT และ Expense ดูรูป แก้จำนวน/รายละเอียด/เงิน/รูปพร้อมเหตุผล แล้วอนุมัติ/ปฏิเสธ | Admin รับข้อมูลexpenseรายรายการได้; PM ไม่รับยอด/description/receipt URL; ก่อนอนุมัติไม่เป็น Actual |
+| W-07 Dashboard | Admin/PM เห็น headcount, distinct employee/date, man-days, OT; Owner เห็น Budget/Actual และ drill-down | ยอดรวมโครงการและค่าแรง Owner-only; Adminเห็นเงินexpenseรายรายการ; pending ไม่รวม Actual; Payroll ไม่บวกซ้ำ |
 | W-08 หลักฐาน (Owner) | เลือกเดือน → ดู approved expenses รวมทุกProject → เปิดภาพ/PDF → ดาวน์โหลด ZIP แตกเป็น folder เดือน/Project/Job | ไม่ให้ Admin/PM เข้าหน้านี้; ต้นแบบใช้ไฟล์ที่เลือกในmemory; storageจริง/restoreยังNOT_RUN |
-| W-09 Admin ปิดเวลา | ข้อผิดปกติ → แก้/ตรวจวันกับ OT → วันที่ 1 ไม่เกิน 10:00 ส่ง Owner ตรวจ → TIME_REVIEWED | ไม่มีข้อมูลเงินใน API/export; rate หายแสดงเพียง Owner ต้องตรวจ; late เข้าคิวแยก |
-| W-10 Owner สรุปค่าจ้าง | ข้อผิดปกติ → rate มีผล/วัน/OT → คำนวณ snapshot → เพิ่มหักพร้อมเหตุผล → สรุป → approve → lock → บันทึกโอน | rate/policy ขาดหรือซ้อน block; ก่อนจ่าย reopen สร้าง revision; หลังจ่าย late ปรับรอบถัดไป |
+| W-09 Admin ปิดเวลา | ข้อผิดปกติ → แก้/ตรวจวันกับ OT → วันที่ 1 ไม่เกิน 10:00 ปิดข้อมูลเวลา → TIME_REVIEWED → ระบบคำนวณอัตโนมัติ → OWNER_REVIEW เฉพาะเงิน ไม่ตรวจเวลาซ้ำ | ไม่มีข้อมูลเงินใน API/export; rate หายแสดงเพียง Owner ต้องตรวจ; late เข้าคิวแยก |
+| W-10 Owner สรุปค่าจ้าง | ระบบคำนวณ snapshot จากเวลาที่Adminอนุมัติ → Ownerตรวจrate/ยอดและเพิ่มหักพร้อมเหตุผล (ไม่ตรวจเวลาซ้ำ) → สรุป → approve → lock → บันทึกโอน | rate/policy ขาดหรือซ้อน block; ก่อนจ่าย reopen สร้าง revision; หลังจ่าย late ปรับรอบถัดไป |
 | W-11 Group binding | Project → สร้างรหัส single use/expiry → ผู้มีสิทธิ์ส่งในกลุ่ม → ตรวจและผูก → Activity | หมดอายุ/ใช้แล้ว/กลุ่มมี Project active ไม่ rebind เงียบ; ยกเลิกพร้อม audit |
 | W-12 Settings | Owner/Admin ดูหมวด Job Type ปฏิทินตามสิทธิ์ → เพิ่ม/rename/reorder/disable | code ที่ใช้แล้วไม่เปลี่ยนความหมาย; rate/policy เฉพาะ Owner; snapshot เก่าคงเดิม |
 
@@ -54,8 +54,8 @@ flowchart TD
 | --- | --- | --- |
 | L-01 งานของฉัน | รายการ Project ที่ได้รับมอบหมาย → รายละเอียดวัน/ทีม/งานย่อยถ้ามี → เริ่มลงรายการ | Project A ใช้งานได้ทันที; closed แสดงประวัติแต่ลงใหม่ไม่ได้ |
 | L-02 ลงวันทำงาน | Project → วันที่ → เต็มวัน/เช้า/บ่าย → สรุป → ส่งตรวจ | ทำ2Projectวันเดียวเลือกเช้าA/บ่ายB อย่างละ0.5วัน; รวม1วัน/ค่ากินตามครึ่งวันเดิม; ป้องกันช่วงวันซ้ำ |
-| L-03 ลง OT | Project → วันที่ย้อนหลังได้ → จำนวนชั่วโมง → เหตุผล → สรุป → ส่งตรวจ | เช่น21ก.ย.8ชม. แม้ถึง22ก็คิดตาม21ทั้งรายการ ไม่บังคับเวลาเริ่ม/จบ; หลังปิดเวลาเข้าlate path |
-| L-04 ส่งค่าใช้จ่าย | Project → วันที่ → หมวด9ประเภท → ยอด/รายละเอียด → เลือกภาพหรือPDF1–5ไฟล์ → preview → แก้/ลบ/เพิ่ม → สรุป → ส่งOwnerตรวจ | PENDING_REVIEW; ไม่มีOCR; file limit10MB; LABOR/OTคำนวณจากเวลา ไม่ส่งexpenseซ้ำ |
+| L-03 ลง OT | Project → วันที่ย้อนหลังได้ → จำนวนชั่วโมงทีละ0.5 เช่น2.5 (ไม่รับเศษนาที) → เหตุผล → สรุป → ส่งตรวจ | เช่น21ก.ย.8ชม. แม้ถึง22ก็คิดตาม21ทั้งรายการ ไม่บังคับเวลาเริ่ม/จบ; หลังปิดเวลาเข้าlate path |
+| L-04 ส่งค่าใช้จ่าย | Project → วันที่ → หมวด9ประเภท → ยอด/รายละเอียด → เลือกภาพหรือPDF1–5ไฟล์ → preview → แก้/ลบ/เพิ่ม → สรุป → ส่งAdminตรวจ | PENDING_REVIEW; ไม่มีOCR; file limit10MB; LABOR/OTคำนวณจากเวลา ไม่ส่งexpenseซ้ำ |
 | L-05 ตรวจสถานะของฉัน | รายการตนเอง → filter รอตรวจ/อนุมัติ/ไม่ผ่าน → รายละเอียดและเหตุผล → แก้เป็น revision เมื่อได้รับสิทธิ์ | เห็นสถานะวัน/OT/expense ของตน ไม่เห็นค่าจ้างหรือยอด Project |
 
 Expense summary A แสดง Project, วันที่, หมวด, 500.00 บาท, รายละเอียด, จำนวนไฟล์ และปุ่มยืนยัน ไม่แสดงบรรทัด Job; B แสดง Job เฉพาะที่เลือกจริง

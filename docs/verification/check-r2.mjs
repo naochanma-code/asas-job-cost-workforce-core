@@ -20,7 +20,7 @@ const png=new Uint8Array(Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HA
 check('signature sniff rejects renamed text',()=>{assert.equal(M.mime(png)[0],'image/png');assert.throws(()=>M.mime(new TextEncoder().encode('not a png')));});
 const attachment={bytes:png,ext:'png'};
 const expense={id:'DEMO-001',kind:'expense',sender:'DEMO-T1',date:'2026-09-21',project:'A',job:null,category:'FUEL',amount:50000,status:'APPROVED',attachments:[attachment,attachment],note:'price 500',rate:97000};
-check('Admin PM denied expense/receipt; Owner and own TECH allowed',()=>{for(const role of ['ADMIN','PM'])assert.equal(M.canSeeExpense(role,'DEMO-T1',expense),false);assert.equal(M.canSeeExpense('OWNER','x',expense),true);assert.equal(M.canSeeExpense('TECH','DEMO-T1',expense),true);assert.equal(M.canSeeExpense('TECH','DEMO-T2',expense),false);});
+check('Admin item expense allowed, PM denied; Owner and own TECH allowed',()=>{assert.equal(M.canSeeExpense('ADMIN','DEMO-T1',expense),true);assert.equal(M.canSeeExpense('PM','DEMO-T1',expense),false);assert.equal(M.canSeeExpense('OWNER','x',expense),true);assert.equal(M.canSeeExpense('TECH','DEMO-T1',expense),true);assert.equal(M.canSeeExpense('TECH','DEMO-T2',expense),false);});
 check('time projection omits amounts, note, rate and attachment bytes',()=>{const r=M.timeProjection({...base,amount:97000,rate:97000,note:'salary970',attachments:[attachment]});for(const key of ['amount','rate','note','attachments'])assert.ok(!(key in r));});
 check('nine expense types; labour/OT not entered twice',()=>{assert.equal(M.categories.length,9);assert.equal(new Set(M.categories.map(c=>c[0])).size,9);assert.ok(!M.categories.some(c=>['LABOR','OT'].includes(c[0])));});
 const rows=[expense,{...expense,id:'DEMO-002',project:'B',job:'B1',amount:130000,attachments:[attachment]}, {...expense,id:'DEMO-003',status:'PENDING_REVIEW'}, {...expense,id:'DEMO-004',date:'2026-10-01'}];
@@ -29,8 +29,9 @@ check('monthly folder includes 3 approved files and one expense register only',(
 check('ZIP CRC known vector / traversal rejected',()=>{assert.equal(M.crc32(new TextEncoder().encode('123456789')),0xcbf43926);assert.throws(()=>M.zip([{name:'../outside.png',data:png}]));});
 check('three distinct Owner accounts are selectable',()=>{const html=fs.readFileSync(path.join(root,'docs/prototype/index.html'),'utf8');for(const id of ['DEMO-OWNER-1','DEMO-OWNER-2','DEMO-OWNER-3'])assert.ok(html.includes(id));});
 check('prototype UI parses',()=>new vm.Script(fs.readFileSync(path.join(root,'docs/prototype/ui.js'),'utf8')));
+check('half-hour OT and exact calculation',()=>{for(const h of [0.5,2,2.5,8])assert.equal(M.validOtHours(h),true);for(const h of [0,-1,2.25,2.1,NaN,Infinity]){assert.equal(M.validOtHours(h),false);assert.throws(()=>M.amount({kind:'ot',date:'2026-09-21',hours:h}));}assert.equal(M.amount({kind:'ot',date:'2026-09-21',hours:2.5}),60750);assert.equal(M.amount({kind:'ot',date:'2026-09-27',hours:2.5}),91000);});
 const folder=fs.mkdtempSync(path.join(os.tmpdir(),'asas-m0-r2-'));
 fs.writeFileSync(path.join(folder,'sample.png'),png);
 fs.writeFileSync(path.join(folder,'invalid.png'),'this is not an image');
 fs.writeFileSync(path.join(folder,'evidence.zip'),zip);
-process.stdout.write(JSON.stringify({scope:'M0-R2 prototype contracts, synthetic files only',checks:results.length,results,temporaryFixtureDirectory:folder},null,2)+'\n');
+process.stdout.write(JSON.stringify({scope:'M0-R3 prototype contracts, synthetic files only',checks:results.length,results,temporaryFixtureDirectory:folder},null,2)+'\n');

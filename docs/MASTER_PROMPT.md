@@ -1,4 +1,4 @@
-# ASAS Job Cost & Workforce Core — Master Prompt v2.3
+# ASAS Job Cost & Workforce Core — Master Prompt v2.4
 
 วันที่จัดทำ: 21 กันยายน 2026  
 เจ้าของผลิตภัณฑ์: โอ๋ / ASAS IT Co., Ltd.  
@@ -6,13 +6,13 @@
 
 สถานะเอกสาร: Canonical product specification — ใช้ฉบับนี้เป็นข้อกำหนดกลางเพียงฉบับเดียว
 
-## 0. คำตอบ Owner รอบ 2 — 21 กันยายน 2026
+## 0. คำตอบ Owner รอบ 3 — 21 กันยายน 2026
 
-ข้อกำหนด v2.3 ตาม [ADR-007](adr/007-owner-decisions-m0-r2.md) ใช้แทนข้อความ v2.2 ที่ให้ Admin/PM เห็นเงินหรืออนุมัติ Expense: Admin/PM เห็นเฉพาะคน วันเข้างาน วันทำงานและชั่วโมง OT ไม่เห็นเงินทุกประเภทหรือรูปบิล; Owner ดู/ตั้งงบ ตรวจยอด/อนุมัติค่าใช้จ่าย และดูหลักฐานรายเดือน รองรับ Owner หลายบัญชีสำหรับหุ้นส่วน3คน มี audit แยกผู้ทำ ไม่มีการบังคับอนุมัติร่วม3คน
+ข้อกำหนด v2.4 ตาม [ADR-008](adr/008-admin-review-ot-retention.md): Admin ตรวจ แก้ไข และอนุมัติค่าใช้จ่ายรายรายการได้ รวมจำนวน รายละเอียด เงิน และรูป แต่ไม่เห็นยอดรวมต้นทุน/ยอดใช้ไปของโครงการ อัตราค่าแรงหรือ Payroll; PM ยังไม่เห็นเงินหรือรูปบิล รองรับ Owner หลายบัญชีสำหรับหุ้นส่วน3คน มี audit แยกผู้ทำ ไม่บังคับอนุมัติร่วม3คน วัน/OT ที่ Admin อนุมัติผ่านทันที ไม่ส่ง Owner ตรวจเวลาอีก ระบบคำนวณเมื่อปิดเวลา Owner ตรวจเฉพาะยอดจ่าย OT ต้องเป็นจำนวนบวกเพิ่มทีละ0.5ชั่วโมง เช่น2.5 ไม่รับเศษนาที
 
 OT ใช้วันที่เลือกและจำนวนชั่วโมง ลงย้อนหลังได้ แม้คาบเกี่ยววันที่ถัดไปก็ไม่แยกคิดเพิ่ม; ใช้ rate/calendar ของวันที่เลือกทั้งรายการ การลงหลังปิดข้อมูลยังใช้ late adjustment ทำสอง Project ในวันเดียวแบ่งครึ่งวันต่อ Project รวม1วัน/ค่ากิน120ตาม baseline Project ไม่มี Job เป็น flow ปกติ เพิ่ม Job ได้ภายหลัง
 
-Owner ต้องการดูค่าใช้จ่ายรายเดือนและ ZIP ที่แตกเป็น folder ของรูปบิล/ใบเสร็จ/สลิปค่าใช้จ่ายทั้งเดือน ใช้ SMEMOVE แยก ไม่เชื่อม API ใน M0; ไม่ได้อนุมัติการลบหลักฐานหรือกำหนด retention ใหม่
+Owner ต้องการดูค่าใช้จ่ายรายเดือนและ ZIP ที่แตกเป็น folder ของรูปบิล/ใบเสร็จ/สลิปค่าใช้จ่ายทั้งเดือน ใช้ SMEMOVE แยก ไม่เชื่อม API ใน M0; Owner ยืนยันเก็บหลักฐาน2ปี; ใน M0 ปรับเอกสารเท่านั้น ไม่ลบไฟล์จริง
 
 ## 1. คำสั่งหลัก
 
@@ -32,7 +32,7 @@ Owner ต้องการดูค่าใช้จ่ายรายเด�
 
 เป้าหมายของ Release แรกคือพิสูจน์ว่าเส้นทางนี้ใช้จริงได้ครบวงจร:
 
-`Admin สร้าง Project → Owner ตั้ง Budget → เพิ่ม Site/Job เฉพาะเมื่อจำเป็น → มอบหมายช่าง → ช่างลงงาน/OT/ค่าใช้จ่ายผ่าน LINE → Admin ตรวจวัน/OT และ Owner ตรวจค่าใช้จ่าย → ระบบลง Actual Cost ครั้งเดียว → Owner ดู Budget vs Actual → ปิดรอบและคำนวณ Payroll จากข้อมูลที่อนุมัติแล้ว`
+`Admin สร้าง Project → Owner ตั้ง Budget → เพิ่ม Site/Job เฉพาะเมื่อจำเป็น → มอบหมายช่าง → ช่างลงงาน/OT/ค่าใช้จ่ายผ่าน LINE → Admin ตรวจวัน/OT และค่าใช้จ่าย → ระบบลง Actual Cost ครั้งเดียว → Owner ดู Budget vs Actual → ปิดรอบและคำนวณ Payroll จากข้อมูลที่อนุมัติแล้ว`
 
 ## 2. ปัญหาที่ต้องแก้จากระบบเดิม
 
@@ -159,9 +159,9 @@ Bot ต้องสรุปข้อมูลกลับมาให้ผู�
 หลักฐาน: 1 รูป
 ```
 
-มีปุ่ม `ยืนยันส่งตรวจ`, `แก้ไข`, `ยกเลิก` หลังยืนยัน สถานะเป็น `รอตรวจ` และยังไม่เป็น Actual Cost จน Owner อนุมัติ Owner แก้ประเภท วันที่ ยอด และรายละเอียดได้ โดยระบบเก็บค่าก่อนแก้ ผู้แก้ เวลา และเหตุผล
+มีปุ่ม `ยืนยันส่งตรวจ`, `แก้ไข`, `ยกเลิก` หลังยืนยัน สถานะเป็น `รอตรวจ` และยังไม่เป็น Actual Cost จน Admin หรือ Owner อนุมัติ ผู้ตรวจแก้ประเภท วันที่ จำนวน/หน่วย ยอด รายละเอียด และรูปได้ โดยระบบเก็บค่าก่อนแก้ ผู้แก้ เวลา และเหตุผล
 
-การอนุมัติค่าใช้จ่ายของ Owner ต้องสร้าง Cost Ledger เพียงครั้งเดียว การกดซ้ำ webhook ซ้ำ worker retry หรือเปิดหน้าซ้ำต้องไม่สร้างต้นทุนซ้ำ
+การอนุมัติค่าใช้จ่ายของ Admin/Owner ต้องสร้าง Cost Ledger เพียงครั้งเดียว การกดซ้ำ webhook ซ้ำ worker retry หรือเปิดหน้าซ้ำต้องไม่สร้างต้นทุนซ้ำ
 
 ### 3.4 LINE group ต่อ Project
 
@@ -181,7 +181,7 @@ Bot ต้องสรุปข้อมูลกลับมาให้ผู�
 | บทบาท | ความสามารถ |
 | --- | --- |
 | OWNER | เห็นและจัดการทุก Opportunity/Project/Job, Budget, Actual, Profit/Margin, อัตราค่าจ้าง, Payroll, การตั้งค่า และ Audit; เป็นผู้อนุมัติ/lock รอบค่าจ้าง |
-| ADMIN | จัดการ master data, Project/Job, ทีม และตรวจวันทำงาน/OT; เห็นจำนวนคน วันเข้างาน จำนวนวันและชั่วโมงเท่านั้น ไม่เห็น Budget, Expense amount, ค่าแรง, Payroll หรือภาพบิล/สลิป |
+| ADMIN | จัดการ master data, Project/Job, ทีม และตรวจวัน/OT; ตรวจ แก้ไข อนุมัติจำนวน รายละเอียด เงิน และรูปค่าใช้จ่ายรายรายการได้ ไม่เห็น Budget, Actual/ยอดใช้ไปรวม, ค่าแรงหรือ Payroll |
 | PM | เห็นและจัดการ Project/Job ที่ได้รับมอบหมาย ดูจำนวนคน วันและชั่วโมง OT; ตรวจเวลาเมื่อ Owner เปิด policy ไม่เห็นยอดเงินใดหรือภาพบิล/สลิป |
 | TECH | เห็น Project และ optional Job ที่ได้รับมอบหมาย ส่งและดูสถานะรายการของตน ไม่มีสิทธิ์ดู Budget/Actual รวม ค่าแรง หรือกำไร |
 
@@ -233,7 +233,7 @@ Work Entry และ OT Entry ที่อนุมัติเป็นแห�
 
 ห้ามนำ Payroll total ไปบวก Actual Cost ซ้ำ เพราะต้นทุนแรงงานถูกลงจาก Work/OT แล้ว แต่ละรายการต้องเชื่อมกลับ source เดิมและ policy/rate snapshot ได้
 
-รอบค่าจ้างเป็นวันที่ 1 ถึงวันสุดท้ายของเดือนและต้องโอนเงินไม่เกินวันที่ 1 ของเดือนถัดไป สถานะ `OPEN → TIME_REVIEWED → OWNER_REVIEW → APPROVED → LOCKED → PAID` ช่างต้องส่งวันทำงาน/OT ของวันสุดท้ายภายในวันนั้น Admin ตรวจและปิดข้อมูลเวลาไม่เกิน 10:00 น. วันที่ 1 จากนั้นระบบคำนวณยอดในขอบเขตที่ Admin มองไม่เห็น Owner ตรวจอัตรา รายการเพิ่ม/หัก ยอดสุทธิ อนุมัติ lock และบันทึกการโอนภายในวันที่ 1 การเปิดรอบที่ lock แล้วทำได้เฉพาะ OWNER พร้อมเหตุผล และต้องสร้าง revision/audit ไม่แก้ผลเดิมแบบเงียบ
+รอบค่าจ้างเป็นวันที่ 1 ถึงวันสุดท้ายของเดือนและต้องโอนเงินไม่เกินวันที่ 1 ของเดือนถัดไป สถานะ `OPEN → TIME_REVIEWED → OWNER_REVIEW → APPROVED → LOCKED → PAID` ช่างต้องส่งวันทำงาน/OT ของวันสุดท้ายภายในวันนั้น Admin ตรวจและปิดข้อมูลเวลาไม่เกิน 10:00 น. วันที่ 1 วัน/OT ผ่านแล้วไม่ต้อง Owner ตรวจซ้ำ จากนั้นระบบคำนวณยอดอัตโนมัติในขอบเขตที่ Admin มองไม่เห็น Owner ตรวจอัตรา รายการเพิ่ม/หัก ยอดสุทธิ อนุมัติ lock และบันทึกการโอนภายในวันที่ 1 การเปิดรอบที่ lock แล้วทำได้เฉพาะ OWNER พร้อมเหตุผล และต้องสร้าง revision/audit ไม่แก้ผลเดิมแบบเงียบ
 
 หากข้อมูลวันทำงานหรือ OT มาหลัง `TIME_REVIEWED` ระบบห้ามแก้ยอดที่อนุมัติแล้วแบบเงียบ ต้องสร้าง `LATE_ADJUSTMENT` พร้อมเหตุผลและเลือกว่าจะ reopen รอบก่อนจ่าย หรือยกไปปรับรอบถัดไป หากวันที่ 1 เป็นวันหยุดให้ยังใช้ electronic transfer ภายในวันที่ 1 เป็น default; เหตุขัดข้องของธนาคารต้องบันทึกผู้รับผิดชอบ เวลา และวันที่จ่ายจริง
 
@@ -383,7 +383,7 @@ LINE รองรับ webhook ใน group chats และรับรูป�
 - export แต่ละครั้งมี version, ผู้สร้าง, เวลา, จำนวนไฟล์, ยอดรวม และ checksum; เมื่อข้อมูลแก้ไขให้สร้าง export revision ใหม่และระบุฉบับเดิมว่า superseded
 - มี backup/restore และทดสอบกู้คืนทั้ง metadata กับ binary
 
-Google Drive เป็น optional export mirror ไม่ใช่ source of truth ระบบสามารถสร้าง folder ตามเดือนและส่งสำเนา/manifest ไป Drive เมื่อเชื่อมต่อภายหลัง แต่ Drive ล้ม สิทธิ์หมดอายุ หรือลบไฟล์ ต้องไม่ทำให้ต้นฉบับใน Core หาย การเก็บหลักฐานใช้ default 7 ปีแบบตั้งค่าได้ รอ Owner ยืนยันระยะจริงกับผู้ทำบัญชี/ข้อกำหนดบริษัทก่อน production
+Google Drive เป็น optional export mirror ไม่ใช่ source of truth ระบบสามารถสร้าง folder ตามเดือนและส่งสำเนา/manifest ไป Drive เมื่อเชื่อมต่อภายหลัง แต่ Drive ล้ม สิทธิ์หมดอายุ หรือลบไฟล์ ต้องไม่ทำให้ต้นฉบับใน Core หาย การเก็บหลักฐานใช้ 2 ปีตามคำตอบ Owner รอบ3; วิธีเริ่มนับและ lifecycle ตาม ADR-008 เป็นรายละเอียดออกแบบ ยังไม่รันลบจริง
 
 ## 11. หน้าเว็บ
 
@@ -454,7 +454,7 @@ Google Drive เป็น optional export mirror ไม่ใช่ source of tr
 1. Event เดิมส่งซ้ำ 10 ครั้ง เกิด business record และ Cost Ledger หนึ่งครั้ง
 2. ช่างสองคนส่งข้อความและรูปพร้อมกันในกลุ่มเดียว รูปและยอดไม่สลับกัน
 3. Bot/DB/storage ล้มกลางทางแล้วกลับมาทำต่อได้ ไม่มี success message ลวง
-4. Owner แก้ยอดก่อนอนุมัติ มี before/after/reason ครบ
+4. Admin/Owner แก้รายการก่อนอนุมัติ มี before/after/reason ครบ
 5. Approved expense ถูกนับ Actual หนึ่งครั้ง การยกเลิกสร้าง reversal
 6. TECH และสมาชิกภายนอกดึง Budget, ค่าแรง หรือกำไรผ่าน API/LINE/export ไม่ได้
 7. Project dashboard รวมยอดตรงกับ Cost Ledger และแยก pending ออกจาก actual
@@ -502,7 +502,7 @@ Gate: ข้อมูลหนึ่งรอบจ่ายตัวอย่�
 
 - Typed expense + photo flow
 - Durable inbox/worker/outbox
-- Owner review ค่าใช้จ่ายและ Cost Ledger
+- Admin/Owner review ค่าใช้จ่ายและ Cost Ledger
 
 Gate: ผ่าน concurrent group test, failure recovery และ real phone UAT
 
@@ -610,7 +610,7 @@ PROJECT_STATUS ต้องเขียนเป็นภาษาไทยแ�
 - Work entry: FULL/AM/PM
 - Expense status: DRAFT → PENDING_REVIEW → APPROVED/REJECTED/CANCELLED
 - Work/OT status: DRAFT → SUBMITTED → APPROVED/REJECTED/CANCELLED
-- Reviewer วัน/OT เริ่มต้น: ADMIN หรือ OWNER; PM ตรวจเวลาได้เฉพาะ Project ที่ได้รับมอบหมายเมื่อ Owner เปิด policy; Expense/Budget reviewer คือ OWNER เท่านั้น
+- Reviewer วัน/OT เริ่มต้น: ADMIN หรือ OWNER; PM ตรวจเวลาได้เฉพาะ Project ที่ได้รับมอบหมายเมื่อ Owner เปิด policy; Expense reviewer คือ ADMIN/OWNER; Budget reviewer คือ OWNER เท่านั้น
 - Faa เป็น Admin หลักในงานจริง แต่สิทธิ์ต้องผูกกับบัญชีที่ยืนยันแล้ว ไม่ผูกจากชื่อเพียงอย่างเดียว
 - รอบค่าจ้าง: วันที่ 1 ถึงวันสุดท้ายของเดือน และโอนเงินไม่เกินวันที่ 1 ของเดือนถัดไป; ฟ้า/Admin ปิดตรวจวัน/OT ภายใน 10:00 น. วันที่ 1 โดยไม่เห็นจำนวนเงิน และ OWNER กรอกอัตรารายวัน เห็นยอด อนุมัติ/lock/บันทึกจ่ายภายในวันเดียวกัน
 - ค่าแรง: full day 1.0, half day 0.5, Sunday/holiday work 2.0 ตามสัดส่วนวัน
@@ -621,7 +621,7 @@ PROJECT_STATUS ต้องเขียนเป็นภาษาไทยแ�
 - External LINE group members ไม่เห็นยอดรวม Project หรือข้อมูลค่าจ้าง
 - Receipt image เป็นหลักฐาน; typed amount เป็นข้อมูลตั้งต้น
 - Core private storage เป็นแหล่งหลัก; monthly accounting export และ optional Drive mirror เป็นสำเนา
-- ระยะเก็บหลักฐาน default 7 ปีแบบ configurable รอยืนยันผู้ทำบัญชีก่อน production
+- ระยะเก็บหลักฐาน 2 ปีตาม ADR-008; M0 ไม่มีการลบจริง
 
 ## 18. ข้อตกลงที่ยืนยันแล้วก่อนใช้เงินจริง
 
@@ -638,7 +638,7 @@ PROJECT_STATUS ต้องเขียนเป็นภาษาไทยแ�
 
 เริ่ม Milestone 0 เท่านั้น สร้าง repository กลางและใส่ Master Prompt ฉบับนี้เป็น `docs/MASTER_PROMPT.md` ก่อน จากนั้นจัดทำ wireflow, state diagrams, data dictionary, permission matrix, architecture decision records, Payroll calculation examples, accounting evidence export specification และ pilot acceptance script ใช้ข้อมูลสมมติที่ทำเครื่องหมายชัดเจน ห้าม deploy production หรือเชื่อม LINE OA จริงใน milestone นี้
 
-เมื่อเอกสารและ clickable prototype พร้อม ให้ Owner ตรวจ task จริง 7 งาน ได้แก่ ดูงานของฉัน, ลงวันทำงาน, ลง OT, ส่งค่าใช้จ่ายพร้อมรูป, Admin ตรวจเวลา และ Owner ตรวจค่าใช้จ่าย/ดู Budget vs Actual, เปิดหลักฐานบัญชีรายเดือน และตรวจรอบค่าจ้าง จากนั้นปรับ flow ให้ผ่านก่อนเริ่ม Milestone 1
+เมื่อเอกสารและ clickable prototype พร้อม ให้ Owner ตรวจ task จริง 7 งาน ได้แก่ ดูงานของฉัน, ลงวันทำงาน, ลง OT, ส่งค่าใช้จ่ายพร้อมรูป, Admin ตรวจเวลา และค่าใช้จ่าย; Owner ดู Budget vs Actual, เปิดหลักฐานบัญชีรายเดือน และตรวจรอบค่าจ้าง จากนั้นปรับ flow ให้ผ่านก่อนเริ่ม Milestone 1
 
 ## แหล่งอ้างอิง LINE ที่ต้องตรวจซ้ำเมื่อเริ่ม implementation
 

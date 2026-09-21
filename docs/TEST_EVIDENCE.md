@@ -1,6 +1,27 @@
 # Test Evidence — Milestone 0
 
-## ผลตรวจรอบ2 — M0-R2-2026-09-21
+## ผลตรวจรอบ3 — M0-R3-2026-09-21
+
+คำตัดสินปัจจุบัน ADR-008 / MASTER v2.4; ผลรอบ2ด้านล่างเป็นประวัติ โดยเฉพาะการห้ามAdminเห็นexpenseและขั้นOwnerคำนวณถูกแทนที่แล้ว
+
+- node docs/verification/check-m0.mjs: 24/24 PASS
+- node docs/verification/check-r2.mjs (อัปเดตcontractเป็นR3): 14/14 PASS ดู [r3-check-results.json](verification/r3-check-results.json); OT2.5=60750สตางค์ปกติ/91000วันหยุด; reject2.25/2.1/0/negative/NaN/Infinity; Adminexpenseallow/PMdeny; projectionไม่ส่งค่าแรง
+- pwsh -NoProfile -File docs/verification/check-zip.ps1: PASS; .NETอ่าน4entries,3รูปbytesตรง,2expenseรวม180000สตางค์ (Windows PowerShellตัวเก่าปฏิเสธscriptตามexecution policy จึงใช้pwshที่มีอยู่ โดยไม่เปลี่ยนpolicy)
+- git diff --check PASS; ภาพPNG1x1สมมติอยู่OS temp ไม่เพิ่มภาพลงGit
+
+| Browser case | ผลที่ตรวจจริงผ่านlocalhost4174 |
+| --- | --- |
+| R3-B01 | OT2.25มีstepMismatch;2.5ส่งได้ ProjectAไม่ถามJob |
+| R3-B02 | AdminapproveOTและเต็มวัน → APPROVED; ปิดเวลาระบบเข้าOWNER_REVIEWอัตโนมัติ Adminเห็น1คน/1วัน/OT2.5ไม่มีเงิน |
+| R3-B03 | Ownerเปิดสรุปพบ1697.50 (work1090+OT607.50) พร้อมปุ่มอนุมัติสรุป ไม่มีปุ่มคำนวณหรืออนุมัติเวลาซ้ำ |
+| R3-B04 | ช่างเลือกPNGส่งexpense500 → Adminเห็นยอด/รูปและเปิดแก้ได้; ลบรูปแล้วยกเลิก รูปต้นฉบับยังโหลดnaturalWidth1 |
+| R3-B05 | Adminแก้เป็น2ชิ้น/550/รายละเอียดใหม่/เหตุผล พร้อมลบและเลือกภาพใหม่ → บันทึกยังรอตรวจ แล้วapproveได้ ไม่มีต้นทุนรวม/ค่าแรง/เมนูZIP |
+| R3-B06 | PMที่ProjectBมีเฉพาะงาน/กำลังคน ไม่มีเมนูเงิน; helper testยืนยันไม่เห็นexpenseแม้senderตรง |
+
+Auditก่อน/หลัง/actor/time/reasonเก็บในหน่วยความจำตามcode ยังไม่มีหน้าตรวจauditหรือpersistent audit ทดสอบอายุไฟล์2ปีเป็นspecเท่านั้น ไม่มีlifecycleทำงานจริง ไม่มีbackendsecurity/integration/OwnerUAT/deploy/LINEจริง
+
+
+## ประวัติผลตรวจรอบ2 — M0-R2-2026-09-21
 
 Artifact commit: `5f96422eb23151022c789441deb83a4c7eeb3312`; fetch/rebase origin/main แล้ว up to date ไม่มี conflict Commit บันทึก provenance ถัดมาปรับเฉพาะเอกสาร ไม่เปลี่ยนต้นแบบที่ทดสอบ
 

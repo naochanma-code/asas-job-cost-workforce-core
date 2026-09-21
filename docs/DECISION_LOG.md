@@ -60,3 +60,7 @@
 ดู [ADR-007](adr/007-owner-decisions-m0-r2.md): Admin/PM ไม่เห็นเงินทุกประเภทและรูปบิล; Ownerหลายบัญชีสำหรับหุ้นส่วน3คน; Expense/BudgetตรวจโดยOwner; Projectไม่มีJobเป็นปกติ; OTdate+hoursย้อนหลังได้ไม่แยกเที่ยงคืน; สองProjectต่อวันแบ่งครึ่ง; Ownerดูค่าใช้จ่ายรายเดือนและfolderหลักฐาน; SMEMOVEแยก; Ownerเตรียมpilotภายหลัง
 
 ใช้แทนข้อเสนอnon-pay visibilityของ D-008 และปรับ MASTER เป็นv2.3/PAYROLL_POLICY/schema/permissionตามคำตอบโดยตรง ไม่มีการอนุมัติUAT/deploy หรือกติกาOTเศษย่อย/Job allocation/retentionแทนOwner
+
+## D-010 — คำตอบ Owner รอบ3 (2026-09-21)
+
+Accepted ตาม [ADR-008](adr/008-admin-review-ot-retention.md): Admin ตรวจ แก้ไข และอนุมัติค่าใช้จ่ายรายรายการได้ รวมจำนวน รายละเอียด เงิน และรูป แต่ไม่เห็นยอดรวมต้นทุน/ยอดใช้ไปของโครงการ อัตราค่าแรงหรือ Payroll; PM ยังไม่เห็นเงินหรือรูปบิล; Adminอนุมัติวัน/OTแล้วไม่ส่งOwnerตรวจซ้ำ ปิดข้อมูลเวลาแล้วคำนวณอัตโนมัติ Ownerอนุมัติเงินตามเดิม; OTทีละ0.5ชั่วโมงไม่รับเศษนาที; หลักฐานเก็บ2ปี เป็นM0design/local prototype ไม่มีproductionหรือการลบไฟล์จริง แทนD-009เฉพาะส่วนที่เปลี่ยน

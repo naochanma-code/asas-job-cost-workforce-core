@@ -1,6 +1,6 @@
 # State diagrams และ transition contract
 
-Expense reviewer=OWNER เท่านั้น; ADMIN/PM ไม่มีสิทธิ์เงินหรือภาพบิล ตาม [ADR-007](adr/007-owner-decisions-m0-r2.md). OWNER มีหลายบัญชี audit actor แยกและ transition ต้องป้องกันซ้ำ
+Expense reviewer=ADMIN/OWNER รายรายการ ตาม [ADR-008](adr/008-admin-review-ot-retention.md); Admin ไม่เห็น Project total/Payroll; PM ไม่เห็นเงิน/รูปบิล. OWNER มีหลายบัญชี audit actor แยกและ transition ต้องป้องกันซ้ำ
 
 DESIGNED — ชื่อสถานะจาก MASTER/PAYROLL_POLICY; guards/revision semantics เพิ่มเติมเป็นข้อเสนอ ADR-003/004 ยังไม่ใช่ code หรือ migration
 
@@ -26,18 +26,21 @@ APPROVED ห้ามแก้ยอด/วัน/Job in place; reject แล้
 | Transition | Actor / guard | Transaction และผล |
 | --- | --- | --- |
 | submit | ผู้ส่ง linked + assignment active, Project/Job ถูกต้อง, จำนวน/วันที่ผ่าน, Expense evidence 1–5 READY | source revision + audit + notification intent atomically; pending ไม่มี Cost Ledger |
-| review edit | OWNER สำหรับ Expense; ADMIN/OWNER สำหรับเวลา และ PM ตาม policy/project; reason ทุก field ที่แก้ | before/after แบบตามสิทธิ์, expected_version ป้องกัน overwrite |
-| approve | OWNER สำหรับ Expense หรือผู้ตรวจเวลาตาม scope; ตรวจ source version, rate/policy ที่เกี่ยวข้องครบ | approval + immutable cost components + outbox ใน transaction; rate ขาดไม่อ้าง posted สำเร็จ; Admin เห็น exception code ไม่มีค่าเงินแรงงาน |
+| review edit | ADMIN/OWNER สำหรับ Expense; ADMIN/OWNER สำหรับเวลา และ PM ตาม policy/project; reason ทุก field ที่แก้ | before/after แบบตามสิทธิ์, expected_version ป้องกัน overwrite |
+| approve | ADMIN/OWNER สำหรับ Expense หรือผู้ตรวจเวลาตาม scope; ตรวจ source version, rate/policy ที่เกี่ยวข้องครบ | approval + immutable cost components + outbox ใน transaction; rate ขาดไม่อ้าง posted สำเร็จ; Admin เห็น exception code ไม่มีค่าเงินแรงงาน |
 | cancel approved | reviewer ตาม policy พร้อม reason; ถ้ากระทบ payroll frozen ให้ late/correction queue | reversal ต่อ original cost line เพียงครั้งเดียว; Payroll ไม่ลบตาม ต้อง revision/adjustment ตาม period |
 
 ## Payroll
+
+Admin อนุมัติ Work/OT แล้วผ่านทันที ไม่มี Owner ตรวจเวลาซ้ำ ปิดเวลาแล้ว freeze/คำนวณอัตโนมัติ; OWNER_REVIEW ตรวจเงินเท่านั้น ถ้าคำนวณไม่ผ่านให้แก้สาเหตุ ไม่สร้างคิวอนุมัติเวลาซ้ำ
+
 
 ```mermaid
 stateDiagram-v2
     [*] --> OPEN
     OPEN --> TIME_REVIEWED: Admin/Owner ปิดข้อมูลเวลา
-    TIME_REVIEWED --> OWNER_REVIEW: คำนวณ snapshot สำเร็จ
-    OWNER_REVIEW --> APPROVED: Owner ยืนยัน revision นี้
+    TIME_REVIEWED --> OWNER_REVIEW: ระบบคำนวณ snapshot อัตโนมัติสำเร็จ
+    OWNER_REVIEW --> APPROVED: Owner ยืนยันยอดจ่าย revision นี้
     APPROVED --> LOCKED: Owner lock hash/source set
     LOCKED --> PAID: Owner บันทึกหลักฐานและวันโอน
     TIME_REVIEWED --> OPEN: Owner reopen เป็น revision ใหม่

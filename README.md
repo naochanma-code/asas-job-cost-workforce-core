@@ -19,4 +19,4 @@
 
 เปิด [ต้นแบบ](docs/prototype/index.html) ใน browser หรือรัน `node docs/verification/serve-m0.mjs` แล้วเปิด `http://127.0.0.1:4174/prototype/index.html` ใช้ภาพทดสอบ เลือกไฟล์จากเครื่องได้แต่ไม่ส่ง server และ refresh ล้างข้อมูล
 
-Admin/PM เห็นคน/วัน/ชั่วโมงเท่านั้น Owner3บัญชีดูเงินและดาวน์โหลดfolderบิลรายเดือน (ZIP) รายละเอียด [คำตอบโอ๋](docs/OWNER_QUESTIONS.md) และ [หลักฐานตรวจ](docs/TEST_EVIDENCE.md) ยังไม่ใช่Production/LINEจริง
+Admin ตรวจexpenseรายรายการรวมเงิน/รูปได้ ไม่เห็นต้นทุนรวม/ค่าแรง; PM เห็นคน/วัน/ชั่วโมงเท่านั้น Owner3บัญชีดูเงินและดาวน์โหลดfolderบิลรายเดือน (ZIP) รายละเอียด [คำตอบโอ๋](docs/OWNER_QUESTIONS.md) และ [หลักฐานตรวจ](docs/TEST_EVIDENCE.md) ยังไม่ใช่Production/LINEจริง

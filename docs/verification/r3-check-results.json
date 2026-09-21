@@ -1,0 +1,62 @@
+{
+  "scope": "M0-R3 prototype contracts, synthetic files only",
+  "checks": 14,
+  "results": [
+    {
+      "name": "two projects = one person / attendance day / man-day",
+      "result": "PASS"
+    },
+    {
+      "name": "split work 545+545 =1090, no double meal",
+      "result": "PASS"
+    },
+    {
+      "name": "AM/AM or FULL overlap blocked across projects; AM/PM allowed",
+      "result": "PASS"
+    },
+    {
+      "name": "8h dated21 uses 243x8=1944; date unchanged",
+      "result": "PASS"
+    },
+    {
+      "name": "Sunday date controls entire 8h at364",
+      "result": "PASS"
+    },
+    {
+      "name": "signature sniff rejects renamed text",
+      "result": "PASS"
+    },
+    {
+      "name": "Admin item expense allowed, PM denied; Owner and own TECH allowed",
+      "result": "PASS"
+    },
+    {
+      "name": "time projection omits amounts, note, rate and attachment bytes",
+      "result": "PASS"
+    },
+    {
+      "name": "nine expense types; labour/OT not entered twice",
+      "result": "PASS"
+    },
+    {
+      "name": "monthly folder includes 3 approved files and one expense register only",
+      "result": "PASS"
+    },
+    {
+      "name": "ZIP CRC known vector / traversal rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "three distinct Owner accounts are selectable",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype UI parses",
+      "result": "PASS"
+    },
+    {
+      "name": "half-hour OT and exact calculation",
+      "result": "PASS"
+    }
+  ]
+}

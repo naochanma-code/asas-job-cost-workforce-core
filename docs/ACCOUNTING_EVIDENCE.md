@@ -1,6 +1,6 @@
 # Accounting Evidence Export Specification
 
-DESIGNED; baseline MASTER §10/13, D-003; รายละเอียด revision/schema Proposed ADR-005; Q-06 รอยืนยันเดือน/retention ผู้ใช้ของ spec คือ OWNER หลายบัญชีเท่านั้น (ADMIN/PM ไม่มีสิทธิ์รูปบิลหรือเงิน) ไม่ใช่การ export สรุปค่าจ้าง
+DESIGNED; baseline MASTER §10/13, D-003; รายละเอียด revision/schema Proposed ADR-005; Q-06 เดือนอ้างอิงยังเป็นรายละเอียดออกแบบ; retention2ปียืนยันแล้วตาม ADR-008 ผู้ใช้ของ spec คือ OWNER หลายบัญชีเท่านั้น (Admin เปิดเงิน/รูปexpenseรายรายการที่ตรวจได้ แต่ไม่มี monthly total/ZIP; PM ไม่มีสิทธิ์) ไม่ใช่การ export สรุปค่าจ้าง
 
 ## ขอบเขตรอบ2ที่ Owner ยืนยัน
 
@@ -80,4 +80,10 @@ DEMO-EXPORT-202609-r001.zip
 | E-08 | source ถูกอนุมัติหลัง cutoff, expense_date เดือนก่อน | r001 ไม่เปลี่ยน; r002 จึงรวมและแสดงเวลาที่มาช้า |
 | E-09 | metadata+binary restore เข้า environment ใหม่ | counts, total, hashes, FK และ openability ตรง; ไม่ใช้ Drive เพื่อผ่าน |
 
-M0 มี local ZIP จากไฟล์ทดสอบที่เลือกจริง แต่ไม่มี XLSX/ZIP production หรือข้อมูลจริง; tests E-01–09 ต้องรันกับระบบใน M3–M6 ก่อนอ้างพร้อมบัญชี ระยะเก็บ default 7 ปีรอยืนยัน Owner/บัญชี
+M0 มี local ZIP จากไฟล์ทดสอบที่เลือกจริง แต่ไม่มี XLSX/ZIP production หรือข้อมูลจริง; tests E-01–09 ต้องรันกับระบบใน M3–M6 ก่อนอ้างพร้อมบัญชี ระยะเก็บหลักฐาน2ปีตาม Owner ยืนยันใน ADR-008 ไม่มี lifecycle จริงใน M0
+
+## การเก็บหลักฐาน2ปี
+
+ข้อเสนอเริ่มนับจาก stored_at ของไฟล์แต่ละฉบับ บันทึก retain_until, hash, ผู้กระทำและเหตุการณ์หมดอายุ แยกอายุ binary จาก cost/payroll ledger; ครบอายุรูปไม่ลบยอดหรือประวัติธุรกิจ วิธีจัดการสำเนา backup/exports ต้องออกแบบก่อนproduction ไฟล์ที่ Owner ดาวน์โหลดไปอยู่ในการดูแลของ Owner เอง ไม่มีงานลบไฟล์จริงใน Milestone0
+
+E-10 (DESIGNED): stored_at 2026-09-21 มี retain_until 2028-09-21; การหมดอายุไม่ลบledger; replica/backup lifecycle ตรวจแยกก่อนproduction

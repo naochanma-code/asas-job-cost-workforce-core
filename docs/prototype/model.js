@@ -24,7 +24,9 @@ var M0 = (() => {
       r.sender === candidate.sender && r.date === candidate.date &&
       (r.part === 'FULL' || candidate.part === 'FULL' || r.part === candidate.part));
   }
+  const validOtHours = hours => Number.isFinite(hours) && hours > 0 && Number.isInteger(hours * 2);
   function amount(r) {
+    if (r.kind === "ot" && !validOtHours(r.hours)) throw Error("OT ต้องเพิ่มทีละ 0.5 ชั่วโมง");
     if (r.kind === 'expense') return r.amount;
     // All rate/calendar values below are synthetic fixtures. Work date owns all OT hours.
     const holiday = new Date(r.date + 'T12:00:00Z').getUTCDay() === 0 || r.date === '2026-09-28';
@@ -36,7 +38,7 @@ var M0 = (() => {
       date:r.date, part:r.part, hours:r.hours, status:r.status, late:r.late };
   }
   function canSeeExpense(role, sender, record) {
-    return role === 'OWNER' || (role === 'TECH' && record.sender === sender);
+    return role === 'OWNER' || role === 'ADMIN' || (role === 'TECH' && record.sender === sender);
   }
   function mime(bytes) {
     if (bytes.length >= 8 && [137,80,78,71,13,10,26,10].every((v,i) => bytes[i] === v)) return ['image/png','png'];
@@ -89,5 +91,5 @@ var M0 = (() => {
     entries.push({name:month.replace('-','/')+'/expenses.csv',data:new TextEncoder().encode('\ufeff'+manifest.join('\r\n')+'\r\n')});
     return entries;
   }
-  return {categories,dayFraction,metrics,overlap,amount,timeProjection,canSeeExpense,mime,crc32,zip,archiveEntries};
+  return {validOtHours,categories,dayFraction,metrics,overlap,amount,timeProjection,canSeeExpense,mime,crc32,zip,archiveEntries};
 })();

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-09-21 — M0 รอบ3 (ADR-008)
+
+- Admin ตรวจแก้จำนวน/รายละเอียด/เงิน/รูปexpenseรายรายการพร้อมประวัติ ไม่เห็นProject total/Payroll; PMยังไม่เห็นเงิน
+- Adminapproveวัน/OTผ่านครั้งเดียว ปิดเดือนระบบคำนวณ Ownerตรวจเฉพาะเงิน
+- OTบวกทีละ0.5 ปฏิเสธเศษนาที; หลักฐานเก็บ2ปีเป็นdesign ไม่มีการลบจริง
+- ปรับMASTERv2.4, schema/dictionary, permission, wireflow/state, payrollcases, export/pilot และOWNER_QUESTIONSเป็นภาษาตรงไปตรงมา
+- ตรวจlocal 24 baseline +14 contract checks, ZIP reader และbrowser6กรณีผ่าน; ไม่เริ่มProduction/LINE/deploy
+
 ## 2026-09-21 — Milestone 0 รอบ2ตามคำตอบ Owner
 
 - ยืนยัน Q-01/02/03วันที่/04/05สิทธิ์/06ขอบเขต: Admin/PMไม่มีเงินทุกประเภท, Ownerหลายบัญชีสำหรับหุ้นส่วน3คน, optional Job, OTdate+hoursย้อนหลังไม่แยกวัน, สองProjectแบ่งครึ่ง และfolderหลักฐานรายเดือน
