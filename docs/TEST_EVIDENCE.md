@@ -2,6 +2,8 @@
 
 ## ผลตรวจรอบ3 — M0-R3-2026-09-21
 
+Artifact commit: 2294814994d7a244be1989ffe4cc7f7ee074c13e; fetch/rebase origin/main up to date; commitบันทึกหลักฐานถัดมาปรับเฉพาะเอกสาร
+
 คำตัดสินปัจจุบัน ADR-008 / MASTER v2.4; ผลรอบ2ด้านล่างเป็นประวัติ โดยเฉพาะการห้ามAdminเห็นexpenseและขั้นOwnerคำนวณถูกแทนที่แล้ว
 
 - node docs/verification/check-m0.mjs: 24/24 PASS
