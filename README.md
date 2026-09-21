@@ -21,4 +21,4 @@
 
 Admin ตรวจexpenseรายรายการรวมเงิน/รูปได้ ไม่เห็นต้นทุนรวม/ค่าแรง; PM เห็นคน/วัน/ชั่วโมงและexpenseของตน ทุกบทบาทลงexpenseได้ PM/Admin/Ownerลงเวลาแทนได้ Owner3บัญชีดูเงินและดาวน์โหลดfolderบิลรายเดือน (ZIP) รายละเอียด [คำตอบโอ๋](docs/OWNER_QUESTIONS.md) และ [หลักฐานตรวจ](docs/TEST_EVIDENCE.md) ยังไม่ใช่Production/LINEจริง
 
-Milestone 0: OWNER_ACCEPTED / READY_TO_MERGE ตาม [ผลตรวจรับ](docs/M0_ACCEPTANCE.md) ยังไม่ merge หรือเริ่ม Milestone 1
+Milestone 0: OWNER_ACCEPTED / MERGED ตาม [ผลตรวจรับ](docs/M0_ACCEPTANCE.md) Merge PR#1 เข้า main แล้ว ยังไม่เริ่ม Milestone 1

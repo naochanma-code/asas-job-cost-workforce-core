@@ -72,3 +72,7 @@ PM/Admin/Owner ลงวันทำงานและ OT แทนพนัก�
 ## D-012 — ปิด Milestone 0 (2026-09-21)
 
 Owner ยืนยัน “ยืนยันผ่านทั้ง 7 งาน รวมการแก้ล่าสุดเมื่อทดสอบผ่าน” ในtaskนี้; Codexตรวจ7งานและfeedbackล่าสุดผ่าน ทดสอบ45checksและZIPผ่าน สถานะOWNER_ACCEPTED / READY_TO_MERGE ตาม [M0_ACCEPTANCE](M0_ACCEPTANCE.md) ไม่มีการแต่งassistance/time ของOwner PRพร้อมreviewหลังpush ไม่merge/M1จนOwnerยืนยันใหม่
+
+## D-013 — Owner อนุญาต Merge M0
+
+วันที่2026-09-21 OwnerยืนยันรับMilestone0และสั่งMerge PR#1เข้าmain; merged a7e5c9e08a4d2c8185a12ef65f705a190c243a8d สำเร็จ ตรวจเอกสาร/prototypeครบและ45checks+ZIPผ่าน ยังไม่เริ่มMilestone1 ขอบเขตใน M1_FOUNDATION_PROPOSAL เป็นข้อเสนอเท่านั้น ไม่ได้เปลี่ยนGate MASTER หรืออนุญาตimplementation/deploy/LINEจริง

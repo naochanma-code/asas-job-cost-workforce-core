@@ -1,5 +1,11 @@
 # Test Evidence — Milestone 0
 
+## ตรวจหลัง Merge PR#1
+
+Ownerสั่งmergeแล้ว commit a7e5c9e08a4d2c8185a12ef65f705a190c243a8d; git diff PRhead22b8f32706396cbac31bfb87f77598613b1bc857 กับorigin/main -- AGENTS.md README.md docs ให้exit0 ไม่มีความต่างก่อนเพิ่มบันทึกนี้ เอกสารและprototypeครบ
+
+รันบนcheckoutจากmain: check-m0 24/24, check-r2 14/14, check-r4 7/7, independent.NETZIPreader PASS (4entries/3imagesbyte-match/2expense180000satang) รวม45checks ไม่มีการเปลี่ยนprototype ผลด้านล่างเป็นประวัติก่อนMerge
+
 ## ผลตรวจปิดM0รอบ4 — M0-R4-2026-09-21
 
 สถานะ OWNER_ACCEPTED / READY_TO_MERGE ตาม [M0_ACCEPTANCE](M0_ACCEPTANCE.md); Ownerยืนยันผ่าน7งานและรวมfeedbackล่าสุดเมื่อทดสอบผ่าน คำยืนยันOwnerแยกจากผลCodex ไม่มีการแต่งเวลา/assistanceหรืออ้างreal UAT

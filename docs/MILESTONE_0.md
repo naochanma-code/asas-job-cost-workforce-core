@@ -1,6 +1,6 @@
 # Milestone 0 — ชุดตรวจแบบกระบวนการ
 
-วันที่ 2026-09-21 · Owner ของงานเอกสาร/ต้นแบบ: Codex · สถานะ OWNER_ACCEPTED / READY_TO_MERGE · รอบ4ตาม MASTER v2.5
+วันที่ 2026-09-21 · Owner ของงานเอกสาร/ต้นแบบ: Codex · สถานะ OWNER_ACCEPTED / MERGED · รอบ4ตาม MASTER v2.5
 
 รอบแรกอ่านเอกสารบังคับครบ: AGENTS, MASTER_PROMPT v2.2, PROJECT_STATUS, DECISION_LOG, DATABASE_SCHEMA และ PAYROLL_POLICY จาก main `dd7cbcc2e5379b7fb83c283833332e2710bba936` ก่อนออกแบบ ไม่มี production application, migration, deployment, LINE OA หรือบริการเสียเงินในงานนี้
 
@@ -36,6 +36,6 @@
 
 Prototype แสดงกระบวนการและข้อความเท่านั้น การสลับ role เป็นตัวช่วย review ไม่ใช่ระบบ authentication หรือหลักฐาน permission ฝั่ง server ทุกรายการอยู่ใน memory และล้างเมื่อ refresh ไม่ส่งข้อมูลออกเครือข่าย
 
-Owner ยืนยันผ่านทั้ง7งานรวมfeedbackล่าสุดเมื่อทดสอบผ่านแล้ว; Codex regressionผ่าน ดู [M0_ACCEPTANCE](M0_ACCEPTANCE.md) ปิดเฉพาะgateกระบวนการM0 ไม่ใช่real pilot และยังไม่อนุญาตmerge/M1
+Owner ยืนยันผ่านทั้ง7งานรวมfeedbackล่าสุดเมื่อทดสอบผ่านแล้ว; Codex regressionผ่าน ดู [M0_ACCEPTANCE](M0_ACCEPTANCE.md) ปิดเฉพาะgateกระบวนการM0 ไม่ใช่real pilot OwnerอนุญาตMerge PR#1แล้ว ยังไม่อนุญาตเริ่มM1
 
 รอบ3ตาม [ADR-008](adr/008-admin-review-ot-retention.md): เวลาAdminอนุมัติครั้งเดียว ไม่ส่งOwnerซ้ำ OTทีละ0.5 และหลักฐานเก็บ2ปี

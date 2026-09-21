@@ -1,6 +1,6 @@
 # Milestone 0 — ผลตรวจรับรอบ4
 
-สถานะ OWNER_ACCEPTED / READY_TO_MERGE · วันที่21กันยายน2026 · Session M0-R4-2026-09-21
+สถานะ OWNER_ACCEPTED / MERGED · วันที่21กันยายน2026 · Session M0-R4-2026-09-21
 
 Owner ตอบในtaskนี้ว่า **“ยืนยันผ่านทั้ง 7 งาน รวมการแก้ล่าสุดเมื่อทดสอบผ่าน”** เป็นคำยืนยันการตรวจรับจากOwner ไม่ใช่Codexลงชื่อแทน ผลCodexเป็นregressionแยกด้านล่าง ไม่มีการแต่งเวลาเริ่ม/จบ จำนวนassistance อุปกรณ์ หรือผลสังเกตของOwnerที่ไม่ได้ส่งมา
 
@@ -27,9 +27,9 @@ Windows / Codex in-app browser / localhost4174; ข้อมูลและPNG1x
 
 ไม่มีbackend authentication/persistence/production permission/LINEจริง/เก็บไฟล์2ปีจริง/backup restore การเลือกroleและช่องทางเป็นsimulation ไม่ใช่real UAT ข้อเสนอrequiredJob/budgetallocation/OTไม่มีWorkยังเป็นรายละเอียดออกแบบก่อนimplementation ไม่บล็อกM0processที่Ownerรับแล้ว
 
-การปิดM0อนุญาตให้PRพร้อมreviewเท่านั้น ห้ามmerge เริ่มM1 deploy หรือเปิดLINEจริงจนOwnerสั่งใหม่
+Ownerสั่งMerge PR#1ภายหลังการตรวจรับแล้วและmergeสำเร็จ a7e5c9e08a4d2c8185a12ef65f705a190c243a8d; ยังไม่เริ่มM1/deploy/LINEจริง
 
-Artifactที่ตรวจ cf615b00e97f1d2fdaa71b4501c7c0340d6cc2c3; GitHub PR#1 Ready for review, mergeable=true/clean, merged=false, auto_merge=null ตรวจหลังpush งานยังอยู่branchเดิม รอOwnerสั่งmerge
+Artifactที่ตรวจ cf615b00e97f1d2fdaa71b4501c7c0340d6cc2c3; GitHub PR#1 Ready for review, mergeable=true/clean, merged=false, auto_merge=null ตรวจหลังpush เป็นผลก่อนMerge; Ownerสั่งและmergeสำเร็จแล้ว ดูPROJECT_STATUS
 
 ## ไฟล์ที่เปลี่ยนรอบ4 (28ไฟล์)
 

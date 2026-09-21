@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-09-21 — Merge Milestone 0 เข้า main
+
+- OwnerยืนยันรับM0และสั่งMerge PR#1; merge commit a7e5c9e08a4d2c8185a12ef65f705a190c243a8d (PRhead22b8f32706396cbac31bfb87f77598613b1bc857)
+- ตรวจAGENTS/README/docsบนmainตรงกับPRhead รวมprototypeและADRครบ; หลังmerge45checksและindependentZIPผ่าน
+- อัปเดตPROJECT_STATUSเป็นOWNER_ACCEPTED / MERGED และสถานะสรุปในREADME/MILESTONE_0; เพิ่มข้อเสนอM1_FOUNDATION_PROPOSALเป็นเอกสาร ยังไม่เริ่มM1 ไม่deploy ไม่เชื่อมLINEจริง
+
 ## 2026-09-21 — M0 รอบ4 / ตรวจปิดงาน
 
 Artifact cf615b00e97f1d2fdaa71b4501c7c0340d6cc2c3 pushแล้ว; PR#1 Ready for review (draft=false) GitHubmergeable=true/clean ไม่merge ไม่เปิดauto-merge; commitปิดหลักฐานถัดมาปรับเฉพาะเอกสาร

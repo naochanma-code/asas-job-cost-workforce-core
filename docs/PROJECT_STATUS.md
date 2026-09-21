@@ -2,7 +2,7 @@
 
 2026-09-21 · MASTER v2.5 · M0-R4 · ผู้ดูแลเอกสาร/ต้นแบบ Codex
 
-**Milestone 0: OWNER_ACCEPTED / READY_TO_MERGE**
+**Milestone 0: OWNER_ACCEPTED / MERGED**
 
 Owner ยืนยันผ่านทั้ง7งานรวมfeedbackล่าสุดเมื่อทดสอบผ่านแล้ว ผลแยกรายงานใน [M0_ACCEPTANCE](M0_ACCEPTANCE.md) Codexตรวจซ้ำผ่าน ไม่ใช่การอ้างreal pilotหรือproduction UAT
 
@@ -25,7 +25,7 @@ Owner ยืนยันผ่านทั้ง7งานรวมfeedbackล�
 
 ## Repositoryและการส่งมอบ
 
-Repository naochanma-code/asas-job-cost-workforce-core; branch codex/milestone-0-process-design; PR#1 เปลี่ยนเป็นReady for reviewแล้ว (draft=false); GitHubรายงานmergeable=true/clean และauto_merge=null ไม่มีmerge ไม่มีM1
+Repository naochanma-code/asas-job-cost-workforce-core; Ownerสั่งMerge PR#1จากcodex/milestone-0-process-designเข้าmainแล้ว merge commit a7e5c9e08a4d2c8185a12ef65f705a190c243a8d; ยังไม่เริ่มMilestone1
 
 ฐานก่อนรอบ4: 1ce069297731383c918df2b30b3c06158be1175c; artifactรอบ4ที่ทดสอบ cf615b00e97f1d2fdaa71b4501c7c0340d6cc2c3; หลักฐานใน [TEST_EVIDENCE](TEST_EVIDENCE.md) พร้อมตรวจremote head
 
@@ -37,4 +37,8 @@ OTไม่มีWork, Jobbudgetallocation, เดือนอ้างอิง
 
 ## ขั้นตอนถัดไป
 
-รอOwnerอนุญาตMergeโดยชัดเจน การพร้อมMergeไม่ใช่คำสั่งMerge และไม่เริ่มMilestone1จากการปิดงานครั้งนี้
+รอOwnerอนุมัติขอบเขตและสั่งเริ่มMilestone1แยกต่างหาก ข้อเสนอ [M1_FOUNDATION_PROPOSAL](M1_FOUNDATION_PROPOSAL.md) เป็นเอกสารเท่านั้น ยังไม่มีapplication/migration/environment/LINEจริงของM1
+
+## ตรวจหลังMerge
+
+mainหลังmergeมีAGENTS/README/docsตรงกับPRhead22b8f32706396cbac31bfb87f77598613b1bc857 ไม่มีไฟล์ตกหล่น (git diffเท่ากัน); รัน24+14+7=45checksและindependentZIPผ่าน เอกสารบันทึกผลหลังMergeไม่เปลี่ยนprototypeหรือสูตร
