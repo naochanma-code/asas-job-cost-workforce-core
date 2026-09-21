@@ -20,7 +20,7 @@ const png=new Uint8Array(Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HA
 check('signature sniff rejects renamed text',()=>{assert.equal(M.mime(png)[0],'image/png');assert.throws(()=>M.mime(new TextEncoder().encode('not a png')));});
 const attachment={bytes:png,ext:'png'};
 const expense={id:'DEMO-001',kind:'expense',sender:'DEMO-T1',date:'2026-09-21',project:'A',job:null,category:'FUEL',amount:50000,status:'APPROVED',attachments:[attachment,attachment],note:'price 500',rate:97000};
-check('Admin item expense allowed, PM denied; Owner and own TECH allowed',()=>{assert.equal(M.canSeeExpense('ADMIN','DEMO-T1',expense),true);assert.equal(M.canSeeExpense('PM','DEMO-T1',expense),false);assert.equal(M.canSeeExpense('OWNER','x',expense),true);assert.equal(M.canSeeExpense('TECH','DEMO-T1',expense),true);assert.equal(M.canSeeExpense('TECH','DEMO-T2',expense),false);});
+check('Admin item expense allowed, PM denied; Owner and own TECH allowed',()=>{assert.equal(M.canSeeExpense('ADMIN','DEMO-T1',expense),true);assert.equal(M.canSeeExpense('PM','DEMO-PM',expense),false);assert.equal(M.canSeeExpense('OWNER','x',expense),true);assert.equal(M.canSeeExpense('TECH','DEMO-T1',expense),true);assert.equal(M.canSeeExpense('TECH','DEMO-T2',expense),false);});
 check('time projection omits amounts, note, rate and attachment bytes',()=>{const r=M.timeProjection({...base,amount:97000,rate:97000,note:'salary970',attachments:[attachment]});for(const key of ['amount','rate','note','attachments'])assert.ok(!(key in r));});
 check('nine expense types; labour/OT not entered twice',()=>{assert.equal(M.categories.length,9);assert.equal(new Set(M.categories.map(c=>c[0])).size,9);assert.ok(!M.categories.some(c=>['LABOR','OT'].includes(c[0])));});
 const rows=[expense,{...expense,id:'DEMO-002',project:'B',job:'B1',amount:130000,attachments:[attachment]}, {...expense,id:'DEMO-003',status:'PENDING_REVIEW'}, {...expense,id:'DEMO-004',date:'2026-10-01'}];
@@ -34,4 +34,4 @@ const folder=fs.mkdtempSync(path.join(os.tmpdir(),'asas-m0-r2-'));
 fs.writeFileSync(path.join(folder,'sample.png'),png);
 fs.writeFileSync(path.join(folder,'invalid.png'),'this is not an image');
 fs.writeFileSync(path.join(folder,'evidence.zip'),zip);
-process.stdout.write(JSON.stringify({scope:'M0-R3 prototype contracts, synthetic files only',checks:results.length,results,temporaryFixtureDirectory:folder},null,2)+'\n');
+process.stdout.write(JSON.stringify({scope:'M0-R4 prototype contracts, synthetic files only',checks:results.length,results,temporaryFixtureDirectory:folder},null,2)+'\n');

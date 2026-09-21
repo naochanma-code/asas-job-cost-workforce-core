@@ -35,11 +35,19 @@ var M0 = (() => {
   }
   function timeProjection(r) {
     return { id:r.id, kind:r.kind, sender:r.sender, project:r.project, job:r.job,
-      date:r.date, part:r.part, hours:r.hours, status:r.status, late:r.late };
+      submittedBy:r.submittedBy, sourceChannel:r.sourceChannel, date:r.date, part:r.part, hours:r.hours, status:r.status, late:r.late };
   }
   function canSeeExpense(role, sender, record) {
-    return role === 'OWNER' || role === 'ADMIN' || (role === 'TECH' && record.sender === sender);
+    return role === 'OWNER' || role === 'ADMIN' || (['TECH','PM'].includes(role) && (record.submittedBy || record.sender) === sender);
   }
+  function canSubmitTime(role, actorId, employee, project) {
+    if (!['DEMO-T1','DEMO-T2'].includes(employee)) return false;
+    if (role === 'PM') return project === 'B';
+    if (['ADMIN','OWNER'].includes(role)) return ['A','B'].includes(project);
+    return role === 'TECH' && actorId === employee && ['A','B'].includes(project);
+  }
+  const initialStatus = kind => kind === 'expense' ? 'PENDING_REVIEW' : 'SUBMITTED';
+  const canReviewExpense = role => ['ADMIN','OWNER'].includes(role);
   function mime(bytes) {
     if (bytes.length >= 8 && [137,80,78,71,13,10,26,10].every((v,i) => bytes[i] === v)) return ['image/png','png'];
     if (bytes.length >= 3 && bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255) return ['image/jpeg','jpg'];
@@ -91,5 +99,5 @@ var M0 = (() => {
     entries.push({name:month.replace('-','/')+'/expenses.csv',data:new TextEncoder().encode('\ufeff'+manifest.join('\r\n')+'\r\n')});
     return entries;
   }
-  return {validOtHours,categories,dayFraction,metrics,overlap,amount,timeProjection,canSeeExpense,mime,crc32,zip,archiveEntries};
+  return {canSubmitTime,initialStatus,canReviewExpense,validOtHours,categories,dayFraction,metrics,overlap,amount,timeProjection,canSeeExpense,mime,crc32,zip,archiveEntries};
 })();

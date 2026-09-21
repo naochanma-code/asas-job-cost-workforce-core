@@ -1,6 +1,6 @@
 # Payroll calculation test cases — golden specification
 
-DESIGNED; คำตอบรอบ2ตาม ADR-007: OTอ้างวันที่เลือกไม่แยกข้ามวัน สองProjectแบ่งครึ่ง OWNERหลายบัญชี Adminเห็นexpenseรายรายการได้ แต่ไม่เห็นยอดค่าจ้าง/ต้นทุนรวม; PMไม่เห็นเงิน ตามADR-008; สูตรจาก MASTER §5/5.1/17 และ PAYROLL_POLICY ใช้ข้อมูลสมมติทั้งหมด ไม่ใช่อัตราจริงหรือคำรับรองความถูกต้องตามกฎหมาย การทดสอบใน M0 เป็น arithmetic fixture checks ไม่ใช่ application tests
+DESIGNED; คำตอบรอบ2ตาม ADR-007: OTอ้างวันที่เลือกไม่แยกข้ามวัน สองProjectแบ่งครึ่ง OWNERหลายบัญชี Adminเห็นexpenseรายรายการได้ แต่ไม่เห็นยอดค่าจ้าง/ต้นทุนรวม; PMเห็นเฉพาะexpenseตน ไม่เห็นPayroll ตามADR-009; สูตรจาก MASTER §5/5.1/17 และ PAYROLL_POLICY ใช้ข้อมูลสมมติทั้งหมด ไม่ใช่อัตราจริงหรือคำรับรองความถูกต้องตามกฎหมาย การทดสอบใน M0 เป็น arithmetic fixture checks ไม่ใช่ application tests
 
 ## Oracle และ snapshot
 

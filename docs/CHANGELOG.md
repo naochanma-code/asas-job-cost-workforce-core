@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-09-21 — M0 รอบ4 / ตรวจปิดงาน
+
+- PM/Admin/Owner ลงวันทำงานและ OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ โดยเก็บผู้กรอกแยกจากพนักงาน ทุกบทบาทส่งค่าใช้จ่ายได้ PM เห็นยอดและรูปเฉพาะรายการที่ตนส่ง LINE expense ทุกบทบาทต้องรอ Admin หรือ Owner กดอนุมัติแยกทุกครั้งก่อนเป็น Actual; Web คงขั้นรอตรวจเดิม ไม่มี auto-approve
+- เพิ่มADR-009/D-011 ปรับMASTERv2.5, permissions, schema/audit, wireflow/state, prototype; ตรวจOwnerAcceptanceแยกจากCodex
+- ปิดM0 OWNER_ACCEPTED / READY_TO_MERGE: Ownerยืนยัน7งาน; 45checks+ZIP+browser7งานและfeedbackregressionPASS; แก้ย้อนสรุปแล้วเปลี่ยนพนักงาน/ช่องทางไม่อัปเดตและตรวจซ้ำผ่าน ไม่merge/M1/deploy/LINEจริง
+
 ## 2026-09-21 — M0 รอบ3 (ADR-008)
 
 Artifactที่ตรวจ 2294814994d7a244be1989ffe4cc7f7ee074c13e; บันทึกprovenanceแยกโดยไม่เปลี่ยนต้นแบบ

@@ -1,6 +1,27 @@
 # Test Evidence — Milestone 0
 
-## ผลตรวจรอบ3 — M0-R3-2026-09-21
+## ผลตรวจปิดM0รอบ4 — M0-R4-2026-09-21
+
+สถานะ OWNER_ACCEPTED / READY_TO_MERGE ตาม [M0_ACCEPTANCE](M0_ACCEPTANCE.md); Ownerยืนยันผ่าน7งานและรวมfeedbackล่าสุดเมื่อทดสอบผ่าน คำยืนยันOwnerแยกจากผลCodex ไม่มีการแต่งเวลา/assistanceหรืออ้างreal UAT
+
+Artifactรอบ4: รอบันทึกcommit SHAหลังcommit (ผลรอบก่อนด้านล่างเป็นประวัติ)
+
+| Command/check | Result |
+| --- | --- |
+| node docs/verification/check-m0.mjs | 24/24 PASS: golden arithmetic, calendar, links/fences, syntax, no remote dependencies |
+| node docs/verification/check-r2.mjs | 14/14 PASS: current R4 contract, half days/OT/privacy/category/monthlyZIP |
+| node docs/verification/check-r4.mjs | 7/7 PASS: delegated scope, own expense, role approval, employee overlap, actor projection, pending excluded |
+| pwsh -NoProfile -File docs/verification/check-zip.ps1 | PASS: independent .NETreader4entries/3images byte-for-byte/2expenses180000satang |
+| git diff --check / current canonical review | PASS; latest MASTERv2.5 / ADR-009/D-011/D-012 / status / changelog ตรงกัน |
+
+ผลเครื่องอ่านได้ [m0-closeout-results.json](verification/m0-closeout-results.json) และ [m0-closeout-zip.json](verification/m0-closeout-zip.json) ไม่มีtemp paths/ภาพจริงในGit
+
+Browserทดสอบ U-01–07 ครบ พร้อมลงเวลาแทนของPM/Admin/Ownerและส่งLINEexpenseของทุกrole; ผลรายขั้นและตัวเลข2489/550ใน M0_ACCEPTANCE พบback-from-summaryเลือกพนักงาน/ช่องทางใหม่แล้วยังใช้ค่าเดิม แก้และrerunผ่าน: พนักงานT2 ผู้กรอกADMIN ช่องทางLINE ถูกต้อง pendingก่อนกดapproveแยก
+
+ต้นแบบเท่านั้น: channelจำลอง ไม่ส่งLINE; memory/role switch ไม่ใช่serverpermissions/retention2ปีจริง ไม่มี integration, deployment, realpilot, production readiness ผลประวัติที่เคยห้ามPMเห็นexpenseทุกชนิดถูกแทนที่ด้วยown-expense ruleรอบ4
+
+
+## ประวัติผลตรวจรอบ3 — M0-R3-2026-09-21
 
 Artifact commit: 2294814994d7a244be1989ffe4cc7f7ee074c13e; fetch/rebase origin/main up to date; commitบันทึกหลักฐานถัดมาปรับเฉพาะเอกสาร
 

@@ -7,7 +7,7 @@ const actor=()=>role()==='OWNER'?$('owner').value:role()==='TECH'?sender():'DEMO
 const labels={jobs:'งานของฉัน',work:'ลงวันทำงาน',ot:'ลง OT',expense:'ส่งค่าใช้จ่าย',status:'ตรวจสถานะของฉัน',review:'ตรวจรายการ / กำลังคน',evidence:'ค่าใช้จ่ายรายเดือน / รูปบิล',payroll:'ตรวจรอบค่าจ้าง'};
 let page='jobs', records=[], draft=null, run='OPEN', frozen=[], audit=[], sequence=0, month='2026-09', pickerBusy=false;
 const objectUrls=new Set();
-const allowed=()=>role()==='TECH'?['jobs','work','ot','expense','status']:role()==='OWNER'?['jobs','review','evidence','payroll']:role()==='ADMIN'?['jobs','review','payroll']:['jobs','review'];
+const allowed=()=>['jobs','work','ot','expense','status',...(role()==='OWNER'?['review','evidence','payroll']:role()==='ADMIN'?['review','payroll']:role()==='PM'?['review']:[])];
 function urlFor(bytes,type){const url=URL.createObjectURL(new Blob([bytes],{type}));objectUrls.add(url);return url;}
 function releaseAttachment(f){if(f.committed)return;URL.revokeObjectURL(f.url);objectUrls.delete(f.url);}
 function discardDraft(){if(draft?.attachments)draft.attachments.forEach(releaseAttachment);draft=null;}
@@ -16,7 +16,7 @@ function html(text){$('screen').insertAdjacentHTML('beforeend',text);}
 function button(text,fn,secondary=false){const b=document.createElement('button');b.type='button';b.textContent=text;b.className=secondary?'secondary':'';b.onclick=fn;return b;}
 function actions(...buttons){const d=document.createElement('div');buttons.forEach(b=>d.append(b));$('screen').append(d);}
 function navigate(next){if(draft&&!confirm('มีข้อมูลยังไม่ได้ส่ง ต้องการละทิ้งหรือไม่?'))return;discardDraft();page=next;render();}
-function visible(){return records.filter(r=>r.project===project()&&(role()!=='TECH'||r.sender===sender())).filter(r=>r.kind!=='expense'||M0.canSeeExpense(role(),sender(),r));}
+function visible(){return records.filter(r=>r.project===project()&&(role()!=='TECH'||r.sender===sender())).filter(r=>r.kind!=='expense'||M0.canSeeExpense(role(),actor(),r));}
 function render(){
   if(!allowed().includes(page))page='jobs';
   $('ownerControl').hidden=role()!=='OWNER';$('senderControl').hidden=role()!=='TECH';
@@ -28,8 +28,8 @@ function render(){
 function jobs(){
   html('<h2>งานของฉัน</h2><div class="card"><h3>DEMO-PRJ-'+project()+'</h3><p>'+(project()==='A'?'ดูแลระบบ · มอบหมายระดับโครงการ':'ติดตั้งระบบ · DEMO-SITE-B')+'</p><span class="status">กำลังดำเนินการ</span></div>');
   if(project()==='B')html('<details><summary>ดูงานย่อย</summary><p>DEMO-JOB-B1 · ติดตั้ง<br>DEMO-JOB-B2 · ทดสอบ</p></details>');
-  if(role()==='TECH')actions(button('ลงวันทำงาน',()=>navigate('work')),button('ลง OT',()=>navigate('ot')),button('ส่งค่าใช้จ่าย',()=>navigate('expense')));
-  else html('<p>ดูจำนวนคน วันทำงาน และชั่วโมง OT ได้จากหน้าตรวจรายการ</p>');
+  actions(button('ลงวันทำงาน',()=>navigate('work')),button('ลง OT',()=>navigate('ot')),button('ส่งค่าใช้จ่าย',()=>navigate('expense')));
+  if(role()!=='TECH')html('<p>ดูจำนวนคน วันทำงาน และชั่วโมง OT ได้จากหน้าตรวจรายการ</p>');
 }
 function jobField(){return project()==='B'?'<details><summary>ระบุงานย่อย (เพิ่มเติม)</summary><label>งานย่อย<select id="job"><option value="">บันทึกระดับโครงการ</option><option value="B1">DEMO-JOB-B1 · ติดตั้ง</option><option value="B2">DEMO-JOB-B2 · ทดสอบ</option></select></label></details>':'';}
 function showAttachments(files,target,editable=false){
@@ -46,11 +46,12 @@ function showAttachments(files,target,editable=false){
 }
 function entry(kind,saved=null){
   draft=saved||{kind,attachments:[]};
-  html('<h2>'+labels[kind]+'</h2><p>DEMO-PRJ-'+project()+' · '+esc(sender())+'</p><form id="entryForm"><label>วันที่<input id="date" type="date" required value="'+(saved?.date||'2026-09-21')+'"></label>'+jobField()+
+  html('<h2>'+(saved?.editingId?'แก้ไขค่าใช้จ่าย':labels[kind])+'</h2><p>DEMO-PRJ-'+project()+' · ผู้กรอก '+esc(actor())+'</p><form id="entryForm">'+(kind!=='expense'&&role()!=='TECH'?'<label>พนักงานที่ลงเวลาให้<select id="employee"><option value="DEMO-T1">DEMO-T1</option><option value="DEMO-T2">DEMO-T2</option></select></label>':'')+(kind==='expense'&&!saved?.editingId?'<label>ช่องทางจำลอง<select id="sourceChannel"><option value="WEB">Web</option><option value="LINE">LINE (จำลอง)</option></select></label><p>ทุกรายการรอ Admin หรือ Owner อนุมัติ ไม่อนุมัติอัตโนมัติ</p>':'')+'<label>วันที่<input id="date" type="date" required value="'+(saved?.date||'2026-09-21')+'"></label>'+jobField()+
     (kind==='work'?'<label>ช่วงวัน<select id="part"><option value="FULL">เต็มวัน</option><option value="AM">เช้า (ครึ่งวัน)</option><option value="PM">บ่าย (ครึ่งวัน)</option></select></label><p class="muted">หากไปสองโครงการในวันเดียว ให้ลงเช้าโครงการหนึ่งและบ่ายอีกโครงการหนึ่ง รวมหนึ่งวัน</p>':
     kind==='ot'?'<label>จำนวนชั่วโมง OT<input id="hours" type="number" min="0.5" step="0.5" required value="8"></label><p class="notice">เลือกวันที่ย้อนหลังได้ เช่น 21 กันยายน 8 ชั่วโมง แม้ทำต่อถึงวันที่ 22 ก็ใช้วันที่ 21 ทั้งรายการ ไม่ต้องใส่เวลาเริ่ม/จบ</p><p class="muted">ใส่ชั่วโมงเต็มหรือครึ่งชั่วโมง เช่น 2 หรือ 2.5 ไม่รับเศษนาที</p>':
     '<label>ประเภทรายจ่าย<select id="category">'+M0.categories.map(([code,label])=>'<option value="'+code+'">'+label+'</option>').join('')+'</select></label><label>จำนวน (ถ้ามี)<input id="quantity" type="number" min="0.01" step="0.01"></label><label>หน่วย (ถ้ามี)<input id="unit"></label><label>จำนวนเงิน (บาท)<input id="amount" type="number" min="0.01" step="0.01" value="500" required></label><p class="muted">ค่าแรงและ OT มาจากข้อมูลเวลา ไม่ต้องส่งซ้ำเป็นค่าใช้จ่าย ส่วนค่าอาหารตามบิลแยกจากค่ากินรายวัน</p><label>เลือกรูปบิล / ใบเสร็จ / สลิป / PDF<input id="files" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" multiple></label><p class="muted">1–5 ไฟล์ ไม่เกิน 10 MB ต่อไฟล์ · ใช้ภาพทดสอบ · เลือกเพิ่มทีละชุดได้</p><div id="previews" class="attachments"></div>')+
     (saved?.editingId?'<label>เหตุผลที่แก้ไข<textarea id="editReason" required></textarea></label>':'')+'<label>'+(kind==='ot'?'เหตุผล':'รายละเอียด')+'<textarea id="note" '+(kind==='work'?'':'required')+'></textarea></label><button id="summary" type="submit">ตรวจสรุป</button></form>');
+  if($('employee'))$('employee').value=saved?.sender||'DEMO-T1';if($('sourceChannel'))$('sourceChannel').value=saved?.sourceChannel||(role()==='TECH'?'LINE':'WEB');
   if(saved?.job&&$('job')){$('job').value=saved.job;$('job').closest('details').open=true;}
   if($('part'))$('part').value=saved?.part||'FULL';if($('hours'))$('hours').value=saved?.hours||8;
   if($('amount'))$('amount').value=saved?.amount?saved.amount/100:500;if($('category'))$('category').value=saved?.category||'FUEL';
@@ -73,7 +74,8 @@ function entry(kind,saved=null){
   $('entryForm').onsubmit=e=>{
     e.preventDefault();if(pickerBusy)return;
     if(kind==='expense'&&!draft.attachments.length){say('กรุณาเลือกหลักฐานอย่างน้อย 1 ไฟล์');return;}
-    const row={kind,editingId:saved?.editingId,version:saved?.version,editReason:$("editReason")?.value,quantity:$("quantity")?.value?Number($("quantity").value):null,unit:$("unit")?.value||null,project:saved?.project||project(),sender:saved?.sender||sender(),date:$('date').value,job:$('job')?.value||null,note:$('note').value,part:$('part')?.value,hours:Number($('hours')?.value||0),amount:Math.round(Number($('amount')?.value||0)*100),category:$('category')?.value,attachments:draft.attachments};
+    const row={kind,editingId:saved?.editingId,version:saved?.version,editReason:$("editReason")?.value,quantity:$("quantity")?.value?Number($("quantity").value):null,unit:$("unit")?.value||null,project:saved?.project||project(),sender:saved?.editingId?saved.sender:(kind==='expense'?actor():$('employee')?.value||sender()),submittedBy:saved?.submittedBy||actor(),sourceChannel:$('sourceChannel')?.value||saved?.sourceChannel||(role()==='TECH'?'LINE':'WEB'),date:$('date').value,job:$('job')?.value||null,note:$('note').value,part:$('part')?.value,hours:Number($('hours')?.value||0),amount:Math.round(Number($('amount')?.value||0)*100),category:$('category')?.value,attachments:draft.attachments};
+    if(kind!=='expense'&&!M0.canSubmitTime(role(),actor(),row.sender,row.project)){say('ไม่มีสิทธิ์ลงเวลาให้พนักงานในโครงการนี้');return;}
     if(kind==='ot'&&!M0.validOtHours(row.hours)){say('OT ต้องเป็นชั่วโมงเต็มหรือครึ่งชั่วโมง เช่น 2.5');return;}
     if(M0.overlap(records,row)){say('มีวันทำงานช่วงนี้แล้ว ถ้าไปสองโครงการให้แบ่งเช้าและบ่าย ไม่ลงเต็มวันซ้ำ');return;}
     draft=row;confirmEntry();
@@ -82,8 +84,8 @@ function entry(kind,saved=null){
 }
 function description(record){
   const r=record.kind!=='expense'&&['ADMIN','PM'].includes(role())?M0.timeProjection(record):record;
-  if(r.kind==='expense'&&!M0.canSeeExpense(role(),sender(),record))return '';
-  return '<p>โครงการ DEMO-PRJ-'+esc(r.project)+(r.job?'<br>งานย่อย DEMO-JOB-'+esc(r.job):'')+'<br>ผู้ส่ง '+esc(r.sender)+'<br>วันที่ '+esc(r.date)+'<br>'+
+  if(r.kind==='expense'&&!M0.canSeeExpense(role(),actor(),record))return '';
+  return '<p>โครงการ DEMO-PRJ-'+esc(r.project)+(r.job?'<br>งานย่อย DEMO-JOB-'+esc(r.job):'')+'<br>'+(r.kind==='expense'?'ผู้ส่ง ':'พนักงาน ')+esc(r.sender)+(r.submittedBy?'<br>ผู้กรอก '+esc(r.submittedBy):'')+(r.sourceChannel?'<br>ช่องทาง '+esc(r.sourceChannel):'')+'<br>วันที่ '+esc(r.date)+'<br>'+
     (r.kind==='work'?'ช่วงวัน '+({FULL:'เต็มวัน',AM:'เช้า (0.5 วัน)',PM:'บ่าย (0.5 วัน)'}[r.part]):r.kind==='ot'?'OT '+r.hours+' ชั่วโมง':'ประเภท '+esc(M0.categories.find(c=>c[0]===r.category)?.[1])+(r.quantity?'<br>จำนวน '+esc(r.quantity)+' '+esc(r.unit||''):'')+'<br>ยอด '+money(r.amount)+' บาท<br>หลักฐาน '+r.attachments.length+' ไฟล์')+(r.note?'<br>'+esc(r.note):'')+'</p>';
 }
 function confirmEntry(){
@@ -102,23 +104,23 @@ function confirmEntry(){
     }
     draft.attachments.forEach(f=>f.committed=true);
     const id='DEMO-'+String(++sequence).padStart(3,'0');const late=draft.kind!=='expense'&&run!=='OPEN';
-    records.push({...draft,id,version:1,status:draft.kind==='expense'?'PENDING_REVIEW':'SUBMITTED',late});draft=null;page='status';render();say(id+' บันทึกไว้ในต้นแบบแล้ว'+(late?' · ข้อมูลหลังปิดรอบ รอ Owner พิจารณา ไม่เปลี่ยนยอดเดิม':''));
+    records.push({...draft,id,version:1,submittedAt:new Date().toISOString(),status:M0.initialStatus(draft.kind),late});draft=null;page='status';render();say(id+' บันทึกไว้ในต้นแบบแล้ว'+(late?' · ข้อมูลหลังปิดรอบ รอ Owner พิจารณา ไม่เปลี่ยนยอดเดิม':''));
   }),button('แก้ไข',()=>{const saved=draft;$('screen').replaceChildren();entry(saved.kind,saved);},true),button('ยกเลิก',()=>{discardDraft();page='jobs';render();},true));
 }
 function recordCard(r){const box=document.createElement('div');box.className='card';box.innerHTML='<strong>'+r.id+' · '+({work:'วันทำงาน',ot:'OT',expense:'ค่าใช้จ่าย'}[r.kind])+'</strong> <span class="status">'+r.status+'</span>'+description(r)+(r.late?'<p>รายการหลังปิดข้อมูล รอ Owner พิจารณา</p>':'');return box;}
-function status(){html('<h2>ตรวจสถานะของฉัน</h2>');const rows=visible();if(!rows.length)html('<p>ยังไม่มีรายการของคุณในโครงการนี้</p>');rows.forEach(r=>$('screen').append(recordCard(r)));}
+function status(){html('<h2>ตรวจสถานะของฉัน</h2>');const rows=visible().filter(r=>r.submittedBy===actor()||(role()==='TECH'&&r.sender===sender()));if(!rows.length)html('<p>ยังไม่มีรายการของคุณในโครงการนี้</p>');rows.forEach(r=>$('screen').append(recordCard(r)));}
 function review(){
   html('<h2>ตรวจรายการ / กำลังคน</h2>');const rows=visible(),m=M0.metrics(rows);
   html('<div class="row"><div class="card">จำนวนคน<div class="metric">'+m.people+'</div></div><div class="card">วันเข้างานรวมต่อคน<div class="metric">'+m.attendance+'</div></div><div class="card">จำนวนวันทำงานรวม<div class="metric">'+m.manDays+'</div></div><div class="card">OT (ชั่วโมง)<div class="metric">'+m.hours+'</div></div></div><p class="muted">นับเฉพาะรายการที่อนุมัติ · ครึ่งวันนับ 0.5 วัน · วันเข้างานของคนเดียวในวันเดียวไม่นับซ้ำ</p>');
   if(role()==='OWNER')html('<div class="card">ต้นทุนที่อนุมัติของโครงการนี้ <strong>'+money(rows.filter(r=>r.status==='APPROVED').reduce((sum,r)=>sum+M0.amount(r),0))+' บาท</strong></div>');
-  else html('<p class="notice">'+(role()==='ADMIN'?'ตรวจเงินและหลักฐานได้ทีละรายการ ไม่มีสรุปต้นทุนโครงการหรือยอดค่าแรง':'แสดงกำลังคน วันทำงาน และ OT')+'</p>');
+  else html('<p class="notice">'+(role()==='ADMIN'?'ตรวจเงินและหลักฐานได้ทีละรายการ ไม่มีสรุปต้นทุนโครงการหรือยอดค่าแรง':'แสดงกำลังคน วันทำงาน OT และค่าใช้จ่ายที่ตนส่ง')+'</p>');
   if(!rows.length)html('<p>ยังไม่มีรายการ ให้สวมบทช่างส่งรายการก่อน</p>');
   rows.forEach(r=>{
     const box=recordCard(r);
-    if(r.kind==='expense'&&['OWNER','ADMIN'].includes(role())){const div=document.createElement('div');div.className='attachments';box.append(div);showAttachments(r.attachments,div);}
-    if(!['APPROVED','REJECTED'].includes(r.status)&&(role()==='ADMIN'||role()==='OWNER'&&r.kind==='expense')){
+    if(r.kind==='expense'&&M0.canSeeExpense(role(),actor(),r)){const div=document.createElement('div');div.className='attachments';box.append(div);showAttachments(r.attachments,div);}
+    if(!['APPROVED','REJECTED'].includes(r.status)&&(r.kind==='expense'?M0.canReviewExpense(role()):role()==='ADMIN')){
       if(r.kind==='expense')box.append(button('แก้จำนวน รายละเอียด เงิน และรูป',()=>editExpense(r),true));
-      box.append(button('อนุมัติ',()=>{r.status='APPROVED';audit.push({actor:actor(),action:'APPROVED',id:r.id});render();say('อนุมัติแล้วโดย '+actor());}),button('ปฏิเสธ',()=>{const reason=prompt('เหตุผลที่ไม่อนุมัติ');if(reason?.trim()){r.status='REJECTED';audit.push({actor:actor(),action:'REJECTED',id:r.id,reason});render();}},true));
+      box.append(button('อนุมัติ',()=>{r.status='APPROVED';r.reviewedBy=actor();r.reviewedAt=new Date().toISOString();audit.push({actor:actor(),action:'APPROVED',id:r.id});render();say('อนุมัติแล้วโดย '+actor());}),button('ปฏิเสธ',()=>{const reason=prompt('เหตุผลที่ไม่อนุมัติ');if(reason?.trim()){r.status='REJECTED';audit.push({actor:actor(),action:'REJECTED',id:r.id,reason});render();}},true));
     }
     $('screen').append(box);
   });

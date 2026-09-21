@@ -15,3 +15,5 @@ ADR เหล่านี้บันทึก baseline ที่มีอยู
 | [007](007-owner-decisions-m0-r2.md) | คำตอบOwner: ไม่มีเงินสำหรับAdmin/PM, 3Owners, OTย้อนหลัง, ครึ่งวัน, รูปบิล | บางส่วน superseded by008; ประวัติรอบ2 |
 
 | [008](008-admin-review-ot-retention.md) | Adminตรวจเงิน/รูปexpenseรายรายการ, เวลาอนุมัติครั้งเดียว, OT0.5, เก็บ2ปี | Accepted; supersedes007ส่วนที่ระบุ |
+
+| [009](009-delegated-entry-and-expense-review.md) | ลงเวลาแทน ทุกroleส่งexpense LINEรอตรวจทุกครั้ง | Accepted รอบ4; supersedes008เฉพาะsubmission/PM own expense |

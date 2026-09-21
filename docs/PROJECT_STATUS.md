@@ -1,54 +1,40 @@
 # PROJECT STATUS
 
-อัปเดต 21 กันยายน 2026 · Milestone 0 รอบ3เท่านั้น · Owner ของเอกสาร/ต้นแบบ: Codex
+2026-09-21 · MASTER v2.5 · M0-R4 · ผู้ดูแลเอกสาร/ต้นแบบ Codex
 
-## สิ่งที่ใช้งานได้ในต้นแบบ
+**Milestone 0: OWNER_ACCEPTED / READY_TO_MERGE**
 
-- Project เป็นหลัก A ไม่มี Site/Job; B เพิ่มงานย่อยได้ ไม่บังคับเลือก
-- Admin ตรวจแก้และอนุมัติ expense รายรายการรวมจำนวน/รายละเอียด/เงิน/รูปได้ ไม่เห็นต้นทุนรวม/ค่าแรง; PM ดูเฉพาะกำลังคนและเวลา
-- Owner มีบัญชีจำลองแยก3คน ดูเงิน ตรวจและอนุมัติค่าใช้จ่าย พร้อมบันทึกผู้ทำ
-- ช่างลง OT เป็นชั่วโมงพร้อมวันที่ย้อนหลังได้ ไม่แยกเที่ยงคืน; สอง Project ใช้เช้า/บ่ายอย่างละครึ่งวัน ป้องกันลงช่วงวันซ้ำ
-- เลือกภาพ/PDFจากเครื่อง 1–5 ไฟล์ สูงสุด10MB/ไฟล์ ดูภาพก่อนส่ง ลบหรือเพิ่มแทนได้ มี9ประเภทรายจ่าย
-- Owner ดูค่าใช้จ่ายรายเดือนรวมทุกProject และดาวน์โหลด ZIP ที่แตกเป็น folder ของไฟล์ที่เลือกจริง พร้อมทะเบียน expense
+Owner ยืนยันผ่านทั้ง7งานรวมfeedbackล่าสุดเมื่อทดสอบผ่านแล้ว ผลแยกรายงานใน [M0_ACCEPTANCE](M0_ACCEPTANCE.md) Codexตรวจซ้ำผ่าน ไม่ใช่การอ้างreal pilotหรือproduction UAT
 
-ทั้งหมดเป็น local HTML simulation ไม่มี Production Application, backend, database, migration, upload server, LINE OA หรือ deployment ไฟล์อยู่ในหน่วยความจำ browser Refresh แล้วหาย ไม่ใช้ข้อมูลจริง
+## ผลงานปัจจุบัน
 
-## คำตอบ Owner และขอบเขตที่ยืนยัน
+- ครบwireflow Web/LINE, state diagrams, dictionary/schema, permission matrix, payroll cases, evidence export, pilot script และADR001–009
+- Projectเป็นหลัก Site/Joboptional ไม่มีJobไม่ถาม; Owner3บัญชีแยกactor
+- PM/Admin/Ownerลงเวลาแทนพนักงานได้ เก็บผู้กรอกกับพนักงานแยกกัน PMจำกัดProjectที่assigned TECHลงตนเอง
+- ทุกroleส่งexpenseได้ PMเห็นเงิน/รูปเฉพาะของตน Adminตรวจรายรายการได้แต่ไม่เห็นต้นทุนรวม/Payroll LINEทุกroleรอAdmin/Ownerอนุมัติทุกครั้ง Webคงขั้นรอตรวจ
+- Adminapproveเวลาแล้วไม่ส่งOwnerตรวจซ้ำ ปิดเวลาคำนวณอัตโนมัติ Ownerตรวจยอดจ่าย OTทีละ0.5ย้อนหลังได้ สองProjectแบ่งครึ่งวัน
+- รูป/PDF1–5ไฟล์10MB/ไฟล์ หมวด9ประเภท Ownerดาวน์โหลดZIPเดือน; policyเก็บ2ปีเป็นdesign
 
-[OWNER_QUESTIONS](OWNER_QUESTIONS.md) เปลี่ยนเป็นทะเบียนคำตอบแล้ว ไม่ต้องถาม Q-01/02/03เรื่องวันที่/04/05เรื่องสิทธิ์/06เรื่องfolder ซ้ำ ใช้ [ADR-008](adr/008-admin-review-ot-retention.md), D-010 และ MASTER v2.4 แทนข้อเสนอ non-pay visibility รอบแรก คำตอบล่าสุด ADR-008/D-010 ให้Adminตรวจexpenseรายรายการ; Budget/ยอดรวมยังOwner
+## สถานะแยก
 
-Owner เตรียมผู้ร่วมทดลองจริงภายหลัง (Q-07) ยังไม่ถือว่าผ่าน UAT จากการตอบคำถามนี้ Work ยังไม่ได้รับมอบหมายให้แก้ module/schema คู่ขนาน
+| Workstream | DESIGNED | CODED | TESTED_LOCAL | OWNER_ACCEPTANCE | INTEGRATION / REAL UAT | DEPLOYED |
+| --- | --- | --- | --- | --- | --- | --- |
+| เอกสาร/Process prototype M0 | YES | MOCK_ONLY | 45checks + ZIP +7งานและfeedbackregression PASS | PASSทั้ง7 ตามOwner | NOT_RUN | NO |
+| Production Web/API/DB/LINE | design only | NOT_STARTED | NOT_RUN | ไม่ใช่ขอบเขตM0 | NOT_RUN | NO |
+| Persistence/retention/backup/real pilot | spec only | NOT_STARTED | NOT_RUN | ไม่ใช่ขอบเขตM0 | NOT_RUN | NO |
 
-## สถานะแยกตามหลักฐาน
+## Repositoryและการส่งมอบ
 
-| Workstream | DESIGNED | CODED | TESTED_LOCAL | TESTED_INTEGRATION | DEPLOYED_STAGING | UAT_PASSED | PRODUCTION_READY |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| เอกสาร MASTER v2.4 / schema / permission / ADR | YES (business decisions Accepted; implementation draft) | N/A | consistency checks | NOT_RUN | NO | NO | NO |
-| Process prototype รอบ3 | YES | MOCK_ONLY | 24 baseline +14 current contract checks PASS, independent ZIP PASS, browser R3-B01–06 PASS | NOT_RUN | NO | NO | NO |
-| Production Web/API/worker/LINE | design only | NOT_STARTED | NOT_RUN | NOT_RUN | NO | NO | NO |
-| Backup/restore/real pilot | spec only | NOT_STARTED | NOT_RUN | NOT_RUN | NO | NO | NO |
+Repository naochanma-code/asas-job-cost-workforce-core; branch codex/milestone-0-process-design; PR#1 รอเปลี่ยนจากDraftเป็นReady for reviewหลังpushครบ ไม่มีmerge ไม่มีM1
 
-หลักฐาน [TEST_EVIDENCE](TEST_EVIDENCE.md) แยกรอบใหม่กับผลเก่าที่ถูกแทนที่แล้ว ไม่มีการอ้างว่า mock role switch เป็น server security
+ฐานก่อนรอบ4: 1ce069297731383c918df2b30b3c06158be1175c; artifactรอบ4จะบันทึกSHAหลังcommitใน [TEST_EVIDENCE](TEST_EVIDENCE.md) พร้อมตรวจremote head
 
-## Version / Repository
+## ข้อจำกัดที่ยอมรับในM0
 
-- Repository: naochanma-code/asas-job-cost-workforce-core (Private)
-- Branch: codex/milestone-0-process-design; Draft PR #1
-- Base main: dd7cbcc2e5379b7fb83c283833332e2710bba936; MASTER v2.4 / artifact M0-R3-2026-09-21
-- Artifact รอบ3ที่ตรวจ: 2294814994d7a244be1989ffe4cc7f7ee074c13e; fetch/rebase main แล้ว up to date ไม่มี conflict
-- ต้นแบบเปิดจาก docs/prototype/index.html หรือรัน node docs/verification/serve-m0.mjs แล้วเปิด http://127.0.0.1:4174/prototype/index.html
-- Migration: ไม่มี; deploy: ไม่มี;เงินจริง/ข้อมูลจริง/การส่งLINEจริง: ไม่มี
+Role/channelจำลอง ทุกข้อมูลอยู่memory refreshแล้วหาย ไม่มีLINEจริง/serverauthorization/database/retentionworker/backuprestore ไม่มีrateeditor/manualadjustment/reopenlateUI/requiredJobmode/productionexport
 
-## ข้อจำกัดและเรื่องที่ค่อยยืนยัน
-
-- OTทีละ0.5ชั่วโมงยืนยันแล้ว ปฏิเสธเศษนาที; กรณีไม่มีWork Entryยังรอนโยบาย
-- วิธีแบ่ง/เพิ่ม Job budget, เดือนอ้างอิง export และวันเริ่มนับอายุไฟล์ยังเป็นข้อเสนอ; ระยะเก็บ2ปียืนยันแล้ว ไม่ถือว่า Owner ยืนยันทั้งหมดเมื่อบอกว่าใช้ SMEMOVE แยก
-- required-Job mode, rate editor, manual payroll adjustment, reopen/late resolution, server authorization, concurrent transactions, persistent storage/backup และ production export ยังไม่ได้พัฒนา
-- Snapshot payroll ในต้นแบบ freeze source เมื่อ Admin ปิดเวลา ระบบคำนวณอัตโนมัติ Ownerไม่ตรวจเวลาซ้ำ; late source ไม่เปลี่ยนผลเดิม แต่ยังไม่มีหน้าตัดสิน late adjustment
-- ไม่ต้องรอคำตอบเรื่องเหล่านี้เพื่อทดลองเลือกรูป/หมวด/กำลังคน/OTย้อนหลังในรอบนี้
+OTไม่มีWork, Jobbudgetallocation, เดือนอ้างอิงexportและจุดเริ่มนับ2ปีเป็นรายละเอียดก่อนimplementation ไม่ใช่คำถามซ้ำเรื่องสิทธิ์หรือOT0.5 ทุกข้ออยู่ [OWNER_QUESTIONS](OWNER_QUESTIONS.md)
 
 ## ขั้นตอนถัดไป
 
-1. โอ๋ลองต้นแบบรอบ3 โดยเฉพาะรูปบิล หมวดรายจ่าย OTย้อนหลัง และข้อมูลแต่ละบทบาท
-2. บันทึกผลเจ็ดงานตาม [PILOT_ACCEPTANCE_SCRIPT](PILOT_ACCEPTANCE_SCRIPT.md); ปรับตามfeedbackก่อนถือว่า M0ผ่าน
-3. ยังไม่เริ่ม Milestone1/LINEจริง/deploy จากคำตอบนโยบายครั้งนี้
+รอOwnerอนุญาตMergeโดยชัดเจน การพร้อมMergeไม่ใช่คำสั่งMerge และไม่เริ่มMilestone1จากการปิดงานครั้งนี้

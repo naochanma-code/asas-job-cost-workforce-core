@@ -1,6 +1,6 @@
 # Accounting Evidence Export Specification
 
-DESIGNED; baseline MASTER §10/13, D-003; รายละเอียด revision/schema Proposed ADR-005; Q-06 เดือนอ้างอิงยังเป็นรายละเอียดออกแบบ; retention2ปียืนยันแล้วตาม ADR-008 ผู้ใช้ของ spec คือ OWNER หลายบัญชีเท่านั้น (Admin เปิดเงิน/รูปexpenseรายรายการที่ตรวจได้ แต่ไม่มี monthly total/ZIP; PM ไม่มีสิทธิ์) ไม่ใช่การ export สรุปค่าจ้าง
+DESIGNED; baseline MASTER §10/13, D-003; รายละเอียด revision/schema Proposed ADR-005; Q-06 เดือนอ้างอิงยังเป็นรายละเอียดออกแบบ; retention2ปียืนยันแล้วตาม ADR-008 ผู้ใช้ของ spec คือ OWNER หลายบัญชีเท่านั้น (Admin เปิดเงิน/รูปexpenseรายรายการที่ตรวจได้ แต่ไม่มี monthly total/ZIP; PM เปิดexpenseของตนได้ แต่ไม่มี monthly total/ZIP) ไม่ใช่การ export สรุปค่าจ้าง
 
 ## ขอบเขตรอบ2ที่ Owner ยืนยัน
 
@@ -87,3 +87,7 @@ M0 มี local ZIP จากไฟล์ทดสอบที่เลือก
 ข้อเสนอเริ่มนับจาก stored_at ของไฟล์แต่ละฉบับ บันทึก retain_until, hash, ผู้กระทำและเหตุการณ์หมดอายุ แยกอายุ binary จาก cost/payroll ledger; ครบอายุรูปไม่ลบยอดหรือประวัติธุรกิจ วิธีจัดการสำเนา backup/exports ต้องออกแบบก่อนproduction ไฟล์ที่ Owner ดาวน์โหลดไปอยู่ในการดูแลของ Owner เอง ไม่มีงานลบไฟล์จริงใน Milestone0
 
 E-10 (DESIGNED): stored_at 2026-09-21 มี retain_until 2028-09-21; การหมดอายุไม่ลบledger; replica/backup lifecycle ตรวจแยกก่อนproduction
+
+## คำตอบรอบ4 — ลงแทนและรอตรวจ
+
+PM/Admin/Owner ลงวันทำงานและ OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ โดยเก็บผู้กรอกแยกจากพนักงาน ทุกบทบาทส่งค่าใช้จ่ายได้ PM เห็นยอดและรูปเฉพาะรายการที่ตนส่ง LINE expense ทุกบทบาทต้องรอ Admin หรือ Owner กดอนุมัติแยกทุกครั้งก่อนเป็น Actual; Web คงขั้นรอตรวจเดิม ไม่มี auto-approve ตาม [ADR-009](adr/009-delegated-entry-and-expense-review.md) ต้นแบบแสดงช่องทางจำลอง ไม่มีLINEจริง

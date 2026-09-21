@@ -1,6 +1,6 @@
 # Milestone 0 — ชุดตรวจแบบกระบวนการ
 
-วันที่ 2026-09-21 · Owner ของงานเอกสาร/ต้นแบบ: Codex · สถานะ DESIGNED / OWNER_PROCESS_REVIEW_PENDING · รอบ3ตาม MASTER v2.4
+วันที่ 2026-09-21 · Owner ของงานเอกสาร/ต้นแบบ: Codex · สถานะ OWNER_ACCEPTED / READY_TO_MERGE · รอบ4ตาม MASTER v2.5
 
 รอบแรกอ่านเอกสารบังคับครบ: AGENTS, MASTER_PROMPT v2.2, PROJECT_STATUS, DECISION_LOG, DATABASE_SCHEMA และ PAYROLL_POLICY จาก main `dd7cbcc2e5379b7fb83c283833332e2710bba936` ก่อนออกแบบ ไม่มี production application, migration, deployment, LINE OA หรือบริการเสียเงินในงานนี้
 
@@ -30,12 +30,12 @@
 
 ## การปรับรอบ2ตามคำตอบโอ๋
 
-[ADR-007](adr/007-owner-decisions-m0-r2.md) บันทึกคำตอบแล้ว: Adminดูเงิน/รูปexpenseรายรายการได้แต่ไม่มีต้นทุนรวม/ค่าแรง; PMไม่มีเงิน, 3Owner accounts, OTdate+hoursย้อนหลังได้ไม่แยกวัน, สองProjectแบ่งครึ่ง เพิ่มเลือกไฟล์/previewและZIPรายเดือนแบบlocal พร้อม9หมวดexpense เริ่มทดลองโดยเปิด prototype/index.html หรือรัน node docs/verification/serve-m0.mjs ที่ localhost:4174/prototype/index.html
+[ADR-007](adr/007-owner-decisions-m0-r2.md) บันทึกคำตอบแล้ว: Adminดูเงิน/รูปexpenseรายรายการได้แต่ไม่มีต้นทุนรวม/ค่าแรง; PMเห็นexpenseของตน, 3Owner accounts, OTdate+hoursย้อนหลังได้ไม่แยกวัน, สองProjectแบ่งครึ่ง เพิ่มเลือกไฟล์/previewและZIPรายเดือนแบบlocal พร้อม9หมวดexpense เริ่มทดลองโดยเปิด prototype/index.html หรือรัน node docs/verification/serve-m0.mjs ที่ localhost:4174/prototype/index.html
 
 ## ขอบเขตของหลักฐาน
 
 Prototype แสดงกระบวนการและข้อความเท่านั้น การสลับ role เป็นตัวช่วย review ไม่ใช่ระบบ authentication หรือหลักฐาน permission ฝั่ง server ทุกรายการอยู่ใน memory และล้างเมื่อ refresh ไม่ส่งข้อมูลออกเครือข่าย
 
-Milestone 0 ยังไม่ผ่าน gate จน Owner ทำ 7 tasks โดยไม่ต้องมีผู้ชี้ขั้นตอนและยืนยันคำศัพท์/flow ส่วนที่ขัดกันหยุดเฉพาะการตัดสินใจนั้นตาม [คำถาม](OWNER_QUESTIONS.md) ไม่เริ่ม Milestone 1 จากการมีเอกสารเพียงอย่างเดียว
+Owner ยืนยันผ่านทั้ง7งานรวมfeedbackล่าสุดเมื่อทดสอบผ่านแล้ว; Codex regressionผ่าน ดู [M0_ACCEPTANCE](M0_ACCEPTANCE.md) ปิดเฉพาะgateกระบวนการM0 ไม่ใช่real pilot และยังไม่อนุญาตmerge/M1
 
 รอบ3ตาม [ADR-008](adr/008-admin-review-ot-retention.md): เวลาAdminอนุมัติครั้งเดียว ไม่ส่งOwnerซ้ำ OTทีละ0.5 และหลักฐานเก็บ2ปี

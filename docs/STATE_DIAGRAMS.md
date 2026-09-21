@@ -1,6 +1,6 @@
 # State diagrams และ transition contract
 
-Expense reviewer=ADMIN/OWNER รายรายการ ตาม [ADR-008](adr/008-admin-review-ot-retention.md); Admin ไม่เห็น Project total/Payroll; PM ไม่เห็นเงิน/รูปบิล. OWNER มีหลายบัญชี audit actor แยกและ transition ต้องป้องกันซ้ำ
+Expense reviewer=ADMIN/OWNER รายรายการ ตาม [ADR-008](adr/008-admin-review-ot-retention.md); Admin ไม่เห็น Project total/Payroll; PM เห็นเงิน/รูปเฉพาะexpenseของตนตามADR-009. OWNER มีหลายบัญชี audit actor แยกและ transition ต้องป้องกันซ้ำ
 
 DESIGNED — ชื่อสถานะจาก MASTER/PAYROLL_POLICY; guards/revision semantics เพิ่มเติมเป็นข้อเสนอ ADR-003/004 ยังไม่ใช่ code หรือ migration
 
@@ -90,3 +90,7 @@ Flow draft: OPEN → AWAITING_EVIDENCE → READY_TO_CONFIRM → SUBMITTED หร
 Evidence: RECEIVED → FETCHING → READY หรือ RETRY → FAILED; replacement สร้าง evidence revision ใหม่และ audit, ไม่ overwrite binary เดิม
 
 Export: REQUESTED → BUILDING → READY → SUPERSEDED; error เป็น FAILED แล้ว retry สร้าง attempt ที่ตรวจย้อนหลังได้ READY ต้อง manifest/จำนวนไฟล์/ยอด/ทุก hash ผ่านครบก่อนให้ดาวน์โหลด Source เปลี่ยนสร้าง export revision ใหม่ ไม่เปลี่ยน ZIP เดิม Download expiry เป็นสถานะ link ไม่เปลี่ยนหลักฐาน
+
+## คำตอบรอบ4 — ลงแทนและรอตรวจ
+
+PM/Admin/Owner ลงวันทำงานและ OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ โดยเก็บผู้กรอกแยกจากพนักงาน ทุกบทบาทส่งค่าใช้จ่ายได้ PM เห็นยอดและรูปเฉพาะรายการที่ตนส่ง LINE expense ทุกบทบาทต้องรอ Admin หรือ Owner กดอนุมัติแยกทุกครั้งก่อนเป็น Actual; Web คงขั้นรอตรวจเดิม ไม่มี auto-approve ตาม [ADR-009](adr/009-delegated-entry-and-expense-review.md) ต้นแบบแสดงช่องทางจำลอง ไม่มีLINEจริง

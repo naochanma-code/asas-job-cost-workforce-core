@@ -1,6 +1,6 @@
 # Pilot Acceptance Script
 
-เวอร์ชัน M0-R2-2026-09-21 · ข้อมูลสมมติเท่านั้น · Owner reviewer ยังไม่ได้รัน
+เวอร์ชัน M0-R4-2026-09-21 · ข้อมูลสมมติเท่านั้น · Owner ยืนยันPASSทั้ง7งานในtaskนี้ ดู M0_ACCEPTANCE
 
 ## แยก gate
 
@@ -22,13 +22,13 @@
 | U-02 วันทำงาน | บันทึก A วันที่ 21 ก.ย. เต็มวัน แก้เป็นเช้าแล้วส่งตรวจ | สรุปก่อนส่ง, SUBMITTED; ไม่มี Site/Job question; ไม่แสดงเงิน | source mock ID + before/after |
 | U-03 OT | เลือกย้อนหลังวันที่21ก.ย. OT8ชั่วโมง แม้จริงทำถึง22 | วันที่21ทั้ง8ชั่วโมง ไม่ถามเริ่ม/จบ; รอตรวจ ไม่มีเงินในTECH timeview | source date+hours |
 | U-04 ค่าใช้จ่าย | เลือกค่าน้ำมันA500 แล้วเลือกภาพทดสอบจากเครื่อง ลบ/เพิ่มและสรุปก่อนส่ง | 9ประเภทรายจ่าย; previewไฟล์จริง1–5; PENDING_REVIEW; ไม่มีJob prompt | ภาพจำลอง/จำนวนไฟล์/สถานะ |
-| U-05 ตรวจรายการ | Adminแก้จำนวน/รายละเอียด/เงิน/รูปexpenseพร้อมเหตุผล แล้วอนุมัติเวลาและexpense; ทดลองOwnerทั้ง3บัญชี | Adminเห็นexpenseรายรายการ แต่ไม่มีต้นทุนรวม/ค่าแรง; PMไม่มีเงินหรือรูปบิล; Ownerเห็นActualจากapprovedและactorถูกต้อง | before/after/role/actor |
+| U-05 ตรวจรายการ | Adminแก้จำนวน/รายละเอียด/เงิน/รูปexpenseพร้อมเหตุผล แล้วอนุมัติเวลาและexpense; ทดลองOwnerทั้ง3บัญชี | Adminเห็นexpenseรายรายการ แต่ไม่มีต้นทุนรวม/ค่าแรง; PMเห็นเฉพาะexpenseของตน; Ownerเห็นActualจากapprovedและactorถูกต้อง | before/after/role/actor |
 | U-06 หลักฐานเดือน | Ownerเลือกเดือนกันยายนและดาวน์โหลดZIP | มีไฟล์ที่แนบจริงตามเดือน/Project/optionalJob และCSVยอดexpenseไม่ซ้ำ; Admin/PMไม่มีเมนูนี้ | ZIPที่แตกและเปิดได้ / reviewer feedback |
 | U-07 ตรวจรอบค่าจ้าง | Admin อนุมัติเวลาแล้วปิดเดือน ระบบคำนวณอัตโนมัติ; Owner ตรวจตัวอย่างค่าจ้าง อนุมัติ lock และบันทึกโอนจำลอง | Admin ไม่มี rate/amount; Owner เห็น golden amount; ทุก action ชัดเจน; late path อธิบายว่า revision ไม่ทับของเดิม | run state trail + reviewer decision |
 
 เกณฑ์ Gate M0: ทั้ง 7 tasks ทำได้โดย assistance_count=0, คำศัพท์เข้าใจตรงกัน, ไม่มี critical no-Job/privacy ambiguity ที่ไม่ได้บันทึก, Owner ยืนยัน flow; หากช่วยชี้คลิกให้ FAIL task นั้นและ rerun หลังแก้ ไม่ตั้ง completion time เป็นเกณฑ์ผ่านโดยไม่มี baseline
 
-เพิ่มเติมรอบ2: ลงเช้าA/บ่ายBให้รวม1วัน; ลองลงช่วงเช้าซ้ำต้องไม่ผ่าน; Adminไม่เห็นยอดรวมต้นทุน/ค่าแรง แต่แก้เงินและรูปexpenseรายรายการได้; PMไม่เห็นเงิน; เปลี่ยนOwner1/2/3แล้วตรวจactor; รูปแนบผิดชนิด/เกิน5/เกิน10MBไม่ผ่าน; เปลี่ยนเดือนต้องไม่ส่งไฟล์ผิดเดือน
+เพิ่มเติมรอบ2: ลงเช้าA/บ่ายBให้รวม1วัน; ลองลงช่วงเช้าซ้ำต้องไม่ผ่าน; Adminไม่เห็นยอดรวมต้นทุน/ค่าแรง แต่แก้เงินและรูปexpenseรายรายการได้; PMไม่เห็นเงินผู้อื่นหรือยอดรวม; เปลี่ยนOwner1/2/3แล้วตรวจactor; รูปแนบผิดชนิด/เกิน5/เกิน10MBไม่ผ่าน; เปลี่ยนเดือนต้องไม่ส่งไฟล์ผิดเดือน
 
 ## Edge-case walkthrough ต่อจากเจ็ดงาน
 
@@ -65,13 +65,17 @@
 - [ ] ผู้รับผิดชอบ backup/restore, retention, rollback และ checklist บัญชี
 - [ ] Milestone ที่เกี่ยวข้องผ่าน integration/staging/real LINE และอนุญาตขอบเขตใช้งานจริง
 
-## แบบบันทึกผล (ว่างโดยเจตนา)
+## แบบบันทึกผล
 
 | Session/task | Commit/env/device | Result NOT_RUN/PASS/FAIL/BLOCKED | Assistance | Evidence/issue | Reviewer/date |
 | --- | --- | --- | --- | --- | --- |
-| M0 U-01–U-07 | local prototype | NOT_RUN_BY_OWNER | — | รอ Owner | — |
+| M0 U-01–U-07 | local prototype R4 | PASS ตามคำยืนยัน Owner | ไม่มีบันทึกจำนวนครั้งจากการสังเกต | [ผลรายงาน](M0_ACCEPTANCE.md) | Owner / 2026-09-21 |
 | Real pilot R-01–R-10 | ยังไม่มี environment | NOT_RUN | — | milestones ถัดไป | — |
 
 ผู้สังเกตห้ามเปลี่ยน NOT_RUN เป็น PASS จากการเขียน script หรือ local fixture checks เพียงอย่างเดียว
 
 รอบ3เพิ่ม: OT2.5ผ่าน/2.25ไม่ผ่าน; แก้expenseแล้วยกเลิกต้องไม่เปลี่ยนต้นฉบับหรือทำรูปเดิมเสีย; บันทึกแล้วดูbefore/after/reason/actor; Adminปิดเวลาแล้วOwnerเห็นยอดจ่ายทันทีโดยไม่กดตรวจเวลา/คำนวณอีก; retention2ปีเป็นdesign ยังไม่รันทดสอบการลบจริง
+
+## Regression รอบ4
+
+ทดสอบPM(B)/Admin/OwnerลงWorkและOTแทนT2 แสดงemployeeและsubmitted_byต่างกัน TECHเลือกแทนไม่ได้ ทุกroleส่งexpenseได้; เลือกLINEแล้วต้องPENDING_REVIEWไม่มีActual/ZIPจนAdminหรือOwnerกดapprove รวมผู้ส่งAdmin/Owner PMเห็นเฉพาะexpenseตนเองไม่เห็นของTECH; Owner AcceptanceแยกจากCodex walkthrough ใน [M0_ACCEPTANCE](M0_ACCEPTANCE.md)

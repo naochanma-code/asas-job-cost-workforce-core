@@ -1,0 +1,9 @@
+{
+  "reader": "System.IO.Compression.ZipFile independent ZIP reader",
+  "result": "PASS",
+  "entries": 4,
+  "image_files": 3,
+  "original_image_bytes": "MATCH",
+  "expenses": 2,
+  "total_satang": 180000
+}
