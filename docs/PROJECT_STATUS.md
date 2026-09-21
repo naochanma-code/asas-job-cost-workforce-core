@@ -13,7 +13,7 @@ Login บัญชีจริง 4 roles (ไม่ใช่ role selector), Ow
 | Workstream | DESIGNED | CODED | TESTED_LOCAL | TESTED_INTEGRATION | DEPLOYED_STAGING | UAT_PASSED | PRODUCTION_READY |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | M0 เอกสาร/ต้นแบบ | YES | MOCK_ONLY | PASS 45 checks + ZIP + browser | NOT_APPLICABLE | NO | OWNER_ACCEPTED ทั้ง7งาน | NO |
-| M1 Web/API/identity/project/team | YES | YES | PASS API+browser | Native PostgreSQL CI pending | NO | NOT_RUN | NO |
+| M1 Web/API/identity/project/team | YES | YES | PASS API+browser | PASS PostgreSQL 17 CI (API/SQL) | NO | NOT_RUN | NO |
 | M1 persistence/backup | YES | YES | PASS PGlite disk restart/restore | staging NOT_RUN | NO | NOT_RUN | NO |
 | M1 LINE link/group/my projects | YES | YES | PASS simulated transport | REAL_LINE_NOT_RUN | NO | NOT_RUN | NO |
 | M2+ time/OT/expense/payroll | M0 design | NOT_STARTED | NOT_RUN | NOT_RUN | NO | NOT_RUN | NO |
@@ -30,4 +30,4 @@ Owner ยืนยันว่ามี OA/กลุ่มทดสอบแล�
 
 ## ขั้นตอนถัดไป
 
-ส่ง draft PR ของ M1 พร้อมผลตรวจ; ตรวจ CI PostgreSQL และแก้ปัญหาที่พบเฉพาะ Foundation จากนั้นเตรียม staging/LINE pilot เมื่อ Owner ระบุ environment และขอบเขตที่อนุญาต ยังไม่ merge M1 หรือเริ่ม M2
+[Draft PR #2](https://github.com/naochanma-code/asas-job-cost-workforce-core/pull/2) เปิดแล้ว implementation commit 69c073944d8c2149e9d5f903af6da9b6d08a4ae3 push ครบ; [CI PostgreSQL 17](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35610393373) PASS ทั้ง typecheck/tests/build/M0 regression ขั้นต่อไปเตรียม staging/LINE pilot เมื่อ Owner ระบุ environment และขอบเขตที่อนุญาต ยังไม่ merge M1 หรือเริ่ม M2

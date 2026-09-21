@@ -2,6 +2,8 @@
 
 ## 2026-09-21 — เริ่ม Milestone 1 Foundation
 
+- Implementation 69c0739 push และเปิด Draft PR #2; CI run 35610393373 PASS กับ PostgreSQL 17 รวม typecheck/tests/build/M0 regression บันทึก provenance แยก ไม่ใช่ real LINE หรือ Owner UAT
+
 - Owner อนุมัติเริ่มและยืนยัน OA/กลุ่มทดสอบแยก; บันทึก MASTER §19, D-014/ADR-010 และปรับ proposal เป็น AUTHORIZED
 - เพิ่ม Next.js/Fastify, session login/4 roles/multiple Owners, Customer/Project/optional Site/Job/team assignment, audit/health และ migrations พร้อม constraints
 - เพิ่ม PGlite local persistence และ native PostgreSQL adapter, backup/restore ฐานว่าง, CI และ lockfile; เพิ่ม scripts bootstrap/seed เฉพาะฐานว่าง
