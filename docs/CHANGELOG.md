@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Runtime password saved; API secret handoff — 2026-09-22
+
+Owner completed both hidden password entries. Latest read-only boolean check confirms runtime password present=true; no password/hash retrieved. Enabled LOGIN for asas_m1_runtime after credential/role preflight and verified LOGIN=true. Migrator remains NOLOGIN and runtime grants stay restricted. The first guarded command hit shell-quoting syntax error before mutation; the literal SQL heredoc completed successfully. Actual password authentication from API is still NOT_RUN.
+
+API configuration staged (not deployed): public CA, password-free runtime connection using Railway private references, and start command node --import tsx scripts/verify-runtime-db.ts. Restart Never, M1 branch and Auto deploy disabled verified. No administrator credential returned to API. PGPASSWORD field is prepared for Owner to enter the same existing runtime password directly and click Add; do not request the value in chat.
+
+PASS: installed pg compatibility check confirms PGPASSWORD is used verbatim with a password-free connection URL, including URL-special characters (synthetic fixture only; no connection opened). Latest checked PR head a1a8c13 remains Draft/not merged/mergeable; CI [35732225713](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35732225713) SUCCESS. No application source change this checkpoint.
+
+Phase A runtime connection/TLS/log scan pending API secret; B–E NOT_RUN. LINE=false, no Web URL, no merge/M2/production/paid upgrade or data deletion. Continue with one-shot verification once Owner confirms Add.
+
 ## Credential handoff verification — 2026-09-22
 
 Owner reported typing a password but seeing no confirmation. Read-only check returned runtime password present=false and LOGIN enabled=false. The active Console was at a fresh shell prompt, with no password-confirmation prompt visible; the reason the prior entry did not persist is unconfirmed. No password/hash was selected or printed, and no credential was reset. Runtime login/API TLS and Staging B–E remain NOT_RUN.

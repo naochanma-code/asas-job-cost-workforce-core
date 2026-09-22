@@ -6,7 +6,7 @@
 
 ## ล่าสุด — Phase A ก่อนเปิด Web/API
 
-สร้าง runtime/migrator roles บน PostgreSQL แล้วและตรวจสิทธิ์ผ่าน โดยทั้งคู่ยัง NOLOGIN. Owner ต้องตั้งรหัส runtime เองใน private prompt ที่เปิดไว้ ห้ามส่งในแชท. Public CA ถูกเพิ่มใน API Variables เป็น staged change ยังไม่ deploy. API guard บังคับ verified TLS และสิทธิ์จำกัดก่อนเปิด HTTP ดู [ขั้นตอนฐานข้อมูล](M1_DATABASE_SECURITY.md). LINE คงปิดแม้ A–E ผ่านตามคำสั่งล่าสุด; ขั้นตอน LINE ด้านล่างใช้ได้เมื่อ Owner อนุมัติรอบใหม่เท่านั้น.
+สร้าง runtime/migrator roles บน PostgreSQL แล้วและตรวจสิทธิ์ผ่าน โดย migrator ยัง NOLOGIN; Owner ตั้งรหัส runtime สำเร็จและเปิด runtime LOGIN แล้ว. รอ Owner ใส่รหัสเดิมในช่อง PGPASSWORD ของ API โดยไม่ส่งในแชท. Public CA ถูกเพิ่มใน API Variables เป็น staged change ยังไม่ deploy. API guard บังคับ verified TLS และสิทธิ์จำกัดก่อนเปิด HTTP ดู [ขั้นตอนฐานข้อมูล](M1_DATABASE_SECURITY.md). LINE คงปิดแม้ A–E ผ่านตามคำสั่งล่าสุด; ขั้นตอน LINE ด้านล่างใช้ได้เมื่อ Owner อนุมัติรอบใหม่เท่านั้น.
 
 ## อัปเดตหลัง Owner กรอกตัวแปร
 
@@ -44,7 +44,7 @@ GitHub เชื่อมแล้วและจำกัด1repo; PostgreSQL18
 
 | Service | Build | Variables ไม่มีค่าลับในเอกสาร |
 | --- | --- | --- |
-| API | `RAILWAY_DOCKERFILE_PATH=deploy/Dockerfile.api` | `NODE_ENV=production`, `HOST=::`, `PORT=3001`, `WEB_ORIGIN` เป็น HTTPS Web จริง, `DATABASE_URL` ของ runtime role, `DATABASE_SSL_CA` ใบรับรองสาธารณะ, `LINE_ENABLED=false` |
+| API | `RAILWAY_DOCKERFILE_PATH=deploy/Dockerfile.api` | `NODE_ENV=production`, `HOST=::`, `PORT=3001`, `WEB_ORIGIN` เป็น HTTPS Web จริง, `DATABASE_URL` ของ runtime role แบบไม่มีรหัส, `PGPASSWORD` ช่องลับที่ Owner กรอก, `DATABASE_SSL_CA` ใบรับรองสาธารณะ, `LINE_ENABLED=false` |
 | Web | `RAILWAY_DOCKERFILE_PATH=deploy/Dockerfile.web` | `PORT=3000`, build arg `API_URL` เป็น private API hostname/port ที่ Railway แสดง ต้องตั้งก่อน build เพราะ Next compile rewrites |
 | LINE worker (ยังไม่สร้าง) | API image/start `pnpm worker` | DB runtime credential, HTTPS origin, secret/key/allowlists ตาม M1_LINE_PILOT_CHECKLIST |
 
