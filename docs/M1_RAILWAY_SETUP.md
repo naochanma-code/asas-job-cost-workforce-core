@@ -4,7 +4,11 @@
 
 อนุญาตเฉพาะ Trial credits ไม่กรอกบัตร ไม่สมัคร Hobby ไม่เพิ่มขนาดเอง หากเครดิต/ข้อจำกัดไม่พอ แจ้ง Owner ก่อน ยังไม่ Merge PR #2, Production หรือ M2
 
-## อัปเดตล่าสุดก่อนส่งต่อ Owner
+## อัปเดตหลัง Owner กรอกตัวแปร
+
+Bootstrap deployment 13df75fd-935d-4f60-b3c0-c82f67a3b96b จาก f12f66c จบ Completed มีข้อความ Owner created; password not logged. ไม่เปิดดูค่า secret. Owner ยืนยันถอน BOOTSTRAP_USERNAME/BOOTSTRAP_PASSWORD และยืนยัน DATABASE_URL ในapiเฉพาะรายการหลังapproval reviewปฏิเสธแล้ว ลบและapplyสำเร็จใน e49929ec Completed; APIไม่มี3ตัวแปรนี้แล้ว ปิดAuto deploy ใช้คำสั่งจบทันทีไม่เปิดHTTP ไม่ต่อDB. บัญชีและpassword hashในDBคงอยู่. ยังไม่มีWeb/HTTPS/LINEจริง/UAT
+
+## ประวัติก่อนส่งต่อ Owner
 
 GitHub เชื่อมแล้วและจำกัด1repo; PostgreSQL18/volume Online. APIยังOfflineหลังfirst buildจากmain/M0ล้มเหลวก่อนruntime. มี9 staged changes แก้branch M1/Dockerfile และเตรียม pnpm bootstrap แบบNever restart รอ Ownerตั้งBOOTSTRAP_USERNAME/BOOTSTRAP_PASSWORDผ่านVariables. DATABASE_URLอ้างcredentialผู้ดูแลชั่วคราวสำหรับbootstrapเท่านั้น ก่อนเปิดHTTPต้องเปลี่ยนruntime roleและลบbootstrap secret. Web/workerยังไม่สร้าง. CI0d68bbaผ่านทั้งDocker buildและsmoke. รายละเอียดสถานะจริงในM1_TEST_EVIDENCE
 

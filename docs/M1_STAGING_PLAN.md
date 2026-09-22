@@ -46,7 +46,7 @@ Staging หมายถึงระบบทดลองออนไลน์แ
 4. Build Web ด้วย `pnpm build` โดยตั้ง API_URL เป็น internal API origin ก่อน build เนื่องจาก Next rewrites ถูกสร้างตอน build Start ด้วย `pnpm exec next start apps/web --hostname 0.0.0.0 --port $PORT` บน Linux ของ provider
 5. API start `pnpm exec tsx apps/api/src/main.ts`, HOST=0.0.0.0, PORT ของ provider; Web ใช้ internal host/port นี้ ไม่เปิด API ต่อ internet ตั้ง health `/api/health` ผ่าน Web และ API
 6. Migrate/Bootstrap ผ่านงาน operator ครั้งเดียวด้วย DB migration role แล้วลบ BOOTSTRAP_PASSWORD จาก environment ตั้งชื่อบัญชี staging ใหม่ ไม่ใช้ demo passwords จาก local
-7. ตั้ง DB role runtime แยก migration role: โค้ดปัจจุบัน API เรียก migrate ทุกครั้งเริ่ม จึงเป็น **งานแก้ก่อน deploy** ต้องแยก entrypoint/explicit migration mode พร้อม test ก่อนใช้ least-privilege role ห้ามแก้โดยให้ app เป็น DB superuser แล้วเรียกว่าปลอดภัย
+7. ตั้ง DB role runtime แยก migration role: D-017 แยก production-mode runtime ให้ตรวจ schema โดยไม่ migrate แล้วและผ่าน CI; ยังต้อง provision/test least-privilege role บน Railway จริง ห้ามแก้โดยให้ app เป็น DB superuser แล้วเรียกว่าปลอดภัย
 8. Web ไม่มี DATABASE_URL/LINE secret; API มี DB + signature secret + payload key; worker มี DB + access token + payload key; ใช้ NODE_ENV=production ใน staging เพื่อเปิด HTTPS/DB guard ไม่ได้หมายถึง deploy production
 9. เปิด Web ก่อนโดย LINE_ENABLED=false ตรวจข้อทดสอบ HTTPS/cookie/สิทธิ์ สำรองและกู้คืนก่อนให้คนเริ่มใช้งาน จากนั้นได้รับอนุมัติวันและขอบเขต LINE pilot จึงตั้ง LINE_ENABLED=true เปิด worker ด้วย `pnpm worker`
 10. ตรวจ monitoring: health ทุก 1 นาที, DEAD/retry backlog ระหว่างทดลอง, RAM/CPU/DB disk และค่าใช้จ่าย แจ้งโอ๋เมื่อมีเหตุ ไม่บันทึก URL query/body/secret ใน access log รวมของ provider
