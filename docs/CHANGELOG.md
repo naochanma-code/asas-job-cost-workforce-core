@@ -94,3 +94,5 @@ Artifactที่ตรวจ 2294814994d7a244be1989ffe4cc7f7ee074c13e; บั�
 - เพิ่มคำถาม payroll cutoff/payment date
 
 - หลักฐานรอบเตรียม Staging: local typecheck/build PASS; 18 tests PASS และ native restore 1 SKIP รอ CI; M0 45 checks PASS
+
+- CI code45be1ac run35685633979 SUCCESS รวม native PostgreSQL17 restore case, security tests, build และ M0; commitถัดมาบันทึกผลใน PROJECT_STATUS/M1_TEST_EVIDENCE เท่านั้น

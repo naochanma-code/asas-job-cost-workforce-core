@@ -4,7 +4,7 @@
 
 Baseline PR #2 head 5328b4273ef7c2536097747e63469392fdaa74a0 ตรวจ GitHub: Draft=true, merged=false, mergeable=true; main 0d5da8a, behind0/ahead2; [CI baseline 35610665915](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35610665915) SUCCESS
 
-เพิ่ม tests/staging-security.test.ts (HTTPS guard/cookie/CSRF/logout, rate-limit spoof/lockout/global, byte-exact signature/empty Verify) และ tests/native-restore.test.ts (isolated native PG schemas, Project A/B/Site/Job/assignment/audit/LINE mapping, no transient credentials, scope/revocationหลังrestore) ผลรอบสุดท้ายจะบันทึกด้านล่าง แยกจาก baseline
+เพิ่ม tests/staging-security.test.ts (HTTPS guard/cookie/CSRF/logout, rate-limit spoof/lockout/global, byte-exact signature/empty Verify) และ tests/native-restore.test.ts (isolated native PG schemas, Project A/B/Site/Job/assignment/audit/LINE mapping, no transient credentials, scope/revocationหลังrestore) ผลรอบสุดท้ายบันทึกด้านล่าง แยกจาก baseline
 
 Staging HTTPS/proxy/DB TLS, LINE จริง, provider restart/PITR/backup scheduler, Owner UAT ทั้งหมด **NOT_RUN** ไม่มีการสมัคร/ชำระเงิน/deploy/ส่งข้อความ และยังไม่ Ready to Merge
 
@@ -50,6 +50,14 @@ LINE transport เป็น fake sender ทั้งหมด ไม่มี re
 ## ผล local รอบเพิ่ม tests (2026-09-22)
 
 - frozen offline install, strict typecheck และ Next build PASS
-- Node runner 19 total: 18 PASS / 0 FAIL / 1 SKIP (native restore ต้อง TEST_DATABASE_URL; รอ CI PostgreSQL17)
+- Node runner 19 total: 18 PASS / 0 FAIL / 1 SKIP (native restore ต้อง TEST_DATABASE_URL; CI PostgreSQL17 ผ่านตามหลักฐานด้านล่าง)
 - M0 regression 24+14+7 =45 checks PASS; git diff --check PASS
 - ผลนี้มาจาก isolated M1 checkout ไม่มี migration003/time API ของ M2 ไม่มี real LINE หรือ staging transport
+
+## ผล CI รอบ Staging preparation
+
+Artifact code/tests/docs: 45be1acfe136338df8867dd3ba98ecd6f841a212; [Foundation run 35685633979](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35685633979), verify job 106611718741 SUCCESS ทุก step: frozen install/typecheck/PGlite tests/native PostgreSQL17 tests/Next build/M0 regression
+
+Native restore case PASS จริงใน CI ไม่ได้ skip ใน native run: แยก source/target schemas, restore แล้ว reopen connection, ตรวจ A/B/Site/Job/assignment/audit/LINE mappings และทดสอบ scope กับการถอน assignment หลัง restore ไม่ใช่ provider backup/PITR หรือ Staging restart
+
+Commit หลักฐานถัดจาก45be1acเปลี่ยนเอกสารเท่านั้น; ไม่อ้างว่า CI commitเก่าคือ headใหม่ ผล PRยังDraft/ไม่merge/ไม่deploy/M2พัก
