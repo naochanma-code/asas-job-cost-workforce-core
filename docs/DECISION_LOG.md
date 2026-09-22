@@ -1,5 +1,13 @@
 # DECISION LOG
 
+## D-018 — M1 Staging A–E and isolated database roles (2026-09-22)
+
+Owner authorizes only the existing Railway Trial for database security, API/Web, synthetic functional tests and isolated restore. LINE remains false even after those phases pass. No upgrade, paid service, PR #2 merge, M2 or production. Stop on credit exhaustion, exposure risk or required staging data deletion/overwrite.
+
+Provision runtime/migrator roles using a reviewed one-time transaction. Migrator owns schema/tables and is NOLOGIN, operated through the existing administrator's SET ROLE. Runtime starts NOLOGIN until Owner enters a credential privately; no schema ownership/DDL/TEMP or migration-history mutation; audit append/read only. Explicit table grants avoid granting future modules automatically. No business schema or HTTP contract change. See [database security procedure](M1_DATABASE_SECURITY.md).
+
+Browser credential entry requires Owner handoff. Verified TLS inside the Postgres console does not substitute for testing TLS from the deployed API. Preserve phase-level NOT_RUN until each live check is performed.
+
 ## D-017 — Railway Trial และ runtime schema verification (2026-09-22)
 
 Accepted: Owner เลือก Railway ตัวเริ่มต้นและอนุญาตเริ่มกระบวนการ ใช้ Trial credits เท่านั้น ห้ามเปลี่ยนแพ็กเกจ/เพิ่มขนาด/ค่าใช้จ่ายเอง ต้องแจ้งและรออนุมัติใหม่ ไม่อนุญาต Production/Merge PR #2/M2
