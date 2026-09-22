@@ -1,5 +1,16 @@
 # M1 Test Evidence — 2026-09-21
 
+## Owner Web login handoff — 2026-09-22
+
+Release 4fcb29e deployed: API 66ce64bf-c1f8-4a1a-abc2-5292b33c734c and Web 4202ccc1-70f1-480b-af33-8b1a7c8da635 ACTIVE; Details on both independently match full commit and M1 branch. Post-deploy / and /api/health returned 200, database ready. API startup message verified; limited credential-pattern scan negative. Owner browser handoff pending. This evidence-only documentation update does not change deployed application code.
+
+
+Staging URL: https://web-staging-cb6f.up.railway.app/ . Login page rendered at 390x844 with scrollWidth=390 and no horizontal overflow; authenticated mobile screens remain NOT_RUN. PostgreSQL Settings showed Add Public Access (not enabled); API remains unexposed. Latest Trial indicator $4.99 /30 days; no upgrade or paid add-on.
+
+Release 4fcb29e5625caad99b2d6c3056ebd08a344b7728: CI 35738098892 verify job SUCCESS including both test suites, native PostgreSQL, typecheck, Web build, both Docker builds, Web/API smoke, verified TLS, runtime-role backup CLI and M0 checks. Local: 22 PASS, 2 native SKIP, 0 FAIL; M0 45/45 PASS. PR #2 remains Draft, not merged, mergeable; main base 0d5da8a and behind count 0. Both services now have a non-secret M1_RELEASE_COMMIT annotation; deployment metadata must independently match it (annotation does not pin source).
+
+Current gates: A PASS; B HTTPS/health/CSRF/anonymous scope/forwarded spoof checks PASS, live cookie/rate checks pending; C Login page/mobile PASS, Owner login/logout/expiry NOT_RUN; D synthetic role/Project A+B/restart tests NOT_RUN; E isolated Staging restore NOT_RUN. Owner must enter existing Web credentials directly; no credential requested in chat. LINE=false. No claim of overall A-E/UAT acceptance.
+
 ## Web/API Staging live checkpoint — 2026-09-22
 
 API deployment abc2992b-7b07-4f56-84f2-3fbda1e12ac4 ACTIVE, release 9c70a0805ee6d891bfdf0249d171c009b36e0627 / codex/milestone-1-foundation. Runtime-only DB credential, verified TLS startup gates, private API (no public domain), HTTPS WEB_ORIGIN set to https://web-staging-cb6f.up.railway.app. Web deployment e193de78-4523-4f55-a63d-1ef8b686af55 serves HTTPS through private API. Auto deploy disabled on both services; LINE=false.
