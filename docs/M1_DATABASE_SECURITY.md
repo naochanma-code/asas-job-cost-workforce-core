@@ -31,4 +31,6 @@ Verify role attributes, memberships, database CREATE/TEMP and schema CREATE priv
 
 ## Current stop point
 
-Role script CODED; native verification pending this commit's CI. Staging roles/password/API TLS not provisioned yet. Phase B–E are NOT_RUN. No Web URL is available. Do not treat old bootstrap or CI evidence as deployed API/UAT/backup evidence.
+Role script passed native CI 35728088352 and was applied to staging with COMMIT. Read-only catalog checks confirmed all restrictions above and 18 migrator-owned tables; both roles remain NOLOGIN. Owner's private password prompt is open. Public CA is staged in API Variables, not deployed. Credential login and API-side TLS remain NOT_RUN. Phase B–E are NOT_RUN and no Web URL exists. Do not treat console TLS or CI evidence as deployed API/UAT/backup evidence.
+
+Next operator steps after Owner confirms password entry: confirm only password presence (boolean; never select the hash), enable runtime LOGIN, have Owner enter the same password directly in the API secret field, configure its connection with runtime username and private provider references. Keep the administrator URL absent. Run `node --import tsx scripts/verify-runtime-db.ts` as the one-shot API start command before opening HTTP. Never rerun bootstrap or provision roles to recover a failed connection.

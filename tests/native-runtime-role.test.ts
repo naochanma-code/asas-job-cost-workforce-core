@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { Pool, type PoolClient } from "pg";
+import { verifyRuntimePrivileges } from "../packages/database/runtime-security";
 import {
   openDatabase,
   migrate,
@@ -32,6 +33,13 @@ test(
       await db.close();
       pool = new Pool({ connectionString: url.toString(), max: 1 });
       client = await pool.connect();
+      await assert.rejects(
+        verifyRuntimePrivileges({
+          query: (s, p) => client!.query(s, p),
+          exec: (s) => client!.query(s),
+        }),
+        /excess privileges/,
+      );
       const sql = (
         await readFile(
           new URL("../deploy/provision-m1-roles.sql", import.meta.url),
@@ -44,6 +52,10 @@ test(
       await assert.rejects(client.query(sql), /already exist/);
       await client.query("ROLLBACK");
       await client.query(`SET SESSION AUTHORIZATION "${runtime}"`);
+      await verifyRuntimePrivileges({
+        query: (s, p) => client!.query(s, p),
+        exec: (s) => client!.query(s),
+      });
       await verifySchema({
         query: (s, p) => client!.query(s, p),
         exec: (s) => client!.query(s),

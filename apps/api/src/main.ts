@@ -3,12 +3,20 @@ import {
   prepareRuntimeDatabase,
 } from "../../../packages/database/index";
 import { buildApp } from "./app";
+import {
+  verifyRuntimePrivileges,
+  verifyDatabaseTls,
+} from "../../../packages/database/runtime-security";
 async function main() {
   const db = await openDatabase(
     process.env.DATABASE_URL,
     process.env.LOCAL_DB_DIR,
   );
   await prepareRuntimeDatabase(db);
+  if (process.env.NODE_ENV === "production") {
+    await verifyRuntimePrivileges(db);
+    await verifyDatabaseTls(db);
+  }
   const app = await buildApp(db, process.env.WEB_ORIGIN);
   await app.listen({
     host: process.env.HOST || "127.0.0.1",

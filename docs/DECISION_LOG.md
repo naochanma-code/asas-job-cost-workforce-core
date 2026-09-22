@@ -10,6 +10,8 @@ Browser credential entry requires Owner handoff. Verified TLS inside the Postgre
 
 Production-mode PostgreSQL now always verifies TLS. `DATABASE_SSL_CA` supplies a private provider's **public CA certificate**, otherwise the system trust store applies. Reject URL SSL parameters and disabled verification rather than letting pg replace the explicit SSL policy. Local non-production tests can use plaintext disposable databases. Startup/background logs emit fixed error categories; container CI uses a synthetic CA, not Railway credentials.
 
+API startup also rejects elevated role flags, membership, object ownership, database/schema CREATE/TEMP and writes to migration history or existing audit rows. The one-shot runtime verification uses the same checks plus schema checksum and pg_stat_ssl without opening HTTP. This prevents accidentally restoring the administrator URL to the API.
+
 ## D-017 — Railway Trial และ runtime schema verification (2026-09-22)
 
 Accepted: Owner เลือก Railway ตัวเริ่มต้นและอนุญาตเริ่มกระบวนการ ใช้ Trial credits เท่านั้น ห้ามเปลี่ยนแพ็กเกจ/เพิ่มขนาด/ค่าใช้จ่ายเอง ต้องแจ้งและรออนุมัติใหม่ ไม่อนุญาต Production/Merge PR #2/M2
