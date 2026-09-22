@@ -1,4 +1,4 @@
-import { openDatabase } from "../packages/database/index";
+import { openDatabase, verifySchema } from "../packages/database/index";
 import {
   processLineEvent,
   deliverLine,
@@ -18,6 +18,7 @@ if (
   );
 const db = await openDatabase(process.env.DATABASE_URL),
   transport = liveTransport(process.env.LINE_CHANNEL_ACCESS_TOKEN);
+await verifySchema(db);
 let stopping = false;
 for (const signal of ["SIGINT", "SIGTERM"])
   process.on(signal, () => (stopping = true));

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-09-22 — Railway Trial preparation
+
+- บันทึกอนุมัติ Trial Staging และห้ามอัปเกรด/เพิ่มค่าใช้จ่ายเอง สร้าง project/environment เปล่า ยังไม่ deploy
+- เพิ่ม Dockerfiles Web/API, CI build/smoke container และ runtime schema verification โดยไม่ใช้ DDL ตอนเริ่ม production-mode API/worker
+- เพิ่ม runtime-schema test: reject missing/modified/extra migration; local19 PASS/1 SKIP
+- เพิ่ม D-017/คู่มือ Railway; GitHub access รอ Owner อนุมัติหลัง automatic approval review ปฏิเสธ ยังไม่ Merge PR #2/M2/Production
+
 ## 2026-09-22 — เตรียม Milestone 1 Staging และ Real LINE Pilot
 
 - ตรวจ Draft PR #2/CI/main: ไม่ตกหลัง main และ mergeable; แยก checkout เพื่อพักงาน M2 ไม่ให้ปน PR

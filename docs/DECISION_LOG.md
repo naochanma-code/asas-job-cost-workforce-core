@@ -1,5 +1,13 @@
 # DECISION LOG
 
+## D-017 — Railway Trial และ runtime schema verification (2026-09-22)
+
+Accepted: Owner เลือก Railway ตัวเริ่มต้นและอนุญาตเริ่มกระบวนการ ใช้ Trial credits เท่านั้น ห้ามเปลี่ยนแพ็กเกจ/เพิ่มขนาด/ค่าใช้จ่ายเอง ต้องแจ้งและรออนุมัติใหม่ ไม่อนุญาต Production/Merge PR #2/M2
+
+Staging ใช้ Docker Web/API และ PostgreSQL ใหม่แยกจาก local M2. Production-mode API/worker ตรวจชื่อ/checksum/จำนวน migration ให้ตรง release ก่อนเริ่ม ไม่ apply DDL; operator รัน migrate/bootstrap ก่อนด้วย credential แยก Runtime ต้องใช้ role ที่ไม่มี CREATE/ALTER; ยังต้องทดสอบ role จริง Local ยัง auto-migrate ไม่มีการเปลี่ยน business schema/API/สิทธิ์ผู้ใช้
+
+ป้องกัน runtime ถือ credential ผู้ดูแลและชี้ไปฐาน M2/รุ่นอื่นโดยไม่รู้ตัว Docker CI ไม่ใช่ deployment/UAT; LINE ปิดจนผ่าน checklist
+
 ## D-016 — เตรียม M1 Staging; พัก M2 (2026-09-22)
 
 Owner สั่งตรวจ Draft PR #2 และเตรียม Staging/Real LINE Pilot โดยไม่ Merge ไม่เริ่ม M2 ไม่ deploy หรือสมัครเสียเงินจนอนุมัติ แยกงาน M2 ที่ค้างใน local working tree ไม่รวม PR นี้ แผน [M1_STAGING_PLAN](M1_STAGING_PLAN.md) เสนอ Render paid และ Railway Trial/Hobby ยังไม่เลือกแทน Owner ไม่มีการเปลี่ยน schema/API/permission ของ M1 รอบนี้ เพิ่มเฉพาะ tests และเอกสาร เกณฑ์ UAT/HTTPS/provider restore/real LINE ต้องพิสูจน์จริง ไม่ใช้ผลจำลองแทน

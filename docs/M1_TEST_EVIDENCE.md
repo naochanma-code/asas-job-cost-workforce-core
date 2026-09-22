@@ -1,5 +1,15 @@
 # M1 Test Evidence — 2026-09-21
 
+## Railway Trial preparation — 2026-09-22
+
+- tsc --noEmit: PASS
+- tsx --test --test-concurrency=1 tests/*.test.ts: 20 total /19 PASS /0 FAIL /1 SKIP (native restore ไม่มี TEST_DATABASE_URL บนเครื่อง)
+- runtime-schema test: SELECT อย่างเดียว, reject missing/modified/extra migrations PASS บน PGlite ไม่ใช่หลักฐาน runtime role บน Railway
+- Docker build/Web smoke เพิ่มใน CI: PENDING รุ่นใหม่
+- Railway UI: asas-m1-staging/environment staging สร้างแล้ว; Limited Trial $5/30วัน; ไม่มี service/deploy/DB/LINE traffic
+- Configure GitHub App ถูก automatic approval review ปฏิเสธก่อนเปิด ต้องรับ Owner approval สำหรับ repository access ไม่มีการให้สิทธิ์สำเร็จ
+- DEPLOYED_STAGING=NO, REAL_LINE=NOT_RUN, UAT_PASSED=NO; หลักฐานด้านล่างเป็น historical commit ตามที่ระบุ
+
 ## รอบเตรียม Staging — 2026-09-22
 
 Baseline PR #2 head 5328b4273ef7c2536097747e63469392fdaa74a0 ตรวจ GitHub: Draft=true, merged=false, mergeable=true; main 0d5da8a, behind0/ahead2; [CI baseline 35610665915](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35610665915) SUCCESS

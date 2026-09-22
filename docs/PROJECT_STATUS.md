@@ -1,5 +1,19 @@
 # PROJECT STATUS
 
+## ล่าสุด 2026-09-22 — Railway Trial ได้รับอนุมัติ
+
+Owner เลือก Railway Trial และอนุมัติเริ่ม Staging แล้วตาม D-017 ใช้เฉพาะเครดิตทดลอง ห้ามเพิ่มแพ็กเกจ/ขนาด/บริการเสียเงินเอง ต้องแจ้งและรอ Owner อนุมัติก่อน ยังห้าม Merge PR #2, Production และ M2
+
+Codex ดูแล M1 บน isolated checkout เดิม สร้าง Railway project asas-m1-staging/environment staging แล้ว ยังไม่มี service/database/application deployment Dashboard แสดง Limited Trial $5/สูงสุด30วัน ต้องพิสูจน์ outbound ก่อน LINE
+
+CODED: Dockerfiles Web/API และ runtime ตรวจ schema โดยไม่ migrate; TESTED_LOCAL: typecheck PASS, 20 tests/19 PASS/1 native-only SKIP; TESTED_CI รุ่นใหม่: PENDING; DEPLOYED_STAGING: NO; REAL_LINE/UAT: NOT_RUN; READY_TO_MERGE: NO
+
+ติดขัด: automatic approval review ปฏิเสธ Configure GitHub App เพราะอาจให้ Railway เข้าถึง GitHub ต้องให้ Owner อนุมัติ/ติดตั้งเฉพาะ naochanma-code/asas-job-cost-workforce-core ไม่ให้ทุก repository และไม่ใช้ทางเลี่ยง
+
+ถัดไป: CI/สิทธิ์ GitHub → DB ใหม่/role/TLS → Web/API ปิด LINE → HTTPS/backup/restore → LINE checklist ดู [คู่มือ Railway](M1_RAILWAY_SETUP.md)
+
+ข้อความด้านล่างเป็นประวัติก่อนอนุมัติ Trial ไม่ห้าม Trial ที่อนุมัติใหม่
+
 ## ล่าสุด 2026-09-22 — เตรียม M1 Staging / Real LINE Pilot เท่านั้น
 
 Owner สั่งกลับมาทำ M1 ตาม PR #2: **ห้าม Merge, ห้ามเริ่ม/พัฒนา M2 ต่อ, ห้าม Deploy ทุก environment จนอนุมัติ และห้าม Production** Codex รับผิดชอบ tests/docs ของ M1 คนเดียวบน `codex/milestone-1-foundation` ใน isolated checkout `.local/m1-staging` งาน Web Time/OT ที่ค้างจากคำสั่งก่อนหน้าอยู่เฉพาะ working tree ของ `codex/milestone-2-web-time-ot` ถูกพัก ไม่รวม PR #2 และไม่ใช้ local DB ที่มี migration M2 เป็น staging

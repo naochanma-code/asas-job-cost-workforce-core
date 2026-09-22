@@ -31,4 +31,28 @@ jobs:
         env:
           TEST_DATABASE_URL: postgres://foundation:synthetic-ci-only@127.0.0.1:5432/foundation_test
       - run: pnpm build
+      - name: Build staging containers (no deploy)
+        run: |
+          docker build -f deploy/Dockerfile.api -t asas-api:ci .
+          docker build -f deploy/Dockerfile.web --build-arg API_URL=http://api.railway.internal:3001 -t asas-web:ci .
+      - name: Smoke staging web container (no public deployment)
+        run: |
+          docker run -d --name asas-web-ci -p 127.0.0.1:3100:3000 asas-web:ci
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3100/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Smoke staging API container (isolated CI database)
+        env:
+          DATABASE_URL: postgres://foundation:synthetic-ci-only@127.0.0.1:5432/foundation_test
+        run: |
+          docker run --rm --network host -e DATABASE_URL asas-api:ci pnpm migrate
+          docker run -d --name asas-api-ci --network host -e DATABASE_URL -e WEB_ORIGIN=https://staging.example.test asas-api:ci
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3001/api/health > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          docker logs asas-api-ci
+          exit 1
       - run: node docs/verification/check-m0.mjs && node docs/verification/check-r2.mjs && node docs/verification/check-r4.mjs

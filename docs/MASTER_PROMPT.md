@@ -638,6 +638,8 @@ PROJECT_STATUS ต้องเขียนเป็นภาษาไทยแ�
 
 ## 19. คำสั่งเริ่มงานสำหรับ Codex
 
+อัปเดตล่าสุด 2026-09-22: Owner เลือก Railway Trial และอนุมัติเริ่ม Staging ด้วยเครดิตทดลองตาม D-017 ห้ามเพิ่มแพ็กเกจ/ขนาด/ค่าใช้จ่ายเอง ต้องขออนุมัติก่อน ยังไม่ Merge PR #2 ไม่เริ่ม M2 ไม่ deploy Production และ LINE จริงยังต้องผ่าน checklist/ตั้ง secrets ภายนอก Git ข้อความรออนุมัติ provider ด้านล่างเป็นประวัติ
+
 อัปเดต 2026-09-22: Owner ให้เตรียม M1 Staging และ Real LINE Pilot ตาม [แผน](M1_STAGING_PLAN.md) และ D-016 เท่านั้น พักงาน M2 ที่เคยทดลองในเครื่อง ห้าม Merge PR #2 ห้ามเริ่ม M2 และห้าม deploy/สมัครบริการเสียเงินจน Owner อนุมัติ environment/งบโดยชัดเจน M1 ต้องผ่าน Real LINE และ UAT ก่อนขอปิด gate
 
 อัปเดต 2026-09-21: Milestone 0 ได้รับ Owner Acceptance และ Merge PR #1 แล้ว Owner สั่ง “เริ่มได้เลยค่ะ” ตามข้อเสนอ [Milestone 1 Foundation](M1_FOUNDATION_PROPOSAL.md) จึงอนุญาต implementation M1 บน branch แยกตาม Gate §14 และ [ADR-010](adr/010-foundation-implementation.md) ข้อความเริ่ม M0 ด้านล่างเป็นคำสั่งเริ่มต้นในอดีต ไม่ห้ามงาน M1 ที่อนุมัติใหม่ ยังไม่อนุญาต production deployment หรือเริ่ม M2; การทดสอบ LINE จริงต้องระบุ OA/กลุ่ม/environment และตั้ง secret ภายนอก Git ก่อน

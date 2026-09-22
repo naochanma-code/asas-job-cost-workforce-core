@@ -1,0 +1,12 @@
+FROM node:24-bookworm-slim
+WORKDIR /app
+RUN npm install --global pnpm@11.19.0
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY apps/api ./apps/api
+COPY packages ./packages
+COPY scripts ./scripts
+ENV NODE_ENV=production HOST=:: PORT=3001 LINE_ENABLED=false
+USER node
+EXPOSE 3001
+CMD ["node", "--import", "tsx", "apps/api/src/main.ts"]

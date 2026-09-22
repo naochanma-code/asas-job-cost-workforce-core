@@ -1,10 +1,13 @@
-import { openDatabase, migrate } from "../../../packages/database/index";
+import {
+  openDatabase,
+  prepareRuntimeDatabase,
+} from "../../../packages/database/index";
 import { buildApp } from "./app";
 const db = await openDatabase(
   process.env.DATABASE_URL,
   process.env.LOCAL_DB_DIR,
 );
-await migrate(db);
+await prepareRuntimeDatabase(db);
 const app = await buildApp(db, process.env.WEB_ORIGIN);
 await app.listen({
   host: process.env.HOST || "127.0.0.1",

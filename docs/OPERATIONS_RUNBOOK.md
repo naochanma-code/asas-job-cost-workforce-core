@@ -1,5 +1,9 @@
 # Foundation operations — local / test only
 
+## Online staging update 2026-09-22
+
+Owner อนุมัติ Railway Trial ตาม D-017 แล้ว ดู [คู่มือ Railway](M1_RAILWAY_SETUP.md) แทนสถานะรอเลือก server ด้านล่าง ยังไม่ deploy สำเร็จหรือส่ง LINE จริง. production-mode API/worker ตรวจ schema เท่านั้น operator ต้อง migrate/bootstrap แยกก่อนเริ่ม runtime ไม่ให้ runtime ใช้ credential ผู้ดูแล DB
+
 Owner อนุมัติพัฒนา M1 และยืนยันว่ามี OA/กลุ่มทดสอบแล้ว ยังไม่ระบุ server/domain/รายชื่อ allowlist จึงยังไม่ deploy หรือส่ง LINE จริง
 
 ## เริ่มบนเครื่อง

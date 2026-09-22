@@ -87,3 +87,30 @@ export async function migrate(db: Database) {
     });
   }
 }
+
+// Online runtimes only verify migrations. DDL belongs to the operator job.
+export async function verifySchema(db: Queryable) {
+  const applied = (
+    await db.query("SELECT name,checksum FROM schema_migrations ORDER BY name")
+  ).rows;
+  const dir = new URL("./migrations/", import.meta.url);
+  const names = (await readdir(dir)).filter((n) => n.endsWith(".sql")).sort();
+  if (applied.length !== names.length)
+    throw Error(
+      "Database schema does not match this release; run the approved migration job",
+    );
+  for (const [i, name] of names.entries()) {
+    const checksum = createHash("sha256")
+      .update(await readFile(new URL(name, dir), "utf8"))
+      .digest("hex");
+    if (applied[i].name !== name || applied[i].checksum !== checksum)
+      throw Error(
+        "Database schema does not match this release; run the approved migration job",
+      );
+  }
+}
+
+export async function prepareRuntimeDatabase(db: Database) {
+  if (process.env.NODE_ENV === "production") await verifySchema(db);
+  else await migrate(db);
+}
