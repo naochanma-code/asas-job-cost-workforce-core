@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Credential handoff verification — 2026-09-22
+
+Owner reported typing a password but seeing no confirmation. Read-only check returned runtime password present=false and LOGIN enabled=false. The active Console was at a fresh shell prompt, with no password-confirmation prompt visible; the reason the prior entry did not persist is unconfirmed. No password/hash was selected or printed, and no credential was reset. Runtime login/API TLS and Staging B–E remain NOT_RUN.
+
+Reopen the private psql password prompt for Owner to complete both entries. Do not infer success from typing or missing echo; confirm password presence with a boolean and later test the runtime connection. If a future reset is needed, an authorized administrator can set a new runtime password and update the API secret consistently; business data and the Owner web account are unaffected. Owner must enter credentials directly, never in chat. No deploy/merge/LINE/paid changes.
+
 ## Current handoff — 2026-09-22
 
 CI [35728917876](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35728917876) for code 997e231 SUCCESS: typecheck; PGlite suite; native PostgreSQL suite including runtime denial/restore; Next build; Docker Web/API build and smoke; verified TLS with restricted runtime; untrusted CA rejection; M0 checks. No Railway HTTP deployment was performed by this CI.
