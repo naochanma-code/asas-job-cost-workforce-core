@@ -46,3 +46,7 @@ Admin ที่เชื่อมแล้วสร้าง code ในหน�
 ## สิ่งที่ต้องตรวจบน staging ก่อนปิด M1
 
 LINE จริงครบ account link/unlink, nonceหมดอายุ/ซ้ำ, bindผิดคน/ซ้ำ, งานของ T1/T2 แยกกัน, ถอนสิทธิ์มีผล, restart/restore, Secure cookie, reverse proxy rate limit และ alert failed jobs พร้อม Owner UAT ห้ามอ้าง local mock ว่าแทนรายการเหล่านี้
+
+## แผน Staging ที่รออนุมัติ (2026-09-22)
+
+ใช้ [M1_STAGING_PLAN](M1_STAGING_PLAN.md), [LINE Pilot Checklist](M1_LINE_PILOT_CHECKLIST.md), [Owner UAT](M1_OWNER_UAT.md) และ [Staging test matrix](M1_STAGING_TEST_MATRIX.md) ก่อนเปิดออนไลน์ ห้าม deploy/จ่ายเงิน/ส่ง LINE จน Owner อนุมัติ ข้อจำกัด runtime migration role, proxy bucket, secret logging และ enrollment IDs ในแผนยังเป็น gate ก่อน pilot

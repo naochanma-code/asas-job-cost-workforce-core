@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-09-22 — เตรียม Milestone 1 Staging และ Real LINE Pilot
+
+- ตรวจ Draft PR #2/CI/main: ไม่ตกหลัง main และ mergeable; แยก checkout เพื่อพักงาน M2 ไม่ให้ปน PR
+- เพิ่มแผน Hosting 2 ทาง (Railway/Render), งบขออนุมัติ ขั้นตอน non-programmer, secrets, restart/restore/ย้าย/หยุดบริการ และรายการ blocker ก่อนเปิดจริง
+- เพิ่ม checklist สำหรับโอ๋/ฟ้า/T1/OA/กลุ่ม, Owner UAT 10 ข้อ, security test matrix และ fixture A ไม่มี Site/Job กับ B มี Site/Job
+- เพิ่มทดสอบ HTTPS config/Secure cookie, rate limit/forwarding spoof/account lock, raw signature และ native PostgreSQL restore พร้อมสิทธิ์หลัง restore; รัน tests แบบ serial เพื่อแยกการ migrate บน CI DB
+- สถานะยังไม่ deploy/real LINE/UAT/merge; หลักฐานรอบนี้ใน M1_TEST_EVIDENCE แยกผล local/CI/staging
+
 ## 2026-09-21 — เริ่ม Milestone 1 Foundation
 
 - Implementation 69c0739 push และเปิด Draft PR #2; CI run 35610393373 PASS กับ PostgreSQL 17 รวม typecheck/tests/build/M0 regression บันทึก provenance แยก ไม่ใช่ real LINE หรือ Owner UAT
@@ -84,3 +92,5 @@ Artifactที่ตรวจ 2294814994d7a244be1989ffe4cc7f7ee074c13e; บั�
 - กำหนด Admin กรอก/ตรวจข้อมูลเวลาโดยไม่เห็นยอด Payroll
 - กำหนด Owner กรอก rate เห็นยอด อนุมัติและ lock
 - เพิ่มคำถาม payroll cutoff/payment date
+
+- หลักฐานรอบเตรียม Staging: local typecheck/build PASS; 18 tests PASS และ native restore 1 SKIP รอ CI; M0 45 checks PASS

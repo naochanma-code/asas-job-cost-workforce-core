@@ -7,7 +7,7 @@
     "dev:web": "next dev apps/web --hostname 127.0.0.1 --port 3000",
     "build": "next build apps/web",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/*.test.ts",
+    "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
     "migrate": "tsx scripts/migrate.ts",
     "bootstrap": "tsx scripts/bootstrap.ts",
     "worker": "tsx scripts/worker.ts",

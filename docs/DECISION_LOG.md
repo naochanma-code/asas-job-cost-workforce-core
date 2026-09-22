@@ -1,5 +1,9 @@
 # DECISION LOG
 
+## D-016 — เตรียม M1 Staging; พัก M2 (2026-09-22)
+
+Owner สั่งตรวจ Draft PR #2 และเตรียม Staging/Real LINE Pilot โดยไม่ Merge ไม่เริ่ม M2 ไม่ deploy หรือสมัครเสียเงินจนอนุมัติ แยกงาน M2 ที่ค้างใน local working tree ไม่รวม PR นี้ แผน [M1_STAGING_PLAN](M1_STAGING_PLAN.md) เสนอ Render paid และ Railway Trial/Hobby ยังไม่เลือกแทน Owner ไม่มีการเปลี่ยน schema/API/permission ของ M1 รอบนี้ เพิ่มเฉพาะ tests และเอกสาร เกณฑ์ UAT/HTTPS/provider restore/real LINE ต้องพิสูจน์จริง ไม่ใช้ผลจำลองแทน
+
 ## D-014 — เริ่ม Milestone 1 Foundation (2026-09-21)
 
 Owner สั่ง “เริ่มได้เลยค่ะ” หลังข้อเสนอ M1 และยืนยันว่ามี OA/กลุ่มทดสอบแยกแล้ว Codex รับผิดชอบ codex/milestone-1-foundation ตาม [ADR-010](adr/010-foundation-implementation.md) อนุญาต implementation และ local tests ไม่ใช่การอนุมัติ production/ส่ง LINE จริงหรือเริ่ม M2 สถานะ D-013 ที่ยังไม่เริ่ม M1 เป็นประวัติก่อนคำสั่งนี้ Gate LINE จริงยังคงเดิม

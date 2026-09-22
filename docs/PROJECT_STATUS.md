@@ -1,5 +1,21 @@
 # PROJECT STATUS
 
+## ล่าสุด 2026-09-22 — เตรียม M1 Staging / Real LINE Pilot เท่านั้น
+
+Owner สั่งกลับมาทำ M1 ตาม PR #2: **ห้าม Merge, ห้ามเริ่ม/พัฒนา M2 ต่อ, ห้าม Deploy ทุก environment จนอนุมัติ และห้าม Production** Codex รับผิดชอบ tests/docs ของ M1 คนเดียวบน `codex/milestone-1-foundation` ใน isolated checkout `.local/m1-staging` งาน Web Time/OT ที่ค้างจากคำสั่งก่อนหน้าอยู่เฉพาะ working tree ของ `codex/milestone-2-web-time-ot` ถูกพัก ไม่รวม PR #2 และไม่ใช้ local DB ที่มี migration M2 เป็น staging
+
+ผลตรวจเริ่มรอบ: PR #2 Draft/open/not merged, mergeable=true; head 5328b42, main 0d5da8a; behind 0 / ahead 2; CI 35610665915 SUCCESS ทั้ง PostgreSQL17/PGlite/typecheck/build/M0 ก่อนเพิ่ม tests รอบนี้ ไม่มี conflict ที่ต้อง merge/rebase
+
+จัดทำ [แผนและราคา Hosting](M1_STAGING_PLAN.md), [LINE checklist](M1_LINE_PILOT_CHECKLIST.md), [Owner UAT 10 ข้อ](M1_OWNER_UAT.md), [Staging test matrix](M1_STAGING_TEST_MATRIX.md), [ข้อมูลสมมติ A/B](fixtures/m1-pilot.json) และเพิ่ม security/native restore tests ผลรอบใหม่บันทึกใน [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md)
+
+CODED: M1 เดิม + tests ใหม่; TESTED_LOCAL: PASS typecheck/build/18 tests (native restore 1 SKIP รอ CI)/M0 45 checks; TESTED_CI รอบใหม่: PENDING; DEPLOYED_STAGING: NO; REAL_LINE: NOT_RUN; UAT_PASSED: NO; READY_TO_MERGE: NO
+
+รอ Owner ตัดสินใจ provider/งบ และวัน/ช่างที่ร่วม pilot ไม่ขอ secret ผ่านแชทหรือ GitHub รายละเอียด deployment blockers (runtime DB role/migrations, proxy rate limit, TLS, logs, enrollment IDs และ cleanup/backup) อยู่ในแผน ต้องตรวจ/แก้ก่อน live pilot ไม่ใช่ข้ออ้างให้เปิดจริงโดยอัตโนมัติ
+
+ความขัดแย้งกับคำสั่งเก่าที่พัก LINE/เริ่ม M2: ใช้คำสั่งล่าสุดพัก M2 และเตรียม M1 ไม่ต้องถามซ้ำ ส่วน policy OT ที่ Owner ยืนยันยังเก็บในงานที่พักไว้ ไม่ได้ implement ใน M1
+
+ข้อความด้านล่างเป็นประวัติรอบ Foundation เดิม ขั้นตอนปัจจุบันใช้แผนด้านบน
+
 2026-09-21 · MASTER v2.5 + คำสั่งเริ่ม M1 §19 · ผู้รับผิดชอบ Codex
 
 **Milestone 0: OWNER_ACCEPTED / MERGED** — PR #1 merge a7e5c9e08a4d2c8185a12ef65f705a190c243a8d; main 0d5da8a รวมบันทึกหลัง merge เอกสาร/prototype ครบ หลักฐาน [M0_ACCEPTANCE](M0_ACCEPTANCE.md), [TEST_EVIDENCE](TEST_EVIDENCE.md)
