@@ -2,6 +2,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { Pool } from "pg";
 import { createHash } from "node:crypto";
 import { readFile, readdir, mkdir } from "node:fs/promises";
+import { databasePoolOptions } from "./connection";
 
 export type Row = Record<string, any>;
 export interface Queryable {
@@ -20,7 +21,10 @@ export async function openDatabase(
   directory = ".local/pgdata",
 ): Promise<Database> {
   if (url) {
-    const pool = new Pool({ connectionString: url, max: 10 });
+    const pool = new Pool(databasePoolOptions(url));
+    pool.on("error", () =>
+      console.error("Database background connection failed"),
+    );
     return {
       query: async (s, p) => pool.query(s, p),
       exec: (s) => pool.query(s),

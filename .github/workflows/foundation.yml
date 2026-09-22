@@ -46,9 +46,21 @@ jobs:
       - name: Smoke staging API container (isolated CI database)
         env:
           DATABASE_URL: postgres://foundation:synthetic-ci-only@127.0.0.1:5432/foundation_test
+          PG_CONTAINER: ${{ job.services.postgres.id }}
         run: |
-          docker run --rm --network host -e DATABASE_URL asas-api:ci pnpm migrate
-          docker run -d --name asas-api-ci --network host -e DATABASE_URL -e WEB_ORIGIN=https://staging.example.test asas-api:ci
+          mkdir -p "$RUNNER_TEMP/m1-tls"
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj '/CN=localhost' -addext 'subjectAltName=IP:127.0.0.1,DNS:localhost' -keyout "$RUNNER_TEMP/m1-tls/server.key" -out "$RUNNER_TEMP/m1-tls/server.crt" 2>/dev/null
+          docker cp "$RUNNER_TEMP/m1-tls/server.key" "$PG_CONTAINER:/tmp/m1-server.key"
+          docker cp "$RUNNER_TEMP/m1-tls/server.crt" "$PG_CONTAINER:/tmp/m1-server.crt"
+          docker exec -u 0 "$PG_CONTAINER" chown postgres:postgres /tmp/m1-server.key /tmp/m1-server.crt
+          docker exec -u 0 "$PG_CONTAINER" chmod 600 /tmp/m1-server.key
+          docker exec "$PG_CONTAINER" psql -U foundation -d foundation_test -c "ALTER SYSTEM SET ssl_cert_file='/tmp/m1-server.crt'"
+          docker exec "$PG_CONTAINER" psql -U foundation -d foundation_test -c "ALTER SYSTEM SET ssl_key_file='/tmp/m1-server.key'"
+          docker exec "$PG_CONTAINER" psql -U foundation -d foundation_test -c "ALTER SYSTEM SET ssl=on"
+          docker exec "$PG_CONTAINER" psql -U foundation -d foundation_test -c 'SELECT pg_reload_conf()'
+          export DATABASE_SSL_CA="$(cat "$RUNNER_TEMP/m1-tls/server.crt")"
+          docker run --rm --network host -e DATABASE_URL -e DATABASE_SSL_CA asas-api:ci pnpm migrate
+          docker run -d --name asas-api-ci --network host -e DATABASE_URL -e DATABASE_SSL_CA -e WEB_ORIGIN=https://staging.example.test asas-api:ci
           for attempt in $(seq 1 30); do
             if curl --fail --silent http://127.0.0.1:3001/api/health > /dev/null; then exit 0; fi
             sleep 1

@@ -8,6 +8,8 @@ Provision runtime/migrator roles using a reviewed one-time transaction. Migrator
 
 Browser credential entry requires Owner handoff. Verified TLS inside the Postgres console does not substitute for testing TLS from the deployed API. Preserve phase-level NOT_RUN until each live check is performed.
 
+Production-mode PostgreSQL now always verifies TLS. `DATABASE_SSL_CA` supplies a private provider's **public CA certificate**, otherwise the system trust store applies. Reject URL SSL parameters and disabled verification rather than letting pg replace the explicit SSL policy. Local non-production tests can use plaintext disposable databases. Startup/background logs emit fixed error categories; container CI uses a synthetic CA, not Railway credentials.
+
 ## D-017 — Railway Trial และ runtime schema verification (2026-09-22)
 
 Accepted: Owner เลือก Railway ตัวเริ่มต้นและอนุญาตเริ่มกระบวนการ ใช้ Trial credits เท่านั้น ห้ามเปลี่ยนแพ็กเกจ/เพิ่มขนาด/ค่าใช้จ่ายเอง ต้องแจ้งและรออนุมัติใหม่ ไม่อนุญาต Production/Merge PR #2/M2

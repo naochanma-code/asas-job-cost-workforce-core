@@ -19,7 +19,7 @@ The browser's credential-entry handoff is required before entering a new passwor
 
 Read-only console check on 2026-09-22: PostgreSQL 18.6; ssl=on. Private hostname certificate SAN matched; `PGSSLMODE=verify-full` with the local public root certificate connected successfully; `pg_stat_ssl` for that connection reported TLSv1.3 / 256 bits.
 
-This proves the Postgres console client's verified connection, **not the future Node API connection**. The API still needs explicit trusted public CA configuration, hostname verification and its own `pg_stat_ssl` check. Never copy a private key or database password when exporting the public root certificate. Do not use `rejectUnauthorized=false`, `sslmode=no-verify` or `NODE_TLS_REJECT_UNAUTHORIZED=0`.
+This proves the Postgres console client's verified connection, **not the future Node API connection**. The API now enforces verified TLS in production mode. Configure `DATABASE_SSL_CA` with the public root certificate directly in Railway Variables and verify the deployed API's own `pg_stat_ssl` connection before marking PASS. URL SSL parameters are rejected to prevent pg overriding this configuration. Never copy a private key or database password when exporting the public root certificate. Do not use `rejectUnauthorized=false`, `sslmode=no-verify` or `NODE_TLS_REJECT_UNAUTHORIZED=0`.
 
 Certificate validity observed: 2026-09-22 through 2028-12-20; provider template may renew it. Recheck public CA trust after provider certificate changes before restarting clients. Source: [Railway PostgreSQL image](https://github.com/railwayapp-templates/postgres-ssl/blob/main/init-ssl.sh).
 
