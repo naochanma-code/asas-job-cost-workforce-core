@@ -31,7 +31,7 @@ HTTPS reverse proxy route `/api/*` ไป Fastify, ที่เหลือไ�
 ไฟล์ backup มีข้อมูลส่วนบุคคล/password hashes ใช้ private encrypted storage แยกเครื่อง สิทธิ์เฉพาะ operator/Owner; ห้าม commit หรือส่งในแชท ตั้งรายวันก่อน pilot และทดลองกู้คืนก่อนเปิดใช้งานจริง กำหนดผู้ดูแล/retention ของ foundation backup กับ Owner; นโยบายบิล 2 ปีเป็น M0 design และไม่ใช่ TTL ของ backup นี้
 
 1. Native DB: `pnpm backup backup <private-file.json>` เก็บ consistent logical snapshot ไม่ overwrite ไฟล์เดิม; ถ้า local ต้อง stop API ก่อนและกำหนด LOCAL_DATABASE_OFFLINE=true
-2. สร้างฐานกู้คืนแยกที่ว่าง ใช้ schema เดียวกัน แล้ว `pnpm backup restore <private-file.json>`; ไม่เขียนทับฐานที่มี users/data
+2. สร้างฐานกู้คืนแยกที่ว่าง ให้ผู้ดูแล migration เตรียม schema เดียวกันก่อน แล้ว `pnpm backup restore <private-file.json>`; CLI ตรวจ schema เท่านั้น ไม่รัน migration และไม่เขียนทับฐานที่มี users/data
 3. ตรวจ counts/Project/assignment/audit และ login ใหม่; session/nonce/pending reply tokens ไม่ถูกกู้คืน ไม่ส่งข้อความเก่า
 4. ใช้ `pg_dump`/PITR ของ provider เพิ่มก่อน production; logical tool นี้ไม่ใช่ full disaster recovery ของ cluster หรือ encrypted object storage
 

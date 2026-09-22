@@ -29,7 +29,13 @@ Verify role attributes, memberships, database CREATE/TEMP and schema CREATE priv
 
 `tests/native-runtime-role.test.ts` attempts forbidden DDL, migration/audit mutation and escalation only in a newly created disposable CI database with random role names. It verifies normal writes and migration-role DDL separately. CI cleanup deletes only those resources created by that test, never the Railway database.
 
-## Current stop point
+## Phase A live PASS — 2026-09-22
+
+Runtime password authentication, schema, restricted privileges and verified TLS passed in one-shot API deployment `90dc89a1-a4c0-4d23-baaa-0cd77733e6e0`, release `9c70a08`. API HTTP deployment `abc2992b-7b07-4f56-84f2-3fbda1e12ac4` subsequently passed the same startup guards and healthcheck. HTTPS Web `/api/health` reports database ready. Owner entered PGPASSWORD directly; no administrator credential was restored to API. LINE remains false. Authenticated UAT and isolated restore are pending; see PROJECT_STATUS for the latest checkpoint.
+
+Backup CLI verifies existing migrations without DDL. Use the separate migration operator to prepare an empty restore destination first. Never grant runtime DDL merely to make backup work. CLI errors print a fixed category, not a connection exception.
+
+## Previous credential handoff (superseded by live PASS above)
 
 Role script passed native CI 35728088352 and was applied to staging with COMMIT. Read-only catalog checks confirmed all restrictions above and 18 migrator-owned tables; migration role remains NOLOGIN. Owner saved the runtime password (presence checked as boolean only), and runtime LOGIN is now enabled. Public CA is staged in API Variables, not deployed. Credential login and API-side TLS remain NOT_RUN. Phase B–E are NOT_RUN and no Web URL exists. Do not treat console TLS or CI evidence as deployed API/UAT/backup evidence.
 

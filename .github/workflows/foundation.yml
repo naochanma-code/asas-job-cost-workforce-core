@@ -64,6 +64,8 @@ jobs:
           docker exec "$PG_CONTAINER" psql -U foundation -d foundation_test -c "ALTER ROLE asas_m1_runtime LOGIN PASSWORD 'synthetic-runtime-ci-only'"
           export DATABASE_URL='postgres://asas_m1_runtime:synthetic-runtime-ci-only@127.0.0.1:5432/foundation_test'
           docker run --rm --network host -e DATABASE_URL -e DATABASE_SSL_CA asas-api:ci node --import tsx scripts/verify-runtime-db.ts
+          # Ephemeral synthetic backup proves the operator CLI needs no DDL.
+          docker run --rm --network host -e DATABASE_URL -e DATABASE_SSL_CA asas-api:ci node --import tsx scripts/backup.ts backup /tmp/m1-runtime-backup.json
           if docker run --rm --network host -e DATABASE_URL asas-api:ci node --import tsx scripts/verify-runtime-db.ts; then
             echo 'Untrusted database CA was incorrectly accepted'
             exit 1

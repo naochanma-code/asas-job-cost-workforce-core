@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## Web/API Staging live checkpoint — 2026-09-22
+
+API deployment abc2992b-7b07-4f56-84f2-3fbda1e12ac4 ACTIVE, release 9c70a0805ee6d891bfdf0249d171c009b36e0627 / codex/milestone-1-foundation. Runtime-only DB credential, verified TLS startup gates, private API (no public domain), HTTPS WEB_ORIGIN set to https://web-staging-cb6f.up.railway.app. Web deployment e193de78-4523-4f55-a63d-1ef8b686af55 serves HTTPS through private API. Auto deploy disabled on both services; LINE=false.
+
+PASS live: HTTPS /api/health 200 with database ready; HTTP redirects 301 to HTTPS; anonymous /api/me and /api/projects 401; missing/foreign Origin POST 403; spoofed forwarded headers do not authenticate (401); LINE webhook disabled (503); no-store/nosniff headers. Visible API startup log has fixed success message and no connection-URI/private-key/bearer/password-assignment pattern. This scan covers only the inspected deployment log.
+
+Owner login handoff opened on Web. Authenticated role tests, Secure Cookie attributes, logout/session expiry, runtime restart persistence and isolated Staging restore remain NOT_RUN; do not infer UAT success from health checks. API rate limit live probe deferred during Owner login to avoid shared-proxy throttling.
+
+Preparing Phase E uncovered backup CLI calling migrations even for a read-only snapshot. Changed CLI to verify existing schema only; restore destination must be prepared separately by migration operator. Errors now emit a fixed category instead of potentially sensitive connection details. Added CLI round-trip/refusal-to-overwrite and credential-safe failure regression tests; local M1 suite: 24 tests, 22 PASS / 2 native PostgreSQL SKIP / 0 FAIL; typecheck PASS. CI and deployment of this CLI change pending. No Staging restore or production/LINE/paid/merge action.
+
+## Phase A live verification PASS — 2026-09-22
+
+Railway API one-shot deployment 90dc89a1-a4c0-4d23-baaa-0cd77733e6e0 completed from PR #2 commit 9c70a0805ee6d891bfdf0249d171c009b36e0627 (CI 35734400358 SUCCESS). Deployed command scripts/verify-runtime-db.ts reported PASS for runtime privileges, schema and verified TLS using the Owner-entered PGPASSWORD. No HTTP opened; runtime role only, no administrator credential. Visible deployment log scan found no connection URI/private-key/bearer/password-assignment patterns; this is limited to the inspected log, not a proof about every historical provider log. Trial balance observed $4.99/30 days.
+
+Web service 0664e9f2-1450-4ba0-80ad-45a2b01bc2a1 created from M1, with deploy/Dockerfile.web, internal API reference and PORT3000; no database credentials. Initial build 74f5003d-c8f1-42ef-9878-02c63366ddd0 uses a temporary exit-only command to reserve the service/domain before opening API. Web auto deploy disabled. Phase B/C configuration in progress; B–E live functional/UAT/restore NOT_RUN, LINE=false.
+
 ## Runtime password saved; API secret handoff — 2026-09-22
 
 Owner completed both hidden password entries. Latest read-only boolean check confirms runtime password present=true; no password/hash retrieved. Enabled LOGIN for asas_m1_runtime after credential/role preflight and verified LOGIN=true. Migrator remains NOLOGIN and runtime grants stay restricted. The first guarded command hit shell-quoting syntax error before mutation; the literal SQL heredoc completed successfully. Actual password authentication from API is still NOT_RUN.
