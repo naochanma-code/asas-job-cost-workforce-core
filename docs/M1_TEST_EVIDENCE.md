@@ -1,5 +1,15 @@
 # M1 Test Evidence — 2026-09-21
 
+## Current handoff — 2026-09-22
+
+CI [35728917876](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35728917876) for code 997e231 SUCCESS: typecheck; PGlite suite; native PostgreSQL suite including runtime denial/restore; Next build; Docker Web/API build and smoke; verified TLS with restricted runtime; untrusted CA rejection; M0 checks. No Railway HTTP deployment was performed by this CI.
+
+PASS: staging runtime/migrator roles created and restricted (both still NOLOGIN), M1 schema checksums, console verify-full TLS. NOT_RUN: runtime credential login/API TLS and log scan, all Staging B–E/UAT. FAIL: none outstanding from the executed final checks; initial CI failure remains historical evidence.
+
+Owner action required: complete the hidden password prompt in the existing Railway Postgres Console and report only completion. Browser credential-entry policy requires Owner handoff; no secret is requested in chat. Afterward configure API runtime credentials and run the one-shot verification before HTTP. Public CA is the only pending staged API variable change. LINE remains false. No Web trial URL yet; no paid upgrade, merge PR #2, M2, production, data deletion or restore overwrite.
+
+Updated .env.example, M1_API_CONTRACT and M1_RAILWAY_SETUP to match the new TLS/runtime requirements and current authorization. Branch remains codex/milestone-1-foundation.
+
 ## Phase A — Runtime roles provisioned, Owner credential handoff pending
 
 2026-09-22: CI [35728088352](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35728088352) on c4cb5df SUCCESS: native PostgreSQL privilege/restore tests, TLS API container smoke, Web container, build/typecheck and M0. Local tests 22 /20 PASS /0 FAIL /2 native-only SKIP; M0 45 checks PASS. Earlier CI failure 35727645655 was fixed before touching staging roles.

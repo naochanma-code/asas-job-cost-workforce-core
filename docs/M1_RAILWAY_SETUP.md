@@ -4,6 +4,10 @@
 
 อนุญาตเฉพาะ Trial credits ไม่กรอกบัตร ไม่สมัคร Hobby ไม่เพิ่มขนาดเอง หากเครดิต/ข้อจำกัดไม่พอ แจ้ง Owner ก่อน ยังไม่ Merge PR #2, Production หรือ M2
 
+## ล่าสุด — Phase A ก่อนเปิด Web/API
+
+สร้าง runtime/migrator roles บน PostgreSQL แล้วและตรวจสิทธิ์ผ่าน โดยทั้งคู่ยัง NOLOGIN. Owner ต้องตั้งรหัส runtime เองใน private prompt ที่เปิดไว้ ห้ามส่งในแชท. Public CA ถูกเพิ่มใน API Variables เป็น staged change ยังไม่ deploy. API guard บังคับ verified TLS และสิทธิ์จำกัดก่อนเปิด HTTP ดู [ขั้นตอนฐานข้อมูล](M1_DATABASE_SECURITY.md). LINE คงปิดแม้ A–E ผ่านตามคำสั่งล่าสุด; ขั้นตอน LINE ด้านล่างใช้ได้เมื่อ Owner อนุมัติรอบใหม่เท่านั้น.
+
 ## อัปเดตหลัง Owner กรอกตัวแปร
 
 Bootstrap deployment 13df75fd-935d-4f60-b3c0-c82f67a3b96b จาก f12f66c จบ Completed มีข้อความ Owner created; password not logged. ไม่เปิดดูค่า secret. Owner ยืนยันถอน BOOTSTRAP_USERNAME/BOOTSTRAP_PASSWORD และยืนยัน DATABASE_URL ในapiเฉพาะรายการหลังapproval reviewปฏิเสธแล้ว ลบและapplyสำเร็จใน e49929ec Completed; APIไม่มี3ตัวแปรนี้แล้ว ปิดAuto deploy ใช้คำสั่งจบทันทีไม่เปิดHTTP ไม่ต่อDB. บัญชีและpassword hashในDBคงอยู่. ยังไม่มีWeb/HTTPS/LINEจริง/UAT
@@ -40,7 +44,7 @@ GitHub เชื่อมแล้วและจำกัด1repo; PostgreSQL18
 
 | Service | Build | Variables ไม่มีค่าลับในเอกสาร |
 | --- | --- | --- |
-| API | `RAILWAY_DOCKERFILE_PATH=deploy/Dockerfile.api` | `NODE_ENV=production`, `HOST=::`, `PORT=3001`, `WEB_ORIGIN` เป็น HTTPS Web จริง, `DATABASE_URL` ของ runtime role, `LINE_ENABLED=false` |
+| API | `RAILWAY_DOCKERFILE_PATH=deploy/Dockerfile.api` | `NODE_ENV=production`, `HOST=::`, `PORT=3001`, `WEB_ORIGIN` เป็น HTTPS Web จริง, `DATABASE_URL` ของ runtime role, `DATABASE_SSL_CA` ใบรับรองสาธารณะ, `LINE_ENABLED=false` |
 | Web | `RAILWAY_DOCKERFILE_PATH=deploy/Dockerfile.web` | `PORT=3000`, build arg `API_URL` เป็น private API hostname/port ที่ Railway แสดง ต้องตั้งก่อน build เพราะ Next compile rewrites |
 | LINE worker (ยังไม่สร้าง) | API image/start `pnpm worker` | DB runtime credential, HTTPS origin, secret/key/allowlists ตาม M1_LINE_PILOT_CHECKLIST |
 
@@ -54,4 +58,4 @@ Dockerfiles ใช้ Node24/pnpm11.19.0, ทำงานด้วย user node,
 
 ## Gate ที่ยังไม่ผ่าน
 
-GitHub app access, Docker CI รุ่นใหม่, DB role/TLS, HTTPS/Secure Cookie จริง, proxy rate limit, backup/restore บน Railway, payload cleanup, LINE outbound/real pilot และ Owner UAT ยังไม่ผ่านจากการสร้าง project เปล่า ตรวจผลใน M1_TEST_EVIDENCE ก่อนทุก deployment
+GitHub access และ CI ของ c4cb5df ผ่านแล้ว. DB role restrictions และ TLS จาก Postgres console ผ่านบางส่วนของ Phase A; ยังต้อง credential/runtime API TLS และตรวจ log. HTTPS/Secure Cookie, proxy rate limit, Web/UAT และ Railway backup/restore ยัง NOT_RUN. LINE ปิด. ตรวจ commit/CI ล่าสุดใน M1_TEST_EVIDENCE ก่อนทุก deployment.

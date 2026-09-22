@@ -16,6 +16,8 @@
 
 วันที่บันทึกใช้ timestamptz, UUID entity ไม่ใช้รหัสที่แสดงเป็น FK; unique active assignment รวม job_id=NULL; composite FK ตรวจ project/job และ customer/site ข้อมูลการเงินไม่มีใน M1
 
+Staging API (NODE_ENV=production) ต้องผ่าน schema checksum, runtime-role restrictions และ TLS ก่อนฟัง HTTP. Runtime role ไม่มี ownership/DDL/CREATE/TEMP/membership หรือสิทธิ์แก้ migration history/audit เดิม; operator ใช้ migration role แยก. DATABASE_SSL_CA รับเฉพาะ public CA และห้าม URL SSL overrides. ดู [M1_DATABASE_SECURITY](M1_DATABASE_SECURITY.md); guard นี้ไม่เปลี่ยนสิทธิ์ผู้ใช้หรือ HTTP payload.
+
 ## HTTP `/api`
 
 JSON strict input; mutation ต้องส่ง Origin เท่ากับ WEB_ORIGIN; server อ่านสิทธิ์จาก session ทุกครั้ง ไม่รับ role/actor จาก body
