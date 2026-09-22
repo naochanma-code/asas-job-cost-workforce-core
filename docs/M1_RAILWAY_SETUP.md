@@ -4,9 +4,13 @@
 
 อนุญาตเฉพาะ Trial credits ไม่กรอกบัตร ไม่สมัคร Hobby ไม่เพิ่มขนาดเอง หากเครดิต/ข้อจำกัดไม่พอ แจ้ง Owner ก่อน ยังไม่ Merge PR #2, Production หรือ M2
 
-## สิ่งที่สร้างแล้ว
+## อัปเดตล่าสุดก่อนส่งต่อ Owner
 
-[Project asas-m1-staging](https://railway.com/project/66cbe8a4-60eb-4188-a918-7a6b5759afdf?environmentId=bead0ee5-d1e2-4430-8060-39aef4306b5b) มี environment staging เป็นพื้นที่เปล่า ไม่มีบริการหรือข้อมูลจริง Dashboard แสดง Limited Trial $5/สูงสุด30วัน ไม่ใช่ Full Trial
+GitHub เชื่อมแล้วและจำกัด1repo; PostgreSQL18/volume Online. APIยังOfflineหลังfirst buildจากmain/M0ล้มเหลวก่อนruntime. มี9 staged changes แก้branch M1/Dockerfile และเตรียม pnpm bootstrap แบบNever restart รอ Ownerตั้งBOOTSTRAP_USERNAME/BOOTSTRAP_PASSWORDผ่านVariables. DATABASE_URLอ้างcredentialผู้ดูแลชั่วคราวสำหรับbootstrapเท่านั้น ก่อนเปิดHTTPต้องเปลี่ยนruntime roleและลบbootstrap secret. Web/workerยังไม่สร้าง. CI0d68bbaผ่านทั้งDocker buildและsmoke. รายละเอียดสถานะจริงในM1_TEST_EVIDENCE
+
+## สิ่งที่สร้างก่อนหน้า
+
+[Project asas-m1-staging](https://railway.com/project/66cbe8a4-60eb-4188-a918-7a6b5759afdf?environmentId=bead0ee5-d1e2-4430-8060-39aef4306b5b) มี environment staging; ตอนเริ่มเป็นพื้นที่เปล่า ปัจจุบันมีPostgresตามอัปเดตด้านบน ไม่มีข้อมูลผู้ทดลอง Dashboard แสดง Limited Trial $5/สูงสุด30วัน ไม่ใช่ Full Trial
 
 [เอกสาร Trial](https://docs.railway.com/pricing/free-trial) ระบุ Limited Trial จำกัด outbound network/ports ต้องพิสูจน์ก่อน LINE; การเชื่อม GitHub อาจช่วยตรวจ eligibility แต่ไม่รับประกัน Full Trial ไม่มีการซื้อเพื่อเลี่ยงข้อจำกัด Trial volume อาจถูกลบ30วันหลังเครดิตหมด จึงต้อง export สำรองนอก provider ก่อนหมดอายุ ไม่ถือ Free plan ที่ตามมาว่าเพียงพอใช้งานจริง
 
