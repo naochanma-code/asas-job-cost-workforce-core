@@ -4,14 +4,14 @@ Accepted ตาม [ADR-009](adr/009-delegated-entry-and-expense-review.md) ต�
 
 | Resource/action | OWNER | ADMIN | PM | TECH |
 | --- | --- | --- | --- | --- |
-| Project/Site/Job/team ไม่มีเงิน | ทุกProject | จัดการ | assigned | assigned read |
+| Project/Site/Job/team ไม่มีเงิน | ทุกProject | จัดการ | จัดการ Job และเพิ่ม/ถอน TECH เฉพาะ Project ที่รับผิดชอบ; ห้ามจัดการ Role/PM | assigned read |
 | คน/วันเข้างาน/วันทำงาน/OT | ดู | ดู/ตรวจ/อนุมัติ | assigned ตามpolicy | own |
 | Work/OT ลงแทนพนักงาน | allow scoped | allow scoped | assigned Project | ตนเองเท่านั้น |
 | Expense submit | allow | allow | own assigned | own assigned |
 | Work/OT อนุมัติ | fallbackตามpolicy ไม่ต้องอนุมัติซ้ำ | อนุมัติแล้วผ่าน | เมื่อเปิดpolicy | deny |
 | Expense วันที่/ประเภท/จำนวน/หน่วย/รายละเอียด/เงินรายรายการ | allow | อ่าน/แก้ก่อนอนุมัติพร้อมเหตุผล | own submit/read | own submit/draft |
 | Expense รูปบิล/ใบเสร็จ/สลิป | allow | เปิด/เพิ่ม/ลบจากdraftแก้ไข/แทนที่ก่อนอนุมัติพร้อมประวัติ | own | own |
-| Expense approve/reject | allow | allow | deny | deny |
+| Expense approve/reject | allow รวมรายการตนเอง | allow รวมรายการตนเองตาม scope | deny | deny |
 | Budget/Actual/ยอดต้นทุนรวม/ยอดใช้ไปรวม/Remaining/Profit | allow | deny | deny | deny |
 | อัตราค่าจ้าง/ยอดPayroll/รายการเพิ่มหักเงิน | allow | deny | deny | deny |
 | ปิดข้อมูลเวลาประจำเดือน | fallback | allow ไม่มีเงิน | deny | deny |
@@ -49,6 +49,11 @@ PM/Admin/Owner ลงวันทำงานและ OT แทนพนัก�
 - OWNER เท่านั้นเข้าถึง Selling Price, Estimated/Actual Cost aggregate, Budget, Profit, Margin, Forecast, Rate, Payroll, Financial Adjustment/Lock และ SMEMOVE Actual Cost
 - ADMIN อ่าน/แก้/อนุมัติ Expense transaction พร้อม amount/evidence ได้ แต่ API/export/dashboard ห้ามคืน Project cost total, budget-vs-actual หรือ profitability
 - PM ส่งและอ่าน Expense ของตนตาม assigned Project ได้ ไม่อ่านของผู้อื่นและไม่เป็น reviewer โดย default
-- ผู้ส่ง Expense ห้ามอนุมัติรายการตนเองโดย default แม้มี role ADMIN/OWNER; policy exception ต้องมี ADR/audit/test
+- ADMIN และ OWNER อนุมัติ Expense ที่ตนกรอกได้ตาม D-022 ทุกครั้งต้องมี actor/time/audit; PM/TECH อนุมัติไม่ได้
 - Financial service/query/serializer แยกจาก operational view ห้ามใช้ CSS hide เป็น permission
 - Project Type/Job Type จัดการได้โดย OWNER/ADMIN; stable code ที่ใช้งานแล้วเปลี่ยนความหมายย้อนหลังไม่ได้
+
+
+## Post-approval correction — D-022
+
+ADMIN แก้ Expense หลังอนุมัติได้ก่อน Financial Lock ผ่าน Correction/Revision พร้อมเหตุผลและ before/after หาก Cost Ledger ถูก post แล้วต้องสร้าง Reversal และ corrected posting ห้าม update ledger/source เดิมแบบเงียบ เมื่อ Financial Status=LOCKED ต้องให้ OWNER Unlock/สร้าง Financial Revision ก่อน
