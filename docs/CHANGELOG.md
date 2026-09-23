@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-09-23 — PM assignment และ Expense approval policy
+
+- PM เพิ่ม/ถอน TECH ได้เฉพาะ Project ที่รับผิดชอบ ห้ามสร้างผู้ใช้ เปลี่ยน Role หรือแต่งตั้ง PM; ทุกครั้งมี Audit
+- ADMIN อนุมัติ Expense ได้รวมรายการที่ตนกรอก และ OWNER อนุมัติได้ทั้งหมดรวมรายการตนเอง; PM/TECH อนุมัติไม่ได้
+- การแก้ Approved Expense ใช้ correction/revision และ ledger reversal/repost; Financial Lock ต้องให้ OWNER เปิด revision
+- อัปเดต Master v3.0, Permission Matrix, Gap Analysis, Decision Log และ Project Status; ยังไม่มี application/schema/deployment change
+
 ## 2026-09-23 — Master Prompt v3.0
 
 - รับ Product Specification ใหม่เป็น Canonical Master v3.0 แทนชื่อร่าง v2.4 เพื่อไม่ย้อนเลขจาก v2.5
