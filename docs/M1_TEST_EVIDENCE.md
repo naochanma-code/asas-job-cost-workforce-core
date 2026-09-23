@@ -1,5 +1,17 @@
 # M1 Test Evidence — 2026-09-21
 
+## Staging preflight — 23 กันยายน 2026 หลัง Owner ให้เริ่มต่อ
+
+Owner อนุมัติให้เริ่มกระบวนการตามแผนที่เสนอ จึงเดินหน้า preflight ภายใน Trial เดิม ไม่ขออนุมัติ Deploy ซ้ำ แต่ยังต้องผ่าน Backup/Restore และ maintenance gate ก่อนเปลี่ยนฐานข้อมูล
+
+PASS: fetch ยืนยัน branch ตรง origin ที่ 9bcbe3e; [CI ของ head 35872859835](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35872859835) SUCCESS; Railway แสดง API/Web/Postgres Online; Limited Trial เหลือ $4.89 / 29 วัน ณเวลาตรวจ
+
+BLOCKED_BACKUP_AUTH: หน้า Postgres > Backups ระบุ Create Backup/PITR ต้อง Pro จึงไม่ใช้และไม่อัปเกรด ทางเลือกที่เตรียมคือ pg_dump เข้ารหัส + ดาวน์โหลดไฟล์เข้ารหัสออกจาก provider ผ่าน official Railway CLI และตรวจ Restore ในฐานแยก ต้อง Login CLI บนเครื่องก่อน ขณะนี้ยังไม่มี CLI session ที่ใช้ได้ การเริ่ม Login แบบ background ไม่สำเร็จและยกเลิก process ของ task แล้ว ไม่มีการเก็บหรือแสดง token
+
+เตรียม CLI ทางการ v5.61.0 ใน ignored .local/operator-tools และตัวเปิด .local/RAILWAY-LOGIN.cmd สำหรับ Owner เข้าสู่ระบบโดยตรง ไม่เพิ่ม application dependency หรือบริการ Railway; npm installer ล้มเหลว จึงใช้ binary จาก official railwayapp/cli release แทน
+
+NOT_RUN: Backup ข้อมูลจริง, Restore recovery verification, write freeze, migration003, Deploy Alignment, live UAT ไม่เปิด LINE ไม่ Merge/M2/M3/Production ไม่สร้างบริการเสียเงิน ไม่แก้ข้อมูลจริง ต้องให้ Owner ยืนยัน Login CLI ต่อกับ Railway โดยตรง ไม่ส่ง password/token ในแชท หลัง authentication จะตรวจว่าดาวน์โหลดได้ภายใต้ Trial; หากต้องเสียเงินเพิ่มให้หยุด
+
 ## M1 Alignment v3.0 — ผลตรวจ 23 กันยายน 2026
 
 Code commit: c8a522db94f473c2fd81b048cb20e2f876cb0a84 บน branch codex/milestone-1-foundation; [Foundation CI 35872122374](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35872122374), verify job 107218612210 SUCCESS ทุก step

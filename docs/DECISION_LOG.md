@@ -1,5 +1,11 @@
 # DECISION LOG
 
+## D-024 — Owner ให้เริ่ม Staging Alignment ตามแผน (2026-09-23)
+
+หลังส่งผล Local/CI และแผน Backup/maintenance/migration003/Deploy คู่กัน Owner ตอบ “เริ่ม process ต่อไปได้เลยค่ะ” ถือเป็นการอนุมัติให้ดำเนินการตามแผนภายใน Railway Trial เดิม โดยยังต้องมี recoverable private/encrypted backup ก่อน migration ไม่อนุมัติ Pro/ค่าใช้จ่ายเพิ่ม/ข้าม Backup/เปิด LINE/Merge/M2/M3/Production
+
+Provider Backup/PITR ถูกจำกัดไว้ที่ Pro จึงเตรียม manual encrypted backup ภายใน Trial แทน ต้องยืนยัน CLI authentication และการดาวน์โหลดที่ปลอดภัยก่อนใช้ข้อมูลจริง หากไม่สามารถทำได้ภายใต้ Trial ให้หยุดและรายงาน ไม่ลด Backup gate เพื่อ Deploy
+
 ## D-023 — M1 Alignment และ seed 5 ประเภท (2026-09-23)
 
 Owner ยืนยัน “เริ่ม 5 ประเภทตามข้อความรอบนี้”: Installation, Service, Survey, POC, Other แทน seed 10 รายการใน Master เดิม Job Type คง 10 ประเภท ปรับ Master ให้ตรงคำตอบ

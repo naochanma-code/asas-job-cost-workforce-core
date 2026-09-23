@@ -1,6 +1,6 @@
 # M1 Alignment — Dry Run / Roll-forward / Recovery
 
-ขอบเขต: 001/002 → 003_m1_alignment.sql เท่านั้น ไม่ใช่ M2 migration. Owner ยังไม่อนุมัติ apply ไป Staging. ผู้รับผิดชอบ: Codex; ผู้อนุมัติ deployment: Owner.
+ขอบเขต: 001/002 → 003_m1_alignment.sql เท่านั้น ไม่ใช่ M2 migration. Owner ให้เริ่มตามแผนแล้วตาม D-024 แต่ apply ได้เมื่อ Backup/Restore/preflight ผ่านเท่านั้น. ผู้รับผิดชอบ: Codex; ผู้อนุมัติ deployment: Owner.
 
 ## ผลกระทบที่ต้องรับทราบ
 
@@ -25,7 +25,7 @@
 
 การซ้อม CI ไม่ใช่ Staging UAT/Real LINE. Local ไม่มี Docker/PostgreSQL CLI ใน PATH จึงใช้ CI service PostgreSQL 17 และ Docker runner เป็นหลักฐาน native/container แยกจาก Local.
 
-## ก่อน apply Staging (ต้องอนุมัติใหม่)
+## ก่อน apply Staging (ต้องผ่านทุก gate ตาม D-024)
 
 1. Owner ยืนยัน release SHA, maintenance window, ผู้ดูแล recovery และวิธีสำรองข้อมูลจริงแบบ private/encrypted แยกจาก test drill; คำสั่งรอบนี้ยังไม่อนุญาตใช้ข้อมูลจริงทดสอบหรือคัดลอก
 2. ตรวจ Trial credits โดยไม่อัปเกรด; หากไม่พอหยุด ห้ามสร้างบริการเสียเงิน
@@ -43,4 +43,4 @@
 - ถ้าต้อง recovery: restore backup ที่อนุมัติลงฐานใหม่แยก ตรวจผลก่อนสลับ connection ด้วย Owner approval ห้ามเขียนทับ Staging เดิม เก็บ high-water marks/reservations ของรหัสที่เคยออกหลัง backup แล้วเพื่อไม่ออกซ้ำ; หากกู้ประวัติรหัสไม่ได้ห้ามเปิด writes จนกำหนด namespace ใหม่ที่ไม่ชน
 - Recovery แบบย้อน snapshot อาจสูญเสีย writes หลัง backup จึงต้อง maintenance freeze และ reconciliation ไม่อ้าง RPO/RTO โดยไม่มีการซ้อมจริง
 
-สถานะเอกสาร: PREPARED. ไม่เป็น permission ให้ deploy/backup real data/เปลี่ยนแผน/เปิด LINE.
+สถานะ: OWNER_APPROVED_PROCESS / BLOCKED_BACKUP_AUTH. Manual backup ที่เข้ารหัสและดาวน์โหลดออกจาก provider ยังไม่ผ่าน; provider Backup/PITR ต้อง Pro จึงไม่ใช้ ไม่อนุญาตเปลี่ยนแผนหรือเปิด LINE.

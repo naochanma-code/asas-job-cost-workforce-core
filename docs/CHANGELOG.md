@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 23 กันยายน 2026 — Staging preflight หลัง Owner ให้เริ่ม
+
+- ตรวจ head 9bcbe3e/CI SUCCESS และ Railway Trial $4.89/29 วัน บริการเดิม Online
+- พบ provider Backup/PITR ต้อง Pro ไม่อัปเกรด เตรียมทางเลือก encrypted pg_dump/CLI download แต่ติดการ Login CLI; ยังไม่ backup ข้อมูลจริง/migrate/deploy
+- อัปเดตสถานะและหลักฐานตรงกับ gate จริง ไม่มี application/schema change
+
 ## 23 กันยายน 2026 — M1 Alignment v3.0 (ยังไม่ Deploy)
 
 - เพิ่ม append-only003: configurable Project Type5/Job Type10, operational Project/Job fields, safe backfill, atomic codes/counter/reservation; ไม่แก้001/002
