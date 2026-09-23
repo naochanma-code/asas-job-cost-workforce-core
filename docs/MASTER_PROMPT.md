@@ -1,120 +1,501 @@
-# ASAS Job Cost & Workforce Core — Master Prompt v2.5
+# ASAS Job Cost & Workforce Core — Master Prompt v3.0
 
-วันที่จัดทำ: 21 กันยายน 2026  
-เจ้าของผลิตภัณฑ์: โอ๋ / ASAS IT Co., Ltd.  
-ผู้พัฒนา: Codex และ Work ผ่าน Repository กลาง
+วันที่ปรับปรุง: 23 กันยายน 2026  
+Product Owner: โอ๋ / ASAS IT Co., Ltd.  
+ผู้พัฒนา: Codex และ Work ผ่าน Repository กลาง  
+สถานะ: Canonical Product Specification
 
-สถานะเอกสาร: Canonical product specification — ใช้ฉบับนี้เป็นข้อกำหนดกลางเพียงฉบับเดียว
+เอกสารฉบับนี้เป็น Master Prompt หลักเพียงฉบับเดียว และแทน Requirement / Master Prompt เวอร์ชันก่อนหน้าที่ขัดกับเอกสารนี้ หากเอกสารอื่นใน Repository ขัดกับ Master Prompt ฉบับนี้ ให้ยึดเอกสารนี้และบันทึกการแก้ไขลง Decision Log
 
-## 0. คำตอบ Owner รอบ 4 — 21 กันยายน 2026
+เลขเวอร์ชันใช้ v3.0 แทนชื่อร่าง v2.4 ที่ Owner ส่งมา เนื่องจาก Repository มี v2.5 อยู่แล้วและการเปลี่ยนครั้งนี้เป็นการปรับขอบเขตครั้งใหญ่ ห้ามตีความว่า v3.0 หมายถึง Feature ทั้งหมดถูกพัฒนาแล้ว สถานะการพัฒนาจริงให้ดูที่ `PROJECT_STATUS.md`
 
-ข้อกำหนด v2.5 ตาม [ADR-008](adr/008-admin-review-ot-retention.md): Admin ตรวจ แก้ไข และอนุมัติค่าใช้จ่ายรายรายการได้ รวมจำนวน รายละเอียด เงิน และรูป แต่ไม่เห็นยอดรวมต้นทุน/ยอดใช้ไปของโครงการ อัตราค่าแรงหรือ Payroll; PM ไม่เห็นเงินหรือรูปบิลของผู้อื่น ยกเว้นรายการที่ตนส่ง รองรับ Owner หลายบัญชีสำหรับหุ้นส่วน3คน มี audit แยกผู้ทำ ไม่บังคับอนุมัติร่วม3คน วัน/OT ที่ Admin อนุมัติผ่านทันที ไม่ส่ง Owner ตรวจเวลาอีก ระบบคำนวณเมื่อปิดเวลา Owner ตรวจเฉพาะยอดจ่าย OT ต้องเป็นจำนวนบวกเพิ่มทีละ0.5ชั่วโมง เช่น2.5 ไม่รับเศษนาที
+## 1. เป้าหมายและขอบเขตผลิตภัณฑ์
 
-OT ใช้วันที่เลือกและจำนวนชั่วโมง ลงย้อนหลังได้ แม้คาบเกี่ยววันที่ถัดไปก็ไม่แยกคิดเพิ่ม; ใช้ rate/calendar ของวันที่เลือกทั้งรายการ การลงหลังปิดข้อมูลยังใช้ late adjustment ทำสอง Project ในวันเดียวแบ่งครึ่งวันต่อ Project รวม1วัน/ค่ากิน120ตาม baseline Project ไม่มี Job เป็น flow ปกติ เพิ่ม Job ได้ภายหลัง
+สร้างระบบบริหาร Project ของ ASAS IT โดยมุ่งเน้น:
 
-Owner ต้องการดูค่าใช้จ่ายรายเดือนและ ZIP ที่แตกเป็น folder ของรูปบิล/ใบเสร็จ/สลิปค่าใช้จ่ายทั้งเดือน ใช้ SMEMOVE แยก ไม่เชื่อม API ใน M0; Owner ยืนยันเก็บหลักฐาน2ปี; ใน M0 ปรับเอกสารเท่านั้น ไม่ลบไฟล์จริง
+1. Project และ Job
+2. คนรับผิดชอบและคนที่เข้าทำงาน
+3. วันทำงาน / Man-day
+4. OT
+5. ค่าใช้จ่ายหน้างาน
+6. รูปและหลักฐานค่าใช้จ่าย
+7. ต้นทุนจริงของ Project
+8. ราคาขาย ต้นทุนประมาณการ กำไร Margin และ Forecast สำหรับ OWNER
+9. สรุปค่าจ้างจาก Work / OT
+10. LINE เป็นช่องทางหลักสำหรับ Technician
 
-ตาม [ADR-009](adr/009-delegated-entry-and-expense-review.md): PM/Admin/Owner ลงวันทำงานและ OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ โดยเก็บผู้กรอกแยกจากพนักงาน ทุกบทบาทส่งค่าใช้จ่ายได้ PM เห็นยอดและรูปเฉพาะรายการที่ตนส่ง LINE expense ทุกบทบาทต้องรอ Admin หรือ Owner กดอนุมัติแยกทุกครั้งก่อนเป็น Actual; Web คงขั้นรอตรวจเดิม ไม่มี auto-approve
+ระบบต้องเรียบง่าย ใช้งานจริงได้ ตรวจสอบย้อนหลังได้ และไม่สร้าง ERP ซ้ำกับ SMEMOVE
 
-## 1. คำสั่งหลัก
+### 1.1 Product boundary
 
-สร้างแอปใหม่ตั้งแต่ต้นสำหรับบริหารต้นทุนงานและคำนวณค่าจ้างของ ASAS IT โดยเริ่มจากขอบเขตเล็กที่นำไปทดลองใช้จริงได้ ระบบต้องเชื่อม Opportunity, Project, Job, Budget, วันทำงาน, OT, ค่าใช้จ่าย, หลักฐาน และ Payroll โดยมีแหล่งข้อมูลที่ตรวจสอบย้อนกลับได้ ช่างใช้งานผ่าน LINE เป็นหลัก ส่วน Owner, Admin และ PM ใช้เว็บ
+ASAS Core รับผิดชอบ:
 
-ห้ามนำ source code หรือฐานข้อมูลของแอปเดิมมาเป็นฐานโดยอัตโนมัติ ใช้ requirement และบทเรียนเดิมเป็นข้อมูลอ้างอิงเท่านั้น สร้าง repository, database และ environment ใหม่ แยกจากระบบเดิมอย่างชัดเจน ระบบเดิมยังเป็นข้อมูลอ้างอิงระหว่าง pilot จนกว่าระบบใหม่จะผ่านการตรวจรับ
+`Project + Job + Workforce + Work Day + OT + Expense + Evidence + Project Cost + Owner Financial + Payroll Summary`
 
-ผู้พัฒนาต้องทำหน้าที่พร้อมกันในมุม Business Analyst, Solution Architect, Database Architect, UX/UI Designer, Software Engineer, Integration Engineer และ QA/Test Engineer ต้องทักท้วง requirement ที่เสี่ยง ใช้จริงไม่ได้ ขัดกัน หรือทำให้ข้อมูลผิด ห้ามถือว่าความคิดของ Owner ถูกต้องเสมอ แต่ต้องอธิบายผลกระทบและเสนอทางเลือกที่แนะนำเป็นภาษาไทย
+SMEMOVE ยังคงเป็นระบบหลักสำหรับ:
 
-กติกาการสื่อสารกับ Owner:
+`Product + Purchase + Receiving + Inventory + Stock + Serial + Accounting Operations`
 
-- อธิบายเป็นภาษาไทยที่เข้าใจง่าย และอธิบายศัพท์ technical เมื่อจำเป็น
-- ไม่ถามหลายคำถามพร้อมกัน; หากกำหนดค่าตั้งต้นที่ปลอดภัยได้ ให้เสนอ default พร้อมเหตุผลและเดินหน้าส่วนที่ไม่ติดคำตอบ
-- เสนอทางเลือกไม่เกิน 2–3 ทางและระบุตัวเลือกที่แนะนำที่สุด
-- ระบุ assumption ให้เห็นชัด ห้ามลด requirement สำคัญโดยไม่แจ้ง
-- ห้ามรายงานว่า “เสร็จ” จากการมีหน้า เมนู หรือตาราง ต้องมี flow จริง, test evidence และสถานะ deployment/UAT แยกกัน
+Core เก็บเพียงยอด Actual Hardware/Material ที่ Owner นำมาอ้างอิงกับ Project และ Commercial Document Reference ที่จำเป็น ห้ามสร้าง Procurement, Stock หรือ Accounting ซ้ำ
 
-เป้าหมายของ Release แรกคือพิสูจน์ว่าเส้นทางนี้ใช้จริงได้ครบวงจร:
+### 1.2 Final scope rule
 
-`Admin สร้าง Project → Owner ตั้ง Budget → เพิ่ม Site/Job เฉพาะเมื่อจำเป็น → มอบหมายช่าง → ช่างลงงาน/OT/ค่าใช้จ่ายผ่าน LINE → Admin ตรวจวัน/OT และค่าใช้จ่าย → ระบบลง Actual Cost ครั้งเดียว → Owner ดู Budget vs Actual → ปิดรอบและคำนวณ Payroll จากข้อมูลที่อนุมัติแล้ว`
+ก่อนเพิ่ม Feature ให้ถามว่า “จำเป็นต่อ Project, Workforce, Expense, Cost หรือ Profit หรือไม่” หากไม่ใช่ ให้พิจารณาไม่สร้างใน Core เป้าหมายคือข้อมูลน้อยแต่ถูกต้อง ใช้งานง่าย ตรวจสอบย้อนหลังได้ และทำให้ OWNER เห็นต้นทุนกับกำไรของ Project ได้จริง
 
-## 2. ปัญหาที่ต้องแก้จากระบบเดิม
+## 2. Product และ UX principles
 
-1. ขอบเขตใหญ่เกินไป ทำหลายโมดูลพร้อมกันจนเส้นทางหลักไม่จบจริง
-2. หน้าจอและเมนูมากเกินความจำเป็น ผู้ใช้ไม่รู้ว่าต้องเริ่มตรงไหน
-3. LINE webhook ตอบรับก่อนเก็บงานแบบถาวร ทำให้ข้อความหรือรูปสูญหายเมื่องาน background ถูกยุติ
-4. การทำงานใน LINE group ไม่แยกผู้ส่ง กลุ่ม Job และ draft อย่างปลอดภัย
-5. การอ่านบิลด้วย OCR/AI กลายเป็นเงื่อนไขบังคับ ทั้งที่ช่างพิมพ์ยอดเองได้เร็วและตรวจสอบง่ายกว่า
-6. Automated test ผ่านแต่ไม่ได้พิสูจน์การใช้งานจริงบนมือถือ บัญชี LINE จริง และข้อมูล pilot
-7. การเปลี่ยน source, migration, deployment และผล UAT ถูกรายงานปะปนกัน
-8. ระบบพยายามทำบัญชี สต็อก เงินเดือน MA และ Renewal พร้อมกัน ทั้งที่ยังพิสูจน์ Job Cost ไม่สำเร็จ
-9. ความรู้และสถานะงานกระจายอยู่ในแชท ทำให้ผู้พัฒนาหลายระบบเข้าใจไม่ตรงกัน
-10. คำว่า coded, tested, deployed และพร้อมใช้งานจริงถูกใช้แทนกัน ทั้งที่เป็นคนละสถานะ
+- ภาษาไทยเข้าใจง่าย Mobile Friendly และ Responsive
+- ลด Field และจำนวน Click ไม่ถามข้อมูลที่ระบบรู้อยู่แล้ว
+- ใช้ Default ที่แก้ได้ มี Confirmation ก่อน Transaction สำคัญ
+- มี Loading, Empty, Error, Retry และ Unsaved-state
+- ผู้ใช้เห็นเฉพาะข้อมูลที่เกี่ยวกับหน้าที่และ Project ของตน
+- Advanced Feature อยู่ใน “เพิ่มเติม”
+- หน้าแรกแต่ละ Role เน้นสิ่งที่ต้องจัดการ
+- ห้ามแสดง Placeholder Menu สำหรับสิ่งที่ยังใช้จริงไม่ได้
+- ทำ Vertical Slice ให้จบและทดสอบก่อนขยายเมนู
+- Technician ไม่ควรถูกบังคับเข้า Web สำหรับงานประจำ
 
-ทุก milestone ต้องตอบให้ได้ว่า “ผู้ใช้ทำงานจริงอะไรได้เพิ่ม” และต้องมีหลักฐานจาก flow ครบวงจร ไม่ใช้จำนวนหน้า เมนู หรือตารางเป็นตัวชี้วัดความสำเร็จ
+## 3. Roles และ Security boundary
 
-### 2.1 Business background
+Role หลัก:
 
-ASAS IT เป็น IT System Integrator / Project Contractor ทำงาน Server, Storage, Network, Switch, Firewall, Wireless, CCTV, UPS, Computer, Notebook, IT Hardware, Software/License, Network Cabling, Solar, Installation, Configuration, Migration, Upgrade, Service, Support, POC และ Site Survey
+- OWNER
+- ADMIN
+- PM
+- TECH
 
-ต้นทุนงานอาจประกอบด้วย Hardware, Material, Labour, OT, Meal Allowance, Fuel, Transportation, Accommodation, Subcontractor, Equipment และ Other Expense
+รองรับ OWNER หลายบัญชี รวมกรณีหุ้นส่วน 3 คน สิทธิ์เท่ากันและ Audit แยก actor ไม่บังคับอนุมัติร่วมกัน เว้นแต่มี Policy ใหม่
 
-ปัญหาธุรกิจปัจจุบันคือ Owner ต้องรวบรวม Excel เอง บิลอยู่กับช่าง ค่าใช้จ่ายเข้าไม่ครบ ไม่เห็นกำไรขาดทุนระหว่างงาน ไม่รู้ว่า Material หรือ Man-day เกินประมาณการ ข้อมูลวันทำงาน/OT กระจาย และต้องคำนวณค่าแรงสิ้นเดือนเอง
+การซ่อน Menu ไม่ถือเป็น Security ต้องบังคับ Permission ที่ API, Application Service, Database Query Boundary, Export, LINE Response และ Background Job ห้าม Query Financial Data ทั้งหมดส่งเข้า Browser แล้วซ่อนด้วย CSS
 
-### 2.2 หลักการ Product และ UX ที่ห้ามลด
+### 3.1 OWNER
 
-- ใช้งานง่าย ภาษาไทย Mobile Friendly และ Responsive
-- หน้าแรกของแต่ละ role แสดงสิ่งที่ต้องจัดการ ไม่แสดงข้อมูลทุกอย่าง
-- ลด field และจำนวนขั้นตอน ไม่ถามข้อมูลที่ระบบรู้อยู่แล้ว ใช้ default ที่แก้ไขได้
-- ป้องกันข้อมูลผิดก่อนบันทึก และแสดงสรุปให้ยืนยันก่อนสร้างรายการสำคัญ
-- ผู้ใช้เห็นเฉพาะข้อมูลตามหน้าที่และขอบเขตงาน
-- ความสามารถขั้นสูงอยู่ใน `เพิ่มเติม` และไม่รบกวนงานประจำ
-- เมนูที่ยังใช้งานจริงไม่ได้ต้องไม่แสดงเป็นเมนูปกติ
+OWNER เห็นและจัดการ:
 
-### 2.3 Job Type แบบตั้งค่าได้
+- ทุก Project / Job
+- Selling Price และ Estimated Cost
+- Financial Budget และ Actual Cost รวม
+- Cost Ledger, Budget vs Actual, Profit, Margin และ Forecast
+- Employee Rate และ Payroll Amount
+- SMEMOVE Actual Hardware/Material Cost
+- Financial Adjustment, Reconciliation, Audit และ Financial Lock
 
-สร้าง `Job Type` เป็น master data ห้าม hard-code ในหน้าจอหรือ business logic โดยมีค่าเริ่มต้น:
+### 3.2 ADMIN
+
+ADMIN จัดการ:
+
+- Customer, optional Site, Project, Job และ Assignment
+- Operational Plan, Progress และ Milestone
+- Work Entry และ OT
+- Expense และ Evidence
+- แก้ Expense ก่อนอนุมัติพร้อมประวัติ
+- ดู Amount และ Evidence ระดับ Expense Transaction
+
+ADMIN ไม่เห็น:
+
+- Selling Price
+- Estimated Project Cost และ Financial Budget
+- Project Actual Cost รวม
+- Budget vs Actual, Profit, Margin และ Forecast
+- Employee Daily Rate
+- Labor/OT Cost Amount
+- Payroll Amount
+- Financial Summary, Financial Chart หรือ Profitability Dashboard
+
+ระบบไม่ต้องป้องกัน ADMIN จากการนำ Transaction Amount ไปบวกเองภายนอก แต่ห้ามสร้างหรือส่ง Official Financial Summary ให้ ADMIN
+
+### 3.3 PM
+
+PM ดูเฉพาะ Project ที่ได้รับมอบหมาย จัดการ Job, Team ตาม Policy, Progress, Milestone, Work, OT และ Operational Plan ได้
+
+PM ส่ง Expense ของตนได้และเห็น Amount/Evidence ของรายการที่ตนส่งตามขอบเขต Project แต่ไม่เป็น Financial Reviewer โดย Default และไม่เห็น Expense ของผู้อื่นหรือ Financial Summary
+
+PM ห้ามเห็น Selling Price, Estimated Cost, Financial Budget, Actual Cost รวม, Profit, Margin, Employee Rate และ Payroll Amount
+
+### 3.4 TECH
+
+TECH ใช้ LINE เป็นหลักและสามารถ:
+
+- ดูงานของตน
+- ลงวันทำงาน
+- ลง OT
+- ส่ง Expense และแนบ Evidence
+- ดูสถานะรายการของตน
+
+TECH ห้ามเห็น Financial Project Data, Budget, Cost รวม, Profit, Margin, Employee Rate และ Payroll Summary
+
+### 3.5 Delegated entry
+
+PM, ADMIN และ OWNER ลง Work/OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ ต้องเก็บ `employee_id`, `submitted_by`, `source_channel` และเวลาแยกกัน TECH ลงให้ตนเองเท่านั้น
+
+ทุก Role สามารถส่ง Expense ตามขอบเขตของตนได้ แต่ Expense ทุกช่องทางต้องผ่าน PENDING_REVIEW และผู้ส่งห้ามอนุมัติรายการของตนเองโดย Default หากจะเปิด Self Approval ต้องเป็น Policy แยก มีเหตุผลและ Audit
+
+## 4. Customer, Site, Project และ Job
+
+รองรับทั้ง:
+
+- `Customer → Project`
+- `Customer → Site → Project`
+
+Site เป็น optional ห้ามสร้าง Site ปลอม เช่น Default, Unknown หรือไม่ระบุ
+
+### 4.1 Project
+
+Project เป็นหน่วยหลัก ข้อมูลขั้นต่ำ:
+
+- Project ID แบบ UUID/ULID
+- Project Code เช่น `PRJ-2609-001`
+- Project Name
+- Customer
+- Site optional
+- Project Type
+- Project Manager
+- Start Date และ Target Completion Date
+- Status, Priority, Description และ Progress
+- Created By / Created At
+
+Human-readable Code แยกจาก Internal ID และต้องสร้างแบบ concurrency-safe
+
+Project Type เป็น Configurable Master Data ค่าเริ่มต้น:
+
+- Installation
+- Migration
+- Upgrade
+- Configuration
+- Service
+- Support
+- Survey
+- POC
+- Internal
+- Other
+
+OWNER/ADMIN เพิ่ม เปลี่ยน Display Name เรียงลำดับ และ Disable ได้ Code ที่มีการใช้งานแล้วห้ามเปลี่ยนความหมายย้อนหลัง
+
+### 4.2 Job
+
+Project อาจไม่มี Job มีหนึ่ง Job หรือหลาย Job ได้ ห้ามบังคับสร้าง Job เพื่อให้ Schema ทำงาน
+
+Job ข้อมูลขั้นต่ำ:
+
+- Job ID
+- Job Code เช่น `JOB-2609-001-01`
+- Project ID
+- Job Type
+- Job Name และ Description
+- Responsible Person
+- Planned Date
+- Status และ Progress
+- Created By / Created At
+
+Job Status:
+
+- `PLANNED → ACTIVE`
+- `ACTIVE ↔ BLOCKED`
+- `ACTIVE / BLOCKED → DONE`
+- `PLANNED / ACTIVE / BLOCKED → CANCELLED`
+
+Job Type เป็น Configurable Master Data ค่าเริ่มต้น:
 
 - Installation
 - Service Support
 - PM Visit
 - Site Survey
 - POC
+- Configuration
+- Testing
+- Training
 - Office Work
 - Other
 
-Owner/Admin เพิ่ม แก้ชื่อ เรียงลำดับ และ disable ได้ ค่า code ที่ถูกใช้งานแล้วห้ามเปลี่ยนความหมายหรือลบย้อนหลัง Job ต้องเก็บ snapshot ชื่อที่ใช้ในรายงานเพื่อป้องกันประวัติเปลี่ยนตาม master data
+Code ที่ใช้งานแล้วห้ามเปลี่ยนความหมายย้อนหลัง
 
-### 2.4 Sales Opportunity และ Pre-Sales Cost
+### 4.3 Assignment
 
-ระบบเป้าหมายต้องรองรับ flow:
+Project Assignment เป็น Default และ Job Assignment เป็น optional:
 
-`Opportunity → Site Survey → POC → Demo → BOM → Cost Estimate → Quotation → Won / Lost`
+- `Project → Project Members`
+- `Project → Job → Job Members`
 
-กิจกรรม Pre-Sales แต่ละรายการสร้างเป็น Job ภายใต้ Opportunity และเก็บ Man-day/ค่าใช้จ่ายได้ หาก Won ให้สร้าง Project ใหม่โดยมี `source_opportunity_id` และเก็บ Opportunity/Pre-Sales History เดิมไว้ ห้ามย้ายหรือเปลี่ยน Job เดิมให้เป็น Project Job เพราะจะทำให้ต้นทุนก่อนขายปะปนกับต้นทุนส่งมอบ สามารถคัดลอก Cost Estimate ที่อนุมัติเป็น Budget ฉบับร่างของ Project พร้อมเก็บที่มาได้
+TECH เห็นเฉพาะ Project/Job ที่เกี่ยวข้องกับตน การระบุ Job ต้องตรวจว่า Job อยู่ใน Project เดียวกัน
 
-รายงานในอนาคตต้องตอบได้ว่า Opportunity หนึ่งใช้ Man-day และต้นทุนเท่าใด แยก Survey/POC/Proposal และวิเคราะห์ Conversion ได้ ความสามารถนี้อยู่ใน Target Architecture แต่เริ่มพัฒนาหลัง Core Job Cost และ Payroll ผ่าน pilot เพื่อไม่ให้เส้นทางหลักล่าช้า ทั้งนี้ schema และ ID ต้องรองรับตั้งแต่ต้นโดยไม่สร้างหน้าว่าง
+### 4.4 Operational plan
 
-## 3. ขอบเขต Release แรกที่ต้องมี
+ADMIN/PM บริหาร Planned Man-day, จำนวน Technician, Planned Duration, Planned Start/Finish, Milestone, Progress และ Responsible Person โดยไม่เห็นต้นทุนแรงงานเป็นบาท ตัวอย่าง `4 คน × 10 วัน = 40 Man-day`
 
-### 3.1 Web สำหรับ Owner / Admin / PM
+## 5. Work Day / Man-day และ OT
 
-- Login และกำหนดสิทธิ์ OWNER, ADMIN, PM, TECH
-- Customer และ Site โดย Site เป็น optional; Project สร้างได้โดยไม่เลือก Site และเพิ่ม/เปลี่ยน Site ภายหลังได้โดยมีประวัติ
-- Project เป็นหน่วยหลักสำหรับ Assignment, Budget, Time, OT, Expense และ Cost เสมอ
-- Job เป็นงานย่อยแบบ optional; Project อาจไม่มี Job หรือมีหลาย Job ได้ ห้ามสร้าง Job ปลอมเพียงเพื่อให้ schema ทำงาน
-- รหัสอ่านง่ายและไม่เปลี่ยนตามชื่อ เช่น `PRJ-2609-001`, `JOB-2609-001-01`
-- มอบหมายช่างระดับ Project เป็น default และระบุ Job เพิ่มได้เมื่อมีงานย่อย
-- ตั้ง Budget ระดับ Project และหมวดต้นทุนเป็น default; แยก Job ได้เมื่อ Project ใช้ Job จริง
-- ตรวจและอนุมัติวันทำงาน, OT และค่าใช้จ่าย
-- Dashboard Project/Job แสดง Budget, Actual, Variance และสัดส่วนที่ใช้ไป
-- ดูประวัติการแก้ไขและผู้ทำรายการ
-- เชื่อม LINE group กับ Project ด้วยรหัสใช้ครั้งเดียวที่หมดอายุ
-- เปิด/ปิด Job และ Project โดยเก็บประวัติ
-- ศูนย์หลักฐานบัญชี แยกเดือน ค้นหา ดาวน์โหลด และส่งออกชุดหลักฐานพร้อมทะเบียนรายการ
-- รอบค่าจ้าง: ตรวจวันทำงาน/OT, คำนวณ, แก้รายการเพิ่ม/หักที่มีเหตุผล, อนุมัติ, lock และออกสรุปพนักงาน
+ระบบไม่ใช่ Attendance Punch Clock ไม่เก็บ Start/End Time, Check-in/out หรือ GPS
 
-### 3.2 LINE สำหรับผู้ใช้ทุกบทบาท
+Work Type:
 
-เมนูหลักมี 5 รายการเท่านั้น:
+- FULL = 1.0 Man-day
+- AM = 0.5 Man-day
+- PM = 0.5 Man-day
+
+Work Entry เก็บ Employee, Work Date, Project, Job optional, Work Type, Description optional, Submitted By, Source Channel, Status, Reviewed By/At
+
+Status:
+
+`DRAFT → SUBMITTED → APPROVED / REJECTED / CANCELLED`
+
+Employee หนึ่งคนหนึ่งวันมี Work Fraction รวมไม่เกิน 1.0 โดย Default:
+
+- A AM + B PM = 1.0 อนุญาต
+- A FULL + B PM = 1.5 ไม่อนุญาต
+
+OWNER Override ได้พร้อมเหตุผลและ Audit
+
+หน้า “วันนี้ใครทำงานที่ไหน” ใช้ Work Entry ไม่สร้าง Attendance Module แยก ADMIN/PM เห็น Employee, Project, Job, FULL/AM/PM และ Status โดยไม่เห็น Cost
+
+### 5.1 OT
+
+OT แยกจาก Work Entry ไม่เก็บ Start/End Time เก็บ Employee, Date, Project, Job optional, OT Hours, Description/Reason, Submitted By, Status และ Reviewer
+
+OT เป็นจำนวนบวกเพิ่มทีละ 0.5 ชั่วโมง ใช้วันที่เลือกและจำนวนชั่วโมง ลงย้อนหลังได้ แม้คาบเกี่ยววันถัดไปไม่แยกวันและใช้ Rate/Calendar ของวันที่เลือกทั้งรายการ
+
+Status:
+
+`DRAFT → SUBMITTED → APPROVED / REJECTED / CANCELLED`
+
+กรณี OT ไม่มี Work Entry ให้ Flag เป็น Exception เพื่อ Review แต่ไม่ Reject อัตโนมัติจนกว่าจะกำหนด Policy เพิ่ม
+
+## 6. Expense และ Evidence
+
+Typed Text เป็น Primary Input รูปเป็น Evidence ไม่ใช่ Source หลักของยอดเงิน OCR/AI ไม่ใช่ Critical Path และห้าม Auto-post
+
+Expense เก็บ:
+
+- Expense Date
+- Project
+- Job optional
+- Expense Category
+- Amount
+- Description
+- Expense Owner
+- Submitted By
+- Created By
+- Evidence
+- Status
+
+Release แรกไม่บังคับ VAT, WHT, Tax ID, Invoice Line Detail หรือ Bank Verification
+
+ค่าเริ่มต้นของ Expense Category:
+
+- FUEL
+- TRAVEL
+- ACCOMMODATION
+- MEAL
+- MATERIAL_DIRECT
+- HARDWARE_DIRECT
+- SUBCONTRACTOR
+- TRANSPORT
+- OTHER
+
+เพิ่ม/Rename Display Name/Disable ได้ แต่ Code ที่ใช้งานแล้วห้ามเปลี่ยนความหมาย
+
+### 6.1 LINE expense
+
+ตัวอย่าง:
+
+- `น้ำมัน 500 เติมรถไปหน้างาน`
+- `ซื้อสายแลน 1300 ใช้ติดตั้งหน้างาน`
+
+ระบบ Parse อย่างน้อย Amount, Category และ Description ถ้าอยู่ใน Project Group ที่ Binding แล้วไม่ถาม Project ซ้ำ
+
+ก่อนบันทึก Bot ต้องสรุป Project, Job, Date, Category, Amount, Description และจำนวน Evidence พร้อมปุ่ม:
+
+- ยืนยันส่งตรวจ
+- แก้ไข
+- ยกเลิก
+
+หาก Parse ไม่มั่นใจให้ผู้ใช้แก้เอง Expense Flow ต้องทำงานต่อได้เมื่อ OCR/AI ล่ม
+
+Status:
+
+`DRAFT → PENDING_REVIEW → APPROVED / REJECTED / CANCELLED`
+
+Expense ยังไม่เป็น Actual Project Cost จน Approved
+
+ADMIN แก้ Date, Category, Amount และ Description ก่อน Approve ได้ ทุกการแก้เก็บ Before, After, Changed By/At และ Reason
+
+### 6.2 Draft concurrency safety
+
+LINE Draft ต้องผูกกับ Channel, Group/Private, Sender, Project, Job optional และ Flow ID ห้ามใช้ “รูปล่าสุด”, “Draft ล่าสุด” หรือ “Message ล่าสุด” ของ Group เพราะผู้ใช้หลายคนอาจส่งพร้อมกัน
+
+### 6.3 Evidence
+
+รองรับ JPG, PNG, WebP และ PDF จำนวน 1–5 ไฟล์ต่อ Expense ขนาดเริ่มต้นไม่เกิน 10 MB/ไฟล์ ตรวจ MIME และ Magic Bytes
+
+LINE ไม่ใช่ Permanent Storage ต้องนำไฟล์เข้า Private Object Storage ของ Core และเก็บ Evidence ID, Expense ID, Project ID, Job ID optional, File Hash, MIME, Size, Object Key, Created By/At
+
+ใช้ Signed URL อายุสั้น ห้ามใช้ Public Permanent URL Object Key ใช้ ID ไม่ใช้ชื่อพนักงานหรือข้อมูลอ่อนไหว การลบหรือแทนที่ต้องมี Audit
+
+Core Private Storage เป็น Source of Truth Google Drive เป็น Optional Export Mirror เท่านั้น
+
+Evidence Center สำหรับ OWNER/ADMIN ค้นตาม Year, Month, Project, Job, Employee, Category และ Status ADMIN เห็น Transaction Amount แต่ Export ของ ADMIN ห้ามสร้าง Project Financial Summary หรือ Financial Aggregate
+
+OWNER ส่งออก ZIP ตามเดือน โครง `YYYY/MM/PROJECTCODE/[_JOBCODE]/` พร้อม manifest CSV/XLSX, checksum, revision และ superseded history ระยะเก็บหลักฐาน 2 ปี โดย lifecycle/วันเริ่มนับต้องกำหนดก่อนเปิดงานลบจริง
+
+## 7. Project Financial — OWNER ONLY
+
+Financial Data ต้องแยกจาก Operational Data ตั้งแต่ Database, Application Service, API, UI และ Export
+
+OWNER กรอก:
+
+- Selling Price
+- Estimated Total Cost
+- Optional Financial Budget Breakdown
+- Expected Remaining Cost
+
+Budget Breakdown เป็น optional:
+
+- Hardware
+- Material
+- Labor
+- OT
+- Fuel
+- Travel
+- Accommodation
+- Meal
+- Subcontractor
+- Transportation
+- Other
+
+Owner สามารถเริ่มด้วย Selling Price และ Estimated Total Cost เพียงสองค่า
+
+คำนวณ:
+
+- Estimated Profit = Selling Price − Estimated Cost
+- Estimated Margin = Estimated Profit ÷ Selling Price × 100
+- Actual Profit = Selling Price − Actual Cost Ledger
+- Actual Margin = Actual Profit ÷ Selling Price × 100
+- Forecast Final Cost = Actual Cost + Expected Remaining Cost
+- Forecast Profit = Selling Price − Forecast Final Cost
+- Forecast Margin = Forecast Profit ÷ Selling Price × 100
+
+Release แรกใช้ Rule-based Forecast ไม่ใช้ AI
+
+## 8. SMEMOVE Actual Cost และ Commercial References
+
+Core ไม่สร้าง Procurement, PO, Receiving, Inventory, Stock, Serial หรือ Accounting Operation
+
+Project Financial Profile มี Hardware Cost Status:
+
+- NOT_APPLICABLE — ไม่มี Hardware Cost และไม่เตือน
+- PENDING — มี Hardware Cost แต่ Owner ยังไม่กรอก
+- RECORDED — Owner กรอกแล้ว
+
+OWNER กรอก Actual Hardware/Material Cost ระดับ Project หรือ Job optional โดยมี Amount, Cost Type, SMEMOVE Reference optional, Date, Note, Entered By/At Approved Entry สร้าง Cost Ledger
+
+SMEMOVE Reference เป็นเพียง Purchase/Receiving/Invoice/Document Number หรือ Link เพื่อย้อนกลับไปดูรายละเอียดใน SMEMOVE
+
+Core เก็บ Commercial Reference:
+
+- QUOTATION
+- CUSTOMER_PO
+- INVOICE
+
+ข้อมูลขั้นต่ำ: Type, Number, Date, Project, Job optional, SMEMOVE Reference/Link optional, Note
+
+Core ไม่ Copy Item Lines, ไม่ทำ Billing, AR, Collection หรือ Payment Tracking Selling Price ให้ OWNER กรอกตรง ไม่ Auto-calculate จากเอกสารเหล่านี้
+
+ต้อง Reconcile ป้องกัน Hardware/Material รายการเดียวถูกนับทั้ง Expense และ SMEMOVE Actual Cost ก่อน Financial Finalization
+
+## 9. Cost Ledger
+
+Project Actual Cost มาจาก Cost Ledger เท่านั้น Dashboard ห้าม Sum Source Tables โดยตรง
+
+Source:
+
+- APPROVED_WORK_ENTRY
+- APPROVED_OT_ENTRY
+- APPROVED_EXPENSE
+- WORK_MEAL_ALLOWANCE
+- SMEMOVE_ACTUAL_COST
+- OWNER_MANUAL_ADJUSTMENT
+- REVERSAL
+
+เมื่อ Work Approved ให้คำนวณ Labor และ Meal เมื่อ OT Approved ให้คำนวณ OT เมื่อ Expense Approved ให้ลง Expense Cost เมื่อ Owner Approve SMEMOVE Cost ให้ลง Hardware/Material Cost
+
+Unique Idempotency Key ใช้ `source_type + source_id + cost_component` เพราะ Work หนึ่งรายการสร้าง LABOR และ MEAL ได้
+
+Ledger ที่ Approved เป็น Immutable ห้าม Delete/Update Amount หรือแก้ Source แบบเงียบ การแก้ใช้ Original → Reversal → Corrected Entry และตรวจย้อนหลังได้
+
+จำนวนเงินทางการเก็บเป็น Integer Satang ห้าม Floating Point
+
+### 9.1 Cost completeness
+
+Dashboard ต้องแสดง:
+
+- PARTIAL เมื่อ Hardware Status=PENDING หรือมี Work/OT/Expense/Cost Posting/Reconciliation ที่เกี่ยวข้องค้าง
+- COMPLETE เมื่อ Hardware=NOT_APPLICABLE หรือ RECORDED, ไม่มีรายการค้างที่ต้องนับ, Ledger reconcile ผ่าน และ OWNER ยืนยันความครบถ้วน
+
+เมื่อ PARTIAL ให้แสดง `Actual Profit (ต้นทุนยังไม่ครบ)` ห้ามทำให้เข้าใจว่าเป็น Final
+
+## 10. Labor, Meal, Rate และ Holiday
+
+Employee Rate เป็น OWNER ONLY และมี Employee, Daily Rate, Effective From/To, Version, Created By ช่วง Effective ห้าม Overlap แบบกำกวม
+
+Backend ใช้ Rate ตาม Effective Date และ Snapshot Rate/Formula/Policy ลง Ledger
+
+คำนวณ:
+
+- FULL = Daily Rate × 1.0
+- AM/PM = Daily Rate × 0.5
+- Sunday/Holiday = Daily Rate × 2 × Day Fraction
+- Meal FULL = 120 บาท
+- Meal AM/PM = 60 บาท
+
+Meal จ่ายเฉพาะ Approved Work Entry รวมวันหยุดที่มาทำงาน ไม่จ่ายวันลา/ขาดงาน
+
+OT:
+
+- วันปกติ = ROUND_HALF_UP(Daily Rate ÷ 8 × 2) เป็นบาทเต็ม × OT Hours
+- วันหยุด = ROUND_HALF_UP(Daily Rate ÷ 8 × 3) เป็นบาทเต็ม × OT Hours
+
+ตัวอย่าง Daily Rate 970 บาท: Normal OT 243 บาท/ชั่วโมง และ Holiday OT 364 บาท/ชั่วโมง Frontend/Backend ห้ามใช้สูตรต่างกัน
+
+Sunday เป็น Holiday Default ADMIN เพิ่มวัน New Year, Songkran หรือ Company Holiday ได้ การเปลี่ยน Calendar ห้ามเปลี่ยน Payroll ที่ Lock แล้ว
+
+## 11. Payroll Summary
+
+Approved Work/OT เป็น Source ของ Project Cost Ledger และ Payroll Ledger แต่ห้ามนำ Payroll Total ไปบวก Project Cost ซ้ำ
+
+รอบค่าจ้างวันที่ 1 ถึงวันสุดท้ายของเดือน:
+
+`OPEN → TIME_REVIEWED → OWNER_REVIEW → APPROVED → LOCKED → PAID`
+
+ADMIN ตรวจ FULL/AM/PM และ OT Hours โดยไม่เห็น Rate/Amount ปิดข้อมูลเวลาไม่เกิน 10:00 น. วันที่ 1 OWNER กำหนด Rate เห็นยอด เพิ่ม/หัก อนุมัติ Lock และ Mark Paid โดยโอนไม่เกินวันที่ 1 ของเดือนถัดไป แม้วันที่ 1 เป็นวันหยุดให้ใช้ Electronic Transfer เป็น Default
+
+ข้อมูลที่มาหลัง TIME_REVIEWED ห้ามแก้ยอดเดิมแบบเงียบ ต้องเป็น LATE_ADJUSTMENT และเลือก Reopen ก่อนจ่ายหรือยกไปรอบถัดไป
+
+OWNER เพิ่ม/หัก Manual Adjustment ได้โดยมี Type, Amount, Reason, Created By และ Evidence optional
+
+Release แรกไม่คำนวณ Tax, Social Security, Loan หรือ Advance อัตโนมัติ จนกว่าจะยืนยันกับผู้ทำบัญชี ให้เรียกผลลัพธ์ว่า “สรุปค่าจ้าง” ไม่อ้างว่าเป็น Payroll ตามกฎหมายครบถ้วน
+
+## 12. Project lifecycle, Progress และ Milestone
+
+Project Operational Status:
+
+`PLANNED → ACTIVE → COMPLETED → CLOSED`
+
+เมื่อ CLOSED ห้ามสร้าง Work/OT/Expense ใหม่ตามปกติ รายการ Pending เดิมยัง Review ได้ OWNER/ADMIN Reopen ได้พร้อม Reason/Audit
+
+Financial Status แยก:
+
+`OPEN → RECONCILING → FINALIZED → LOCKED`
+
+Project ปิด Operational แล้ว OWNER ยังเพิ่ม Hardware Actual, Reconcile, Correct Cost, Add Adjustment และตรวจ Profit ได้จน Financial Lock
+
+เมื่อ LOCKED ห้ามแก้ Financial Data ตามปกติ การ Unlock เป็น OWNER Only พร้อม Reason, Audit และ Revision
+
+Progress รองรับ Status, Progress %, Issue, Blocker, Note และ Milestone โดยไม่สร้าง Planning Engine หรือ Full Gantt
+
+Milestone เก็บ Name, Planned Date, Actual Date, Responsible Person, Status และ Note ค่าเริ่มต้น เช่น Survey, Delivery, Installation, Configuration, Testing, Migration, UAT, Training และ Handover
+
+## 13. LINE-first contract
+
+Technician มี 5 เมนู:
 
 1. งานของฉัน
 2. ลงวันทำงาน
@@ -122,448 +503,274 @@ Owner/Admin เพิ่ม แก้ชื่อ เรียงลำดับ
 4. ส่งค่าใช้จ่าย
 5. ตรวจสถานะของฉัน
 
-รองรับทั้ง private chat และ Project group ตามกติกาสิทธิ์ ผู้ใช้ต้องเชื่อม LINE กับบัญชีพนักงานก่อนทำรายการ ระบบต้องรองรับภาษาไทยและใช้ปุ่ม/ตัวเลือกเพื่อลดการพิมพ์
+ใช้ Quick Reply/Button ให้มากที่สุด
 
-### 3.3 การส่งค่าใช้จ่ายแบบง่าย
+Work: Project → Job เมื่อจำเป็น → FULL/AM/PM → Description optional → Confirm  
+OT: Project → Job optional → Date → Hours → Description → Confirm  
+Expense: Typed text → Evidence → Parse → Summary → Confirm → PENDING_REVIEW
 
-ไม่ใช้ OCR, AI อ่านบิล หรือ slip verification เป็นเงื่อนไขของ Release แรก ผู้ใช้ทุกบทบาทเลือก Project แล้วพิมพ์ข้อความ เช่น:
+Project Group ที่ Binding แล้วไม่ถาม Project ซ้ำ
 
-```text
-ค่าน้ำมัน 500 เติมรถไปหน้างาน
-```
+Bot หนึ่งตัวรองรับหลาย Group ADMIN สร้าง One-Time Binding Code หนึ่ง Group มีหนึ่ง Active Project Project หนึ่งมีหลาย Group ได้เมื่อ ADMIN ตั้งใจ
 
-หรือ
+ผู้ใช้ต้อง Link LINE Account กับ Employee Account ก่อนทำ Business Transaction ห้ามใช้ Display Name หรือ Group Member Name เป็น Identity
 
-```text
-ซื้อของหน้างาน 1300 สาย LAN และอุปกรณ์เข้าหัว
-```
+### 13.1 Reliability
 
-ระบบต้องแยกอย่างน้อย:
+Webhook:
 
-- วันที่ค่าใช้จ่าย (ค่าเริ่มต้นคือวันที่ส่งตามเวลาไทย แก้ได้)
-- Project
-- Job (optional และไม่ถามเมื่อ Project ไม่มีงานย่อย)
-- ประเภทรายจ่าย
-- จำนวนเงิน
-- รายละเอียด
-- ผู้ส่ง
-- รูปหลักฐาน 1–5 รูป
+1. Verify LINE Signature จาก raw body
+2. Validate Payload
+3. Persist Event ลง Durable Inbox
+4. Commit
+5. Reply HTTP 200
+6. Worker Claim Event
+7. Process Business Logic
+8. Persist Business Transaction
+9. Write Notification Outbox
+10. Retry อย่างปลอดภัย
 
-Bot ต้องสรุปข้อมูลกลับมาให้ผู้ส่งตรวจ:
+Event Status: RECEIVED, PROCESSING, DONE, RETRY, DEAD
 
-```text
-โครงการ: PRJ-2609-001 — ติดตั้งระบบ IHI
-งานย่อย: ไม่ได้ระบุ
-วันที่: 21/09/2026
-ประเภท: ค่าน้ำมัน
-ยอด: 500.00 บาท
-รายละเอียด: เติมรถไปหน้างาน
-หลักฐาน: 1 รูป
-```
+ต้องมี Idempotency สำหรับ LINE Webhook, Work, OT, Expense, Approval, Cost Posting, Hardware Cost, Payroll Posting และ Notification
 
-มีปุ่ม `ยืนยันส่งตรวจ`, `แก้ไข`, `ยกเลิก` หลังยืนยัน สถานะเป็น `รอตรวจ` และยังไม่เป็น Actual Cost จน Admin หรือ Owner อนุมัติ ผู้ตรวจแก้ประเภท วันที่ จำนวน/หน่วย ยอด รายละเอียด และรูปได้ โดยระบบเก็บค่าก่อนแก้ ผู้แก้ เวลา และเหตุผล
+Production ใช้ Web, API, PostgreSQL, Private Object Storage, Durable Inbox/Outbox และ Background Worker เริ่มจาก PostgreSQL-backed Queue ได้ ห้ามใช้ Memory-only Background Task
 
-การอนุมัติค่าใช้จ่ายของ Admin/Owner ต้องสร้าง Cost Ledger เพียงครั้งเดียว การกดซ้ำ webhook ซ้ำ worker retry หรือเปิดหน้าซ้ำต้องไม่สร้างต้นทุนซ้ำ
+## 14. Web UX
 
-### 3.4 LINE group ต่อ Project
-
-- Bot หนึ่งตัวเข้าร่วมหลายกลุ่มได้
-- Admin สร้างรหัสเชื่อมกลุ่มจากหน้า Project รหัสหมดอายุและใช้ได้ครั้งเดียว
-- ผู้มีสิทธิ์ส่งคำสั่งเชื่อมในกลุ่ม ระบบบันทึก `group_id → project_id`
-- หนึ่งกลุ่มมี Project ที่ active ได้หนึ่งรายการ; Project หนึ่งรายการอาจมีหลายกลุ่มได้เมื่อ Admin ตั้งใจเพิ่ม
-- หาก Project ไม่มี Job ให้บันทึกระดับ Project โดยตรงและห้ามถาม Job
-- หากมี Job แต่ไม่ได้บังคับใช้ ให้ซ่อนการเลือกไว้ใน `ระบุงานย่อย` และบันทึกระดับ Project เป็น default
-- หาก Project ตั้งค่าให้ต้องระบุ Job และมีหนึ่ง Job ที่ active ให้เลือกอัตโนมัติ; หากมีหลาย Job จึงให้เลือกด้วย quick reply
-- Draft ต้องผูกกับ `channel + group/private + sender + project + optional_job + flow_id` เสมอ ห้ามใช้ “รูปล่าสุดของกลุ่ม” หรือ draft ล่าสุดของกลุ่ม
-- สมาชิกภายนอกในกลุ่มเห็นข้อความยืนยันระดับรายการได้ แต่ Bot ห้ามแสดง Budget, Actual รวม, Profit, Margin, ค่าแรง หรือข้อมูลส่วนบุคคลในกลุ่ม
-- Bot รับคำสั่งธุรกิจจากพนักงานที่เชื่อมบัญชีและมีสิทธิ์ใน Project เท่านั้น
-
-## 4. สิทธิ์
-
-| บทบาท | ความสามารถ |
-| --- | --- |
-| OWNER | เห็นและจัดการทุก Opportunity/Project/Job, Budget, Actual, Profit/Margin, อัตราค่าจ้าง, Payroll, การตั้งค่า และ Audit; เป็นผู้อนุมัติ/lock รอบค่าจ้าง |
-| ADMIN | จัดการ master data, Project/Job, ทีม และตรวจวัน/OT; ตรวจ แก้ไข อนุมัติจำนวน รายละเอียด เงิน และรูปค่าใช้จ่ายรายรายการได้ ไม่เห็น Budget, Actual/ยอดใช้ไปรวม, ค่าแรงหรือ Payroll |
-| PM | เห็นและจัดการ Project/Job ที่ได้รับมอบหมาย ดูจำนวนคน วันและชั่วโมง OT; ตรวจเวลาเมื่อ Owner เปิด policy ไม่เห็นยอดรวมหรือบิลผู้อื่น; ลงค่าใช้จ่ายและเห็นเงิน/รูปของตนได้ |
-| TECH | เห็น Project และ optional Job ที่ได้รับมอบหมาย ส่งและดูสถานะรายการของตน ไม่มีสิทธิ์ดู Budget/Actual รวม ค่าแรง หรือกำไร |
-
-การซ่อนเมนูไม่ถือเป็นการป้องกันข้อมูล ทุก API, export, notification และ LINE response ต้องตรวจสิทธิ์ที่ server
-
-สิทธิ์ข้อมูลเงินเดือนแยกเป็น `PAYROLL_INPUT_TIME`, `PAYROLL_VIEW_AMOUNT`, `PAYROLL_EDIT_RATE`, `PAYROLL_ADJUST_AMOUNT`, `PAYROLL_APPROVE`, `PAYROLL_PAY` PM/Admin/Owner ลงเวลาแทนได้ตามProject โดยเก็บผู้กรอกแยกจากพนักงาน; ฟ้า/Admin ได้ `PAYROLL_INPUT_TIME` เพื่อกรอกและตรวจข้อมูลที่ไม่ใช่จำนวนเงิน โดยหน้าจอ/API/export ต้องไม่ส่งอัตราหรือยอดคำนวณมาให้ browser ของ Admin เลย ไม่ใช่เพียงซ่อนด้วย CSS ส่วน OWNER เป็นผู้กรอกอัตรารายวัน รายการเพิ่ม/หักที่เป็นตัวเงิน เห็นยอด อนุมัติ lock และบันทึกการจ่าย
-
-## 5. หมวดต้นทุน Release แรก
-
-- LABOR — ค่าแรงวันทำงาน
-- OT — ค่าล่วงเวลา
-- FUEL — น้ำมัน
-- TRAVEL — เดินทาง/ค่าทางด่วน/ที่จอดรถ
-- ACCOMMODATION — ที่พัก
-- MEAL — อาหาร/เบี้ยเลี้ยง
-- MATERIAL_DIRECT — วัสดุซื้อใช้ตรงกับงาน
-- HARDWARE_DIRECT — อุปกรณ์ซื้อใช้ตรงกับงาน
-- SUBCONTRACTOR — ผู้รับเหมาช่วง
-- TRANSPORT — ขนส่ง
-- OTHER — อื่น ๆ
-
-Owner/Admin แก้ชื่อหรือปิดหมวดในอนาคตได้ แต่ code ที่มีการใช้งานแล้วห้ามเปลี่ยนความหมายย้อนหลัง
-
-ค่าแรงและ OT ใช้อัตราที่มี effective date และเก็บ snapshot ของอัตราที่ใช้คำนวณไว้ใน Cost Ledger ผู้ไม่มีสิทธิ์เห็นค่าแรงต้องเห็นได้เพียงจำนวนคน/วัน/ชั่วโมงตามขอบเขตงาน
-
-นโยบายค่าแรงเริ่มต้นตาม requirement เดิม โดยเก็บเป็น version และมี effective date ห้ามแก้ย้อนหลัง:
-
-- วันทำงานปกติเต็มวัน: `อัตรารายวัน × 1.0`
-- ครึ่งวัน: `อัตรารายวัน × 0.5`
-- ค่ากิน/Meal Allowance เมื่อมาทำงานเต็มวัน: 120 บาท; ครึ่งวัน: 60 บาท
-- วันอาทิตย์หรือวันหยุดในปฏิทินที่มาทำงาน: `อัตรารายวัน × 2 × สัดส่วนวัน`
-- วันปกติ: `(ค่าแรงรายวัน ÷ 8) × 2 × ชั่วโมง`
-- วันหยุด: `(ค่าแรงรายวัน ÷ 8) × 3 × ชั่วโมง`
-- วันอาทิตย์เป็นวันหยุดโดยค่าเริ่มต้น และ Admin กำหนดปฏิทินวันหยุดได้
-- ตัวอย่างค่าแรง 970 บาท: OT ปกติ 243 บาท/ชั่วโมง, OT วันหยุด 364 บาท/ชั่วโมง ตามวิธีปัดที่กำหนดและทดสอบไว้
-
-Assumption เริ่มต้น: ค่ากินจ่ายเฉพาะวันที่มี Work Entry ที่อนุมัติ ไม่จ่ายวันลา/ขาดงาน และยังจ่าย 120/60 บาทเมื่อมาทำงานวันหยุดตามสัดส่วนวัน ค่าเดินทางหรือเบี้ยเลี้ยงอื่นไม่รวมอยู่ในค่ากิน ต้องแยกรายการ หากนโยบายจริงต่างจากนี้ให้แก้ policy version ไม่แก้ข้อมูลเก่า
-
-การปัด OT ใช้ `ROUND_HALF_UP` อัตราต่อชั่วโมงเป็นบาทเต็มก่อนคูณจำนวนชั่วโมง และเก็บสูตร, input, policy version และผลลัพธ์เป็น snapshot เพื่อให้ตัวอย่าง 970 บาทได้ 243/364 ตาม requirement เดิม ห้ามให้ frontend กับ backend คำนวณคนละสูตร
-
-จำนวนเงินทุกค่าเก็บเป็น integer satang ห้ามใช้ floating point เป็นข้อมูลทางการ
-
-## 5.1 Payroll / รอบค่าจ้าง
-
-Work Entry และ OT Entry ที่อนุมัติเป็นแหล่งข้อมูลร่วม แต่ต้องสร้างผลลัพธ์สองบริบทแยกกัน:
-
-1. `Cost Ledger` สำหรับต้นทุน Project/Opportunity
-2. `Payroll Ledger` สำหรับยอดจ่ายพนักงาน
-
-ห้ามนำ Payroll total ไปบวก Actual Cost ซ้ำ เพราะต้นทุนแรงงานถูกลงจาก Work/OT แล้ว แต่ละรายการต้องเชื่อมกลับ source เดิมและ policy/rate snapshot ได้
-
-รอบค่าจ้างเป็นวันที่ 1 ถึงวันสุดท้ายของเดือนและต้องโอนเงินไม่เกินวันที่ 1 ของเดือนถัดไป สถานะ `OPEN → TIME_REVIEWED → OWNER_REVIEW → APPROVED → LOCKED → PAID` ช่างต้องส่งวันทำงาน/OT ของวันสุดท้ายภายในวันนั้น Admin ตรวจและปิดข้อมูลเวลาไม่เกิน 10:00 น. วันที่ 1 วัน/OT ผ่านแล้วไม่ต้อง Owner ตรวจซ้ำ จากนั้นระบบคำนวณยอดอัตโนมัติในขอบเขตที่ Admin มองไม่เห็น Owner ตรวจอัตรา รายการเพิ่ม/หัก ยอดสุทธิ อนุมัติ lock และบันทึกการโอนภายในวันที่ 1 การเปิดรอบที่ lock แล้วทำได้เฉพาะ OWNER พร้อมเหตุผล และต้องสร้าง revision/audit ไม่แก้ผลเดิมแบบเงียบ
-
-หากข้อมูลวันทำงานหรือ OT มาหลัง `TIME_REVIEWED` ระบบห้ามแก้ยอดที่อนุมัติแล้วแบบเงียบ ต้องสร้าง `LATE_ADJUSTMENT` พร้อมเหตุผลและเลือกว่าจะ reopen รอบก่อนจ่าย หรือยกไปปรับรอบถัดไป หากวันที่ 1 เป็นวันหยุดให้ยังใช้ electronic transfer ภายในวันที่ 1 เป็น default; เหตุขัดข้องของธนาคารต้องบันทึกผู้รับผิดชอบ เวลา และวันที่จ่ายจริง
-
-Payroll Release แรกประกอบด้วยค่าแรงรายวัน, ค่าทำงานวันหยุด, OT, ค่ากิน และรายการเพิ่ม/หักแบบ manual ที่ต้องเลือกประเภท ใส่เหตุผล ผู้บันทึก และหลักฐานถ้ามี การคำนวณประกันสังคม ภาษี เงินกู้ หรือเงินทดรองแบบอัตโนมัติยังไม่ถือว่าพร้อมจนกว่าจะยืนยันกติกากับผู้ทำบัญชี ระบบจึงต้องเรียกผลลัพธ์ช่วงนี้ว่า “สรุปค่าจ้าง” ไม่อ้างว่าเป็น payroll ตามกฎหมายครบถ้วน
-
-Rate และ policy ทุกชนิดมี effective date และห้าม overlap แบบกำกวม เมื่อปิดรอบต้อง snapshot ชื่อพนักงาน อัตรา สูตร ปฏิทิน และยอด เพื่อให้เปิดย้อนหลังได้แม้ master data เปลี่ยน
-
-## 6. Budget และ Actual Cost
-
-Budget ต้องมี version และสถานะ `DRAFT`, `APPROVED`, `SUPERSEDED` เมื่ออนุมัติแล้วให้สร้าง baseline snapshot การแก้ Budget ต้องสร้าง version ใหม่พร้อมเหตุผล
-
-Budget line ทุกบรรทัดมี `project_id` และมี `job_id` แบบ nullable ค่าเริ่มต้นเป็น Budget ระดับ Project หากใช้ Job budget ต้องระบุชัดว่าเป็นการแบ่ง Project budget หรือเป็นยอดเพิ่ม ห้ามรวม Project-level และ Job-level ซ้ำกัน Dashboard Project ต้อง reconcile กลับ baseline ได้เสมอ
-
-Actual Cost มาจาก Cost Ledger เท่านั้น แต่ละบรรทัดต้องมี source type และ source ID ที่ unique:
-
-- APPROVED_WORK_ENTRY
-- APPROVED_OT_ENTRY
-- APPROVED_EXPENSE
-- MANUAL_ADJUSTMENT (เฉพาะ OWNER พร้อมเหตุผล)
-
-ห้ามรวมยอดจากตารางต้นทางโดยตรงหลายแบบ เพราะอาจนับซ้ำ การยกเลิกรายการที่อนุมัติแล้วต้องสร้าง reversal line ห้ามลบหรือแก้ Cost Ledger เดิม
-
-Dashboard แสดงอย่างน้อย:
-
-- Budget, Actual และ Remaining รวม
-- แยกตาม Job เมื่อ Project มี Job; หากไม่มีให้แสดง Project total โดยไม่สร้างหมวดว่าง
-- แยกตามหมวดต้นทุน
-- % Used และสถานะสี: เขียว <80%, เหลือง 80–100%, ส้ม 100–110%, แดง >110%
-- รายการรอตรวจ ซึ่งยังไม่รวมใน Actual
-- Forecast แบบง่าย: Actual + รายการที่อนุมัติแล้วแต่ยังไม่ post (ถ้ามี) + commitment ที่ Owner กรอกเอง; AI Forecast อยู่นอก Release แรก
-
-## 7. โครงสร้างข้อมูลหลัก
-
-ใช้ UUID/ULID เป็น internal ID และ human code แยกกัน ทุกตารางธุรกิจมี `created_at`, `created_by`, `updated_at` ตามความเหมาะสม
-
-- users
-- employees
-- employee_rate_versions
-- line_accounts
-- customers
-- sites
-- projects
-- jobs (`context_type` = PROJECT/OPPORTUNITY/INTERNAL, optional สำหรับ Project และมี parent ตาม check constraint)
-- project_members
-- job_assignments
-- cost_categories
-- budgets
-- budget_lines
-- work_entries
-- overtime_entries
-- expense_submissions
-- expense_evidence
-- expense_review_history
-- cost_ledger
-- line_group_bindings
-- line_event_inbox
-- line_conversation_flows
-- notification_outbox
-- audit_logs
-- job_types
-- holiday_calendars
-- payroll_periods
-- payroll_runs
-- payroll_lines
-- payroll_adjustments
-- payroll_ledger
-- payroll_revision_history
-- opportunities
-- opportunity_status_history
-- accounting_export_runs
-- accounting_export_items
-
-กำหนด foreign keys, unique constraints และ indexes จาก query จริง Migration ทุกไฟล์ append-only หลังใช้กับ environment ร่วม ห้ามแก้ migration ที่ apply แล้ว
-
-ตาราง Assignment, Budget, Work, OT, Expense และ Cost ที่เป็นข้อมูล Project ต้องมี `project_id` เสมอและ `job_id` nullable หากมี `job_id` ต้องตรวจว่า Job อยู่ใน Project เดียวกัน ห้ามใช้ polymorphic ID ที่ไม่มี foreign key และห้ามบังคับสร้าง Job เพื่อรองรับรายการระดับ Project
-
-## 8. สถาปัตยกรรมที่ต้องใช้
-
-สร้างเป็น Modular Monolith เพื่อให้ดูแลง่ายและต่อยอดได้ โดยแยก module ใน code ชัดเจน:
-
-- Identity & Access
-- Customer / Project / Job
-- Assignment
-- Budget
-- Time & OT
-- Expense & Evidence
-- Cost Ledger
-- Payroll
-- Opportunity / Pre-Sales
-- Accounting Export
-- LINE Integration
-- Reporting
-- Audit & Operations
-
-โครงสร้างแนะนำ:
-
-```text
-apps/web      — Next.js สำหรับ Owner/Admin/PM
-apps/api      — Node.js + Fastify API และ LINE webhook
-apps/worker   — worker สำหรับ inbox/outbox, retry และงานเบื้องหลัง
-packages/domain
-packages/database
-packages/contracts
-packages/ui
-```
-
-ใช้ TypeScript strict, PostgreSQL และ object storage แบบ S3-compatible สำหรับรูปหลักฐาน ระบบต้องรันได้บน managed container ทั่วไปและไม่ผูกกับผู้ให้บริการรายเดียว Production ต้องมี process ของ API และ worker ที่ทำงานต่อเนื่อง ไม่พึ่ง request background หรือ `waitUntil` เป็นตัวรับประกันงาน
-
-ทุก business action เรียก application service เดียวกันจาก Web และ LINE ห้ามให้ LINE import หรือเรียก route handler ของ Web โดยตรง
-
-## 9. LINE reliability contract
-
-เมื่อ webhook เข้า:
-
-1. ตรวจ signature จาก raw request body
-2. ตรวจขนาด payload และ schema ขั้นต่ำ
-3. เขียน event ลง `line_event_inbox` แบบ durable โดยใช้ `webhook_event_id` เป็น unique idempotency key
-4. commit แล้วตอบ HTTP 200 อย่างรวดเร็ว
-5. Worker claim event ด้วย lease, ประมวลผล และ retry แบบ bounded backoff
-6. ผลธุรกิจและ notification outbox อยู่ใน transaction ที่เหมาะสม
-7. การส่ง reply ล้มหลังบันทึกธุรกิจสำเร็จต้องไม่ย้อนลบธุรกิจ Worker ใช้ push message หรือสถานะใน outbox เพื่อส่งซ้ำอย่างปลอดภัย
-8. เก็บสถานะ RECEIVED, PROCESSING, DONE, RETRY, DEAD พร้อม attempt, last_error_category และ timestamps
-
-ห้าม log token, raw receipt image, ค่าแรง, เลขบัญชี หรือข้อมูลส่วนบุคคลโดยไม่จำเป็น Log ต้องมี correlation ID ที่ตามจาก LINE event → draft → business record → cost line ได้
-
-LINE รองรับ webhook ใน group chats และรับรูปจากผู้ใช้ได้ แต่รูปที่ LINE เก็บอาจถูกลบภายหลัง จึงต้องดาวน์โหลดและบันทึก object storage ของระบบทันทีหลัง event ผ่านการรับเข้าแบบ durable ตามเอกสาร LINE Messaging API ปัจจุบัน
-
-## 10. การจัดเก็บรูปหลักฐานและส่งออกให้บัญชี
-
-- เก็บ binary ใน private object storage
-- เก็บ metadata, hash, owner, project, optional job, expense, mime, size และ object key ใน PostgreSQL
-- จำกัด JPG/PNG/WebP/PDF ตามที่ทดสอบแล้ว ขนาดเริ่มต้นไม่เกิน 10 MB ต่อไฟล์
-- ตรวจ magic bytes และจำนวนไฟล์ ไม่เชื่อ extension อย่างเดียว
-- object key ใช้ ID ไม่ใช้ชื่อพนักงานหรือรายละเอียดอ่อนไหว
-- ชื่อดาวน์โหลดสำหรับ Owner: `YYYYMMDD_PROJECTCODE[_JOBCODE]_EXPENSECODE_01.jpg`
-- รูปเข้าถึงผ่าน authenticated signed URL อายุสั้น
-- hash และ unique LINE message ID ป้องกันการเก็บซ้ำ
-- ลบหรือแก้ไฟล์ไม่ได้แบบเงียบ ต้องมี audit/replacement history
-
-แนะนำให้ Core App เป็นแหล่งเก็บหลัก เพราะสามารถผูกสิทธิ์, hash, audit, expense, Project และ optional Job ได้โดยตรง ผู้ใช้ต้องได้ประโยชน์แบบเดียวกับ Google Drive ผ่าน “ศูนย์หลักฐานบัญชี” ดังนี้:
-
-- มุมมองแยกปี/เดือนตาม `Asia/Bangkok` พร้อม filter Project, Job, ผู้ส่ง, หมวด และสถานะ
-- ลิงก์หน้าเดือนสำหรับผู้มีสิทธิ์ ซึ่งต้อง login; ห้ามใช้ public link ถาวร
-- ดาวน์โหลดไฟล์เดี่ยวด้วย signed URL อายุสั้น
-- ส่งออกเป็น ZIP แยก `YYYY/MM/PROJECTCODE/` และแยก Job เพิ่มเมื่อมี พร้อมไฟล์ภาพ/PDF และ manifest CSV/XLSX ที่มี Evidence ID, วันที่, Project, optional Job, ประเภท, ยอด, ผู้ส่ง, สถานะ, hash และชื่อไฟล์
-- ชื่อไฟล์ `YYYYMMDD_PROJECTCODE[_JOBCODE]_EXPENSECODE_SEQUENCE.ext`; ชื่อไฟล์ช่วยค้นหาแต่ Evidence ID เป็นตัวอ้างอิงจริง
-- export แต่ละครั้งมี version, ผู้สร้าง, เวลา, จำนวนไฟล์, ยอดรวม และ checksum; เมื่อข้อมูลแก้ไขให้สร้าง export revision ใหม่และระบุฉบับเดิมว่า superseded
-- มี backup/restore และทดสอบกู้คืนทั้ง metadata กับ binary
-
-Google Drive เป็น optional export mirror ไม่ใช่ source of truth ระบบสามารถสร้าง folder ตามเดือนและส่งสำเนา/manifest ไป Drive เมื่อเชื่อมต่อภายหลัง แต่ Drive ล้ม สิทธิ์หมดอายุ หรือลบไฟล์ ต้องไม่ทำให้ต้นฉบับใน Core หาย การเก็บหลักฐานใช้ 2 ปีตามคำตอบ Owner รอบ3; วิธีเริ่มนับและ lifecycle ตาม ADR-008 เป็นรายละเอียดออกแบบ ยังไม่รันลบจริง
-
-## 11. หน้าเว็บ
-
-เมนูหลักไม่เกิน 7 กลุ่มและแสดงตาม role:
+OWNER:
 
 1. ภาพรวม
 2. โครงการและงาน
 3. รายการรอตรวจ
-4. ต้นทุนและงบประมาณ
+4. ต้นทุนและกำไร
 5. ทีมงานและค่าจ้าง
-6. รายงานและหลักฐานบัญชี
+6. หลักฐาน / Reference
 7. ตั้งค่า
 
-หน้า Project Detail เป็นศูนย์กลางและมี tabs เท่าที่จำเป็น:
+ADMIN:
+
+1. ภาพรวมงาน
+2. โครงการและงาน
+3. รายการรอตรวจ
+4. ทีมงาน
+5. หลักฐาน
+6. รายงานการทำงาน
+7. ตั้งค่า
+
+ADMIN ไม่มีเมนูต้นทุนและกำไร
+
+Project Detail Operational Tabs:
 
 - Overview
 - Jobs
-- Budget vs Actual
-- Time & OT
+- Team
+- Work & OT
 - Expenses
+- Milestones
+- References
 - Activity
 
-หน้าแรกของ Owner ต้องตอบสามคำถามได้ภายใน 10 วินาที (Admin/PM แสดงงานค้าง จำนวนคน วันและชั่วโมงเท่านั้น ไม่มีเงิน):
+OWNER เพิ่ม Financial, Cost Ledger และ Profitability
 
-1. Project ใดใกล้หรือเกิน Budget
-2. มีรายการอะไรค้างตรวจ
-3. Job ใดกำลังทำและใครรับผิดชอบ
+OWNER Dashboard ต้องตอบ Selling Price, Estimated/Actual Cost, Completeness, Labor, OT, Expense, Hardware/Material, Profit, Margin, Forecast และ Risk ได้รวดเร็ว
 
-ใช้ภาษาไทยที่คนทำงานเข้าใจ ปุ่มต้องเป็นคำกริยาชัดเจน รองรับมือถือ และมี loading, empty, error, retry และ unsaved-state ที่สมบูรณ์
+ADMIN Dashboard ตอบ Active/Due Projects, Pending Work/OT/Expense, วันนี้ใครอยู่ Project ไหน, Blocked Job, Missing Work Entry และ Operational Progress โดยไม่แสดง Financial Summary
 
-หน้า Payroll ต้องเริ่มจากข้อผิดปกติและสิ่งที่ต้องตรวจ เช่น วันซ้ำ OT ไม่มี Work Entry หรือ rate หาย (ไม่มี Job ไม่ใช่ข้อผิดพลาดสำหรับโครงการที่ไม่บังคับงานย่อย) ไม่เริ่มจากตารางเงินเดือนขนาดใหญ่ ค่าแรงรายบุคคลต้อง masked จนผู้มีสิทธิ์เปิดดู และ export ต้องตรวจ capability ซ้ำ
+## 15. Architecture และข้อมูลหลัก
 
-## 12. สิ่งที่ไม่ทำใน Release แรก
+ใช้ Modular Monolith:
 
-- OCR/AI อ่านใบเสร็จหรือสลิป
-- Auto approval
-- ตรวจสอบสลิปกับธนาคาร
-- Stock ledger, Serial, Issue/Return และ Reconciliation
-- SMEMOVE API sync
-- Purchase Request / Purchase Order
-- การคำนวณภาษี/ประกันสังคม/เงินกู้อัตโนมัติก่อนยืนยัน policy กับผู้ทำบัญชี
-- MA, PM, Warranty และ Renewal
-- Customer Portal
-- ClickUp migration
-- AI Forecast
-- Google Drive เป็นแหล่งเก็บหลัก; อนุญาตเฉพาะ export mirror หลัง Core flow ผ่าน
-- หน้าจอ Opportunity เต็มรูปแบบก่อน Core Job Cost และ Payroll ผ่าน pilot
-- Import ข้อมูลเดิมทั้งระบบ
+- Identity & Access
+- Customer / Site
+- Project / Job
+- Assignment
+- Operational Planning
+- Work / OT
+- Expense & Evidence
+- Project Financial
+- Cost Ledger
+- SMEMOVE Actual Cost
+- Commercial References
+- Payroll
+- LINE Integration
+- Reporting
+- Audit & Operations
 
-ออกแบบ event contracts และ IDs ให้เพิ่ม module เหล่านี้ได้ภายหลัง แต่ห้ามสร้างหน้าว่าง ตาราง speculative หรือเมนูที่ยังใช้ไม่ได้
+โครงสร้าง:
 
-## 13. การทดสอบและหลักฐาน
+```text
+apps/
+  web
+  api
+  worker
+packages/
+  domain
+  database
+  contracts
+  ui
+```
 
-ใช้ test pyramid ที่เน้นความเสี่ยงธุรกิจ:
+ใช้ TypeScript Strict, PostgreSQL, S3-compatible Object Storage และ Managed-container compatible ต้อง Hosting Agnostic
 
-- Unit tests: parsing จำนวนเงิน/วันที่, OT, permission และ state transitions
-- Payroll golden tests: full/half day, meal 120/60, Sunday/holiday 2x, normal OT 2x, holiday OT 3x, rounding 970 → 243/364, rate effective date และ reopened period
-- Integration tests กับ PostgreSQL จริง: idempotency, transactions, ledger/reversal, concurrent approval, migration
-- Contract tests: LINE payload/signature, group/private source, duplicate/redelivery และ image sequence
-- End-to-end: Web และ worker ผ่าน infrastructure ใกล้ production
-- Backup/restore rehearsal
-- Accounting export test: จำนวนไฟล์ ยอดรวม manifest hash และไฟล์ที่เปิดได้ตรงกับข้อมูลใน Core
-- Load test เริ่มต้น: 20 concurrent users, 2,000 webhook events/day และรูป 10–20 รูป/day; บันทึกตัวเลขจริงก่อนปรับขนาด
-- Pilot UAT ด้วยโทรศัพท์และบัญชีจริงของ Owner/Admin/PM/ช่าง โดยไม่ปลอม session
+Core entities อย่างน้อย:
 
-เงื่อนไขผ่านที่สำคัญ:
+- users, employees, employee_rate_versions, line_accounts
+- customers, sites, projects, project_types
+- project_financial_profiles, project_members, project_operational_plans, project_milestones
+- jobs, job_types, job_assignments
+- cost_categories, budgets, budget_lines
+- work_entries, overtime_entries
+- expense_submissions, expense_evidence, expense_review_history
+- smemove_actual_cost_entries, commercial_references
+- cost_ledger
+- holiday_calendars
+- payroll_periods, payroll_runs, payroll_lines, payroll_adjustments, payroll_ledger, payroll_revision_history
+- line_group_bindings, line_event_inbox, line_conversation_flows, notification_outbox
+- audit_logs
 
-1. Event เดิมส่งซ้ำ 10 ครั้ง เกิด business record และ Cost Ledger หนึ่งครั้ง
-2. ช่างสองคนส่งข้อความและรูปพร้อมกันในกลุ่มเดียว รูปและยอดไม่สลับกัน
-3. Bot/DB/storage ล้มกลางทางแล้วกลับมาทำต่อได้ ไม่มี success message ลวง
-4. Admin/Owner แก้รายการก่อนอนุมัติ มี before/after/reason ครบ
-5. Approved expense ถูกนับ Actual หนึ่งครั้ง การยกเลิกสร้าง reversal
-6. TECH และสมาชิกภายนอกดึง Budget, ค่าแรง หรือกำไรผ่าน API/LINE/export ไม่ได้
-7. Project dashboard รวมยอดตรงกับ Cost Ledger และแยก pending ออกจาก actual
-8. Backup กู้เข้า database ใหม่แล้ว counts, totals, hashes และ relationships ตรงกัน
-9. หน้าเว็บหลักใช้งานบนมือถือ และ flow LINE สำเร็จตาม pilot script
-10. รอบค่าจ้างหนึ่งเดือนตรวจมือแล้วตรงทุกคน และไม่ทำให้ Project Actual ถูกบวกซ้ำ
-11. ผู้ไม่มี Payroll capability เรียกดูผ่าน URL/API/export ไม่ได้ แม้รู้ ID
-12. Export หลักฐานรายเดือนครบทุก approved expense และตรวจ checksum ได้; export ซ้ำสร้าง revision ไม่ทับหลักฐานเดิม
-13. Project ที่ไม่มี Site และไม่มี Job ทำ flow Assignment → Time/OT/Expense → Approval → Cost → Payroll ได้ครบโดยระบบไม่ถาม Site/Job
-14. เมื่อระบุ Job ระบบปฏิเสธ Job ที่อยู่คนละ Project และ Project total ไม่รวม Budget/Actual ซ้ำ
-15. ข้อมูลวันที่สุดท้ายของเดือนที่ส่งทันเวลารวมในรอบเดียวกัน Admin ปิดเวลาโดยไม่เห็นยอด และ Owner สามารถอนุมัติ/บันทึกจ่ายภายในวันที่ 1
-16. รายการที่ส่งหลังปิดข้อมูลไม่เปลี่ยนยอดที่อนุมัติแล้วแบบเงียบและมี late-adjustment audit ครบ
+Project Transaction มี `project_id NOT NULL`; `job_id` nullable และถ้ามีต้องเป็น Job ใน Project เดียวกัน
 
-รายงานผลแยก Local test, Integration test, Deployed smoke test, Real LINE test และ User acceptance ชัดเจน ห้ามเรียก mock test ว่าทดสอบ LINE จริง
+Audit อย่างน้อย Project, Job, Work, OT, Expense/Correction, Selling Price, Estimated Cost, Budget, Employee Rate, SMEMOVE Cost, Cost Adjustment, Project Close/Reopen, Financial Finalize/Lock/Unlock และ Payroll โดยเก็บ Before/After, User, Timestamp, Reason และ Correlation ID ตามความเหมาะสม
 
-## 14. ลำดับพัฒนาและ gates
+## 16. Testing strategy และ Definition of Done
 
-### Milestone 0 — Process prototype
+Risk-based tests:
 
-- ทำ wireflow ของ 5 LINE actions และหน้าเว็บหลัก
-- ทำ data dictionary, permission matrix และ state diagrams
-- ใช้ข้อมูลตัวอย่าง Project A ที่ไม่มี Site/Job และ Project B ที่มี Site/สอง Jobs พร้อมช่างสองคน
-- Owner ตรวจคำศัพท์และขั้นตอน โดยยังไม่เขียนโมดูลอื่น
+- Unit: FULL/AM/PM, Conflict, OT, Holiday, Meal, Rate Version, Permission, State, Financial Formula
+- Integration: PostgreSQL Transaction, Approval, Ledger, Reversal, Idempotency, Concurrency, Payroll และ Financial Permission
+- LINE: Private/Group, Multiple Users, Duplicate Webhook, Text/Image order, Multiple Images, Failure Recovery
+- Security: ADMIN/PM/TECH ดึง Selling Price, Estimated Cost, Budget, Actual Total, Profit, Margin, Forecast, Rate และ Payroll Amount ไม่ได้ผ่าน UI/API/Export/LINE/Direct URL
+- Backup/Restore และ Provider Restore
+- Real-device Owner/Admin/PM/TECH UAT
 
-Gate: ผู้ใช้เข้าใจ flow และทำ task ตัวอย่างได้โดยไม่ต้องอธิบายขั้นตอนเพิ่มเติม
+Expense tests ต้องครอบคลุม “น้ำมัน 500”, “500 ค่าน้ำมัน”, parse ไม่ได้, Text ก่อน/หลัง Image, Multiple Evidence/Users, Admin Correction, Approval Retry, Duplicate Webhook, Storage Failure และ Cost Posting Once
+
+Hardware tests ครอบคลุม NOT_APPLICABLE, PENDING→PARTIAL, RECORDED→COMPLETE หลัง Reconcile
+
+Project Close tests ครอบคลุมไม่มี Site/Job/Hardware, Closed ไม่รับ Source ใหม่, Pending Review ต่อได้, Owner เติม Hardware หลัง Close, Financial Lock แยก และ Reopen มี Audit
+
+Feature status:
+
+- DESIGNED
+- CODED
+- TESTED_LOCAL
+- TESTED_INTEGRATION
+- DEPLOYED_STAGING
+- REAL_INTEGRATION_TESTED
+- UAT_PASSED
+- PRODUCTION_READY
+
+ห้ามรายงาน “เสร็จ” จากการมี Menu, Page, Table, API หรือ Mock Test
+
+## 17. Milestones และ Gates
+
+### Milestone 0 — Process Prototype
+
+Owner/Admin/Technician flows, Financial Permission, Work/OT/Expense, Wireflow, Permission Matrix, Data Dictionary และ State Diagram
+
+Gate: ผู้ใช้เข้าใจ Process และไม่มี Requirement Conflict หลัก
 
 ### Milestone 1 — Foundation
 
-- Repository, environments, CI, PostgreSQL migrations, authentication, roles
-- Customer/Project/optional Site/optional Job/Assignment
-- Audit, health checks, backup policy
-- LINE account linking และ group binding
+Repository, Environment, Authentication, Roles, Customer, optional Site, Project, optional Job, configurable Project/Job Types, Assignment, Audit, LINE Account Linking และ Group Binding
 
-Gate: Admin สร้าง Project โดยไม่ต้องมี Site/Job มอบหมายทีม และช่างเห็นงานของตนใน LINE จริง; Project ที่ใช้ Site/Job ก็ทำงานได้โดยไม่ปะปนกัน
+Gate: ADMIN สร้าง Project/Job และ Assign Team ได้ TECH เห็นงานจริงใน LINE โดย Project ที่ไม่มี Site/Job ทำงานได้ครบ
 
-### Milestone 2 — Time & OT
+### Milestone 2 — Work & OT
 
-- ลงวันทำงาน/OT ผ่าน LINE
-- Review/approve/correct ผ่านเว็บ
-- Cost posting ตาม rate snapshot
+FULL/AM/PM, Man-day, Conflict, OT, LINE Submit, Web Review/Approval และ Hidden Labor Cost Posting
 
-Gate: ข้อมูลหนึ่งรอบจ่ายตัวอย่างคำนวณตรงและ retry ไม่ซ้ำ
+Gate: Work/OT คำนวณถูกและ ADMIN ไม่เห็นเงินค่าแรง
 
 ### Milestone 3 — Expense & Evidence
 
-- Typed expense + photo flow
-- Durable inbox/worker/outbox
-- Admin/Owner review ค่าใช้จ่ายและ Cost Ledger
+Typed Expense, Photo Evidence, LINE Confirmation, Durable Inbox/Worker, Admin Review/Correction, Cost Ledger Posting และ Evidence Center
 
-Gate: ผ่าน concurrent group test, failure recovery และ real phone UAT
+Gate: Real Phone + Real LINE Group ผ่าน UAT
 
-### Milestone 4 — Budget vs Actual
+### Milestone 4 — OWNER Financial
 
-- Budget versions/baseline
-- Dashboard, thresholds, exports
-- Reconciliation checks
+Selling Price, Estimated Cost, optional Budget Breakdown, Profit/Margin, Actual Cost, Financial View และ Permission Isolation
 
-Gate: ตัวเลขตัวอย่างตรวจมือกับ ledger ตรงกันทุกหมวด
+Gate: เฉพาะ OWNER เข้าถึง Financial Dashboard ได้และยอด Ledger ตรง
 
-### Milestone 5 — Payroll / สรุปค่าจ้าง
+### Milestone 5 — SMEMOVE Actual Cost
 
-- รอบค่าจ้าง, rate/policy version, holiday calendar และ payroll ledger
-- ค่าแรงเต็มวัน/ครึ่งวัน, วันหยุด 2x, OT 2x/3x และค่ากิน 120/60
-- ตรวจข้อผิดปกติ รายการเพิ่ม/หัก การอนุมัติ lock revision และสรุปพนักงาน
-- Permission และ privacy test สำหรับข้อมูลค่าจ้าง
+Hardware Status, Manual Actual Cost, Project/Job scope, Reference, Duplicate Prevention, Reconciliation และ Completeness
 
-Gate: รอบตัวอย่างตรวจมือกับ time/OT และ rate snapshot ตรงทั้งหมด ไม่มีการบวก Project Actual ซ้ำ และ Owner อนุมัติรูปแบบสรุปก่อนใช้จ่ายจริง
+Gate: Project ที่มีและไม่มี Hardware แสดงสถานะถูกต้องและไม่ Double Cost
 
-### Milestone 6 — Pilot Core
+### Milestone 6 — Commercial References
 
-- เลือก 2–3 Projects และผู้ใช้กลุ่มเล็ก
-- ใช้คู่ขนานกับวิธีเดิม 2–4 สัปดาห์
-- วัด completion rate, response time, correction rate, duplicate/lost events และเวลาที่ Admin ใช้
-- แก้ blocker แล้วจึงพิจารณาย้าย Project ใหม่เข้าระบบ
+Quotation, Customer PO และ Invoice Reference ระดับ Project/Job โดยไม่สร้าง Billing/Accounting
 
-Gate: Owner, Admin และช่างยืนยันว่าใช้ทำงานประจำได้ พร้อมผล restore และ rollback drill
+### Milestone 7 — Payroll Summary
 
-### Milestone 7 — Opportunity / Pre-Sales
+Rate Version, Holiday, Work/OT/Meal, Period, Adjustment, Approval, Lock, Revision และ Paid
 
-- Opportunity pipeline, Job ภายใต้ Opportunity, Man-day และ Pre-Sales Cost
-- Won/Lost history และการสร้าง Project จาก Won โดยไม่ทำประวัติเดิมหาย
-- Conversion และ Opportunity cost report
+Gate: ตรวจยอดมือแล้วตรง ไม่มีการบวก Project Cost ซ้ำ และ Privacy Test ผ่าน
 
-Gate: Opportunity ตัวอย่างเปลี่ยนเป็น Project ได้โดยยอด Pre-Sales ไม่ปะปน Project Actual และรายงาน Man-day ตรงกับ source entries
+### Milestone 8 — Pilot
 
-## 15. วิธีทำงานของ Codex และ Work ผ่าน Repository กลาง
+ทดลอง 2–3 Projects จริงแบบคู่ขนาน วัด LINE Completion, Missing Expense/Evidence, Duplicate, Correction Rate, Admin Workload, Work/OT/Payroll/Project Cost Accuracy และ Backup/Restore
 
-- เริ่มจาก repository ใหม่ ห้ามแก้หรือ deploy แอปเดิมระหว่างสร้างระบบใหม่นี้ Repository คือแหล่งข้อมูลจริงเพียงแห่งเดียว; แชท ความจำของ agent หรือไฟล์นอก repo ไม่มีอำนาจเหนือเอกสาร version ปัจจุบัน
-- ก่อนเริ่มงานทุกครั้งต้อง fetch/pull และอ่าน `AGENTS.md`, `docs/MASTER_PROMPT.md`, `docs/PROJECT_STATUS.md`, `docs/DECISION_LOG.md`, schema และ contract ของ module ที่เกี่ยวข้อง
-- Codex และ Work ใช้ branch แยกตามงานและเปิด PR ห้ามแก้ module เดียวกันพร้อมกันโดยไม่มี owner ระบุใน `PROJECT_STATUS.md`
-- การแก้ database schema, API contract, สูตรเงิน หรือ permission ต้องมี ADR/decision ที่ review ก่อน merge
-- Update `PROJECT_STATUS.md`, `DECISION_LOG.md`, `CHANGELOG.md` และ `DATABASE_SCHEMA.md` ทุก milestone และ failure/recovery ที่สำคัญ
-- ก่อนส่งงานต้อง rebase/merge จาก branch หลัก รัน test ตาม risk และบันทึก commit SHA, migration, environment และ test evidence ลง repo
-- Deployment ต้องมาจาก tagged/release commit ใน branch หลักเท่านั้น ห้าม deploy โค้ดที่มีเฉพาะในเครื่องหรือแชท
-- ทำ vertical slice ให้จบทีละเส้นทาง ห้ามสร้างทุกเมนูก่อน backend พร้อม
-- ทุก PR/commit อธิบาย problem, behavior, migration, tests และ limitation
-- ใช้ feature flags สำหรับ flow ที่ยังไม่ผ่าน real integration
-- ไม่ซื้อ service, เปลี่ยน LINE OA, ส่งข้อความจริง, เปลี่ยน production data หรือ deploy production โดยไม่มีขอบเขตที่ Owner อนุญาต
-- ห้ามเก็บ credentials ใน source, docs, logs หรือ chat
-- เมื่อพบ requirement ขัดกัน ให้ใช้ขอบเขต Release แรกนี้ก่อนและบันทึกคำตัดสิน ห้ามเดาเรื่องเงิน สิทธิ์ หรือการอนุมัติ
-- เมื่อมี blocker ให้ทำงานอิสระส่วนอื่นต่อและรายงานสิ่งที่ขาดอย่างเฉพาะเจาะจง
-- หากเอกสารใน repo ขัดกัน ให้หยุดเฉพาะส่วนที่ขัด บันทึก blocker และทำส่วนอื่นต่อ ห้ามเลือกคำตอบจากแชทเก่าเอง
+Pilot ผ่านเมื่อ Technician ทำงานประจำผ่าน LINE, Evidence ไม่หาย, Admin Review ง่ายแต่ไม่เห็น Financial Summary, Owner เห็น Cost/Profit, Ledger ไม่ Duplicate, Hardware Optional/Completeness ถูก, Payroll ไม่ Double Cost และ Real LINE/Backup/Restore ผ่าน
 
-## 16. เอกสารใน repository ใหม่
+Opportunity/Pre-Sales เป็น Future Phase หลัง Core Pilot:
+
+`Opportunity → Survey → POC → Quotation → Won/Lost`
+
+เก็บ Man-day/Expense แยกจาก Delivery Project เมื่อ Won สร้าง Project ใหม่ด้วย `source_opportunity_id` ห้ามย้าย Pre-Sales Cost เข้า Project Actual อัตโนมัติ
+
+## 18. Release แรกที่ไม่อยู่ใน Scope
+
+- Procurement / Purchase Request / Supplier PO
+- Inventory, Stock, Serial, Warehouse, Receiving และ Reconciliation
+- Full Accounting, Billing, AR, Collection และ Banking
+- GPS Attendance / Punch Clock
+- Mandatory OCR และ Bank Slip Verification
+- Automatic Tax/Social Security/Loan
+- MA, Warranty, Renewal
+- Customer Portal
+- AI Forecast
+- Full Gantt
+- ClickUp Migration
+- Opportunity Full Module
+
+ห้ามสร้าง Placeholder Menu สำหรับสิ่งเหล่านี้
+
+## 19. Repository governance
+
+Repository เป็น Source of Truth ก่อนเริ่มงานต้อง Fetch/Pull และอ่าน:
+
+- AGENTS.md
+- docs/MASTER_PROMPT.md
+- docs/PROJECT_STATUS.md
+- docs/DECISION_LOG.md
+- docs/DATABASE_SCHEMA.md
+- docs/PERMISSION_MATRIX.md
+- Module Specification ที่เกี่ยวข้อง
+
+Codex และ Work ต้องใช้ Branch แยก เปิด PR ระบุ Module Owner ไม่แก้ Module/Schema เดียวกันพร้อมกันโดยไม่มี Owner Update PROJECT_STATUS/CHANGELOG ทุกครั้ง และ Update DECISION_LOG/DATABASE_SCHEMA เมื่อมี Decision/Schema
+
+Critical Change ต่อไปนี้ต้องมี ADR และ Test:
+
+- Financial Permission
+- Cost Formula
+- Employee Rate
+- Payroll Formula
+- Cost Ledger
+- Idempotency
+- Financial Lock
+- LINE Reliability
+
+Deployment ต้องมาจาก Commit ที่ตรวจได้ ห้ามเก็บ Secret, Token, Password, รูปบิล ค่าแรงหรือข้อมูลส่วนบุคคลใน Git/Chat/Log ห้ามซื้อ Service, เปลี่ยน Production หรือส่ง LINE จริงนอกขอบเขตที่ Owner อนุมัติ
+
+Required documents:
 
 ```text
-/docs
+docs/
   MASTER_PROMPT.md
   PROJECT_STATUS.md
   DECISION_LOG.md
@@ -571,87 +778,50 @@ Gate: Opportunity ตัวอย่างเปลี่ยนเป็น Proj
   DATABASE_SCHEMA.md
   DATA_DICTIONARY.md
   PERMISSION_MATRIX.md
-  adr/
-  LINE_INTEGRATION.md
+  PROJECT_FLOW.md
+  WORK_OT_FLOW.md
   EXPENSE_FLOW.md
+  COST_LEDGER.md
+  FINANCIAL_SECURITY.md
+  SMEMOVE_COST_REFERENCE.md
+  COMMERCIAL_REFERENCES.md
+  LINE_INTEGRATION.md
   ACCOUNTING_EVIDENCE.md
   PAYROLL_POLICY.md
-  OPPORTUNITY_FLOW.md
   TEST_EVIDENCE.md
   OPERATIONS_RUNBOOK.md
+  adr/
+AGENTS.md
+README.md
+.env.example
 ```
 
-ไฟล์ root ที่ต้องมี:
+PROJECT_STATUS ต้องเป็นภาษาไทย แสดงสิ่งที่ใช้จริงได้/กำลังทำ/ยังไม่เริ่ม, Known Issues, Test Evidence, Deployment/UAT, Migration, Commit SHA, Next Action และ Owner พร้อมแยกสถานะตาม Definition of Done
 
-```text
-AGENTS.md              — กติกาที่ Codex/Work ต้องทำตามและลำดับเอกสารที่ต้องอ่าน
-README.md              — วิธีรันระบบและภาพรวมที่ไม่ซ้ำ Master Prompt
-.env.example           — ชื่อตัวแปรเท่านั้น ไม่มี secret
-```
+## 20. Current implementation boundary — 23 กันยายน 2026
 
-PROJECT_STATUS ต้องเขียนเป็นภาษาไทยและแสดง:
+Master v3.0 เป็น Target Specification ไม่ใช่คำสั่งว่าโค้ดทุก Milestone พร้อมแล้ว
 
-- สิ่งที่ใช้งานได้จริง
-- สิ่งที่อยู่ระหว่างทำ
-- สิ่งที่ยังไม่เริ่ม
-- หลักฐาน test/deployment/UAT
-- known issues และผลกระทบ
-- migration/version/commit ที่เกี่ยวข้อง
-- ขั้นตอนถัดไปและ owner ของงาน
+- Milestone 0 ผ่านและ Merge แล้ว
+- Milestone 1 อยู่ใน Draft PR #2 และพัฒนา Login, Roles, Customer, optional Site, Project, optional Job, Assignment, Audit, LINE Linking/Binding และ Inbox/Outbox ขั้นพื้นฐานแล้ว
+- Railway Trial/PostgreSQL ถูกเตรียมสำหรับ Staging แต่ต้องใช้สถานะจริงใน PROJECT_STATUS เป็นหลัก
+- M2–M8 ยังห้ามถือว่าพร้อมเพราะมีเพียง Design หรือ Prototype
+- การนำ v3.0 มาใช้ต้องทำ Gap Analysis, ADR และ Migration แบบ append-only ห้ามแก้ Migration ที่ Apply แล้ว
+- ห้ามรื้อ Foundation ที่ผ่าน Test หากสามารถเพิ่ม Field/Table/Projection ด้วย Migration ใหม่ได้
+- ห้าม Merge PR #2 หรือเริ่ม Milestone ถัดไปเพียงเพราะ Master เปลี่ยน ต้องผ่าน Gate ปัจจุบันก่อน
 
-ทุก feature ต้องแสดงสถานะแยกกันอย่างน้อย `DESIGNED`, `CODED`, `TESTED_LOCAL`, `TESTED_INTEGRATION`, `DEPLOYED_STAGING`, `UAT_PASSED`, `PRODUCTION_READY` ห้ามข้ามเป็น “เสร็จ” และต้องมี link ไปหลักฐานที่ตรวจซ้ำได้
+## 21. Primary business questions
 
-## 17. ค่าตั้งต้นที่ใช้เริ่มพัฒนาได้ทันที
+OWNER ต้องตอบได้ว่า Project ขายเท่าไร ตั้งต้นทุนเท่าไร Actual/Completeness/Labor/OT/Expense/Hardware เป็นเท่าไร Profit/Margin/Forecast เหลือเท่าไร และ Project ใดเสี่ยง
 
-- Timezone: Asia/Bangkok
-- Currency: THB
-- Site เป็น optional; ไม่ต้องสร้าง Site ปลอมหรือเลือกค่า `ไม่ระบุ` เพื่อสร้าง Project
-- Project เป็นหน่วยหลักและอาจไม่มี Job; Job เป็นงานย่อย optional
-- Work/OT/Expense/Budget บันทึกระดับ Project ได้โดยมี `job_id = null`
-- Job Type เป็น configurable master data ไม่ hard-code
-- Work entry: FULL/AM/PM
-- Expense status: DRAFT → PENDING_REVIEW → APPROVED/REJECTED/CANCELLED
-- Work/OT status: DRAFT → SUBMITTED → APPROVED/REJECTED/CANCELLED
-- Reviewer วัน/OT เริ่มต้น: ADMIN หรือ OWNER; PM ตรวจเวลาได้เฉพาะ Project ที่ได้รับมอบหมายเมื่อ Owner เปิด policy; Expense reviewer คือ ADMIN/OWNER; Budget reviewer คือ OWNER เท่านั้น
-- Faa เป็น Admin หลักในงานจริง แต่สิทธิ์ต้องผูกกับบัญชีที่ยืนยันแล้ว ไม่ผูกจากชื่อเพียงอย่างเดียว
-- รอบค่าจ้าง: วันที่ 1 ถึงวันสุดท้ายของเดือน และโอนเงินไม่เกินวันที่ 1 ของเดือนถัดไป; ฟ้า/Admin ปิดตรวจวัน/OT ภายใน 10:00 น. วันที่ 1 โดยไม่เห็นจำนวนเงิน และ OWNER กรอกอัตรารายวัน เห็นยอด อนุมัติ/lock/บันทึกจ่ายภายในวันเดียวกัน
-- ค่าแรง: full day 1.0, half day 0.5, Sunday/holiday work 2.0 ตามสัดส่วนวัน
-- ค่ากิน: full day 120 บาท, half day 60 บาท เฉพาะวันที่ทำงานที่อนุมัติ รวมวันหยุดที่มาทำงาน
-- OT: วันปกติ `(daily/8)×2`, วันหยุด `(daily/8)×3`; ปัด hourly rate แบบ HALF_UP เป็นบาทเต็มก่อนคูณชั่วโมง
-- Pending ไม่รวม Actual
-- Approved สร้าง Cost Ledger ครั้งเดียว
-- External LINE group members ไม่เห็นยอดรวม Project หรือข้อมูลค่าจ้าง
-- Receipt image เป็นหลักฐาน; typed amount เป็นข้อมูลตั้งต้น
-- Core private storage เป็นแหล่งหลัก; monthly accounting export และ optional Drive mirror เป็นสำเนา
-- ระยะเก็บหลักฐาน 2 ปีตาม ADR-008; M0 ไม่มีการลบจริง
+ADMIN ต้องตอบได้ว่าวันนี้ใครทำงานที่ไหน มี Work/OT/Expense อะไรรอตรวจ Transaction แต่ละรายการเท่าไร Project ใดกำลังทำ Job ใด Blocked และงานใกล้ Due โดยไม่เห็น Cost/Profit Summary
 
-## 18. ข้อตกลงที่ยืนยันแล้วก่อนใช้เงินจริง
+TECH ต้องดูงาน ลง FULL/AM/PM ลง OT ส่ง Expense+Evidence และดูสถานะได้ง่ายผ่าน LINE
 
-ยืนยันแล้ว:
+## 22. Final release rule
 
-1. พนักงานเป็นรายวัน จ่ายค่าแรงและค่ากินเฉพาะวันที่มาทำงาน ค่ากินเต็มวัน 120 บาท ครึ่งวัน 60 บาท รวมวันที่มาทำงานในวันอาทิตย์/วันหยุด และไม่จ่ายวันลา/ขาดงาน
-2. Release แรกคำนวณค่าแรง OT ค่ากิน และรายการเพิ่ม/หัก manual ยังไม่คำนวณภาษีหรือประกันสังคมอัตโนมัติ
-3. รอบค่าจ้างวันที่ 1–วันสุดท้ายของเดือน Admin กรอก/ตรวจข้อมูลเวลาโดยไม่เห็นยอดเงิน Owner กรอกอัตรารายวัน เห็นยอด และอนุมัติ/lock
-4. ตัดวันทำงานถึงวันสุดท้ายของเดือนและโอนเงินไม่เกินวันที่ 1 ของเดือนถัดไป ใช้ electronic transfer ได้แม้วันที่ 1 เป็นวันหยุด และรายการมาช้าต้องใช้ late adjustment ที่ตรวจย้อนหลังได้
+Release แรกต้องพิสูจน์ Flow ต่อไปนี้จริง:
 
-ก่อน Pilot ต้องกรอก checklist ใน repo เพิ่มเติม: Project และผู้ร่วม pilot, ปริมาณผู้ใช้/รูป, budget hosting/domain, แผนนำเข้า master data, วิธีจ่ายเงินจริง และผู้รับผิดชอบ backup/restore แต่ไม่ต้องถามทั้งหมดในครั้งเดียว
+`ADMIN สร้าง Project → Assign Team → OWNER ใส่ Selling Price/Estimated Cost → TECH ลง Work/OT/Expense+Evidence ผ่าน LINE → ADMIN Review → Backend ลง Labor/Meal/OT/Expense Cost → OWNER ใส่ SMEMOVE Actual เมื่อมี → Cost Ledger → OWNER ดู Actual/Profit/Margin → Payroll Summary → Operational Close → Financial Reconcile → Financial Lock`
 
-## 19. คำสั่งเริ่มงานสำหรับ Codex
-
-อัปเดตล่าสุด 2026-09-22: Owner เลือก Railway Trial และอนุมัติเริ่ม Staging ด้วยเครดิตทดลองตาม D-017 ห้ามเพิ่มแพ็กเกจ/ขนาด/ค่าใช้จ่ายเอง ต้องขออนุมัติก่อน ยังไม่ Merge PR #2 ไม่เริ่ม M2 ไม่ deploy Production และ LINE จริงยังต้องผ่าน checklist/ตั้ง secrets ภายนอก Git ข้อความรออนุมัติ provider ด้านล่างเป็นประวัติ
-
-อัปเดต 2026-09-22: Owner ให้เตรียม M1 Staging และ Real LINE Pilot ตาม [แผน](M1_STAGING_PLAN.md) และ D-016 เท่านั้น พักงาน M2 ที่เคยทดลองในเครื่อง ห้าม Merge PR #2 ห้ามเริ่ม M2 และห้าม deploy/สมัครบริการเสียเงินจน Owner อนุมัติ environment/งบโดยชัดเจน M1 ต้องผ่าน Real LINE และ UAT ก่อนขอปิด gate
-
-อัปเดต 2026-09-21: Milestone 0 ได้รับ Owner Acceptance และ Merge PR #1 แล้ว Owner สั่ง “เริ่มได้เลยค่ะ” ตามข้อเสนอ [Milestone 1 Foundation](M1_FOUNDATION_PROPOSAL.md) จึงอนุญาต implementation M1 บน branch แยกตาม Gate §14 และ [ADR-010](adr/010-foundation-implementation.md) ข้อความเริ่ม M0 ด้านล่างเป็นคำสั่งเริ่มต้นในอดีต ไม่ห้ามงาน M1 ที่อนุมัติใหม่ ยังไม่อนุญาต production deployment หรือเริ่ม M2; การทดสอบ LINE จริงต้องระบุ OA/กลุ่ม/environment และตั้ง secret ภายนอก Git ก่อน
-
-เริ่ม Milestone 0 เท่านั้น สร้าง repository กลางและใส่ Master Prompt ฉบับนี้เป็น `docs/MASTER_PROMPT.md` ก่อน จากนั้นจัดทำ wireflow, state diagrams, data dictionary, permission matrix, architecture decision records, Payroll calculation examples, accounting evidence export specification และ pilot acceptance script ใช้ข้อมูลสมมติที่ทำเครื่องหมายชัดเจน ห้าม deploy production หรือเชื่อม LINE OA จริงใน milestone นี้
-
-เมื่อเอกสารและ clickable prototype พร้อม ให้ Owner ตรวจ task จริง 7 งาน ได้แก่ ดูงานของฉัน, ลงวันทำงาน, ลง OT, ส่งค่าใช้จ่ายพร้อมรูป, Admin ตรวจเวลา และค่าใช้จ่าย; Owner ดู Budget vs Actual, เปิดหลักฐานบัญชีรายเดือน และตรวจรอบค่าจ้าง จากนั้นปรับ flow ให้ผ่านก่อนเริ่ม Milestone 1
-
-## แหล่งอ้างอิง LINE ที่ต้องตรวจซ้ำเมื่อเริ่ม implementation
-
-- LINE Messaging API overview: https://developers.line.biz/en/docs/messaging-api/overview/
-- Receiving webhook events: https://developers.line.biz/en/docs/messaging-api/receiving-messages/
-- Message types and quick replies: https://developers.line.biz/en/docs/messaging-api/message-types/
-- Actions: https://developers.line.biz/en/docs/messaging-api/actions/
-- Account linking: https://developers.line.biz/en/docs/messaging-api/linking-accounts/
+หาก Flow นี้ยังไม่ผ่านจริง ห้ามขยาย Scope ไป Module อื่น
