@@ -1,10 +1,22 @@
 # PROJECT STATUS — สถานะปัจจุบัน
 
-## จุดที่รอ Owner ตอนนี้ — 23 กันยายน 2026
+## 23 กันยายน 2026 — ปรับ UX และทดสอบอัตโนมัติก่อนส่ง Owner
 
-Owner แจ้ง Login Admin แล้ว แต่เมื่อ reload และตรวจบทบาทจาก session บนหน้า Web ยังเป็น OWNER จึงไม่ลง PASS ให้ Admin UAT ตรวจแบบอ่านอย่างเดียวพบว่ามีบัญชี ADMIN/TECH/PM ที่ active อยู่แล้ว ไม่อ่านหรือเปลี่ยนรหัสผ่าน ไม่แก้สิทธิ์บัญชี เปิดหน้า Login ใหม่ไว้ให้ Owner เข้าบัญชีที่มีสิทธิ์ ADMIN จนข้อความใต้ชื่อแสดง ADMIN แล้วจึงทดสอบ PILOT A/B ต่อ
+Owner ขอให้พัฒนาและทดสอบเป็นชุดก่อนส่งตรวจ ไม่ต้องสลับบัญชีทีละขั้น จึงพักคำขอ Login TECH ก่อนหน้า ไม่รอ Owner เพื่อทดสอบอัตโนมัติ ใช้บัญชี OWNER/ADMIN/PM/TECH ที่ชุดทดสอบสร้างเองในฐานสมมติแยก รหัสผ่านสุ่มในหน่วยความจำ ไม่พิมพ์/บันทึกและไม่ใช้กับ Staging ที่มีข้อมูลจริง
 
-TECH Login/การซ่อนเมนูผู้ดูแลผ่านแล้วตามหลักฐานก่อนหน้านี้ ไม่ใช้ผลของ OWNER แทน ADMIN และยังไม่เปิด LINE
+CODED: เพิ่มชื่อลูกค้า/สถานที่บนการ์ดและรายละเอียดโครงการ เปิดรายการ Job และแบบฟอร์มเพิ่ม Job ให้มองเห็นชัด ตัวเลือกมอบหมายทั้งโครงการ/Job แสดงทันทีเมื่อมี Job เท่านั้น โครงการไม่มี Job ยังไม่ถาม Job ล้างข้อมูลหน้าจอเมื่อ Logout ป้องกันข้อมูลค้างข้ามบัญชี
+
+TESTED: Local regression 24 tests: 22 PASS / 2 native-PostgreSQL-only SKIP / 0 FAIL; typecheck และ Next production build PASS; M0 document checks 24/24 PASS; git diff --check PASS. ชุดใหม่ตรวจ customer/site ตาม scope, ห้ามอ่าน directory, A ไม่มี Job และ B มี Job โดยสร้างบัญชี/รหัสผ่านอัตโนมัติในฐานแยก CI รุ่นใหม่ยังรอผล DEPLOYED: Staging ยังเป็น release 4fcb29e จึงยังไม่เห็น UX ใหม่ UAT: ยังไม่ส่ง Owner ตรวจรอบใหม่ ไม่ถือผล automated เป็น Owner acceptance
+
+ยังไม่เปิด LINE ไม่ Merge PR #2 ไม่เริ่ม M2/Production ไม่แก้ข้อมูลจริงหรือเพิ่มค่าใช้จ่าย ส่ง Owner ตรวจเป็น flow เดียวหลังรุ่นพร้อม และขอ Owner เฉพาะเรื่องที่ต้องตัดสินใจ/กรอก secret ของบริการจริง
+
+## 23 กันยายน 2026 — Admin และชุด PILOT A/B
+
+PASS บน Web Staging release 4fcb29e: reload แล้วยืนยันบทบาท ADMIN; Admin สร้างลูกค้า PILOT-20260923-Customer และ Project A โดยไม่กรอก Site/Job ได้ มอบหมายช่างสมมติที่เคย Login ให้ A โดยแบบฟอร์มมีเฉพาะพนักงาน ไม่มีช่อง Job หลังบันทึกพบช่างสมมติและปุ่มถอนมอบหมาย
+
+PASS: สร้าง Site B เลือก Site นี้ตอนสร้าง Project B และเพิ่ม Job B ได้ ตรวจพบ Job B ในรายละเอียด และ B ไม่มี assignment ช่าง ทั้งหมดใช้ชื่อขึ้นต้น PILOT-20260923 ไม่แก้รายการจริงเดิม Owner ยืนยันเพิ่มเติมว่า Admin เลือกช่างได้ถูกต้อง
+
+ประวัติก่อนเปลี่ยนวิธีทดสอบ: เคยรอ Login ช่างสมมติเพื่อตรวจ A/B; คำขอนี้พักแล้วตามคำสั่ง Owner ล่าสุด ยังไม่ลง PASS ให้ cross-project, ถอนสิทธิ์, PM หรือ security live ที่เหลือ LINE ยังคงปิด ไม่มี deploy/merge/M2/ค่าใช้จ่ายเพิ่ม
 
 อัปเดต 23 กันยายน 2026 หลัง Owner ทดลอง Web และซ้อม Restore · ผู้รับผิดชอบ M1: Codex
 
@@ -20,8 +32,8 @@ Owner ยืนยันว่า Login, สร้างพนักงาน, �
 
 | งาน | เขียนโค้ด (CODED) | ทดสอบ (TESTED) | เปิดใช้งาน (DEPLOYED) | Owner ตรวจรับ (UAT) |
 | --- | --- | --- | --- | --- |
-| Login และจัดการพนักงาน/ลูกค้า/โครงการ/มอบหมาย | YES | Local/CI PASS | Staging YES | 5 flow ข้างต้น PASS; ยังไม่ครบทุกบทบาท |
-| ขอบเขต Admin/PM/ช่างและถอนสิทธิ์ | YES | Local/CI PASS; TECH Login/เมนูตามบทบาท PASS บน Web | Staging YES | Admin/PM, ข้ามโครงการ/ถอนสิทธิ์ ยังไม่ครบ |
+| Login และจัดการพนักงาน/ลูกค้า/โครงการ/มอบหมาย | YES | Local/CI PASS | Staging YES | Owner 5 flow PASS; Admin สร้างลูกค้า/A/B/มอบหมาย PASS; ยังไม่ครบทุกบทบาท |
+| ขอบเขต Admin/PM/ช่างและถอนสิทธิ์ | YES | Local/CI PASS; ADMIN/TECH Login PASS บน Web | Staging YES | PM, TECH ข้ามโครงการ/ถอนสิทธิ์ ยังไม่ครบ |
 | ความปลอดภัยฐานข้อมูล/TLS | YES | Staging PASS | Staging YES | เป็นการตรวจทางเทคนิค |
 | HTTPS/CSRF/ปฏิเสธผู้ไม่ Login/มือถือหน้า Login | YES | Staging PASS | Staging YES | Logout PASS; rate limit API ภายใน PASS; cookie/expiry/public-edge ยังไม่ครบ |
 | Backup/Restore และ Restart | YES | Local/CI PASS; native restore ชุดสมมติบน Railway PASS | เครื่องมืออยู่ใน API | Web UAT หลัง restore NOT_RUN; Web/API Restart และข้อมูลคงอยู่ PASS |
@@ -38,9 +50,9 @@ Owner ยืนยันว่าข้อมูลที่สร้างม�
 
 **ยังไม่เปิด LINE จริง**: Restore แบบ native ของชุดสมมติแยกผ่านแล้ว ดู [หลักฐานและข้อจำกัด](M1_STAGING_RESTORE_DRILL.md) ยังเหลือผล Admin/ช่าง/PM แยกบทบาท, การถอนสิทธิ์, expiry/cookie/public-edge rate limit; Logout และ Restart ผ่านแล้ว จากนั้นเตรียม OA/กลุ่ม/allowlist/secret ผ่านหน้าผู้ให้บริการก่อนนัดทดลอง ไม่ถือว่าคำสั่งให้ทำ process ถัดไปยกเลิก gate A–E หรืออนุญาต Merge/M2/Production
 
-## โอ๋ต้องทดสอบอะไรต่อ
+## แผน UAT รอบรวม — ยังไม่ต้องทำตอนนี้
 
-ทำเฉพาะบัญชีและโครงการสมมติ ตั้งชื่อขึ้นต้น `PILOT` และใช้รหัสผ่านใหม่สำหรับทดสอบโดยกรอกในเว็บเอง ไม่ส่งรหัสในแชท
+พักรายการต่อไปนี้จน Codex เตรียมรุ่นพร้อมตามคำขอ Owner ล่าสุด ไม่ต้องสลับ Login ระหว่างการพัฒนา เมื่อถึงรอบ UAT ทำเฉพาะบัญชีและโครงการสมมติ ตั้งชื่อขึ้นต้น `PILOT` และใช้รหัสผ่านใหม่สำหรับทดสอบโดยกรอกในเว็บเอง ไม่ส่งรหัสในแชท
 
 1. **Admin:** Login ด้วยบัญชี Admin สมมติ สร้างลูกค้าและ Project A โดยเว้น Site/Job แล้วมอบหมายช่างสมมติ ต้องบันทึกได้โดยไม่ถาม Job
 2. **ช่าง:** ใช้อีก browser profile/มือถือ Login บัญชีช่างสมมติ ต้องเห็น A ที่มอบหมาย และไม่เห็น Project B สมมติที่ยังไม่ได้มอบหมาย

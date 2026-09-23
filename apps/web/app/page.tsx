@@ -93,6 +93,12 @@ export default function Home() {
                 setMe(null);
                 setSelected(null);
                 setProjects([]);
+                setCustomers([]);
+                setSites([]);
+                setUsers([]);
+                setAssignments([]);
+                setCustomer("");
+                setPage("projects");
               })
             }
           >
@@ -202,6 +208,8 @@ export default function Home() {
                           {p.status === "ACTIVE" ? "กำลังดำเนินการ" : "ปิดแล้ว"}
                         </span>
                         <h3>{p.name}</h3>
+                        <p>ลูกค้า: {p.customer_name}</p>
+                        {p.site_name && <p>สถานที่: {p.site_name}</p>}
                         <small>{p.code}</small>
                       </div>
                       <button onClick={() => act(() => open(p.id))}>
@@ -278,16 +286,20 @@ export default function Home() {
                 <button className="secondary" onClick={() => setSelected(null)}>
                   กลับรายการโครงการ
                 </button>
-                <section className="card">
+                <section className="card" key={selected.id}>
                   <small>{selected.code}</small>
                   <h2>{selected.name}</h2>
+                  <p>ลูกค้า: {selected.customer_name}</p>
+                  {selected.site_name && <p>สถานที่: {selected.site_name}</p>}
                   {selected.jobs.length > 0 && (
-                    <details>
-                      <summary>งานย่อย</summary>
-                      {selected.jobs.map((j: Row) => (
-                        <p key={j.id}>{j.name}</p>
-                      ))}
-                    </details>
+                    <section aria-label="งานย่อยในโครงการ">
+                      <h3>งานย่อย (Job)</h3>
+                      <ul>
+                        {selected.jobs.map((j: Row) => (
+                          <li key={j.id}>{j.name}</li>
+                        ))}
+                      </ul>
+                    </section>
                   )}
                   {me.role !== "TECH" && (
                     <details>
@@ -328,7 +340,7 @@ export default function Home() {
                   )}
                 </section>
                 {manager && (
-                  <div className="grid">
+                  <div className="grid" key={selected.id}>
                     <section className="card">
                       <h2>ทีมงาน</h2>
                       {assignments.map((a) => (
@@ -338,7 +350,7 @@ export default function Home() {
                             ? " · " +
                               selected.jobs.find((j: Row) => j.id === a.job_id)
                                 ?.name
-                            : ""}{" "}
+                            : " · ทั้งโครงการ"}{" "}
                           <button
                             className="secondary"
                             onClick={() =>
@@ -383,20 +395,17 @@ export default function Home() {
                           </select>
                         </label>
                         {selected.jobs.length > 0 && (
-                          <details>
-                            <summary>ระบุงานย่อย (ถ้าต้องการ)</summary>
-                            <label>
-                              งานย่อย
-                              <select name="job_id">
-                                <option value="">ทั้งโครงการ</option>
-                                {selected.jobs.map((j: Row) => (
-                                  <option key={j.id} value={j.id}>
-                                    {j.name}
-                                  </option>
-                                ))}
-                              </select>
-                            </label>
-                          </details>
+                          <label>
+                            ขอบเขตงานที่มอบหมาย
+                            <select name="job_id" defaultValue="">
+                              <option value="">ทั้งโครงการ</option>
+                              {selected.jobs.map((j: Row) => (
+                                <option key={j.id} value={j.id}>
+                                  {j.name}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
                         )}
                         <button disabled={busy || selected.status !== "ACTIVE"}>
                           มอบหมายงาน
@@ -404,29 +413,32 @@ export default function Home() {
                       </form>
                     </section>
                     <section className="card">
-                      <h2>เพิ่มเติม</h2>
-                      <details>
-                        <summary>เพิ่มงานย่อย</summary>
-                        <form
-                          onSubmit={(e) => {
-                            const b = fields(e);
-                            act(async () => {
-                              await api(
-                                "/projects/" + selected.id + "/jobs",
-                                "POST",
-                                b,
-                              );
-                              await open(selected.id);
-                            });
-                          }}
-                        >
-                          <label>
-                            ชื่องานย่อย
-                            <input name="name" required />
-                          </label>
-                          <button disabled={busy}>เพิ่มงานย่อย</button>
-                        </form>
-                      </details>
+                      <h2>งานย่อย (Job)</h2>
+                      <p className="muted">
+                        เพิ่มเมื่อมีงานย่อยที่ต้องแยกมอบหมาย หากไม่มี
+                        ใช้ทั้งโครงการได้เลย
+                      </p>
+                      <form
+                        onSubmit={(e) => {
+                          const b = fields(e);
+                          act(async () => {
+                            await api(
+                              "/projects/" + selected.id + "/jobs",
+                              "POST",
+                              b,
+                            );
+                            await open(selected.id);
+                          });
+                        }}
+                      >
+                        <label>
+                          ชื่องานย่อย
+                          <input name="name" required />
+                        </label>
+                        <button disabled={busy || selected.status !== "ACTIVE"}>
+                          เพิ่มงานย่อย
+                        </button>
+                      </form>
                       <details>
                         <summary>กำหนด PM</summary>
                         <form

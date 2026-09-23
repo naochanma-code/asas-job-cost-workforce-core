@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { randomUUID, createHmac } from "node:crypto";
+import { randomUUID, randomBytes, createHmac } from "node:crypto";
 import { openDatabase, migrate } from "../packages/database/index";
 import { passwordHash, hashToken } from "../packages/domain/identity";
 import { buildApp } from "../apps/api/src/app";
@@ -13,7 +13,7 @@ test("Foundation: real sessions, database constraints, scope and durable LINE co
   await migrate(db);
   await migrate(db);
   const owner = randomUUID(),
-    password = "Synthetic-test-only-2026!";
+    password = randomBytes(32).toString("base64url");
   await db.query(
     "INSERT INTO users(id,username,display_name,password_hash,role) VALUES($1,$2,$3,$4,$5)",
     [
@@ -166,6 +166,8 @@ test("Foundation: real sessions, database constraints, scope and durable LINE co
         ).id;
         const p = await ok("ADMIN", "GET", "/api/projects/" + a);
         assert.equal(p.site_id, null);
+        assert.equal(p.customer_name, "Synthetic customer");
+        assert.equal(p.site_name, null);
         assert.deepEqual(p.jobs, []);
         assignment = (
           await ok("ADMIN", "POST", `/api/projects/${a}/assignments`, {
@@ -241,6 +243,32 @@ test("Foundation: real sessions, database constraints, scope and durable LINE co
           employee_id: users.TECH2.employee_id,
           job_id: job,
         });
+        const techProjects = await ok("TECH", "GET", "/api/projects");
+        assert.deepEqual(
+          techProjects.map((p: any) => p.id),
+          [a],
+        );
+        assert.equal(techProjects[0].customer_name, "Synthetic customer");
+        assert.doesNotMatch(
+          JSON.stringify(techProjects),
+          /Other fixture|Other site|B subtask/,
+        );
+        assert.equal(
+          (await req("TECH", "GET", "/api/projects/" + b)).statusCode,
+          404,
+        );
+        const techB = await ok("TECH2", "GET", "/api/projects/" + b);
+        assert.equal(techB.customer_name, "Other fixture");
+        assert.equal(techB.site_name, "Other site");
+        assert.deepEqual(
+          techB.jobs.map((j: any) => j.id),
+          [job],
+        );
+        assert.equal(
+          (await req("TECH2", "GET", "/api/customers")).statusCode,
+          403,
+        );
+        assert.equal((await req("TECH2", "GET", "/api/sites")).statusCode, 403);
       },
     );
     await t.test(

@@ -113,6 +113,15 @@ nav {
   gap: 15px;
   align-items: center;
 }
+.project > div {
+  min-width: 0;
+}
+h2,
+h3,
+p,
+li {
+  overflow-wrap: anywhere;
+}
 code {
   overflow-wrap: anywhere;
 }

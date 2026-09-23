@@ -50,3 +50,7 @@ PM/TECH ไม่เห็น user directory/audit/team assignments ของค
 RECEIVED → PROCESSING → DONE หรือ RETRY → PROCESSING → DEAD (5 attempts); lease 1 นาที กู้ processing ที่ค้างได้ Outbox PENDING → SENDING → SENT/RETRY/DEAD และ CANCELLED เมื่อผู้รับหลุด allowlist ก่อนส่ง ไม่มี push fallback อัตโนมัติ
 
 Account linking ที่ชน user/LINE เดิมไม่สลับเจ้าของ มี audit LINE_LINK_CONFLICT; ให้ unlink เดิมแล้วเชื่อมใหม่ เปลี่ยนกลุ่มที่ผูกแล้วต้องมีขั้นตอนตรวจโดย operator ไม่มี silent overwrite
+
+## Project display context — D-020
+
+GET projects และ projects/:id คืน customer_name และ site_name (string หรือ null) เพิ่มจาก project fields เดิม โดย join หลังใช้ขอบเขต Project เดิม ช่าง/PM อ่านได้เฉพาะลูกค้าและสถานที่ของโครงการที่ตนมีสิทธิ์ ไม่เปิด endpoint directory และไม่คืน contact/ข้อมูลเงิน Job อยู่ภายใต้โครงการเช่นเดิม ไม่มี schema migration

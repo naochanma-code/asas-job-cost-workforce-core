@@ -1,10 +1,22 @@
 # M1 Test Evidence — 2026-09-21
 
-## จุดที่รอ Owner ตอนนี้ — 23 กันยายน 2026
+## 23 กันยายน 2026 — ปรับ UX และทดสอบอัตโนมัติก่อนส่ง Owner
 
-Owner แจ้ง Login Admin แล้ว แต่เมื่อ reload และตรวจบทบาทจาก session บนหน้า Web ยังเป็น OWNER จึงไม่ลง PASS ให้ Admin UAT ตรวจแบบอ่านอย่างเดียวพบว่ามีบัญชี ADMIN/TECH/PM ที่ active อยู่แล้ว ไม่อ่านหรือเปลี่ยนรหัสผ่าน ไม่แก้สิทธิ์บัญชี เปิดหน้า Login ใหม่ไว้ให้ Owner เข้าบัญชีที่มีสิทธิ์ ADMIN จนข้อความใต้ชื่อแสดง ADMIN แล้วจึงทดสอบ PILOT A/B ต่อ
+Owner ขอให้พัฒนาและทดสอบเป็นชุดก่อนส่งตรวจ ไม่ต้องสลับบัญชีทีละขั้น จึงพักคำขอ Login TECH ก่อนหน้า ไม่รอ Owner เพื่อทดสอบอัตโนมัติ ใช้บัญชี OWNER/ADMIN/PM/TECH ที่ชุดทดสอบสร้างเองในฐานสมมติแยก รหัสผ่านสุ่มในหน่วยความจำ ไม่พิมพ์/บันทึกและไม่ใช้กับ Staging ที่มีข้อมูลจริง
 
-TECH Login/การซ่อนเมนูผู้ดูแลผ่านแล้วตามหลักฐานก่อนหน้านี้ ไม่ใช้ผลของ OWNER แทน ADMIN และยังไม่เปิด LINE
+CODED: เพิ่มชื่อลูกค้า/สถานที่บนการ์ดและรายละเอียดโครงการ เปิดรายการ Job และแบบฟอร์มเพิ่ม Job ให้มองเห็นชัด ตัวเลือกมอบหมายทั้งโครงการ/Job แสดงทันทีเมื่อมี Job เท่านั้น โครงการไม่มี Job ยังไม่ถาม Job ล้างข้อมูลหน้าจอเมื่อ Logout ป้องกันข้อมูลค้างข้ามบัญชี
+
+TESTED: Local regression 24 tests: 22 PASS / 2 native-PostgreSQL-only SKIP / 0 FAIL; typecheck และ Next production build PASS; M0 document checks 24/24 PASS; git diff --check PASS. ชุดใหม่ตรวจ customer/site ตาม scope, ห้ามอ่าน directory, A ไม่มี Job และ B มี Job โดยสร้างบัญชี/รหัสผ่านอัตโนมัติในฐานแยก CI รุ่นใหม่ยังรอผล DEPLOYED: Staging ยังเป็น release 4fcb29e จึงยังไม่เห็น UX ใหม่ UAT: ยังไม่ส่ง Owner ตรวจรอบใหม่ ไม่ถือผล automated เป็น Owner acceptance
+
+ยังไม่เปิด LINE ไม่ Merge PR #2 ไม่เริ่ม M2/Production ไม่แก้ข้อมูลจริงหรือเพิ่มค่าใช้จ่าย ส่ง Owner ตรวจเป็น flow เดียวหลังรุ่นพร้อม และขอ Owner เฉพาะเรื่องที่ต้องตัดสินใจ/กรอก secret ของบริการจริง
+
+## 23 กันยายน 2026 — Admin และชุด PILOT A/B
+
+PASS บน Web Staging release 4fcb29e: reload แล้วยืนยันบทบาท ADMIN; Admin สร้างลูกค้า PILOT-20260923-Customer และ Project A โดยไม่กรอก Site/Job ได้ มอบหมายช่างสมมติที่เคย Login ให้ A โดยแบบฟอร์มมีเฉพาะพนักงาน ไม่มีช่อง Job หลังบันทึกพบช่างสมมติและปุ่มถอนมอบหมาย
+
+PASS: สร้าง Site B เลือก Site นี้ตอนสร้าง Project B และเพิ่ม Job B ได้ ตรวจพบ Job B ในรายละเอียด และ B ไม่มี assignment ช่าง ทั้งหมดใช้ชื่อขึ้นต้น PILOT-20260923 ไม่แก้รายการจริงเดิม Owner ยืนยันเพิ่มเติมว่า Admin เลือกช่างได้ถูกต้อง
+
+ประวัติก่อนเปลี่ยนวิธีทดสอบ: เคยรอ Login ช่างสมมติเพื่อตรวจ A/B; คำขอนี้พักแล้วตามคำสั่ง Owner ล่าสุด ยังไม่ลง PASS ให้ cross-project, ถอนสิทธิ์, PM หรือ security live ที่เหลือ LINE ยังคงปิด ไม่มี deploy/merge/M2/ค่าใช้จ่ายเพิ่ม
 
 ## 23 กันยายน 2026 — Restart, Logout และ Rate Limit
 
@@ -206,3 +218,7 @@ Artifact code/tests/docs: 45be1acfe136338df8867dd3ba98ecd6f841a212; [Foundation 
 Native restore case PASS จริงใน CI ไม่ได้ skip ใน native run: แยก source/target schemas, restore แล้ว reopen connection, ตรวจ A/B/Site/Job/assignment/audit/LINE mappings และทดสอบ scope กับการถอน assignment หลัง restore ไม่ใช่ provider backup/PITR หรือ Staging restart
 
 Commit หลักฐานถัดจาก45be1acเปลี่ยนเอกสารเท่านั้น; ไม่อ้างว่า CI commitเก่าคือ headใหม่ ผล PRยังDraft/ไม่merge/ไม่deploy/M2พัก
+
+## สภาพแวดล้อมทดสอบรอบ UX 23 กันยายน
+
+คำสั่ง node --import tsx --test --test-concurrency=1 tests/*.test.ts รอบ sandbox เริ่มไม่ได้เพราะ Windows uv_os_get_passwd ENOMEM ก่อนเข้า test; รันนอก sandbox โดยล้าง TEST_DATABASE_URL แล้วได้ 22 PASS/2 SKIP/0 FAIL ใน 41.95 วินาที ไม่เชื่อมฐาน Staging และไม่ใช้รหัสผ่านจริง ผลนี้เป็น Local API/integration ไม่ใช่ browser E2E หรือ live security/UAT รุ่นใหม่ Native PostgreSQL ให้ CI ที่ใช้ฐานทิ้งได้ตรวจต่อ ไม่มี schema migration
