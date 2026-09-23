@@ -38,3 +38,11 @@ Query-driven indexes, concurrency, FK/exclusion enforcement และ restore �
 ## คำตอบรอบ4 — ลงแทนและรอตรวจ
 
 PM/Admin/Owner ลงวันทำงานและ OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ โดยเก็บผู้กรอกแยกจากพนักงาน ทุกบทบาทส่งค่าใช้จ่ายได้ PM เห็นยอดและรูปเฉพาะรายการที่ตนส่ง LINE expense ทุกบทบาทต้องรอ Admin หรือ Owner กดอนุมัติแยกทุกครั้งก่อนเป็น Actual; Web คงขั้นรอตรวจเดิม ไม่มี auto-approve ตาม [ADR-009](adr/009-delegated-entry-and-expense-review.md) ต้นแบบแสดงช่องทางจำลอง ไม่มีLINEจริง
+
+## Master v3.0 target delta — 2026-09-23
+
+Target schema เพิ่ม/ยืนยัน entities: project_types, job_types, project_financial_profiles, project_operational_plans, project_milestones, employee_rate_versions, holiday_calendars, smemove_actual_cost_entries, commercial_references, expense review/evidence, immutable cost ledger และ payroll ledgers/revisions ตาม MASTER v3.0
+
+M1 migration 001/002 เป็น executable subset ที่ใช้แล้ว ห้ามแก้ย้อนหลัง ช่องว่าง M1 ต้องเพิ่ม migration ใหม่สำหรับ configurable types และ Project/Job fields ส่วน financial/work/expense/payroll tables สร้างใน milestone เจ้าของ module หลัง ADR/API/permission review ห้ามสร้าง speculative migration ทั้งหมดพร้อมกัน
+
+Financial projection/service/API ต้องแยกจาก operational projection ADMIN เห็น amount/evidence ระดับ Expense transaction ได้แต่ไม่มี Project financial aggregate ผู้ส่งห้าม self-approve โดย default Cost Ledger ใช้ unique source_type/source_id/cost_component และ correction ผ่าน reversal
