@@ -1,5 +1,13 @@
 # DECISION LOG
 
+## D-021 — Master Prompt v3.0 เป็น Canonical Product Specification (2026-09-23)
+
+Owner ส่งขอบเขต Product ใหม่เพื่อให้ Core เน้น Project/Job/Workforce/Work/OT/Expense/Evidence/Cost/Owner Financial/Payroll Summary และไม่สร้าง ERP ซ้ำ SMEMOVE รับเป็น Master v3.0 แทนชื่อร่าง v2.4 เพราะ Repository มี v2.5 แล้ว เอกสารใหม่มีอำนาจเหนือเอกสารเก่าเฉพาะส่วนที่ขัดกัน
+
+ยืนยัน Admin เห็น Amount/Evidence ระดับ Expense transaction แต่ไม่เห็น Project financial aggregate; PM ส่งและเห็น Expense ของตนแต่ไม่เป็น reviewer; Financial data แยก operational query/service/API/export; typed text เป็น primary expense input; Core private storage เป็น source of truth; SMEMOVE Actual/Commercial data เป็น manual reference; Cost Ledger immutable และ Payroll ห้ามบวก Project Cost ซ้ำ
+
+Foundation ปัจจุบันใช้ต่อได้ ไม่แก้ migration ที่ apply แล้ว เพิ่ม schema ด้วย append-only migration ตาม [Gap Analysis](MASTER_V3_GAP_ANALYSIS.md) Master change ไม่อนุญาตให้ข้าม M1 gate, Merge PR #2, เปิด LINE, เริ่ม M2 หรือ Deploy Production โดยอัตโนมัติ
+
 ## D-020 — Project context และรอบทดสอบอัตโนมัติ (2026-09-23)
 
 Owner พบว่าไม่เห็นลูกค้าของโครงการและหา Job ไม่พบ พร้อมขอให้พัฒนา/ทดสอบให้เป็นชุดก่อนส่ง UAT API GET projects และ projects/:id เพิ่ม customer_name กับ site_name (nullable) เฉพาะ Project ที่ actor มีสิทธิ์ตาม scope เดิม ไม่เปิด customer/site directory ให้ TECH/PM และไม่ส่ง contact/เงิน/ข้อมูลโครงการอื่น LINE formatter คงเดิม ไม่เปลี่ยน schema
