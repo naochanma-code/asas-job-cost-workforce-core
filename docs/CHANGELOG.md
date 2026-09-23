@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-09-23 — Master Prompt v3.0
+
+- รับ Product Specification ใหม่เป็น Canonical Master v3.0 แทนชื่อร่าง v2.4 เพื่อไม่ย้อนเลขจาก v2.5
+- จำกัด Core ที่ Project/Job/Workforce/Work/OT/Expense/Evidence/Project Cost/Owner Financial/Payroll Summary; SMEMOVE ยังคงเป็น Product/Purchase/Inventory/Accounting master
+- ระบุ Admin เห็น Expense transaction amount/evidence แต่ไม่มี financial aggregate, PM เห็นเฉพาะ Expense ของตน และ default ห้ามผู้ส่งอนุมัติรายการตนเอง
+- เพิ่ม Owner-only financial boundary, SMEMOVE actual/reference, immutable Cost Ledger, completeness, commercial reference และ milestone M0–M8
+- รักษาข้อยืนยันเดิมเรื่อง Owner หลายบัญชี, delegated entry, รอบค่าจ้าง 1–สิ้นเดือน, จ่ายไม่เกินวันที่ 1, late adjustment, OT 0.5 ชั่วโมง และหลักฐาน 2 ปี
+- เพิ่ม MASTER_V3_GAP_ANALYSIS.md; ผลตรวจพัฒนาต่อจาก M1 Foundation ได้โดย append-only migration ไม่รื้อระบบ
+- เอกสารรอบนี้ไม่เปลี่ยน application/migration/deployment; PR #2 ยัง Draft, LINE ปิด, M1 ยังไม่ผ่าน UAT
+
 ## 23 กันยายน 2026 — ปรับ UX และทดสอบอัตโนมัติก่อนส่ง Owner
 
 Owner ขอให้พัฒนาและทดสอบเป็นชุดก่อนส่งตรวจ ไม่ต้องสลับบัญชีทีละขั้น จึงพักคำขอ Login TECH ก่อนหน้า ไม่รอ Owner เพื่อทดสอบอัตโนมัติ ใช้บัญชี OWNER/ADMIN/PM/TECH ที่ชุดทดสอบสร้างเองในฐานสมมติแยก รหัสผ่านสุ่มในหน่วยความจำ ไม่พิมพ์/บันทึกและไม่ใช้กับ Staging ที่มีข้อมูลจริง
