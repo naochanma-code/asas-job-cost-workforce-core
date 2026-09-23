@@ -32,7 +32,7 @@
 3. เพิ่ม Job fields: type, description, responsible person, planned date, status และ progress
 4. กำหนด concurrency-safe Project/Job code generation และห้ามนำ Code ที่ยกเลิกแล้วกลับมาใช้ซ้ำ
 5. ปรับ Project/Job API contract, validation, audit และ Web UX ให้ตรง Master
-6. บันทึก PM assignment policy ให้ชัดว่าใคร Assign Team ได้และขอบเขตใด
+6. Implement PM assignment policy: PM เพิ่ม/ถอน TECH ได้เฉพาะ Project ที่ตนรับผิดชอบ ห้ามสร้าง User/เปลี่ยน Role/แต่งตั้ง PM และต้อง Audit
 7. ทดสอบ Project A ไม่มี Site/Job และ Project B มี Site/Jobs บน Staging
 8. ปิด Gate M1 ด้วย Real LINE “งานของฉัน”, account linking และ group binding ก่อน Merge
 
@@ -54,7 +54,7 @@
 
 1. **Financial leakage:** ต้องแยก operational/financial query และ serializer ตั้งแต่ M2 ห้ามส่งข้อมูลเงินแล้วซ่อนใน UI
 2. **Double cost:** Work/OT/Expense/SMEMOVE ใช้ immutable ledger และ idempotency component key; Payroll total ห้าม post เข้า Project Cost ซ้ำ
-3. **Expense self-approval:** Default ใหม่คือผู้ส่งอนุมัติรายการตนเองไม่ได้ ต้องเพิ่ม backend constraint/policy test ก่อน M3
+3. **Expense self-approval:** ตาม D-022 ADMIN/OWNER อนุมัติรายการตนเองได้ PM/TECH อนุมัติไม่ได้ ต้องทดสอบ actor/time/audit และ correction/reversal หลัง approval
 4. **Admin aggregate:** Admin เห็น transaction amount ได้ แต่ API/export ต้องไม่มี Project financial total หรือ profitability projection
 5. **Evidence retention:** ห้ามเปิด auto-delete จนกำหนดวันเริ่มนับ การพักลบ (legal hold) และได้รับการยืนยันจาก Owner/ผู้ทำบัญชี ระหว่างนี้เก็บโดยไม่ลบอัตโนมัติ
 6. **Cost completeness:** COMPLETE ต้องไม่อาศัย Hardware Status อย่างเดียว ต้องไม่มี source/posting/reconciliation ค้างและ Owner ยืนยัน
@@ -67,7 +67,7 @@
 - Project Code: `PRJ-YYMM-NNN`, sequence atomic ต่อเดือน, ไม่ reuse
 - Job Code: `JOB-YYMM-NNN-NN`, sequence ภายใน Project, ไม่ reuse
 - PM ส่ง Expense ของตนได้และเห็นเฉพาะรายการตน แต่ไม่ Review รายการผู้อื่น
-- Admin/Owner Review Expense ได้ แต่ backend ปฏิเสธ self-approval โดย Default
+- ADMIN/OWNER Review Expense ได้รวมรายการตนเองตาม D-022; PM/TECH Review ไม่ได้
 - Hardware Status เริ่มจาก `PENDING` เฉพาะเมื่อ Owner ระบุว่า Project มี Hardware; งานบริการเริ่ม `NOT_APPLICABLE`
 - Evidence retention 2 ปีเป็น business setting แต่ auto-delete ปิดไว้จน policy/lifecycle ได้รับอนุมัติ
 - OT ไม่มี Work Entry เป็น review exception ไม่ reject อัตโนมัติ
@@ -76,9 +76,8 @@
 
 ไม่ขวางการปิด M1:
 
-1. PM ให้ Assign ทีมเองได้ทุกคนใน Project หรือให้เสนอแล้ว ADMIN ยืนยัน — แนะนำให้ PM Assign ได้เฉพาะ Project ที่รับผิดชอบและมี Audit
-2. ระยะเก็บหลักฐาน 2 ปีให้นับจาก Expense Date, Approved Date หรือสิ้นเดือน — แนะนำ Approved Date ถึงสิ้นเดือนเดียวกันในปีที่ครบกำหนด และยังไม่ลบจนผู้ทำบัญชียืนยัน
-3. OWNER Override Work เกิน 1.0 วัน ควรเพิ่ม Payroll เต็มตาม fraction หรือเป็นเพียง Operational Exception — แนะนำไม่เพิ่ม Payroll อัตโนมัติ ให้ Owner ตัดสินใน Payroll Review
+1. ระยะเก็บหลักฐาน 2 ปีให้นับจาก Expense Date, Approved Date หรือสิ้นเดือน — แนะนำ Approved Date ถึงสิ้นเดือนเดียวกันในปีที่ครบกำหนด และยังไม่ลบจนผู้ทำบัญชียืนยัน
+2. OWNER Override Work เกิน 1.0 วัน ควรเพิ่ม Payroll เต็มตาม fraction หรือเป็นเพียง Operational Exception — แนะนำไม่เพิ่ม Payroll อัตโนมัติ ให้ Owner ตัดสินใน Payroll Review
 
 ## คำสั่งดำเนินงาน
 
@@ -87,3 +86,10 @@
 3. ก่อน Merge PR #2 ให้เพิ่มเฉพาะช่องว่าง M1 ที่จำเป็นและไม่ขยายเข้า M2
 4. หลัง M1 ผ่าน ให้สร้าง branch/PR ใหม่ต่อ Milestone
 5. ทุก Critical Change ต้องมี ADR, migration, permission test และ evidence
+
+
+## Decisions confirmed after review
+
+- PM เพิ่ม/ถอน TECH ได้เฉพาะ Project ที่ตนรับผิดชอบ ห้ามสร้างผู้ใช้ เปลี่ยน Role หรือแต่งตั้ง PM คนอื่น ทุกครั้งมี Audit
+- ADMIN อนุมัติ Expense ได้ทั้งหมดในขอบเขต รวมรายการที่ตนกรอก และแก้หลังอนุมัติผ่าน Correction/Revision/Reversal ที่ตรวจย้อนหลังได้
+- OWNER อนุมัติ Expense ได้ทั้งหมดรวมรายการที่ตนกรอก PM/TECH อนุมัติไม่ได้
