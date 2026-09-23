@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## จุดที่รอ Owner ตอนนี้ — 23 กันยายน 2026
+
+Owner แจ้ง Login Admin แล้ว แต่เมื่อ reload และตรวจบทบาทจาก session บนหน้า Web ยังเป็น OWNER จึงไม่ลง PASS ให้ Admin UAT ตรวจแบบอ่านอย่างเดียวพบว่ามีบัญชี ADMIN/TECH/PM ที่ active อยู่แล้ว ไม่อ่านหรือเปลี่ยนรหัสผ่าน ไม่แก้สิทธิ์บัญชี เปิดหน้า Login ใหม่ไว้ให้ Owner เข้าบัญชีที่มีสิทธิ์ ADMIN จนข้อความใต้ชื่อแสดง ADMIN แล้วจึงทดสอบ PILOT A/B ต่อ
+
+TECH Login/การซ่อนเมนูผู้ดูแลผ่านแล้วตามหลักฐานก่อนหน้านี้ ไม่ใช้ผลของ OWNER แทน ADMIN และยังไม่เปิด LINE
+
 ## 23 กันยายน 2026 — Restart, Logout และ Rate Limit
 
 PASS: ยืนยัน Restart API/Web จากการยืนยันใน provider และ startup/ready log รอบที่สอง; / และ /api/health กลับมา HTTP 200, database ready. Read-only checksum ของชุด IDs ใน users/employees/customers/sites/projects/jobs/assignments/audit ตรง baseline ก่อน restart โดยไม่พิมพ์ ID หรือ row data. ชุด restore สมมติ counts ยังครบ
