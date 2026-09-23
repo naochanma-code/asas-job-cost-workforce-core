@@ -5,6 +5,8 @@ import type { Database, Row } from "./index";
 // Deliberately excludes sessions, pending link codes, inbox and reply tokens.
 // Restore requires fresh login/link attempts; never re-send old notifications.
 const tables = [
+  "project_types",
+  "job_types",
   "users",
   "employees",
   "customers",
@@ -16,6 +18,8 @@ const tables = [
   "audit_logs",
   "line_accounts",
   "line_group_bindings",
+  "code_counters",
+  "code_reservations",
 ] as const;
 export async function backup(db: Database, path: string) {
   const snapshot = await db.transaction(async (tx) => {
@@ -24,7 +28,7 @@ export async function backup(db: Database, path: string) {
     for (const table of tables)
       data[table] = (await tx.query(`SELECT * FROM ${table}`)).rows;
     return {
-      format: 1,
+      format: 2,
       migrations: (
         await tx.query(
           "SELECT name,checksum FROM schema_migrations ORDER BY name",
@@ -49,7 +53,7 @@ export async function restore(db: Database, path: string) {
     throw Error("Backup checksum mismatch");
   const snapshot = JSON.parse(envelope.payload);
   if (
-    snapshot.format !== 1 ||
+    snapshot.format !== 2 ||
     JSON.stringify(Object.keys(snapshot.data)) !== JSON.stringify(tables)
   )
     throw Error("Unsupported backup format");
@@ -64,9 +68,39 @@ export async function restore(db: Database, path: string) {
     await tx.exec(
       "LOCK TABLE " + tables.join(",") + " IN ACCESS EXCLUSIVE MODE",
     );
-    for (const table of tables)
-      if ((await tx.query(`SELECT 1 FROM ${table} LIMIT 1`)).rows.length)
+    for (const table of tables) {
+      if (table === "project_types" || table === "job_types") {
+        const kind = table === "project_types" ? "project" : "job",
+          expected = kind === "project" ? 5 : 10;
+        const rows = (await tx.query(`SELECT * FROM ${table}`)).rows;
+        if (
+          rows.length !== expected ||
+          rows.some(
+            (r) =>
+              r.version !== 1 ||
+              !r.enabled ||
+              r.id !==
+                createHash("md5")
+                  .update(kind + "-type:" + r.code)
+                  .digest("hex")
+                  .replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, "$1-$2-$3-$4-$5"),
+          )
+        )
+          throw Error(
+            "Restore destination must be empty with untouched seed types",
+          );
+        if (
+          rows.some(
+            (r) =>
+              !snapshot.data[table].some(
+                (s: Row) => s.id === r.id && s.code === r.code,
+              ),
+          )
+        )
+          throw Error("Backup missing seed identity");
+      } else if ((await tx.query(`SELECT 1 FROM ${table} LIMIT 1`)).rows.length)
         throw Error("Restore destination must be empty");
+    }
     for (const table of tables) {
       const allowed = new Set(
         (
@@ -81,7 +115,14 @@ export async function restore(db: Database, path: string) {
         if (!columns.length || columns.some((c) => !allowed.has(c)))
           throw Error("Invalid backup columns");
         await tx.query(
-          `INSERT INTO ${table} (${columns.map((c) => '"' + c + '"').join(",")}) VALUES (${columns.map((_, i) => "$" + (i + 1)).join(",")})`,
+          `INSERT INTO ${table} (${columns.map((c) => '"' + c + '"').join(",")}) VALUES (${columns.map((_, i) => "$" + (i + 1)).join(",")})` +
+            (table === "project_types" || table === "job_types"
+              ? " ON CONFLICT(id) DO UPDATE SET " +
+                columns
+                  .filter((c) => !["id", "code"].includes(c))
+                  .map((c) => '"' + c + '"=EXCLUDED."' + c + '"')
+                  .join(",")
+              : ""),
           columns.map((c) =>
             typeof row[c] === "object" && row[c] !== null
               ? JSON.stringify(row[c])

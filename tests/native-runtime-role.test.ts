@@ -82,6 +82,9 @@ test(
         "DELETE FROM public.audit_logs",
         "UPDATE public.audit_logs SET action='changed'",
         "DELETE FROM public.schema_migrations",
+        "DELETE FROM public.code_reservations",
+        "UPDATE public.code_reservations SET code='changed'",
+        "DELETE FROM public.code_counters",
         `SET ROLE "${migrator}"`,
       ])
         await assert.rejects(

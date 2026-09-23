@@ -61,7 +61,7 @@ export async function openDatabase(
     close: () => pg.close(),
   };
 }
-export async function migrate(db: Database) {
+export async function migrate(db: Database, role?: "asas_m1_migrator") {
   await db.query(
     "CREATE TABLE IF NOT EXISTS schema_migrations (name text PRIMARY KEY, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())",
   );
@@ -72,6 +72,7 @@ export async function migrate(db: Database) {
     const sql = await readFile(new URL(name, dir), "utf8"),
       checksum = createHash("sha256").update(sql).digest("hex");
     await db.transaction(async (tx) => {
+      if (role) await tx.exec("SET LOCAL ROLE asas_m1_migrator");
       await tx.query("LOCK TABLE schema_migrations IN EXCLUSIVE MODE");
       const old = (
         await tx.query("SELECT checksum FROM schema_migrations WHERE name=$1", [

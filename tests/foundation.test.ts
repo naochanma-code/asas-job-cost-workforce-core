@@ -285,7 +285,7 @@ test("Foundation: real sessions, database constraints, scope and durable LINE co
         await ok("PM", "PATCH", "/api/projects/" + b, {
           name: "Project B revised",
           status: "ACTIVE",
-          version: 1,
+          version: (await ok("PM", "GET", "/api/projects/" + b)).version,
         });
         assert.equal(
           (

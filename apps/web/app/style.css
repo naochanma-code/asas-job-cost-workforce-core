@@ -37,6 +37,7 @@ label {
   margin: 12px 0;
 }
 input,
+textarea,
 select {
   display: block;
   width: 100%;
@@ -124,6 +125,19 @@ li {
 }
 code {
   overflow-wrap: anywhere;
+}
+.type-row,
+.job-card {
+  border-top: 1px solid #dbe6df;
+  padding-top: 16px;
+  margin-top: 16px;
+}
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+.compact {
+  gap: 12px;
 }
 footer {
   padding: 20px;

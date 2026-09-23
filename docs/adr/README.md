@@ -18,3 +18,5 @@ ADR เหล่านี้บันทึก baseline ที่มีอยู
 
 | [009](009-delegated-entry-and-expense-review.md) | ลงเวลาแทน ทุกroleส่งexpense LINEรอตรวจทุกครั้ง | Accepted รอบ4; supersedes008เฉพาะsubmission/PM own expense |
 | [010](010-foundation-implementation.md) | M1 implementation, authentication/schema/LINE/backup | Accepted implementation; deployment pending |
+
+| [011](011-m1-v3-alignment.md) | M1 v3 types, fields, code reservation, PM assignment และ recovery | Implementation ตาม D-021–023; Staging approval pending |

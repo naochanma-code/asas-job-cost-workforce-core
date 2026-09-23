@@ -1,5 +1,21 @@
 # M1 Test Evidence — 2026-09-21
 
+## M1 Alignment v3.0 — 23 กันยายน 2026
+
+Baseline543a899: CI35863738772SUCCESS, PR#2Draft/notmerged/mergeable, behindmain0; migrations001/002; StagingHTTPShealth200/database readyแบบอ่านอย่างเดียว ไม่ใช้ข้อมูลจริงทดสอบ
+
+Local node test runner34:32PASS/2native-onlySKIP/0FAIL; typecheck/NextproductionbuildPASS; M024+14+7=45PASS; diffcheckPASS. tests/alignment.test.tsเพิ่มdate/stateunit, seedidempotency, richfields, disabledhistory/snapshot, PMallow/deny/audit, TECHjobscope, concurrent24Projects+24Jobs, legacy001/002→003backfill+rerun+restore. Migration001/002ไม่มีdiff
+
+NativePostgreSQL/containerต้องรอCIใหม่ ไม่มีDocker/PostgresCLIในPATHบนเครื่อง ข้อจำกัด: ผลlocalไม่ใช่liveUAT; Stagingยัง4fcb29eตามหลักฐานdeployเดิม; healthรอบนี้ไม่ได้ยืนยันsourcecommitใหม่ ไม่มีLINEจริง
+
+## M1 Alignment v3.0 — กำลังพัฒนา (Codex)
+
+ฐานก่อนแก้: 543a899; CI 35863738772 SUCCESS; PR #2 Draft/ไม่ Merge/ไม่มี conflict และไม่ตกหลัง origin/main; executable migrations มี 001/002 เท่านั้น HTTPS Staging health 200/database ready แบบอ่านอย่างเดียว รุ่นที่ deploy ตามหลักฐานเดิม 4fcb29e ไม่ได้ deploy ใหม่
+
+ขอบเขตรอบนี้: configurable types, Project/Job operational fields, code generation, D-022 PM assignment และ automated tests ในฐานสมมติแยก ยังไม่เริ่ม M2/M3/Expense/Payroll/Real LINE ยังไม่อนุมัติ migration หรือ deployment ไป Staging
+
+คำถามเดิมปิดแล้ว: Owner ยืนยันเริ่ม Project Type 5 ประเภทตามคำสั่งรอบนี้ บันทึก D-023 และแก้ Master/seed/test ให้ตรงกันแล้ว
+
 ## 23 กันยายน 2026 — ปรับ UX และทดสอบอัตโนมัติก่อนส่ง Owner
 
 Owner ขอให้พัฒนาและทดสอบเป็นชุดก่อนส่งตรวจ ไม่ต้องสลับบัญชีทีละขั้น จึงพักคำขอ Login TECH ก่อนหน้า ไม่รอ Owner เพื่อทดสอบอัตโนมัติ ใช้บัญชี OWNER/ADMIN/PM/TECH ที่ชุดทดสอบสร้างเองในฐานสมมติแยก รหัสผ่านสุ่มในหน่วยความจำ ไม่พิมพ์/บันทึกและไม่ใช้กับ Staging ที่มีข้อมูลจริง
@@ -222,3 +238,5 @@ Commit หลักฐานถัดจาก45be1acเปลี่ยนเอ
 ## สภาพแวดล้อมทดสอบรอบ UX 23 กันยายน
 
 คำสั่ง node --import tsx --test --test-concurrency=1 tests/*.test.ts รอบ sandbox เริ่มไม่ได้เพราะ Windows uv_os_get_passwd ENOMEM ก่อนเข้า test; รันนอก sandbox โดยล้าง TEST_DATABASE_URL แล้วได้ 22 PASS/2 SKIP/0 FAIL ใน 41.95 วินาที ไม่เชื่อมฐาน Staging และไม่ใช้รหัสผ่านจริง ผลนี้เป็น Local API/integration ไม่ใช่ browser E2E หรือ live security/UAT รุ่นใหม่ Native PostgreSQL ให้ CI ที่ใช้ฐานทิ้งได้ตรวจต่อ ไม่มี schema migration
+
+เพิ่ม tests/alignment-web.test.ts: render ฟอร์มจาก types ที่ API ส่งมา, disabled selected type เดิม, ซ่อน PM appointment สำหรับ PM และ form serialization PASS 1 รายการ ไม่อ้าง browser E2E รวมชุดปัจจุบัน34 tests/32 PASS/2 native-only SKIP

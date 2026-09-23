@@ -45,4 +45,16 @@ Target schema เพิ่ม/ยืนยัน entities: project_types, job_ty
 
 M1 migration 001/002 เป็น executable subset ที่ใช้แล้ว ห้ามแก้ย้อนหลัง ช่องว่าง M1 ต้องเพิ่ม migration ใหม่สำหรับ configurable types และ Project/Job fields ส่วน financial/work/expense/payroll tables สร้างใน milestone เจ้าของ module หลัง ADR/API/permission review ห้ามสร้าง speculative migration ทั้งหมดพร้อมกัน
 
-Financial projection/service/API ต้องแยกจาก operational projection ADMIN เห็น amount/evidence ระดับ Expense transaction ได้แต่ไม่มี Project financial aggregate ผู้ส่งห้าม self-approve โดย default Cost Ledger ใช้ unique source_type/source_id/cost_component และ correction ผ่าน reversal
+Financial projection/service/API ต้องแยกจาก operational projection ADMIN เห็น amount/evidence ระดับ Expense transaction ได้แต่ไม่มี Project financial aggregate ADMIN/OWNER self-approve ได้ตาม D-022; PM/TECH อนุมัติไม่ได้ Cost Ledger ใช้ unique source_type/source_id/cost_component และ correction ผ่าน reversal
+
+## Executable M1 Alignment — migration 003 (ยังไม่ apply Staging)
+
+เพิ่ม project_types/job_types (UUID, stable code, display_name, sort_order, enabled, version); seed Project 5/Job 10 ตาม D-023 และ replay ไม่ overwrite ชื่อ/สถานะที่แก้แล้ว
+
+projects เพิ่ม project_type_id, type_name_snapshot, project_manager_id nullable, start_date, target_completion_date, priority, description, progress, code_namespace; status PLANNED/ACTIVE/COMPLETED/CLOSED คง status เดิม Backfill primary PM เฉพาะมี membership PM เดียว ไม่ลบ membership ใด
+
+jobs เพิ่ม job_type_id, type_name_snapshot, description, responsible_person_id nullable, planned_date, status PLANNED/ACTIVE/BLOCKED/DONE/CANCELLED, progress, created_by, created_at, version; backfill creator/date จาก Project สำหรับ legacy jobs โดยระบุข้อจำกัด ไม่ปลอมว่าเป็นเวลาเหตุการณ์เดิม
+
+code_counters(scope PK,last_value) และ code_reservations(code PK,entity_id UNIQUE,kind,issued_at) รองรับ atomic code allocation; รักษา human codes เดิม เติม namespace แยก Legacy Project ไม่ถูก rename Counter ห้ามลด/ลบ registry ห้าม update/delete โดย runtime และไม่มี API reset/delete สำรองทั้งสองตารางเพื่อไม่ reuse
+
+ไม่มี schema เวลา/Expense/Payroll/financial ใน 003 ไม่มี Site/Job ปลอม ใช้ constraint เดิม customer/site และ project/job; progress integer 0–100, วันจบไม่ก่อนวันเริ่ม ดู [dry run/recovery](M1_ALIGNMENT_MIGRATION_PLAN.md) และ [API](M1_API_CONTRACT.md)

@@ -1,5 +1,11 @@
 # Master Prompt v3.0 — Gap Analysis
 
+## M1 Alignment — implementation รอบ 23 กันยายน 2026
+
+ช่องว่าง 1–6 มี implementation ใน 003/API/Web/permission tests แล้ว: types, fields, atomic codes, scoped PM assignment/revoke และ Job-level TECH read ขอบเขตแยก Project seed5 ตามคำตอบ Owner D-023; Job seed10 Local 32 PASS/2 native-only SKIP; typecheck/build PASS Native PostgreSQL/container รอ CI ไม่ใช่ DEPLOYED_STAGING/UAT
+
+ช่องว่าง7–8ยังไม่ปิด: migrationและรุ่นใหม่ไม่ deploy; Real LINE ยังปิด และไม่เริ่ม M2/M3 ดู [แผน migration](M1_ALIGNMENT_MIGRATION_PLAN.md), [หลักฐาน](M1_TEST_EVIDENCE.md), [Expense future test plan](M3_EXPENSE_TEST_PLAN.md).
+
 วันที่ตรวจ: 23 กันยายน 2026  
 ฐานที่ตรวจ: Draft PR #2 branch `codex/milestone-1-foundation`  
 ขอบเขตการตรวจ: ความเข้ากันได้ของ Master v3.0 กับ Foundation ปัจจุบัน ไม่ใช่การรับรอง Production

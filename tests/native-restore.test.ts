@@ -62,8 +62,8 @@ test(
         [a, b, customer, actor, site],
       );
       await source.query(
-        "INSERT INTO jobs(id,project_id,code,name) VALUES($1,$2,'JOB-B','Job B')",
-        [job, b],
+        "INSERT INTO jobs(id,project_id,code,name,created_by) VALUES($1,$2,'JOB-B','Job B',$3)",
+        [job, b, actor],
       );
       await source.query(
         "INSERT INTO job_assignments(id,project_id,employee_id,created_by) VALUES($1,$2,$3,$4)",

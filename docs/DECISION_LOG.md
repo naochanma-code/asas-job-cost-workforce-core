@@ -1,5 +1,11 @@
 # DECISION LOG
 
+## D-023 — M1 Alignment และ seed 5 ประเภท (2026-09-23)
+
+Owner ยืนยัน “เริ่ม 5 ประเภทตามข้อความรอบนี้”: Installation, Service, Survey, POC, Other แทน seed 10 รายการใน Master เดิม Job Type คง 10 ประเภท ปรับ Master ให้ตรงคำตอบ
+
+Implementation ตาม [ADR-011](adr/011-m1-v3-alignment.md): append-only 003, stable type code+snapshot, nullable primary PM และคง legacy memberships, PM role+membership เท่านั้นที่ assign/revoke TECH ได้, Job-level TECH เห็นเฉพาะ Job เกี่ยวข้อง, atomic code counter+reservation รวมใน backup format2 ห้าม reuse รหัสเก่าไม่เปลี่ยน No M2/M3 tables/menus Expense D-022 ยังเป็น specification เท่านั้น ต้องรอ Owner อนุมัติ Staging migration/deploy
+
 ## D-022 — PM assignment และ Expense self-approval (Accepted, 2026-09-23)
 
 Owner ยืนยันให้ PM เพิ่ม/ถอน TECH ได้เฉพาะ Project ที่ PM รับผิดชอบ ห้าม PM สร้างผู้ใช้ เปลี่ยน Role มอบสิทธิ์ OWNER/ADMIN หรือแต่งตั้ง PM คนอื่น ทุก action ต้องมี Audit

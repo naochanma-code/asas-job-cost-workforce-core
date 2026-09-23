@@ -1,5 +1,18 @@
 # Data Dictionary — logical design M0
 
+## Executable M1 Alignment 003 — แยกจาก target design ด้านล่าง
+
+| Entity | Fields / constraints |
+| --- | --- |
+| project_types / job_types | id UUID PK; code UNIQUE immutable uppercase; display_name 1–160; sort_order int; enabled bool; version; created_at; rename/order/enable audited |
+| projects | code immutable; customer required/site optional same customer; project_type_id FK default Other; type_name_snapshot; project_manager_id nullable users PM; start_date/target_completion_date nullable ordered; status PLANNED/ACTIVE/COMPLETED/CLOSED; priority LOW/NORMAL/HIGH/URGENT; description; progress int0–100; created_by/created_at/version; code_namespace UNIQUE |
+| jobs | project_id required; code immutable; job_type_id default Other; type_name_snapshot; name/description; responsible_person_id optional FK employees scoped to team; planned_date optional; status PLANNED/ACTIVE/BLOCKED/DONE/CANCELLED; progress0–100; created_by/created_at/version |
+| code_counters | scope PK PROJECT:YYMM or JOB:projectUUID; last_value bigint atomic increment |
+| code_reservations | code PK/entity_id UNIQUE/kind/issued_at; old codes backfilled; runtime SELECT/INSERT only; no reset API |
+| project_members / job_assignments | existing nullable Job scope and unique active assignment; PM targets TECH only in own project; all success audited |
+
+Project seed5 / Job seed10 ตาม D-023. Disabled type retains old records/snapshot. Legacy Job creator/date inherits Project as explicit fallback; unknown dates/responsible person stayNULL. No financial data. See [migration plan](M1_ALIGNMENT_MIGRATION_PLAN.md) and [API](M1_API_CONTRACT.md).
+
 DESIGNED / PROPOSED implementation; business decisions ล่าสุดตาม [ADR-007](adr/007-owner-decisions-m0-r2.md) Accepted; ไม่ใช่ SQL migration อ้าง MASTER §7 และ [ADR](adr/README.md) ชื่อ field ด้านล่างเป็น contract proposal ที่ต้อง review ก่อน M1 รายการตัวอย่างทุกค่าคือข้อมูลสมมติ
 
 ## ประเภทและการอ่าน

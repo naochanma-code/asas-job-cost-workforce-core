@@ -8,8 +8,8 @@ BEGIN
     RAISE EXCEPTION 'M1 roles already exist; review rather than overwrite';
   END IF;
   IF (SELECT array_agg(name ORDER BY name) FROM public.schema_migrations)
-       IS DISTINCT FROM ARRAY['001_foundation.sql', '002_line_outbox.sql']::text[]
-     OR (SELECT count(*) FROM pg_tables WHERE schemaname='public') <> 18 THEN
+       IS DISTINCT FROM ARRAY['001_foundation.sql', '002_line_outbox.sql', '003_m1_alignment.sql']::text[]
+     OR (SELECT count(*) FROM pg_tables WHERE schemaname='public') <> 22 THEN
     RAISE EXCEPTION 'Expected M1 schema only';
   END IF;
 END
@@ -33,6 +33,8 @@ END
 $ownership$;
 GRANT SELECT ON public.schema_migrations TO asas_m1_runtime;
 GRANT SELECT, INSERT ON public.audit_logs TO asas_m1_runtime;
+GRANT SELECT, INSERT ON public.code_reservations TO asas_m1_runtime;
+GRANT SELECT, INSERT, UPDATE ON public.project_types, public.job_types, public.code_counters TO asas_m1_runtime;
 GRANT SELECT, INSERT, UPDATE, DELETE ON
  public.users, public.employees, public.sessions, public.login_attempts,
  public.customers, public.sites, public.projects, public.jobs,

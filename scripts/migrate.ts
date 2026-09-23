@@ -4,8 +4,19 @@ const db = await openDatabase(
   process.env.LOCAL_DB_DIR,
 );
 try {
-  await migrate(db);
+  if (
+    process.env.MIGRATION_ROLE &&
+    process.env.MIGRATION_ROLE !== "asas_m1_migrator"
+  )
+    throw Error("Unsupported migration role");
+  await migrate(
+    db,
+    process.env.MIGRATION_ROLE as "asas_m1_migrator" | undefined,
+  );
   console.log("Migrations applied");
+} catch {
+  console.error("Migration failed; inspect privately and do not retry blindly");
+  process.exitCode = 1;
 } finally {
   await db.close();
 }

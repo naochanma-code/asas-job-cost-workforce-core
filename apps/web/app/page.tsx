@@ -1,5 +1,11 @@
 "use client";
 import { useEffect, useState, FormEvent } from "react";
+import {
+  ProjectFields,
+  JobFields,
+  projectInput,
+  jobInput,
+} from "./foundation-fields";
 type Row = Record<string, any>;
 async function api(path: string, method = "GET", body?: unknown) {
   const r = await fetch("/api" + path, {
@@ -20,6 +26,9 @@ export default function Home() {
     [projects, setProjects] = useState<Row[]>([]),
     [customers, setCustomers] = useState<Row[]>([]),
     [sites, setSites] = useState<Row[]>([]),
+    [projectTypes, setProjectTypes] = useState<Row[]>([]),
+    [jobTypes, setJobTypes] = useState<Row[]>([]),
+    [technicians, setTechnicians] = useState<Row[]>([]),
     [users, setUsers] = useState<Row[]>([]),
     [selected, setSelected] = useState<Row | null>(null),
     [assignments, setAssignments] = useState<Row[]>([]),
@@ -29,6 +38,12 @@ export default function Home() {
   const manager = me && ["OWNER", "ADMIN"].includes(me.role);
   async function load(user: Row) {
     setProjects(await api("/projects"));
+    const [pt, jt] = await Promise.all([
+      api("/project-types"),
+      api("/job-types"),
+    ]);
+    setProjectTypes(pt);
+    setJobTypes(jt);
     if (["OWNER", "ADMIN"].includes(user.role)) {
       const [c, s, u] = await Promise.all([
         api("/customers"),
@@ -71,7 +86,10 @@ export default function Home() {
   };
   async function open(id: string) {
     setSelected(await api("/projects/" + id));
-    if (manager) setAssignments(await api("/projects/" + id + "/assignments"));
+    if (manager || me?.role === "PM") {
+      setAssignments(await api("/projects/" + id + "/assignments"));
+      setTechnicians(await api("/projects/" + id + "/assignable-technicians"));
+    }
   }
   if (!ready) return <main>กำลังโหลด…</main>;
   return (
@@ -98,6 +116,9 @@ export default function Home() {
                 setUsers([]);
                 setAssignments([]);
                 setCustomer("");
+                setProjectTypes([]);
+                setJobTypes([]);
+                setTechnicians([]);
                 setPage("projects");
               })
             }
@@ -175,7 +196,12 @@ export default function Home() {
                 งานของฉัน
               </button>
               {manager && (
-                <button onClick={() => setPage("setup")}>ลูกค้าและทีม</button>
+                <>
+                  <button onClick={() => setPage("setup")}>ลูกค้าและทีม</button>
+                  <button onClick={() => setPage("types")}>
+                    ประเภทโครงการและงาน
+                  </button>
+                </>
               )}
               {me.role === "OWNER" && (
                 <button onClick={() => setPage("accounts")}>บัญชีผู้ใช้</button>
@@ -205,11 +231,21 @@ export default function Home() {
                     <div key={p.id} className="card project">
                       <div>
                         <span className="pill">
-                          {p.status === "ACTIVE" ? "กำลังดำเนินการ" : "ปิดแล้ว"}
+                          {
+                            {
+                              PLANNED: "วางแผน",
+                              ACTIVE: "กำลังดำเนินการ",
+                              COMPLETED: "งานเสร็จ",
+                              CLOSED: "ปิดแล้ว",
+                            }[p.status as string]
+                          }
                         </span>
                         <h3>{p.name}</h3>
                         <p>ลูกค้า: {p.customer_name}</p>
                         {p.site_name && <p>สถานที่: {p.site_name}</p>}
+                        <p>
+                          {p.project_type_name} · {p.progress}%
+                        </p>
                         <small>{p.code}</small>
                       </div>
                       <button onClick={() => act(() => open(p.id))}>
@@ -225,7 +261,7 @@ export default function Home() {
                       const b = fields(e);
                       act(async () => {
                         const r = await api("/projects", "POST", {
-                          name: b.name,
+                          ...projectInput(b),
                           customer_id: customer,
                           site_id: b.site_id || null,
                         });
@@ -255,6 +291,11 @@ export default function Home() {
                       ชื่อโครงการ
                       <input name="name" required maxLength={160} />
                     </label>
+                    <ProjectFields
+                      types={projectTypes}
+                      users={users}
+                      manager={Boolean(manager)}
+                    />
                     {sites.some((s) => s.customer_id === customer) && (
                       <details>
                         <summary>เพิ่มสถานที่ (ถ้าต้องการ)</summary>
@@ -289,6 +330,15 @@ export default function Home() {
                 <section className="card" key={selected.id}>
                   <small>{selected.code}</small>
                   <h2>{selected.name}</h2>
+                  <p>
+                    {selected.project_type_name} · ความคืบหน้า{" "}
+                    {selected.progress}%
+                  </p>
+                  <p>PM: {selected.project_manager_name || "ยังไม่กำหนด"}</p>
+                  <p>{selected.description}</p>
+                  {selected.target_completion_date && (
+                    <p>กำหนดเสร็จ: {selected.target_completion_date}</p>
+                  )}
                   <p>ลูกค้า: {selected.customer_name}</p>
                   {selected.site_name && <p>สถานที่: {selected.site_name}</p>}
                   {selected.jobs.length > 0 && (
@@ -296,21 +346,92 @@ export default function Home() {
                       <h3>งานย่อย (Job)</h3>
                       <ul>
                         {selected.jobs.map((j: Row) => (
-                          <li key={j.id}>{j.name}</li>
+                          <li key={j.id} className="job-card">
+                            <strong>{j.name}</strong>
+                            <p>
+                              {j.code} · {j.job_type_name} · {j.status} ·{" "}
+                              {j.progress}%
+                            </p>
+                            {j.responsible_person_name && (
+                              <p>ผู้รับผิดชอบ: {j.responsible_person_name}</p>
+                            )}
+                            {j.planned_date && (
+                              <p>วันที่วางแผน: {j.planned_date}</p>
+                            )}
+                            <p>{j.description}</p>
+                            {me.role !== "TECH" && (
+                              <details>
+                                <summary>แก้ไขงานย่อย</summary>
+                                <form
+                                  key={j.version}
+                                  onSubmit={(e) => {
+                                    const b = fields(e);
+                                    act(async () => {
+                                      await api(
+                                        "/projects/" +
+                                          selected.id +
+                                          "/jobs/" +
+                                          j.id,
+                                        "PATCH",
+                                        { ...jobInput(b), version: j.version },
+                                      );
+                                      await open(selected.id);
+                                      setMessage("บันทึกงานย่อยแล้ว");
+                                    });
+                                  }}
+                                >
+                                  <label>
+                                    ชื่องานย่อย
+                                    <input
+                                      name="name"
+                                      defaultValue={j.name}
+                                      required
+                                      maxLength={160}
+                                    />
+                                  </label>
+                                  <JobFields
+                                    job={j}
+                                    types={jobTypes}
+                                    people={assignments
+                                      .filter(
+                                        (a) =>
+                                          a.job_id === null ||
+                                          a.job_id === j.id,
+                                      )
+                                      .filter(
+                                        (a, i, list) =>
+                                          list.findIndex(
+                                            (x) =>
+                                              x.employee_id === a.employee_id,
+                                          ) === i,
+                                      )}
+                                  />
+                                  <button
+                                    disabled={
+                                      busy || selected.status === "CLOSED"
+                                    }
+                                  >
+                                    บันทึกงานย่อย
+                                  </button>
+                                </form>
+                              </details>
+                            )}
+                          </li>
                         ))}
                       </ul>
                     </section>
                   )}
                   {me.role !== "TECH" && (
                     <details>
-                      <summary>แก้ชื่อหรือสถานะ</summary>
+                      <summary>แก้ไขข้อมูลโครงการ</summary>
                       <form
                         key={selected.version}
                         onSubmit={(e) => {
                           const b = fields(e);
                           act(async () => {
                             await api("/projects/" + selected.id, "PATCH", {
-                              ...b,
+                              ...projectInput(b),
+                              ...(b.reason ? { reason: b.reason } : {}),
                               version: selected.version,
                             });
                             await open(selected.id);
@@ -330,16 +451,30 @@ export default function Home() {
                         <label>
                           สถานะ
                           <select name="status" defaultValue={selected.status}>
+                            <option value="PLANNED">วางแผน</option>
                             <option value="ACTIVE">กำลังดำเนินการ</option>
+                            <option value="COMPLETED">งานเสร็จ</option>
                             <option value="CLOSED">ปิดแล้ว</option>
                           </select>
                         </label>
+                        <ProjectFields
+                          project={selected}
+                          types={projectTypes}
+                          users={users}
+                          manager={Boolean(manager)}
+                        />
+                        {selected.status === "CLOSED" && manager && (
+                          <label>
+                            เหตุผลเปิดโครงการใหม่
+                            <input name="reason" maxLength={500} />
+                          </label>
+                        )}
                         <button disabled={busy}>บันทึก</button>
                       </form>
                     </details>
                   )}
                 </section>
-                {manager && (
+                {(manager || me.role === "PM") && (
                   <div className="grid" key={selected.id}>
                     <section className="card">
                       <h2>ทีมงาน</h2>
@@ -385,13 +520,14 @@ export default function Home() {
                           พนักงาน
                           <select name="employee_id" required>
                             <option value="">เลือกพนักงาน</option>
-                            {users
-                              .filter((u) => u.employee_id && u.active)
-                              .map((u) => (
-                                <option key={u.id} value={u.employee_id}>
-                                  {u.display_name}
-                                </option>
-                              ))}
+                            {(manager
+                              ? users.filter((u) => u.employee_id && u.active)
+                              : technicians
+                            ).map((u) => (
+                              <option key={u.employee_id} value={u.employee_id}>
+                                {u.display_name}
+                              </option>
+                            ))}
                           </select>
                         </label>
                         {selected.jobs.length > 0 && (
@@ -407,7 +543,12 @@ export default function Home() {
                             </select>
                           </label>
                         )}
-                        <button disabled={busy || selected.status !== "ACTIVE"}>
+                        <button
+                          disabled={
+                            busy ||
+                            !["PLANNED", "ACTIVE"].includes(selected.status)
+                          }
+                        >
                           มอบหมายงาน
                         </button>
                       </form>
@@ -425,7 +566,7 @@ export default function Home() {
                             await api(
                               "/projects/" + selected.id + "/jobs",
                               "POST",
-                              b,
+                              jobInput(b),
                             );
                             await open(selected.id);
                           });
@@ -435,71 +576,200 @@ export default function Home() {
                           ชื่องานย่อย
                           <input name="name" required />
                         </label>
-                        <button disabled={busy || selected.status !== "ACTIVE"}>
+                        <JobFields
+                          types={jobTypes}
+                          people={assignments
+                            .filter((a) => a.job_id === null)
+                            .filter(
+                              (a, i, list) =>
+                                list.findIndex(
+                                  (x) => x.employee_id === a.employee_id,
+                                ) === i,
+                            )}
+                        />
+                        <button
+                          disabled={
+                            busy ||
+                            !["PLANNED", "ACTIVE"].includes(selected.status)
+                          }
+                        >
                           เพิ่มงานย่อย
                         </button>
                       </form>
-                      <details>
-                        <summary>กำหนด PM</summary>
-                        <form
-                          onSubmit={(e) => {
-                            const b = fields(e);
-                            act(async () => {
-                              await api(
-                                "/projects/" + selected.id + "/pm",
-                                "POST",
-                                {
-                                  user_id: b.user_id,
-                                  active: b.action === "add",
-                                },
-                              );
-                              setMessage("บันทึกสิทธิ์ PM แล้ว");
-                            });
-                          }}
-                        >
-                          <label>
-                            PM
-                            <select name="user_id" required>
-                              {users
-                                .filter((u) => u.role === "PM" && u.active)
-                                .map((u) => (
-                                  <option key={u.id} value={u.id}>
-                                    {u.display_name}
-                                  </option>
-                                ))}
-                            </select>
-                          </label>
-                          <label>
-                            การมอบหมาย
-                            <select name="action">
-                              <option value="add">เพิ่มสิทธิ์</option>
-                              <option value="remove">ถอนสิทธิ์</option>
-                            </select>
-                          </label>
-                          <button disabled={busy}>บันทึก PM</button>
-                        </form>
-                      </details>
-                      <button
-                        className="secondary"
-                        onClick={() =>
-                          act(async () => {
-                            const r = await api(
-                              "/projects/" + selected.id + "/line-code",
-                              "POST",
-                            );
-                            setMessage(
-                              "ใช้ในกลุ่มทดสอบภายใน 10 นาที ด้วย LINE ที่เชื่อมกับบัญชีนี้:\n" +
-                                r.command,
-                            );
-                          })
-                        }
-                      >
-                        สร้างรหัสผูกกลุ่ม LINE
-                      </button>
+                      {manager && (
+                        <>
+                          <details>
+                            <summary>กำหนด PM</summary>
+                            <form
+                              onSubmit={(e) => {
+                                const b = fields(e);
+                                act(async () => {
+                                  await api(
+                                    "/projects/" + selected.id + "/pm",
+                                    "POST",
+                                    {
+                                      user_id: b.user_id,
+                                      active: b.action === "add",
+                                    },
+                                  );
+                                  await open(selected.id);
+                                  await load(me);
+                                  setMessage("บันทึกสิทธิ์ PM แล้ว");
+                                });
+                              }}
+                            >
+                              <label>
+                                PM
+                                <select name="user_id" required>
+                                  {users
+                                    .filter((u) => u.role === "PM" && u.active)
+                                    .map((u) => (
+                                      <option key={u.id} value={u.id}>
+                                        {u.display_name}
+                                      </option>
+                                    ))}
+                                </select>
+                              </label>
+                              <label>
+                                การมอบหมาย
+                                <select name="action">
+                                  <option value="add">เพิ่มสิทธิ์</option>
+                                  <option value="remove">ถอนสิทธิ์</option>
+                                </select>
+                              </label>
+                              <button disabled={busy}>บันทึก PM</button>
+                            </form>
+                          </details>
+                          <button
+                            className="secondary"
+                            onClick={() =>
+                              act(async () => {
+                                const r = await api(
+                                  "/projects/" + selected.id + "/line-code",
+                                  "POST",
+                                );
+                                setMessage(
+                                  "ใช้ในกลุ่มทดสอบภายใน 10 นาที ด้วย LINE ที่เชื่อมกับบัญชีนี้:\n" +
+                                    r.command,
+                                );
+                              })
+                            }
+                          >
+                            สร้างรหัสผูกกลุ่ม LINE
+                          </button>
+                        </>
+                      )}
                     </section>
                   </div>
                 )}
               </>
+            )}
+            {page === "types" && manager && (
+              <div className="grid">
+                {[
+                  ["project", projectTypes, "ประเภทโครงการ"],
+                  ["job", jobTypes, "ประเภทงานย่อย"],
+                ].map(([kind, rows, title]) => (
+                  <section className="card" key={String(kind)}>
+                    <h2>{String(title)}</h2>
+                    <p className="muted">
+                      Code เปลี่ยนไม่ได้ ปิดใช้งานแทนการลบ ข้อมูลเก่ายังแสดงได้
+                    </p>
+                    <form
+                      onSubmit={(e) => {
+                        const b = fields(e);
+                        act(async () => {
+                          await api("/" + kind + "-types", "POST", {
+                            code: String(b.code).trim().toUpperCase(),
+                            display_name: b.display_name,
+                            sort_order: Number(b.sort_order),
+                          });
+                          await load(me);
+                          setMessage("เพิ่มประเภทแล้ว");
+                        });
+                      }}
+                    >
+                      <label>
+                        Code
+                        <input
+                          name="code"
+                          required
+                          pattern="[A-Za-z][A-Za-z0-9_]{0,49}"
+                          maxLength={50}
+                        />
+                      </label>
+                      <label>
+                        ชื่อที่แสดง
+                        <input name="display_name" required maxLength={160} />
+                      </label>
+                      <label>
+                        ลำดับ
+                        <input
+                          name="sort_order"
+                          type="number"
+                          min={-100000}
+                          max={100000}
+                          defaultValue={0}
+                          required
+                        />
+                      </label>
+                      <button disabled={busy}>เพิ่มประเภท</button>
+                    </form>
+                    {(rows as Row[]).map((t) => (
+                      <form
+                        className="type-row"
+                        key={t.id + ":" + t.version}
+                        onSubmit={(e) => {
+                          const b = fields(e);
+                          act(async () => {
+                            await api("/" + kind + "-types/" + t.id, "PATCH", {
+                              display_name: b.display_name,
+                              sort_order: Number(b.sort_order),
+                              enabled: b.enabled === "true",
+                              version: t.version,
+                            });
+                            await load(me);
+                            setMessage("บันทึกประเภทแล้ว");
+                          });
+                        }}
+                      >
+                        <h3>{t.code}</h3>
+                        <label>
+                          ชื่อที่แสดง
+                          <input
+                            name="display_name"
+                            defaultValue={t.display_name}
+                            required
+                            maxLength={160}
+                          />
+                        </label>
+                        <label>
+                          ลำดับ
+                          <input
+                            name="sort_order"
+                            type="number"
+                            min={-100000}
+                            max={100000}
+                            defaultValue={t.sort_order}
+                            required
+                          />
+                        </label>
+                        <label>
+                          การใช้งาน
+                          <select
+                            name="enabled"
+                            defaultValue={String(t.enabled)}
+                          >
+                            <option value="true">เปิดใช้งาน</option>
+                            <option value="false">ปิดใช้งาน</option>
+                          </select>
+                        </label>
+                        <button disabled={busy}>บันทึกประเภท</button>
+                      </form>
+                    ))}
+                  </section>
+                ))}
+              </div>
             )}
             {page === "setup" && manager && (
               <div className="grid">

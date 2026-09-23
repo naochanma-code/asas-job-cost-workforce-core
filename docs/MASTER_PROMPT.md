@@ -161,15 +161,12 @@ Human-readable Code แยกจาก Internal ID และต้องสร�
 Project Type เป็น Configurable Master Data ค่าเริ่มต้น:
 
 - Installation
-- Migration
-- Upgrade
-- Configuration
 - Service
-- Support
 - Survey
 - POC
-- Internal
 - Other
+
+Owner ยืนยันรอบ M1 Alignment ให้เริ่ม 5 ประเภทตาม D-023; ประเภทอื่นเพิ่มภายหลังได้
 
 OWNER/ADMIN เพิ่ม เปลี่ยน Display Name เรียงลำดับ และ Disable ได้ Code ที่มีการใช้งานแล้วห้ามเปลี่ยนความหมายย้อนหลัง
 

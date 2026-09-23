@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 23 กันยายน 2026 — M1 Alignment v3.0 (ยังไม่ Deploy)
+
+- เพิ่ม append-only003: configurable Project Type5/Job Type10, operational Project/Job fields, safe backfill, atomic codes/counter/reservation; ไม่แก้001/002
+- Backend/UI รองรับประเภท/วัน/PM/ผู้รับผิดชอบ/status/progress พร้อม scoped PM TECH assignment/revoke และ audit; ไม่มีExpense/Payroll placeholders
+- Backup format2 รวมmaster/counters/registry, migration roleแยก, grant scriptเฉพาะตารางใหม่; dry-run/recoveryและExpenseD-022testplan
+- Local32PASS/2native-onlySKIP/0FAIL; typecheck/buildPASS; M0 45checksPASS. รอCI NativePostgreSQL/container ไม่มีStagingmigration/LINE/merge/production
+
 ## 2026-09-23 — PM assignment และ Expense approval policy
 
 - PM เพิ่ม/ถอน TECH ได้เฉพาะ Project ที่รับผิดชอบ ห้ามสร้างผู้ใช้ เปลี่ยน Role หรือแต่งตั้ง PM; ทุกครั้งมี Audit

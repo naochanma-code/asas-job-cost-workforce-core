@@ -1,6 +1,6 @@
 # Permission matrix — Master v3.0
 
-Accepted ตาม [ADR-009](adr/009-delegated-entry-and-expense-review.md) ต่อจาก ADR-008 / MASTER v2.5; backend authorization ยัง DESIGNED ไม่ได้พัฒนา
+Accepted ตาม [ADR-009](adr/009-delegated-entry-and-expense-review.md) ต่อจาก ADR-008 / MASTER v2.5; M1 operational authorization มี implementation; ส่วน Work/Expense/Financial/Payroll ยังเป็น target design
 
 | Resource/action | OWNER | ADMIN | PM | TECH |
 | --- | --- | --- | --- | --- |
@@ -57,3 +57,18 @@ PM/Admin/Owner ลงวันทำงานและ OT แทนพนัก�
 ## Post-approval correction — D-022
 
 ADMIN แก้ Expense หลังอนุมัติได้ก่อน Financial Lock ผ่าน Correction/Revision พร้อมเหตุผลและ before/after หาก Cost Ledger ถูก post แล้วต้องสร้าง Reversal และ corrected posting ห้าม update ledger/source เดิมแบบเงียบ เมื่อ Financial Status=LOCKED ต้องให้ OWNER Unlock/สร้าง Financial Revision ก่อน
+
+## M1 Alignment API enforcement — D-022/D-023
+
+| Action | OWNER / ADMIN | PM | TECH |
+| --- | --- | --- | --- |
+| Type create/rename/order/enable | allow | deny | deny |
+| Type read | allow | allow | allow (operational reference only) |
+| Create Project / assign primary PM / change PM membership | allow | deny | deny |
+| Edit Project operational fields / create-edit Job | allow | membership of this Project required; cannot set manager | deny |
+| Candidate technician lookup | scoped active TECH fields only | own Project; employee ID/name only; no account directory | deny |
+| Assignment list/assign/revoke | existing operational authority | own Project AND target role TECH; cannot target OWNER/ADMIN/PM | deny |
+| User create/change active/role | create/active OWNER only; role change absent | deny | deny |
+| Project/Job read | all | PM membership only (employee assignment not enough) | Project-level assignment: jobs in that project; Job-level assignment: only assigned jobs |
+
+Project lock serializes PM grant/revoke with team operations. Target employee/user row locks serialize status changes. Every successful assignment/revoke has actor/time/audit; duplicate assignment and repeated revoke do not create extra audit. Tests call API directly, not UI role-switch. Financial fields/Expense menus absent.
