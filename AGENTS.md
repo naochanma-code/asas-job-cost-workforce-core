@@ -41,4 +41,6 @@ Repository นี้เป็นระบบใหม่ของ ASAS Job Cost 
 - ใช้ `docs/MASTER_PROMPT.md` v3.0 เป็น Target Specification และอ่าน `docs/MASTER_V3_GAP_ANALYSIS.md` ก่อนวางแผนงานถัดไป
 - ห้ามรื้อ Foundation หรือแก้ migration ที่ apply แล้ว; ใช้ append-only migration และปิด Gate ปัจจุบันก่อนเริ่ม Milestone ถัดไป
 - Financial data ต้องแยกจาก operational query/service/API/export ตั้งแต่เริ่ม implementation; Admin เห็น Expense transaction amount ได้แต่ไม่มี Project financial aggregate
-- ผู้ส่ง Expense ห้ามอนุมัติรายการของตนเองโดย default; การเปลี่ยน policy ต้องมี ADR และ test
+- ตาม D-022 ADMIN/OWNER อนุมัติ Expense ของตนเองได้ PM/TECH อนุมัติไม่ได้; ทุก approval มี audit และการแก้หลังอนุมัติใช้ correction/revision/reversal
+
+- PM เพิ่ม/ถอน TECH ได้เฉพาะ Project ที่ตนรับผิดชอบ ห้ามสร้างผู้ใช้ เปลี่ยน Role หรือแต่งตั้ง PM คนอื่น ทุก action ต้องมี audit
