@@ -1,5 +1,13 @@
 # DECISION LOG
 
+## D-022 — PM assignment และ Expense self-approval (Accepted, 2026-09-23)
+
+Owner ยืนยันให้ PM เพิ่ม/ถอน TECH ได้เฉพาะ Project ที่ PM รับผิดชอบ ห้าม PM สร้างผู้ใช้ เปลี่ยน Role มอบสิทธิ์ OWNER/ADMIN หรือแต่งตั้ง PM คนอื่น ทุก action ต้องมี Audit
+
+ADMIN อนุมัติ Expense ได้ทั้งหมดในขอบเขต รวมรายการที่ ADMIN กรอกเอง เพื่อไม่ให้งานกองที่ OWNER; OWNER อนุมัติ Expense ได้ทั้งหมดรวมรายการที่ OWNER กรอกเอง PM/TECH อนุมัติไม่ได้ Expense ทุกช่องทางยังต้องผ่าน PENDING_REVIEW ก่อนเป็น Actual และเก็บ approver/time/audit
+
+ADMIN แก้ Expense หลัง Approved ได้ก่อน Financial Lock ผ่าน correction/revision พร้อมเหตุผลและ before/after หาก post Cost Ledger แล้วต้อง reversal ก่อน corrected posting ห้ามแก้ source/ledger เดิมแบบเงียบ เมื่อ Financial Status=LOCKED ต้องให้ OWNER unlock/สร้าง financial revision ก่อน
+
 ## D-021 — Master Prompt v3.0 เป็น Canonical Product Specification (2026-09-23)
 
 Owner ส่งขอบเขต Product ใหม่เพื่อให้ Core เน้น Project/Job/Workforce/Work/OT/Expense/Evidence/Cost/Owner Financial/Payroll Summary และไม่สร้าง ERP ซ้ำ SMEMOVE รับเป็น Master v3.0 แทนชื่อร่าง v2.4 เพราะ Repository มี v2.5 แล้ว เอกสารใหม่มีอำนาจเหนือเอกสารเก่าเฉพาะส่วนที่ขัดกัน
