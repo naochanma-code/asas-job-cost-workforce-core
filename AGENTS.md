@@ -27,10 +27,18 @@ Repository นี้เป็นระบบใหม่ของ ASAS Job Cost 
 
 - Project เป็นหน่วยหลัก; Site และ Job เป็น optional
 - Project ที่ไม่มี Job ต้องทำ flow ได้ครบและระบบต้องไม่ถาม Job
-- Admin ตรวจ แก้ไข และอนุมัติค่าใช้จ่ายรายรายการได้ รวมจำนวน รายละเอียด เงิน และรูป แต่ไม่เห็นยอดรวมต้นทุน/ยอดใช้ไปของโครงการ อัตราค่าแรงหรือ Payroll; PM ไม่เห็นเงินหรือรูปบิลของผู้อื่น ยกเว้นรายการที่ตนส่ง (MASTER v2.5 / ADR-008)
+- Admin ตรวจ แก้ไข และอนุมัติค่าใช้จ่ายรายรายการได้ รวมจำนวน รายละเอียด เงิน และรูป แต่ไม่เห็นยอดรวมต้นทุน/ยอดใช้ไปของโครงการ อัตราค่าแรงหรือ Payroll; PM ไม่เห็นเงินหรือรูปบิลของผู้อื่น ยกเว้นรายการที่ตนส่ง (MASTER v3.0 / ADR-008)
 - Owner เป็นผู้กรอกอัตรารายวัน เห็นยอด อนุมัติและ lock รอบค่าจ้าง รองรับหลายบัญชีสำหรับหุ้นส่วน3คน เก็บ audit แยกบัญชี
 - Core private storage เป็นแหล่งหลักของรูปหลักฐาน; Drive เป็นเพียง optional export mirror
 - Pending ไม่เป็น Actual; approved source ลง ledger ครั้งเดียว; การแก้ย้อนหลังใช้ reversal/revision
 
 
-- ตาม MASTER v2.5 / ADR-009: PM/Admin/Owner ลงวันทำงานและ OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ โดยเก็บผู้กรอกแยกจากพนักงาน ทุกบทบาทส่งค่าใช้จ่ายได้ PM เห็นยอดและรูปเฉพาะรายการที่ตนส่ง LINE expense ทุกบทบาทต้องรอ Admin หรือ Owner กดอนุมัติแยกทุกครั้งก่อนเป็น Actual; Web คงขั้นรอตรวจเดิม ไม่มี auto-approve
+- ตาม MASTER v3.0 / ADR-009: PM/Admin/Owner ลงวันทำงานและ OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ โดยเก็บผู้กรอกแยกจากพนักงาน ทุกบทบาทส่งค่าใช้จ่ายได้ PM เห็นยอดและรูปเฉพาะรายการที่ตนส่ง LINE expense ทุกบทบาทต้องรอ Admin หรือ Owner กดอนุมัติแยกทุกครั้งก่อนเป็น Actual; Web คงขั้นรอตรวจเดิม ไม่มี auto-approve
+
+
+## Master v3.0 transition
+
+- ใช้ `docs/MASTER_PROMPT.md` v3.0 เป็น Target Specification และอ่าน `docs/MASTER_V3_GAP_ANALYSIS.md` ก่อนวางแผนงานถัดไป
+- ห้ามรื้อ Foundation หรือแก้ migration ที่ apply แล้ว; ใช้ append-only migration และปิด Gate ปัจจุบันก่อนเริ่ม Milestone ถัดไป
+- Financial data ต้องแยกจาก operational query/service/API/export ตั้งแต่เริ่ม implementation; Admin เห็น Expense transaction amount ได้แต่ไม่มี Project financial aggregate
+- ผู้ส่ง Expense ห้ามอนุมัติรายการของตนเองโดย default; การเปลี่ยน policy ต้องมี ADR และ test
