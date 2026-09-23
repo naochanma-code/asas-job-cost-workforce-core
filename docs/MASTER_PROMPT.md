@@ -128,7 +128,9 @@ TECH ห้ามเห็น Financial Project Data, Budget, Cost รวม, Pr
 
 PM, ADMIN และ OWNER ลง Work/OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ ต้องเก็บ `employee_id`, `submitted_by`, `source_channel` และเวลาแยกกัน TECH ลงให้ตนเองเท่านั้น
 
-ทุก Role สามารถส่ง Expense ตามขอบเขตของตนได้ แต่ Expense ทุกช่องทางต้องผ่าน PENDING_REVIEW และผู้ส่งห้ามอนุมัติรายการของตนเองโดย Default หากจะเปิด Self Approval ต้องเป็น Policy แยก มีเหตุผลและ Audit
+PM เพิ่มหรือถอน Assignment ของ TECH ได้เฉพาะ Project ที่ PM รับผิดชอบ ห้าม PM สร้างผู้ใช้ เปลี่ยน Role มอบสิทธิ์ OWNER/ADMIN หรือแต่งตั้ง PM คนอื่น ทุกการเพิ่ม/ถอนต้องมี Audit
+
+ทุก Role สามารถส่ง Expense ตามขอบเขตของตนได้ และ Expense ทุกช่องทางต้องผ่าน PENDING_REVIEW ก่อนเป็น Actual PM/TECH อนุมัติไม่ได้ ADMIN อนุมัติได้ทั้งหมดในขอบเขตงาน รวมรายการที่ ADMIN กรอกเอง เพื่อไม่ให้งานกองที่ OWNER และ OWNER อนุมัติได้ทั้งหมดรวมรายการที่ OWNER กรอกเอง ทุก Approval ต้องเก็บ actor/time/audit
 
 ## 4. Customer, Site, Project และ Job
 
@@ -317,6 +319,8 @@ Status:
 Expense ยังไม่เป็น Actual Project Cost จน Approved
 
 ADMIN แก้ Date, Category, Amount และ Description ก่อน Approve ได้ ทุกการแก้เก็บ Before, After, Changed By/At และ Reason
+
+หลัง Approved ห้ามแก้ Source หรือ Ledger เดิมแบบเงียบ ADMIN ทำ Correction ได้ก่อน Financial Lock โดยต้องใส่เหตุผล สร้าง Revision และหาก Cost Ledger ถูก Post แล้วให้สร้าง Reversal ก่อน Post ยอดแก้ไขใหม่ ADMIN อนุมัติ Correction ของตนได้พร้อม Audit เมื่อ Financial Status=LOCKED ต้องให้ OWNER Unlock/สร้าง Financial Revision ก่อน
 
 ### 6.2 Draft concurrency safety
 
