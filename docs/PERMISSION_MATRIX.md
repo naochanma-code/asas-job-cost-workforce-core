@@ -1,4 +1,4 @@
-# Permission matrix — คำตอบรอบ4
+# Permission matrix — Master v3.0
 
 Accepted ตาม [ADR-009](adr/009-delegated-entry-and-expense-review.md) ต่อจาก ADR-008 / MASTER v2.5; backend authorization ยัง DESIGNED ไม่ได้พัฒนา
 
@@ -43,3 +43,12 @@ Role switchของต้นแบบเป็นsimulation ทุกคนอ�
 ## ส่งรายการรอบ4
 
 PM/Admin/Owner ลงวันทำงานและ OT แทนพนักงานใน Project ที่มีสิทธิ์ได้ โดยเก็บผู้กรอกแยกจากพนักงาน ทุกบทบาทส่งค่าใช้จ่ายได้ PM เห็นยอดและรูปเฉพาะรายการที่ตนส่ง LINE expense ทุกบทบาทต้องรอ Admin หรือ Owner กดอนุมัติแยกทุกครั้งก่อนเป็น Actual; Web คงขั้นรอตรวจเดิม ไม่มี auto-approve ดู [ADR-009](adr/009-delegated-entry-and-expense-review.md) เก็บsubmitted_by/employee_id/source_channel/submitted_at/reviewed_by/at การapproveแยกจากsubmitแม้ผู้ส่งมีroleผู้ตรวจ
+
+## Master v3.0 additions — 2026-09-23
+
+- OWNER เท่านั้นเข้าถึง Selling Price, Estimated/Actual Cost aggregate, Budget, Profit, Margin, Forecast, Rate, Payroll, Financial Adjustment/Lock และ SMEMOVE Actual Cost
+- ADMIN อ่าน/แก้/อนุมัติ Expense transaction พร้อม amount/evidence ได้ แต่ API/export/dashboard ห้ามคืน Project cost total, budget-vs-actual หรือ profitability
+- PM ส่งและอ่าน Expense ของตนตาม assigned Project ได้ ไม่อ่านของผู้อื่นและไม่เป็น reviewer โดย default
+- ผู้ส่ง Expense ห้ามอนุมัติรายการตนเองโดย default แม้มี role ADMIN/OWNER; policy exception ต้องมี ADR/audit/test
+- Financial service/query/serializer แยกจาก operational view ห้ามใช้ CSS hide เป็น permission
+- Project Type/Job Type จัดการได้โดย OWNER/ADMIN; stable code ที่ใช้งานแล้วเปลี่ยนความหมายย้อนหลังไม่ได้
