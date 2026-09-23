@@ -1,5 +1,11 @@
 # DECISION LOG
 
+## D-019 — ข้อมูลจริงปนใน Staging; แยกชุดซ้อม (2026-09-22)
+
+Owner ยืนยันว่ารายการที่สร้างบน Web มีข้อมูลจริงปนอยู่ จึงไม่เข้าเงื่อนไข Phase D/E เดิมที่อนุญาตเฉพาะข้อมูลสมมติ หยุดเฉพาะการ backup/copy/restore ชุดข้อมูลนี้ ไม่ใช้คำสั่งให้ดำเนินการต่อเป็นการอนุมัติใช้ข้อมูลจริง ไม่แก้ ลบ หรือถอนสิทธิ์ของรายการเดิม และไม่บันทึกชื่อ/รายละเอียดจริงลงเอกสาร
+
+งานที่เดินหน้าต่อได้: สถานะและ UAT ภาษาไทย, read-only health/security checks, การซ้อมด้วยฐานข้อมูลสมมติที่แยกชัดภายใน PostgreSQL/Trial เดิม โดยไม่ clone แถวข้อมูลจากฐานปัจจุบัน ไม่เพิ่มบริการเสียเงิน ไม่เปลี่ยน business schema/API/permission การสร้างฐานใหม่ต้องตรวจชื่อและความว่าง; ห้าม drop/overwrite เพื่อรันซ้ำ ผลซ้อมแยกไม่ใช่หลักฐานว่ามี backup ของข้อมูลจริงปัจจุบัน
+
 ## D-018 — M1 Staging A–E and isolated database roles (2026-09-22)
 
 Owner authorizes only the existing Railway Trial for database security, API/Web, synthetic functional tests and isolated restore. LINE remains false even after those phases pass. No upgrade, paid service, PR #2 merge, M2 or production. Stop on credit exhaustion, exposure risk or required staging data deletion/overwrite.

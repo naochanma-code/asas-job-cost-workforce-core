@@ -1,10 +1,16 @@
 # M1 LINE Pilot Checklist
 
-สถานะ PREPARED / REAL_LINE_NOT_RUN · 2026-09-22 · ใช้คู่กับ [Staging plan](M1_STAGING_PLAN.md) และ [Owner UAT](M1_OWNER_UAT.md)
+สถานะ PREPARED / REAL_LINE_NOT_RUN / LINE_ENABLED=false · อัปเดต 2026-09-23 · ใช้คู่กับ [สถานะปัจจุบัน](PROJECT_STATUS.md) และ [Owner UAT](M1_OWNER_UAT.md)
+
+Owner อนุญาตดำเนินการขั้นถัดไปและถามเรื่องเริ่ม LINE แต่ gate A–E ยังไม่ครบ จึงยังไม่ตั้ง webhook/เปิด LINE หรือส่งข้อความจริง Web พื้นฐานที่ Owner รายงาน 5 flow ผ่านแล้ว; TECH Login/เมนูตามบทบาท, native restore ชุดสมมติแยก, Web/API restart และข้อมูลคงอยู่ผ่านแล้ว ไม่ใช้ข้อมูลจริงที่ปนใน Staging ทำ pilot ดู D-019
+
+ก่อนเปิดจริงยังต้องปิดผล Admin/TECH/PM cross-project และ revoke, live cookie/expiry และ edge/allowlist/log handling ไม่ถือว่า CI หรือฐาน restore ที่ไม่เปิด Web เป็น Owner UAT ของ LINE
+
+LINE ใน M1 ทดลองได้เฉพาะเชื่อมบัญชี, เรียกงานของฉัน, ผูกกลุ่มกับ Project และถอนสิทธิ์ ยังไม่มีลงวันทำงาน/OT/ค่าใช้จ่าย/รูปบิลผ่าน LINE
 
 ## ก่อนนัดผู้ทดลอง
 
-- [ ] โอ๋อนุมัติ provider/งบ/ระยะเวลา และอนุมัติ deployment **Staging** ชัดเจน ไม่รวม production หรือ Merge
+- [x] โอ๋อนุมัติ Railway Trial และ deployment **Staging** เท่านั้น ห้ามอัปเกรด/เพิ่มบริการเสียเงิน ไม่รวม production หรือ Merge
 - [ ] Codex บันทึก release SHA, CI PASS และปิด blockers ใน Staging plan
 - [ ] HTTPS, DB TLS, cookie, private API/DB, log redaction และ restore ผ่านตาม [security matrix](M1_STAGING_TEST_MATRIX.md)
 - [ ] เปิด LINE เฉพาะเมื่อโอ๋ยืนยัน OA/กลุ่ม/ผู้ร่วมทดลองและวันทดลอง ห้ามส่งข้อความทดสอบก่อนอนุมัติ

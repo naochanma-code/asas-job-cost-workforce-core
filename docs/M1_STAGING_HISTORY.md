@@ -1,32 +1,8 @@
-# M1 Test Evidence — 2026-09-21
+# ประวัติสถานะ M1 ก่อนรายงาน Owner รอบล่าสุด
 
-## 23 กันยายน 2026 — Restart, Logout และ Rate Limit
+สถานะในไฟล์นี้เป็นประวัติ ให้ดู PROJECT_STATUS.md สำหรับสถานะปัจจุบัน
 
-PASS: ยืนยัน Restart API/Web จากการยืนยันใน provider และ startup/ready log รอบที่สอง; / และ /api/health กลับมา HTTP 200, database ready. Read-only checksum ของชุด IDs ใน users/employees/customers/sites/projects/jobs/assignments/audit ตรง baseline ก่อน restart โดยไม่พิมพ์ ID หรือ row data. ชุด restore สมมติ counts ยังครบ
-
-PASS: Owner Logout แล้ว reload กลับหน้า Login; Owner Login บัญชี TECH สมมติสำเร็จ บน browser เห็น 1 project card, ไม่มีเมนูบัญชีผู้ใช้/ลูกค้าและทีม/สร้างโครงการ; เมื่อเปิดรายละเอียดไม่มีปุ่มแก้ไขหรือมอบหมาย บันทึกเฉพาะผล ไม่บันทึกชื่อหรือข้อมูลจริง ยังไม่ใช่ PASS ของ cross-project/revoke
-
-PASS: ทดสอบบน API container จริงผ่าน loopback เพื่อไม่กินโควตาผู้ใช้ Web: login malformed body 12 ครั้งให้ 400 จำนวน10 และ 429 จำนวน2; health 130 ครั้งให้ 200 จำนวน120 และ 429 จำนวน10 แม้เปลี่ยน X-Forwarded-For ทุกครั้ง ไม่มี password/บัญชีที่ใช้ทดสอบ ไม่มีการล็อกบัญชีจริง ผลนี้ไม่ใช่ public-edge/multi-user rate-limit test
-
-NOT_RUN: การเปิด privileged API โดยตรงผ่าน browser ถูก client navigation block จึงไม่อนุมานว่าได้ HTTP403. Secure Cookie attributes / expired-token replay ผ่าน CI แต่ยังไม่มีหลักฐาน live browser header/replay. Admin/TECH/PM cross-project/revocation UAT ยังไม่ครบ รอ Admin สมมติ Login. เครดิต Trial ล่าสุด $4.94 /30 days; ไม่มีการอัปเกรด
-
-## 23 กันยายน 2026 — ผล Restore และขั้นก่อน LINE
-
-Owner ให้ดำเนินการ process ถัดไปและถามว่าเริ่ม LINE ได้หรือยัง: ยังคง LINE=false จน gate A–E และผู้ทดลองพร้อม ไม่ Merge/M2/Production
-
-Native pg_dump/pg_restore ซ้อมบน PostgreSQL 18 ใน Trial เดิม PASS โดยสร้าง source/restore ใหม่แยกจากฐานที่มีข้อมูลจริง ใช้เฉพาะ schema/migration metadata และสร้างแถว PILOT สมมติใหม่ ข้อมูล 9 business tables และ migration history เทียบทุก column/row ตรงกัน; counts และ Project A ไม่มี Site/Job, B มี Site/Job ผ่าน; transient sessions/codes/queues ไม่ถูกคืนมา Runtime Web ไม่มีสิทธิ์ CONNECT เข้าฐาน restore ดู M1_STAGING_RESTORE_DRILL.md สำหรับ checksum/ขอบเขต ไม่ใช่ backup ของข้อมูลจริงหรือ off-provider DR
-
-Restart UI ครั้งก่อน timeout ก่อนยืนยัน จึงยังไม่ลง PASS จากการกดปุ่ม ขณะนี้ตรวจต่อ ส่วน Owner UAT 5 flow เดิม PASS ตามรายงาน แต่สิทธิ์แยกบทบาท/ถอนสิทธิ์/Logout ยัง NOT_RUN
-
-## 22 กันยายน 2026 — Owner ทดลอง Web และแก้สถานะที่อ่านไม่ตรงกัน
-
-Owner รายงาน PASS: Login, สร้างพนักงาน, สร้างลูกค้า, สร้างโครงการ และมอบหมายคนเข้าโครงการ ไม่ได้ระบุว่าทดสอบทุกบทบาท/Project ไม่มี Site/Job/การถอนสิทธิ์ จึงไม่เติม PASS ให้ UAT ข้อเหล่านั้น ตรวจใน browser พบ session ที่เข้าสู่ระบบอยู่โดยไม่อ่านรหัสผ่านหรือบันทึกรายการจริง
-
-Owner ยืนยันว่ามีข้อมูลจริงปนใน Staging จึงหยุด backup/restore จากฐานชุดนี้; ไม่คัดลอกข้อมูลจริง ไม่แก้/ลบรายการเดิม ทดสอบต่อเฉพาะชุดสมมติแยก ดู D-019
-
-ปรับ PROJECT_STATUS เป็นสรุปภาษาไทยปัจจุบัน พร้อมตาราง CODED/TESTED/DEPLOYED/UAT และ 3 งานที่ Owner ทดลองต่อได้ ย้ายรายละเอียดเก่าไป M1_STAGING_HISTORY เพื่อไม่ให้สถานะเก่าปะปน เพิ่มป้ายอ้างอิงในเอกสารโฟลเดอร์หลักที่ยังพัก M2 โดยเก็บงานเดิมไว้ ไม่รวมโค้ด M2 เข้า PR #2
-
-ไม่มี application/schema/permission change ในการปรับเอกสารนี้ ผล Local/CI ของ release 4fcb29e อ้างอิงผลเดิม ไม่อ้างว่ารันทดสอบใหม่จากการแก้เอกสาร LINE=false, Trial only, no merge/production/M2
+# PROJECT STATUS
 
 ## Owner Web login handoff — 2026-09-22
 
@@ -129,74 +105,64 @@ Owner อนุมัติถอน bootstrap และยืนยันเฉ
 อัปเดตผล: commit 0d68bba push แล้ว; [CI 35709354964](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35709354964) SUCCESS ทุก step รวม native PostgreSQL, Next build, Docker Web/API build และ smoke health ทั้งสอง container, M0 45 checks. Owner อนุมัติ Railway GitHub App เฉพาะ Repository นี้แล้ว ตรวจพบ installation มีอยู่และเลือก All repositories จึงลดเป็น Only select repositories /asas-job-cost-workforce-core และตรวจค่าที่บันทึกแล้วสำเร็จ App เดิมมี read/write actions, administration, checks, code, statuses, deployments, PRs, workflows ไม่ได้เพิ่มชนิดสิทธิ์; ยังไม่ deploy.
 
 
-## Railway Trial preparation — 2026-09-22
+## ล่าสุด 2026-09-22 — Railway Trial ได้รับอนุมัติ
 
-- tsc --noEmit: PASS
-- tsx --test --test-concurrency=1 tests/*.test.ts: 20 total /19 PASS /0 FAIL /1 SKIP (native restore ไม่มี TEST_DATABASE_URL บนเครื่อง)
-- runtime-schema test: SELECT อย่างเดียว, reject missing/modified/extra migrations PASS บน PGlite ไม่ใช่หลักฐาน runtime role บน Railway
-- Docker build/Web smoke เพิ่มใน CI: PENDING รุ่นใหม่
-- Railway UI: asas-m1-staging/environment staging สร้างแล้ว; Limited Trial $5/30วัน; ไม่มี service/deploy/DB/LINE traffic
-- Configure GitHub App ถูก automatic approval review ปฏิเสธก่อนเปิด ต้องรับ Owner approval สำหรับ repository access ไม่มีการให้สิทธิ์สำเร็จ
-- DEPLOYED_STAGING=NO, REAL_LINE=NOT_RUN, UAT_PASSED=NO; หลักฐานด้านล่างเป็น historical commit ตามที่ระบุ
+Owner เลือก Railway Trial และอนุมัติเริ่ม Staging แล้วตาม D-017 ใช้เฉพาะเครดิตทดลอง ห้ามเพิ่มแพ็กเกจ/ขนาด/บริการเสียเงินเอง ต้องแจ้งและรอ Owner อนุมัติก่อน ยังห้าม Merge PR #2, Production และ M2
 
-## รอบเตรียม Staging — 2026-09-22
+Codex ดูแล M1 บน isolated checkout เดิม สร้าง Railway project asas-m1-staging/environment staging แล้ว ยังไม่มี service/database/application deployment Dashboard แสดง Limited Trial $5/สูงสุด30วัน ต้องพิสูจน์ outbound ก่อน LINE
 
-Baseline PR #2 head 5328b4273ef7c2536097747e63469392fdaa74a0 ตรวจ GitHub: Draft=true, merged=false, mergeable=true; main 0d5da8a, behind0/ahead2; [CI baseline 35610665915](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35610665915) SUCCESS
+CODED: Dockerfiles Web/API และ runtime ตรวจ schema โดยไม่ migrate; TESTED_LOCAL: typecheck PASS, 20 tests/19 PASS/1 native-only SKIP; TESTED_CI: PASS 0d68bba/35709354964; DEPLOYED_STAGING: NO; REAL_LINE/UAT: NOT_RUN; READY_TO_MERGE: NO
 
-เพิ่ม tests/staging-security.test.ts (HTTPS guard/cookie/CSRF/logout, rate-limit spoof/lockout/global, byte-exact signature/empty Verify) และ tests/native-restore.test.ts (isolated native PG schemas, Project A/B/Site/Job/assignment/audit/LINE mapping, no transient credentials, scope/revocationหลังrestore) ผลรอบสุดท้ายบันทึกด้านล่าง แยกจาก baseline
+ติดขัด: automatic approval review ปฏิเสธ Configure GitHub App เพราะอาจให้ Railway เข้าถึง GitHub ต้องให้ Owner อนุมัติ/ติดตั้งเฉพาะ naochanma-code/asas-job-cost-workforce-core ไม่ให้ทุก repository และไม่ใช้ทางเลี่ยง
 
-Staging HTTPS/proxy/DB TLS, LINE จริง, provider restart/PITR/backup scheduler, Owner UAT ทั้งหมด **NOT_RUN** ไม่มีการสมัคร/ชำระเงิน/deploy/ส่งข้อความ และยังไม่ Ready to Merge
+ถัดไป: CI/สิทธิ์ GitHub → DB ใหม่/role/TLS → Web/API ปิด LINE → HTTPS/backup/restore → LINE checklist ดู [คู่มือ Railway](M1_RAILWAY_SETUP.md)
 
-แผนทดสอบที่เตรียม: [matrix](M1_STAGING_TEST_MATRIX.md), [UAT](M1_OWNER_UAT.md), [pilot checklist](M1_LINE_PILOT_CHECKLIST.md), [deployment plan](M1_STAGING_PLAN.md) ไม่ใช้สถานะเอกสาร PREPARED เป็น TESTED_STAGING
+ข้อความด้านล่างเป็นประวัติก่อนอนุมัติ Trial ไม่ห้าม Trial ที่อนุมัติใหม่
 
-## หลักฐานเดิม 2026-09-21
+## ล่าสุด 2026-09-22 — เตรียม M1 Staging / Real LINE Pilot เท่านั้น
 
-ผู้ทดสอบ: Codex · branch codex/milestone-1-foundation จาก main 0d5da8a · ข้อมูลทั้งหมดสมมติ
+Owner สั่งกลับมาทำ M1 ตาม PR #2: **ห้าม Merge, ห้ามเริ่ม/พัฒนา M2 ต่อ, ห้าม Deploy ทุก environment จนอนุมัติ และห้าม Production** Codex รับผิดชอบ tests/docs ของ M1 คนเดียวบน `codex/milestone-1-foundation` ใน isolated checkout `.local/m1-staging` งาน Web Time/OT ที่ค้างจากคำสั่งก่อนหน้าอยู่เฉพาะ working tree ของ `codex/milestone-2-web-time-ot` ถูกพัก ไม่รวม PR #2 และไม่ใช้ local DB ที่มี migration M2 เป็น staging
 
-Artifact implementation ที่ตรวจ: `69c073944d8c2149e9d5f903af6da9b6d08a4ae3` · [Draft PR #2](https://github.com/naochanma-code/asas-job-cost-workforce-core/pull/2) · [GitHub Actions run 35610393373](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35610393373) verify job SUCCESS: frozen install, strict typecheck, PGlite tests, native PostgreSQL 17 tests, Next build และ M0 regression ทุก step ผ่าน
+ผลตรวจเริ่มรอบ: PR #2 Draft/open/not merged, mergeable=true; head 5328b42, main 0d5da8a; behind 0 / ahead 2; CI 35610665915 SUCCESS ทั้ง PostgreSQL17/PGlite/typecheck/build/M0 ก่อนเพิ่ม tests รอบนี้ ไม่มี conflict ที่ต้อง merge/rebase
 
-## ผลที่ตรวจแล้วบนเครื่อง
+จัดทำ [แผนและราคา Hosting](M1_STAGING_PLAN.md), [LINE checklist](M1_LINE_PILOT_CHECKLIST.md), [Owner UAT 10 ข้อ](M1_OWNER_UAT.md), [Staging test matrix](M1_STAGING_TEST_MATRIX.md), [ข้อมูลสมมติ A/B](fixtures/m1-pilot.json) และเพิ่ม security/native restore tests ผลรอบใหม่บันทึกใน [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md)
 
-| การตรวจ | ผล / หลักฐาน |
-| --- | --- |
-| TypeScript strict | PASS `pnpm typecheck`; web tsconfig strict=true |
-| Next build | PASS `pnpm build` สร้าง static route / และ API rewrite; ไม่มี deployment |
-| Foundation API/database suite | PASS 9 subtests + parent ใช้ Fastify inject กับ PGlite PostgreSQL; tests/foundation.test.ts |
-| Persistence/backup | PASS 1 test: ปิด–เปิดฐาน disk, consistent backup, restore ลงฐานว่าง, reject non-empty/tampered backup; tests/persistence.test.ts |
-| Browser login + no Job | PASS บัญชี Admin จริงของ local test สร้างลูกค้า/Project A ที่ไม่มี Site/Job แล้วมอบหมาย TECH ไม่มีช่องถาม Job |
-| Browser scope/persistence | PASS TECH เห็น A หลัง login และ refresh; TECH2 ไม่เห็น A; logout/login เป็น session จริง ไม่มี role selector |
-| M0 regression | PASS 24 + 14 + 7 = 45 checks และ independent .NET ZIP reader; ไม่แก้ prototype |
-| Dependency audit | PASS `pnpm audit --prod`: No known vulnerabilities found ณ วันที่ตรวจ ไม่ใช่ security audit ของระบบ |
-| Native PostgreSQL 17 CI | PASS ชุด API/SQL/permission/LINE mock เดียวกันกับ local; backup disk case ยังคงใช้ PGlite ไม่ใช่ provider restore |
-| Documentation links | PASS local links 96 รายการไม่มีไฟล์หาย; git diff --check ผ่าน |
+CODED: M1 เดิม + tests ใหม่; TESTED_LOCAL: PASS typecheck/build/18 tests (native restore 1 SKIP บนเครื่อง)/M0 45 checks; TESTED_CI: PASS PostgreSQL17 รวม native restore ตาม run 35685633979 (code 45be1ac); DEPLOYED_STAGING: NO; REAL_LINE: NOT_RUN; UAT_PASSED: NO; READY_TO_MERGE: NO
 
-Node test runner รายงาน 11 tests PASS (รวม parent 1 และ leaf cases 10); ไม่ใช่ 11 independent acceptance tasks
+รอ Owner ตัดสินใจ provider/งบ และวัน/ช่างที่ร่วม pilot ไม่ขอ secret ผ่านแชทหรือ GitHub รายละเอียด deployment blockers (runtime DB role/migrations, proxy rate limit, TLS, logs, enrollment IDs และ cleanup/backup) อยู่ในแผน ต้องตรวจ/แก้ก่อน live pilot ไม่ใช่ข้ออ้างให้เปิดจริงโดยอัตโนมัติ
 
-API cases ครอบคลุม missing/forged/expired session, CSRF Origin, wrong password, multiple Owner audit, Owner-only account creation, API ไม่มี password/financial fields, optional scope constraints, duplicate assignment rollback รวม audit, PM cross-scope/stale version/ถอนสิทธิ์, TECH forbidden edit, signed LINE body/destination/dedupe, one-use nonce, retry/lease, recheck access ก่อนส่ง, group wrong actor/expired/replay, unlink/deactivate/logout และ health
+ความขัดแย้งกับคำสั่งเก่าที่พัก LINE/เริ่ม M2: ใช้คำสั่งล่าสุดพัก M2 และเตรียม M1 ไม่ต้องถามซ้ำ ส่วน policy OT ที่ Owner ยืนยันยังเก็บในงานที่พักไว้ ไม่ได้ implement ใน M1
 
-LINE transport เป็น fake sender ทั้งหมด ไม่มี request ไป LINE OA ผลนี้ไม่แทน real integration และไม่เป็น Owner UAT ของ M1
+ข้อความด้านล่างเป็นประวัติรอบ Foundation เดิม ขั้นตอนปัจจุบันใช้แผนด้านบน
 
-## ยังไม่ตรวจ / ข้อจำกัด
+2026-09-21 · MASTER v2.5 + คำสั่งเริ่ม M1 §19 · ผู้รับผิดชอบ Codex
 
-- Native PostgreSQL CI ผ่านตาม run ด้านบน; load/concurrency testing และ provider backup restore ยัง NOT_RUN
-- HTTPS staging, DB TLS, secret rotation, reverse proxy rate limit และ provider backup/PITR: NOT_RUN
-- LINE จริงกับ OA/กลุ่มที่ Owner มี: NOT_RUN รอระบุ environment/allowlist/credentials ผ่าน secret manager
-- Owner UAT M1: NOT_RUN การยืนยัน 7 งานก่อนหน้านี้เป็น M0 เท่านั้น
-- ไม่มี password recovery/MFA/role-change/group-rebind UI, automated backup scheduler หรือ DEAD payload TTL purge; ไม่มีเวลา/OT/ค่าใช้จ่าย/รูปบิลใน M1
+**Milestone 0: OWNER_ACCEPTED / MERGED** — PR #1 merge a7e5c9e08a4d2c8185a12ef65f705a190c243a8d; main 0d5da8a รวมบันทึกหลัง merge เอกสาร/prototype ครบ หลักฐาน [M0_ACCEPTANCE](M0_ACCEPTANCE.md), [TEST_EVIDENCE](TEST_EVIDENCE.md)
 
-สถานะ M1: IN_PROGRESS; ยังไม่ READY_TO_MERGE / UAT_PASSED / PRODUCTION_READY
+**Milestone 1: AUTHORIZED / IN_PROGRESS** — Owner สั่ง “เริ่มได้เลยค่ะ” และยืนยันมี OA/กลุ่มทดสอบแยกแล้ว Codex รับผิดชอบ Web/API/schema/tests/docs บน `codex/milestone-1-foundation` ไม่มีผู้แก้ร่วม ขอบเขต [M1 Foundation](M1_FOUNDATION_PROPOSAL.md), [ADR-010](adr/010-foundation-implementation.md)
 
-## ผล local รอบเพิ่ม tests (2026-09-22)
+## ใช้งานและตรวจได้บนเครื่อง
 
-- frozen offline install, strict typecheck และ Next build PASS
-- Node runner 19 total: 18 PASS / 0 FAIL / 1 SKIP (native restore ต้อง TEST_DATABASE_URL; CI PostgreSQL17 ผ่านตามหลักฐานด้านล่าง)
-- M0 regression 24+14+7 =45 checks PASS; git diff --check PASS
-- ผลนี้มาจาก isolated M1 checkout ไม่มี migration003/time API ของ M2 ไม่มี real LINE หรือ staging transport
+Login บัญชีจริง 4 roles (ไม่ใช่ role selector), Owner หลายบัญชี, Customer/Project/optional Site/Job, ทีมงาน/สิทธิ์ PM, audit, health, SQL migrations, persistence และ backup/restore พร้อม [Runbook](OPERATIONS_RUNBOOK.md) Project ไม่มี Job มอบหมายได้โดยไม่ถาม Job ไม่มีโมดูลเงินหรือข้อมูลค่าจ้างใน M1
 
-## ผล CI รอบ Staging preparation
+| Workstream | DESIGNED | CODED | TESTED_LOCAL | TESTED_INTEGRATION | DEPLOYED_STAGING | UAT_PASSED | PRODUCTION_READY |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| M0 เอกสาร/ต้นแบบ | YES | MOCK_ONLY | PASS 45 checks + ZIP + browser | NOT_APPLICABLE | NO | OWNER_ACCEPTED ทั้ง7งาน | NO |
+| M1 Web/API/identity/project/team | YES | YES | PASS API+browser | PASS PostgreSQL 17 CI (API/SQL) | NO | NOT_RUN | NO |
+| M1 persistence/backup | YES | YES | PASS PGlite disk restart/restore | staging NOT_RUN | NO | NOT_RUN | NO |
+| M1 LINE link/group/my projects | YES | YES | PASS simulated transport | REAL_LINE_NOT_RUN | NO | NOT_RUN | NO |
+| M2+ time/OT/expense/payroll | M0 design | NOT_STARTED | NOT_RUN | NOT_RUN | NO | NOT_RUN | NO |
 
-Artifact code/tests/docs: 45be1acfe136338df8867dd3ba98ecd6f841a212; [Foundation run 35685633979](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35685633979), verify job 106611718741 SUCCESS ทุก step: frozen install/typecheck/PGlite tests/native PostgreSQL17 tests/Next build/M0 regression
+หลักฐาน [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md) แยก automated tests, browser และรายการ NOT_RUN ชัดเจน migrations 001_foundation / 002_line_outbox ใช้ checksum ไม่มีฐานเดิมหรือ legacy code
 
-Native restore case PASS จริงใน CI ไม่ได้ skip ใน native run: แยก source/target schemas, restore แล้ว reopen connection, ตรวจ A/B/Site/Job/assignment/audit/LINE mappings และทดสอบ scope กับการถอน assignment หลัง restore ไม่ใช่ provider backup/PITR หรือ Staging restart
+## ข้อจำกัดและสิ่งที่รอ
 
-Commit หลักฐานถัดจาก45be1acเปลี่ยนเอกสารเท่านั้น; ไม่อ้างว่า CI commitเก่าคือ headใหม่ ผล PRยังDraft/ไม่merge/ไม่deploy/M2พัก
+Local ใช้ PGlite PostgreSQL บน disk process เดียว ไม่ใช่ native service; staging/LINE worker บังคับ DATABASE_URL และ HTTPS ไม่มี deploy/ส่ง LINE จริง ยังไม่ปิด Gate M1 จนช่างเห็นงานตนผ่าน LINE จริงและ Owner ทดสอบ
+
+Owner ยืนยันว่ามี OA/กลุ่มทดสอบแล้ว แต่ยังไม่ระบุชื่อ/IDs, ผู้ทดลอง, server/domain หรืองบ deployment ต้องรับข้อมูลนี้และตั้ง secrets นอกแชท/Gitก่อนทดสอบจริง ยังไม่มี password recovery/MFA/role-change/group-rebind UI, automated backup schedule หรือ DEAD payload cleanup ก่อน pilotต้องประเมิน/runbookให้ครบ
+
+ข้อถามเรื่อง OT ไม่มี Work/Job budget/month export และจุดเริ่มนับหลักฐาน 2 ปีใน [OWNER_QUESTIONS](OWNER_QUESTIONS.md) เป็น milestone ถัดไป ไม่ขวาง Foundation และไม่ถามซ้ำเรื่องสิทธิ์ที่ Owner ตอบแล้ว
+
+## ขั้นตอนถัดไป
+
+[Draft PR #2](https://github.com/naochanma-code/asas-job-cost-workforce-core/pull/2) เปิดแล้ว implementation commit 69c073944d8c2149e9d5f903af6da9b6d08a4ae3 push ครบ; [CI PostgreSQL 17](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35610393373) PASS ทั้ง typecheck/tests/build/M0 regression ขั้นต่อไปเตรียม staging/LINE pilot เมื่อ Owner ระบุ environment และขอบเขตที่อนุญาต ยังไม่ merge M1 หรือเริ่ม M2

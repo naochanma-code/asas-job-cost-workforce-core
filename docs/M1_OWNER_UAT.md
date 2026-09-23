@@ -1,8 +1,24 @@
 # M1 Owner UAT — ใบบันทึกการทดลองจริง
 
-ยังไม่ได้รัน: ทุกแถว NOT_RUN ห้ามเติม PASS จาก automated tests
+## ผลที่ Owner ยืนยันแล้ว — 22 กันยายน 2026
 
-วัน/เวลา: ____ · Staging URL: ____ · release SHA: ____ · ผู้ช่วยเทคนิค: Codex
+PASS ตามรายงาน Owner: Login, สร้างพนักงาน, สร้างลูกค้า, สร้างโครงการ และมอบหมายคนเข้าโครงการ บน [Web Staging](https://web-staging-cb6f.up.railway.app/) release 4fcb29e ไม่ใช่การรับ M1 ทั้งหมด และยังไม่ยืนยันผลแยก Admin/PM/ช่าง
+
+Owner แจ้งว่ามีข้อมูลจริงปน: ไม่ใช้รายการเดิมทำกรณีทดสอบถอนสิทธิ์/แก้ไข/backup/restore ใช้บัญชีและโครงการสมมติขึ้นต้น PILOT เท่านั้น ห้ามส่งรหัสผ่านหรือรายละเอียดข้อมูลจริงในรายงาน
+
+## รอบที่ขอให้โอ๋ทดสอบต่อ (ยังไม่ใช้ LINE)
+
+1. Admin สมมติสร้างลูกค้าสมมติและ Project A โดยเว้น Site/Job แล้วมอบหมายช่างสมมติ ต้องไม่ถาม Job
+2. ช่าง Login ผ่านอีก browser profile/มือถือ ต้องเห็น A แต่ไม่เห็น B สมมติที่ไม่ได้รับมอบหมาย; ให้ Admin เก็บ URL ของ B เพื่อลองเปิดตรง ต้องถูกปฏิเสธ
+3. Admin ถอนเฉพาะ assignment สมมติ A; ช่าง refresh/เปิด URL เดิมต้องเข้าไม่ได้ จากนั้น Logout แล้วกลับเข้าหน้าที่ต้อง Login ต้องเห็นหน้าเข้าสู่ระบบ
+
+รายงานเป็นข้อ 1/2/3 ผ่านหรือไม่ผ่าน; ไม่จำเป็นต้องส่ง screenshot ที่มีข้อมูลจริง Site/Job/PM และ Restart/Restore ให้บันทึกเพิ่มตามตารางด้านล่าง LINE U05–U07 ยังพักตามคำสั่ง Owner
+
+## ตารางตรวจรับเต็ม (เก็บแยกผลตามหลักฐาน)
+
+คำว่า PARTIAL หมายถึงทดลองได้บางส่วนตาม Owner รายงาน แต่ยังไม่ครบเงื่อนไขในแถวนั้น ห้ามเติม PASS จาก automated tests
+
+วันรายงาน Owner: 22 กันยายน 2026 · Staging URL: https://web-staging-cb6f.up.railway.app/ · release SHA: 4fcb29e · ผู้ช่วยเทคนิค: Codex
 
 ผู้ตรวจ: Owner โอ๋ / Admin ฟ้า / ช่าง T1 (ใช้รหัสแทนชื่อจริงใน Git) · [Checklist ก่อนเริ่ม](M1_LINE_PILOT_CHECKLIST.md)
 
@@ -10,16 +26,16 @@
 
 | ข้อ | ใครทำ / ขั้นตอน | สิ่งที่ควรได้ | ผลจริง / หลักฐาน |
 | --- | --- | --- | --- |
-| U01 Login ตามบทบาท | โอ๋เข้า OWNER ฟ้าเข้า ADMIN ช่างเข้า TECH; operator ใช้ PM ทดสอบที่มีสิทธิ์ B | บทบาทตรงบัญชี; TECH/PM เปิดหน้าสร้างผู้ใช้หรือ directory ไม่ได้; ADMIN ไม่เห็นค่าแรง/Payroll; logout แล้ว URL ที่ต้อง login เข้าไม่ได้ | NOT_RUN |
-| U02 Project A ไม่มี Site/Job | ฟ้าสร้างลูกค้าสมมติ แล้วสร้าง A โดยไม่เพิ่ม Site/Job | บันทึกได้ มีรหัส A; ไม่บังคับ/ไม่ถาม Job ตอนมอบหมาย ไม่มี Job ปลอม | NOT_RUN |
-| U03 มอบหมายช่าง | ฟ้าเลือก A แล้วมอบหมาย T1 ระดับ Project | T1 เห็น A บน Web; บัญชี TECH-unassigned มองไม่เห็น A รวม URL ตรง; ส่งซ้ำไม่สร้าง assignment ซ้ำ | NOT_RUN |
+| U01 Login ตามบทบาท | โอ๋เข้า OWNER ฟ้าเข้า ADMIN ช่างเข้า TECH; operator ใช้ PM ทดสอบที่มีสิทธิ์ B | บทบาทตรงบัญชี; TECH/PM เปิดหน้าสร้างผู้ใช้หรือ directory ไม่ได้; ADMIN ไม่เห็นค่าแรง/Payroll; logout แล้ว URL ที่ต้อง login เข้าไม่ได้ | PARTIAL — Owner/TECH Login และ Logout-reload PASS; Admin/PM ยังไม่ยืนยัน |
+| U02 Project A ไม่มี Site/Job | ฟ้าสร้างลูกค้าสมมติ แล้วสร้าง A โดยไม่เพิ่ม Site/Job | บันทึกได้ มีรหัส A; ไม่บังคับ/ไม่ถาม Job ตอนมอบหมาย ไม่มี Job ปลอม | PARTIAL — Owner สร้างลูกค้า/โครงการ PASS; Admin และการเว้น Site/Job ยังไม่ยืนยัน |
+| U03 มอบหมายช่าง | ฟ้าเลือก A แล้วมอบหมาย T1 ระดับ Project | T1 เห็น A บน Web; บัญชี TECH-unassigned มองไม่เห็น A รวม URL ตรง; ส่งซ้ำไม่สร้าง assignment ซ้ำ | PARTIAL — Owner มอบหมาย PASS; TECH เปิดโครงการ 1 รายการได้/ไม่มีเมนูผู้ดูแล; ข้ามโครงการ/URL ตรง/ซ้ำ ยังไม่ยืนยัน |
 | U04 Project B มี Site/Job | ฟ้าสร้าง Site B, B ใต้ลูกค้าเดียวกัน และ Job B | B มี Site/Job ถูกต้อง; ในรอบแรกยังไม่มอบหมาย T1 จึงไม่เห็น B; operatorลองส่ง Job B ใต้ A ต้องถูกปฏิเสธ | NOT_RUN |
 | U05 เชื่อม LINE | ฟ้าและ T1 พิมพ์ “เชื่อมบัญชี” ส่วนตัว เปิดลิงก์ login บัญชีตนและยืนยัน | บัญชีถูกคู่; ไม่มีการเปลี่ยนเจ้าของ LINE เดิมเงียบๆ; ลิงก์หมดอายุ/ใช้แล้วเชื่อมใหม่ไม่ได้ ต้องขอลิงก์ใหม่ | NOT_RUN |
 | U06 งานของฉัน | T1 พิมพ์ “งานของฉัน”; operatorตรวจบัญชีไม่รับมอบหมายแยกบน Web | T1 ได้ A ไม่มี B; ก่อนเชื่อม LINE ไม่ได้รับชื่อโครงการ; รหัส Project ของคนอื่นใช้เดาเปิดผ่าน Web ไม่ได้ | NOT_RUN |
 | U07 ผูกกลุ่ม | ฟ้าสร้าง code ของ A แล้วใช้ LINE ฟ้าส่งในกลุ่ม; ลองผู้ส่งผิด/หมดอายุ/ใช้ซ้ำแยกเป็นกรณีลบ | mapping กลุ่ม→A ถูกต้อง ตรวจหลังบ้านโดย Codex; กรณีลบไม่ผูก; ในกลุ่มไม่มีชื่อคน/รายละเอียดงาน/เงิน; เป็นสมาชิกกลุ่มไม่ได้รับสิทธิ์ A อัตโนมัติ | NOT_RUN |
 | U08 ถอนสิทธิ์ | ฟ้าถอน A ของ T1 แล้ว T1 refresh Web/เปิด URL เดิม/พิมพ์งานใหม่ จากนั้นฟ้ามอบหมาย T1 ให้ Job B | A หายและ URL ถูกปฏิเสธ; หลังมอบหมาย B เห็น B เท่านั้น การตรวจรวมช่วงคิวข้อความด้วยผล automated recheck | NOT_RUN |
-| U09 Restart | Codex จด counts และ IDs แล้ว restart Web/API/worker บน provider โดยไม่ลบ DB; T1 login ใหม่ถ้าจำเป็น | A/B/Site/Job/assignment/audit/LINE binding อยู่ครบ ส่งงานใหม่ได้ ไม่มีข้อความเก่าถูกส่งซ้ำ | NOT_RUN |
-| U10 Restore | Codex backup → restore ฐานใหม่ว่างและแยกระบบ ปิด LINE worker; ฟ้า/โอ๋ login ระบบ restore | จำนวน/IDs/ความสัมพันธ์ตรงเดิม T1 ยังเห็นเฉพาะ B; sessions/codes เก่าใช้ไม่ได้; รหัสผ่านทดสอบใหม่ใช้ login ได้ จดเวลาสำรอง/กู้คืนและ checksum | NOT_RUN |
+| U09 Restart | Codex จด counts และ IDs แล้ว restart Web/API/worker บน provider โดยไม่ลบ DB; T1 login ใหม่ถ้าจำเป็น | A/B/Site/Job/assignment/audit/LINE binding อยู่ครบ ส่งงานใหม่ได้ ไม่มีข้อความเก่าถูกส่งซ้ำ | PARTIAL — Web/API Restart และ checksum IDs คงเดิม PASS 2026-09-23; LINE/worker ยังปิด |
+| U10 Restore | Codex backup → restore ฐานใหม่ว่างและแยกระบบ ปิด LINE worker; ฟ้า/โอ๋ login ระบบ restore | จำนวน/IDs/ความสัมพันธ์ตรงเดิม T1 ยังเห็นเฉพาะ B; sessions/codes เก่าใช้ไม่ได้; รหัสผ่านทดสอบใหม่ใช้ login ได้ จดเวลาสำรอง/กู้คืนและ checksum | PARTIAL — native restore ชุดสมมติแยก/data comparison PASS; Web Login บนฐาน restore NOT_RUN ดู M1_STAGING_RESTORE_DRILL |
 
 U05/U07 กรณีหมดอายุ: ใช้ลิงก์/รหัสใหม่รอเกิน 10 นาทีแล้วลอง ต้องปฏิเสธ จากนั้นขอรหัสใหม่ อย่าปรับนาฬิกาฐาน staging เพื่อเร่งทดสอบ; กรณีใช้ซ้ำทดสอบกับรายการที่สำเร็จแล้วโดยไม่เปิดเผยค่าในรายงาน
 

@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## 23 กันยายน 2026 — Restart, Logout และ Rate Limit
+
+PASS: ยืนยัน Restart API/Web จากการยืนยันใน provider และ startup/ready log รอบที่สอง; / และ /api/health กลับมา HTTP 200, database ready. Read-only checksum ของชุด IDs ใน users/employees/customers/sites/projects/jobs/assignments/audit ตรง baseline ก่อน restart โดยไม่พิมพ์ ID หรือ row data. ชุด restore สมมติ counts ยังครบ
+
+PASS: Owner Logout แล้ว reload กลับหน้า Login; Owner Login บัญชี TECH สมมติสำเร็จ บน browser เห็น 1 project card, ไม่มีเมนูบัญชีผู้ใช้/ลูกค้าและทีม/สร้างโครงการ; เมื่อเปิดรายละเอียดไม่มีปุ่มแก้ไขหรือมอบหมาย บันทึกเฉพาะผล ไม่บันทึกชื่อหรือข้อมูลจริง ยังไม่ใช่ PASS ของ cross-project/revoke
+
+PASS: ทดสอบบน API container จริงผ่าน loopback เพื่อไม่กินโควตาผู้ใช้ Web: login malformed body 12 ครั้งให้ 400 จำนวน10 และ 429 จำนวน2; health 130 ครั้งให้ 200 จำนวน120 และ 429 จำนวน10 แม้เปลี่ยน X-Forwarded-For ทุกครั้ง ไม่มี password/บัญชีที่ใช้ทดสอบ ไม่มีการล็อกบัญชีจริง ผลนี้ไม่ใช่ public-edge/multi-user rate-limit test
+
+NOT_RUN: การเปิด privileged API โดยตรงผ่าน browser ถูก client navigation block จึงไม่อนุมานว่าได้ HTTP403. Secure Cookie attributes / expired-token replay ผ่าน CI แต่ยังไม่มีหลักฐาน live browser header/replay. Admin/TECH/PM cross-project/revocation UAT ยังไม่ครบ รอ Admin สมมติ Login. เครดิต Trial ล่าสุด $4.94 /30 days; ไม่มีการอัปเกรด
+
+## 23 กันยายน 2026 — ผล Restore และขั้นก่อน LINE
+
+Owner ให้ดำเนินการ process ถัดไปและถามว่าเริ่ม LINE ได้หรือยัง: ยังคง LINE=false จน gate A–E และผู้ทดลองพร้อม ไม่ Merge/M2/Production
+
+Native pg_dump/pg_restore ซ้อมบน PostgreSQL 18 ใน Trial เดิม PASS โดยสร้าง source/restore ใหม่แยกจากฐานที่มีข้อมูลจริง ใช้เฉพาะ schema/migration metadata และสร้างแถว PILOT สมมติใหม่ ข้อมูล 9 business tables และ migration history เทียบทุก column/row ตรงกัน; counts และ Project A ไม่มี Site/Job, B มี Site/Job ผ่าน; transient sessions/codes/queues ไม่ถูกคืนมา Runtime Web ไม่มีสิทธิ์ CONNECT เข้าฐาน restore ดู M1_STAGING_RESTORE_DRILL.md สำหรับ checksum/ขอบเขต ไม่ใช่ backup ของข้อมูลจริงหรือ off-provider DR
+
+Restart UI ครั้งก่อน timeout ก่อนยืนยัน จึงยังไม่ลง PASS จากการกดปุ่ม ขณะนี้ตรวจต่อ ส่วน Owner UAT 5 flow เดิม PASS ตามรายงาน แต่สิทธิ์แยกบทบาท/ถอนสิทธิ์/Logout ยัง NOT_RUN
+
+## 22 กันยายน 2026 — Owner ทดลอง Web และแก้สถานะที่อ่านไม่ตรงกัน
+
+Owner รายงาน PASS: Login, สร้างพนักงาน, สร้างลูกค้า, สร้างโครงการ และมอบหมายคนเข้าโครงการ ไม่ได้ระบุว่าทดสอบทุกบทบาท/Project ไม่มี Site/Job/การถอนสิทธิ์ จึงไม่เติม PASS ให้ UAT ข้อเหล่านั้น ตรวจใน browser พบ session ที่เข้าสู่ระบบอยู่โดยไม่อ่านรหัสผ่านหรือบันทึกรายการจริง
+
+Owner ยืนยันว่ามีข้อมูลจริงปนใน Staging จึงหยุด backup/restore จากฐานชุดนี้; ไม่คัดลอกข้อมูลจริง ไม่แก้/ลบรายการเดิม ทดสอบต่อเฉพาะชุดสมมติแยก ดู D-019
+
+ปรับ PROJECT_STATUS เป็นสรุปภาษาไทยปัจจุบัน พร้อมตาราง CODED/TESTED/DEPLOYED/UAT และ 3 งานที่ Owner ทดลองต่อได้ ย้ายรายละเอียดเก่าไป M1_STAGING_HISTORY เพื่อไม่ให้สถานะเก่าปะปน เพิ่มป้ายอ้างอิงในเอกสารโฟลเดอร์หลักที่ยังพัก M2 โดยเก็บงานเดิมไว้ ไม่รวมโค้ด M2 เข้า PR #2
+
+ไม่มี application/schema/permission change ในการปรับเอกสารนี้ ผล Local/CI ของ release 4fcb29e อ้างอิงผลเดิม ไม่อ้างว่ารันทดสอบใหม่จากการแก้เอกสาร LINE=false, Trial only, no merge/production/M2
+
 ## Owner Web login handoff — 2026-09-22
 
 Release 4fcb29e deployed: API 66ce64bf-c1f8-4a1a-abc2-5292b33c734c and Web 4202ccc1-70f1-480b-af33-8b1a7c8da635 ACTIVE; Details on both independently match full commit and M1 branch. Post-deploy / and /api/health returned 200, database ready. API startup message verified; limited credential-pattern scan negative. Owner browser handoff pending. This evidence-only documentation update does not change deployed application code.
