@@ -1,14 +1,31 @@
 # M1 Test Evidence — 2026-09-21
 
-## M1 Alignment v3.0 — 23 กันยายน 2026
+## M1 Alignment v3.0 — ผลตรวจ 23 กันยายน 2026
 
-Baseline543a899: CI35863738772SUCCESS, PR#2Draft/notmerged/mergeable, behindmain0; migrations001/002; StagingHTTPShealth200/database readyแบบอ่านอย่างเดียว ไม่ใช้ข้อมูลจริงทดสอบ
+Code commit: c8a522db94f473c2fd81b048cb20e2f876cb0a84 บน branch codex/milestone-1-foundation; [Foundation CI 35872122374](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35872122374), verify job 107218612210 SUCCESS ทุก step
 
-Local node test runner34:32PASS/2native-onlySKIP/0FAIL; typecheck/NextproductionbuildPASS; M024+14+7=45PASS; diffcheckPASS. tests/alignment.test.tsเพิ่มdate/stateunit, seedidempotency, richfields, disabledhistory/snapshot, PMallow/deny/audit, TECHjobscope, concurrent24Projects+24Jobs, legacy001/002→003backfill+rerun+restore. Migration001/002ไม่มีdiff
+| การตรวจ | ผล |
+| --- | --- |
+| Local และ CI PGlite suite | PASS 32 / SKIP 2 native-only / FAIL 0 รวม 34 tests |
+| Native PostgreSQL 17 suite | PASS 34 / SKIP 0 / FAIL 0 |
+| Type Check / Next production build | PASS ทั้ง Local และ CI |
+| Docker API/Web build | PASS ใน CI |
+| Web container smoke | PASS ใน CI ไม่มี public deployment |
+| API container smoke / TLS / runtime role / backup CLI | PASS ในฐาน CI แยก; CA ไม่ถูกต้องถูกปฏิเสธ |
+| M0 regression | PASS 24+14+7 = 45 checks |
+| Migration 001/002 → 003 / seed replay / restore | PASS ด้วยข้อมูลสมมติ; 001/002 ไม่มี diff |
+| Git diff check | PASS |
+| Alignment Staging migration / browser UAT / Real LINE | NOT_RUN ไม่ใช้ผล Local/CI แทน |
 
-NativePostgreSQL/containerต้องรอCIใหม่ ไม่มีDocker/PostgresCLIในPATHบนเครื่อง ข้อจำกัด: ผลlocalไม่ใช่liveUAT; Stagingยัง4fcb29eตามหลักฐานdeployเดิม; healthรอบนี้ไม่ได้ยืนยันsourcecommitใหม่ ไม่มีLINEจริง
+Coverage: Project A ไม่มี Site/Job, B มี Site/หลาย Job; ประเภทเพิ่ม/แก้ชื่อ/เรียง/ปิดและข้อมูลเดิมยังใช้ได้; concurrent 24 Projects + 24 Jobs; PM assign/revoke เฉพาะ TECH ใน Project ตนและ Audit ครั้งเดียว; deny role/user/PM appointment/cross-project/OWNER/ADMIN/PM targets; ADMIN/OWNER regression; TECH job scope; legacy backfill, migrate ซ้ำ, Backup/Restore/counter continuity และออกรหัสใหม่หลัง Restore
 
-## M1 Alignment v3.0 — กำลังพัฒนา (Codex)
+รหัสผ่านบัญชีสมมติสุ่มในหน่วยความจำ ไม่มีบัญชีจริงจาก Staging ผล Local รอบสุดท้าย 44.00 วินาที ไม่พบ fail; native-only 2 รายการผ่านจริงใน CI Native run ไม่ได้ skip
+
+Baseline543a899: CI35863738772 SUCCESS, PR#2 Draft/not merged/mergeable, behind main 0; Staging HTTPS health200/database ready แบบอ่านอย่างเดียว รุ่นที่ deploy ตามหลักฐานเดิมยัง 4fcb29e ไม่ได้ตรวจ source commit สดจาก provider ในรอบนี้
+
+ข้อจำกัด: CI ใช้ PostgreSQL17 แต่ Railway เดิม18; form render ไม่ใช่ browser E2E/Owner UAT รุ่นใหม่ ไม่มี Docker/PostgreSQL CLI ใน PATH เครื่อง local จึงใช้ CI เป็นหลักฐาน native/container; ไม่ใช้ข้อมูลจริงทดสอบ ไม่มี deployment หรือ LINE จริง เอกสารหลักฐานที่ commit ตามหลังเป็น docs-only ดู [release manifest](M1_ALIGNMENT_RELEASE.md)
+
+## ประวัติเริ่มงาน M1 Alignment v3.0 (สถานะปัจจุบันอยู่ด้านบน)
 
 ฐานก่อนแก้: 543a899; CI 35863738772 SUCCESS; PR #2 Draft/ไม่ Merge/ไม่มี conflict และไม่ตกหลัง origin/main; executable migrations มี 001/002 เท่านั้น HTTPS Staging health 200/database ready แบบอ่านอย่างเดียว รุ่นที่ deploy ตามหลักฐานเดิม 4fcb29e ไม่ได้ deploy ใหม่
 

@@ -1,51 +1,53 @@
 # PROJECT STATUS — M1 Alignment v3.0
 
-อัปเดต 23 กันยายน 2026 · Module owner: Codex · Branch codex/milestone-1-foundation · Draft PR #2
+อัปเดต 23 กันยายน 2026 · ผู้รับผิดชอบ module: Codex · Branch codex/milestone-1-foundation · Draft PR #2
 
 ## ตอนนี้ถึงไหน
 
-Foundation เพิ่มข้อมูล Project/Job, ประเภทที่ตั้งค่าได้ และสิทธิ์ PM ตาม D-022 แล้วในโค้ด กำลังตรวจ CI ก่อนเสนออนุมัติย้ายรุ่น ยังไม่ deploy migration003 หรือ Web/API รุ่นใหม่ไป Staging และไม่เริ่ม M2/M3/Expense/Payroll/Real LINE
+พัฒนาและทดสอบ M1 Alignment ผ่าน Local และ CI แล้ว โค้ด c8a522db94f473c2fd81b048cb20e2f876cb0a84 พร้อมเสนออนุมัติ Deploy ไป Staging โดยต้องผ่านเงื่อนไข Backup/maintenance/preflight ก่อนลงมือ ยังไม่ได้ Deploy migration 003 หรือ Web/API รุ่นใหม่ และยังไม่ผ่าน Owner UAT ของรุ่นนี้
 
-| Definition of Done | สถานะ / หลักฐาน |
+| Definition of Done | สถานะและหลักฐาน |
 | --- | --- |
-| DESIGNED | Master v3.0 + D-021/D-022/D-023 + ADR-011 และ migration plan |
-| CODED | Types5/10, operational fields, code generation, PM TECH assignment/revoke, scoped TECH jobs, audit, Web forms |
-| TESTED_LOCAL | 32 PASS / 2 native-only SKIP / 0 FAIL; typecheck/build PASS; M0 45 checks PASS |
-| TESTED_INTEGRATION | รอ CI Native PostgreSQL และ Docker รุ่นใหม่; ไม่ใช้ CI baselineแทนรุ่นนี้ |
-| DEPLOYED_STAGING | รุ่นเก่า4fcb29eเท่านั้น; Alignment003 NOT_DEPLOYED |
-| REAL_INTEGRATION_TESTED | Real LINE NOT_RUN/ยังปิด |
-| UAT_PASSED | M1 ยังไม่ accepted; Ownerผ่าน5flowรุ่นเก่า/ADMIN PILOT A/Bบางส่วน ไม่ใช้แทนAlignmentUAT |
-| PRODUCTION_READY | NO; PR#2ไม่merge |
+| DESIGNED | PASS — Master v3.0, D-021/D-022/D-023, ADR-011 และแผน migration |
+| CODED | PASS — Types 5/10, ข้อมูล Project/Job, รหัสไม่ซ้ำ, PM จัดทีม TECH, Audit และ Web forms |
+| TESTED_LOCAL | PASS — 32 PASS / 2 native-only SKIP / 0 FAIL; Type Check และ Production Build ผ่าน; M0 45 checks ผ่าน |
+| TESTED_INTEGRATION | PASS — [CI 35872122374](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35872122374): Native PostgreSQL 17 รวม 34 PASS / 0 SKIP / 0 FAIL, Docker API/Web build และ smoke ผ่าน |
+| DEPLOYED_STAGING | NOT_DEPLOYED สำหรับ Alignment; หลักฐาน deployment ล่าสุดยังเป็นรุ่น 4fcb29e |
+| REAL_INTEGRATION_TESTED | NOT_RUN — Real LINE ยังปิด |
+| UAT_PASSED | NOT_RUN สำหรับ Alignment; ผล Owner รุ่นเก่าไม่ใช้แทนการรับรุ่นนี้ |
+| PRODUCTION_READY | NO — ไม่ Merge PR #2 และไม่ Deploy Production |
 
-## สิ่งที่เพิ่มและสิ่งที่คงไว้
+## สิ่งที่เพิ่ม
 
-- Project Typeเริ่ม5: Installation/Service/Survey/POC/Other ตามคำตอบ Owner; Job Type10 ตามMaster เพิ่ม/แก้ชื่อ/เรียง/เปิดปิดผ่านAdmin/Owner ไม่hardcodeในFrontend
-- Projectรองรับtype/PM/วันเริ่ม/วันจบ/priority/description/progressและ4สถานะ; Site/Jobยังoptional ไม่มีJobปลอม
-- Jobรองรับtype/description/ผู้รับผิดชอบ/วันที่วางแผน/5สถานะ/progress/creator/time; TECH job-onlyเห็นเฉพาะJobตน
-- PMเพิ่มถอนเฉพาะTECHในProjectที่ตนเป็นPM ห้ามแตะบัญชี/Role/Owner/Admin/PMassignment การตรวจอยู่Backendพร้อมaudit
-- รหัสใหม่PRJ-YYMM-NNNและJOB-projectNamespace-NNใช้atomiccounter/registry รหัส/UUIDเดิมไม่เปลี่ยน
-- Expense D-022เป็น[ข้อกำหนดทดสอบอนาคต](M3_EXPENSE_TEST_PLAN.md) ไม่มีExpenseAPI/table/menu
+- Project Type เริ่ม 5 ประเภทตาม Owner: Installation, Service, Survey, POC, Other; Job Type เริ่ม 10 ประเภท Admin/Owner เพิ่ม แก้ชื่อ เรียง และเปิด/ปิดได้ ประเภทมาจากฐานข้อมูล
+- Project แสดงลูกค้า ประเภท PM วันที่ ความสำคัญ รายละเอียด ความคืบหน้า และสถานะ; Site/Job ยังไม่บังคับ ไม่มีรายการปลอม
+- Job มีประเภท รายละเอียด ผู้รับผิดชอบ วันที่วางแผน 5 สถานะ ความคืบหน้า และผู้สร้าง/เวลา; TECH ที่มอบหมายเฉพาะ Job เห็นเฉพาะ Job ของตน
+- PM เพิ่ม/ถอนเฉพาะ TECH ใน Project ที่ตนเป็น PM ตรวจ Backend พร้อม Audit ห้ามเปลี่ยนบัญชี Role หรือแต่งตั้ง PM
+- รหัสใหม่ PRJ-YYMM-NNN และ JOB-projectNamespace-NN ใช้ตัวนับและทะเบียนรหัสใน transaction รหัสเดิมกับ UUID ไม่เปลี่ยน
+- Expense D-022 อยู่ใน [ข้อกำหนดทดสอบอนาคต](M3_EXPENSE_TEST_PLAN.md) เท่านั้น ไม่มี Expense/Payroll API, table หรือ placeholder
 
-## Migration / ความเสี่ยง
+## Migration และความเสี่ยงที่เหลือ
 
-เพิ่มเฉพาะ003_m1_alignment.sql ไม่แก้001/002 BackfillOther/defaults/null; legacyJobcreator/dateอ้างProjectเป็นfallback; primaryPMเติมเมื่อมีmembershipเดียว ที่มีหลายPMไม่ลบสมาชิกเก่า ดู[แผนDryRun/Recovery](M1_ALIGNMENT_MIGRATION_PLAN.md)
+เพิ่ม 003_m1_alignment.sql แบบ append-only ไม่แก้ 001/002 ทดสอบย้ายข้อมูลสมมติจาก 001/002, backfill, รันซ้ำ, Backup/Restore และออกรหัสต่อหลัง Restore ผ่านแล้ว ดู [แผน Dry Run / Recovery](M1_ALIGNMENT_MIGRATION_PLAN.md)
 
-Backupformat2เพิ่มtypes/counters/reservations Format1ต้องกู้ด้วยรุ่นเก่าลงฐานใหม่ก่อนmigrate APIรุ่นเก่าstrictschemacheckไม่รองรับ003ตอนrestart ต้องmaintenanceและdeployคู่กัน ใช้migrationroleแยก/grantsเฉพาะตารางใหม่ ไม่มีDDLในruntime
+ข้อมูลเดิมที่ไม่ทราบประเภทใช้ Other ความคืบหน้าเริ่ม 0 วัน/ผู้รับผิดชอบที่ไม่ทราบเป็น NULL ข้อมูล Job เก่าใช้ผู้สร้าง/เวลาของ Project เป็น fallback ไม่อ้างว่าเป็นประวัติ Job เดิม Primary PM เติมเมื่อมีสมาชิก PM คนเดียว กรณีหลายคนเก็บสมาชิกเดิมทั้งหมด
 
-ฐานStagingมีข้อมูลจริงปน ห้ามใช้ทดสอบ ไม่คัดลอก/ลบ/แก้รายการจริงรอบนี้ การสำรองและrecoveryข้อมูลจริงต้องอยู่ในขอบเขตที่Ownerอนุมัติก่อนmigration
+Backup format 2 เพิ่ม types/counters/reservations; format 1 ต้องกู้ด้วยรุ่นเก่าลงฐานใหม่ก่อน migrate API รุ่นเก่าไม่รองรับ schema 003 ตอน restart จึงต้องหยุด writes ชั่วคราวและ Deploy Web/API คู่กัน ใช้ migration role แยกจาก runtime
 
-## หลักฐานก่อนแก้
+Staging มีข้อมูลจริงปน ยังไม่คัดลอก/ลบ/แก้ข้อมูลเหล่านั้น CI ใช้ PostgreSQL 17 ส่วน Railway เดิมใช้ 18; ยังต้องตรวจรุ่นจริงหลังได้รับอนุมัติ Web form render/API tests ไม่ใช่ browser E2E หรือ responsive/UAT ของรุ่นใหม่
 
-Fetch/fast-forwardถึง543a899; [CI baseline](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35863738772) SUCCESS; PR#2Draftไม่Merge/ไม่มีconflict/behindmain0; executable001/002 บนbranch; StagingHTTPShealth200/database readyแบบอ่านอย่างเดียว ไม่อนุมานว่าAlignmentdeployแล้ว
+## สิ่งที่ Owner ต้องทำต่อ
 
-## ขั้นต่อไปและสิ่งที่รอ Owner
+อนุมัติแผน Staging เป็นรอบเดียว โดยระบุช่วงหยุดใช้งานชั่วคราว และอนุญาต Backup ข้อมูลจริงแบบ private/encrypted พร้อมตรวจการกู้คืนในฐานแยกก่อน migration เมื่ออนุมัติแล้ว Codex จะตรวจเครดิต Trial และเงื่อนไขความปลอดภัยก่อนลงมือ หากไม่ผ่านจะหยุด ไม่อัปเกรดหรือเพิ่มบริการเสียเงินเอง
 
-1. Codex ตรวจCI Native PostgreSQL/containerและสรุปrelease/evidenceให้ครบ
-2. Ownerยังไม่ต้องสลับบัญชีทดสอบ รอรุ่นที่พร้อมตรวจเป็นรอบเดียว
-3. เมื่อtestsผ่าน ให้OwnerอนุมัติStagingmigration/deployพร้อมช่วงmaintenanceและprivatebackupที่กู้ได้ก่อนลงมือ; ขณะนี้ยังไม่อนุมัติ
+Owner ยังไม่ต้องสลับบัญชีทดสอบ รอ Codex ตรวจระบบอัตโนมัติบนชุดสมมติให้ครบหลัง approved deployment แล้วส่งตรวจหน้าจอและ flow เป็นรอบรวม
 
-สถานะตอนนี้: ยังไม่พร้อมDeployจนCIและpreflightพร้อม ไม่เปิดLINE ไม่ใช้บริการเสียเงิน/upgrade ไม่Merge PR#2 ไม่เริ่มM2/M3/Production
+สถานะ: **พร้อมเสนออนุมัติ Deploy Staging / WAITING_OWNER_APPROVAL** ยังไม่ใช่ M1 accepted หรือ READY_TO_MERGE ไม่เริ่ม M2/M3, Real LINE หรือ Production
 
-## ไฟล์กลาง
+## หลักฐานและไฟล์
 
-งานM1อยู่ที่ .local/m1-staging โฟลเดอร์หลักยังเป็นbranchM2ที่พักไว้ ห้ามนำmigration003_time_entries.sqlจากM2มาปนในM1 ดู[หลักฐาน](M1_TEST_EVIDENCE.md), [GapAnalysis](MASTER_V3_GAP_ANALYSIS.md), [ประวัติStaging](M1_STAGING_HISTORY.md)
+[รายการไฟล์และข้อจำกัด](M1_ALIGNMENT_RELEASE.md) · [Test Evidence](M1_TEST_EVIDENCE.md) · [Gap Analysis](MASTER_V3_GAP_ANALYSIS.md) · [ประวัติ Staging](M1_STAGING_HISTORY.md)
+
+Baseline ก่อนแก้ 543a899: fetch/fast-forward แล้ว, CI เดิมผ่าน, PR #2 Draft/ไม่มี conflict/ไม่ตกหลัง main; HTTPS health ของ Staging 200/database ready แบบอ่านอย่างเดียว ไม่อนุมานว่าโค้ดใหม่ deploy แล้ว
+
+งาน M1 อยู่ใน .local/m1-staging โฟลเดอร์หลักยังเป็น branch M2 ที่พักไว้ ไม่รวม migration003_time_entries.sql หรือการแก้ M2 เข้ามาใน PR #2 เอกสารที่บันทึกหลักฐาน CI หลัง code commit ไม่เปลี่ยน application/schema

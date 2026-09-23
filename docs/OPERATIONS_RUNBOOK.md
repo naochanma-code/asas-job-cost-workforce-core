@@ -1,18 +1,12 @@
 # Foundation operations — local / test only
 
-## Alignment 003 — ยังไม่อนุมัติ Staging
-
-ใช้ [Dry run/recovery](M1_ALIGNMENT_MIGRATION_PLAN.md) ก่อนย้ายรุ่น ต้อง backup ตามขอบเขตที่ Owner อนุมัติ, maintenance freeze, operator migrate ด้วย MIGRATION_ROLE=asas_m1_migrator และ grant-m1-alignment.sql โดยไม่ใช้ runtime ทำ DDL ห้าม provision roles ซ้ำกับ roles เดิม
-
-Backup format2 รวมtypes/counters/reservations ต้องschemaตรงและtargetไม่มี business data/seedยังไม่แก้ Format1ใช้รุ่นเก่าrestoreฐานใหม่ก่อนmigrate ไม่overwriteฐานเดิม ใช้บัญชีสมมติอัตโนมัติในtestsไม่รอOwnerสลับบัญชี
-
 ## M1 Alignment 003 — ต้องรอ Owner อนุมัติ Staging
 
 ใช้ [Dry Run / Recovery Plan](M1_ALIGNMENT_MIGRATION_PLAN.md) รุ่นใหม่เพิ่ม types/counters/fields ต้องรัน approved migration job ด้วย operator แยก runtime และ MIGRATION_ROLE=asas_m1_migrator ก่อน Deploy Web/API คู่กัน ห้ามชี้ฐานจริงทดสอบ รหัสผ่านสมมติสร้างอัตโนมัติใน tests ไม่ต้องให้ Owner สลับบัญชี
 
 Backup format 2 รวม types/counters/reservations และใช้ได้เฉพาะ schema checksum ตรงกัน; target ต้องไม่มี business data และ seed types ยังไม่แก้ Backup format 1 ให้ใช้รุ่นเก่า restore ลงฐานใหม่ก่อน migrate ไม่ overwrite ฐานเดิม ห้ามใช้ provision-m1-roles ซ้ำกับ roles ที่มีแล้ว; ใช้ grant-m1-alignment หลัง migration ที่อนุมัติแทน
 
-## Online staging update 2026-09-22
+## ประวัติการเตรียม Staging 2026-09-22 (สถานะปัจจุบันดู PROJECT_STATUS)
 
 Owner อนุมัติ Railway Trial ตาม D-017 แล้ว ดู [คู่มือ Railway](M1_RAILWAY_SETUP.md) แทนสถานะรอเลือก server ด้านล่าง ยังไม่ deploy สำเร็จหรือส่ง LINE จริง. production-mode API/worker ตรวจ schema เท่านั้น operator ต้อง migrate/bootstrap แยกก่อนเริ่ม runtime ไม่ให้ runtime ใช้ credential ผู้ดูแล DB
 

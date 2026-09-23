@@ -5,7 +5,8 @@
 - เพิ่ม append-only003: configurable Project Type5/Job Type10, operational Project/Job fields, safe backfill, atomic codes/counter/reservation; ไม่แก้001/002
 - Backend/UI รองรับประเภท/วัน/PM/ผู้รับผิดชอบ/status/progress พร้อม scoped PM TECH assignment/revoke และ audit; ไม่มีExpense/Payroll placeholders
 - Backup format2 รวมmaster/counters/registry, migration roleแยก, grant scriptเฉพาะตารางใหม่; dry-run/recoveryและExpenseD-022testplan
-- Local32PASS/2native-onlySKIP/0FAIL; typecheck/buildPASS; M0 45checksPASS. รอCI NativePostgreSQL/container ไม่มีStagingmigration/LINE/merge/production
+- Code c8a522d: Local 32 PASS/2 native-only SKIP; Native PostgreSQL CI 34/34 PASS; Type Check, Production Build, API/Web container build+smoke และ M0 45 checks PASS — [CI 35872122374](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35872122374)
+- บันทึก PROJECT_STATUS ภาษาไทยแยก CODED/TESTED/DEPLOYED/UAT พร้อม release manifest และแผน Dry Run/Recovery; พร้อมเสนออนุมัติ Staging แต่ยังไม่มี migration/deploy/LINE/merge/production
 
 ## 2026-09-23 — PM assignment และ Expense approval policy
 
