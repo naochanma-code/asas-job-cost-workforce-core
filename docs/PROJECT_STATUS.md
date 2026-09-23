@@ -1,5 +1,13 @@
 # PROJECT STATUS — สถานะปัจจุบัน
 
+## 23 กันยายน 2026 — รับ Master Prompt v3.0 และตรวจความเป็นไปได้
+
+Owner ส่ง Product Specification ใหม่และยืนยันให้ใช้เป็น Master หลัก จึงปรับเลขจากชื่อร่าง v2.4 เป็น **v3.0** เพื่อไม่ย้อนจาก Repository v2.5 พร้อมเพิ่ม [Gap Analysis](MASTER_V3_GAP_ANALYSIS.md)
+
+ผลตรวจ: **พัฒนาต่อได้โดยไม่รื้อ Foundation** โครง M1 ปัจจุบันสอดคล้องกับ optional Site/Job, UUID, roles, server authorization, audit, PostgreSQL และ LINE inbox/outbox ต้องเพิ่ม Project/Job Type แบบ configurable, Project/Job fields, code generator และ policy tests ด้วย migration ใหม่ก่อนปิด M1 ส่วน Work/OT/Expense/Financial/SMEMOVE/Payroll เป็น M2–M7 ตามลำดับ ไม่ถือว่าพร้อมจากการแก้เอกสาร
+
+รอบนี้เปลี่ยนเอกสารเท่านั้น: CODED application ไม่เปลี่ยน, migration ไม่มี, deployed release ยังเป็น 4fcb29e, LINE ยังปิด, M1 ยัง DEPLOYED_STAGING / PARTIAL_UAT / NOT_ACCEPTED, PR #2 ยัง Draft และ M2 ยัง PAUSED
+
 ## 23 กันยายน 2026 — ปรับ UX และทดสอบอัตโนมัติก่อนส่ง Owner
 
 Owner ขอให้พัฒนาและทดสอบเป็นชุดก่อนส่งตรวจ ไม่ต้องสลับบัญชีทีละขั้น จึงพักคำขอ Login TECH ก่อนหน้า ไม่รอ Owner เพื่อทดสอบอัตโนมัติ ใช้บัญชี OWNER/ADMIN/PM/TECH ที่ชุดทดสอบสร้างเองในฐานสมมติแยก รหัสผ่านสุ่มในหน่วยความจำ ไม่พิมพ์/บันทึกและไม่ใช้กับ Staging ที่มีข้อมูลจริง
