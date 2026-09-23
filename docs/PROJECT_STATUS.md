@@ -1,5 +1,11 @@
 # PROJECT STATUS — สถานะปัจจุบัน
 
+## 23 กันยายน 2026 — Owner ยืนยัน PM assignment และ Expense approval
+
+Accepted D-022: PM เพิ่ม/ถอน TECH ได้เฉพาะ Project ที่รับผิดชอบ ห้ามสร้างผู้ใช้/เปลี่ยน Role/แต่งตั้ง PM และต้อง Audit; ADMIN/OWNER อนุมัติ Expense ของตนเองได้ PM/TECH อนุมัติไม่ได้ การแก้หลังอนุมัติใช้ correction/revision/reversal ไม่แก้ ledger แบบเงียบ
+
+รอบนี้อัปเดต Master/Permission/Decision/Gap Analysis เท่านั้น Application code, migration และ deployed release ยังไม่เปลี่ยน PM policy ต้อง implement/test ใน M1; Expense approval/correction อยู่ M3 ห้ามเริ่ม M3 ก่อนปิด Gate ก่อนหน้า
+
 ## 23 กันยายน 2026 — รับ Master Prompt v3.0 และตรวจความเป็นไปได้
 
 Owner ส่ง Product Specification ใหม่และยืนยันให้ใช้เป็น Master หลัก จึงปรับเลขจากชื่อร่าง v2.4 เป็น **v3.0** เพื่อไม่ย้อนจาก Repository v2.5 พร้อมเพิ่ม [Gap Analysis](MASTER_V3_GAP_ANALYSIS.md)
