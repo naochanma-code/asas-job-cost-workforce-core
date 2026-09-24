@@ -1,6 +1,18 @@
 # M1 Test Evidence — 2026-09-21
 
-## 24 กันยายน 2026 — แก้ enrollment รับรหัสอย่างเดียว (ยังไม่ Deploy)
+## 24 กันยายน 2026 — ลงทะเบียนจริงครบ / hotfix DEPLOYED
+
+LINE_ENROLLMENT_REAL PASS: Ownerแจ้งได้รับข้อความแล้ว; operatorกดตรวจผลจากOwnerpageก่อนhotfixและพบได้รับแล้ว3คน/1กลุ่มครบ. เป็นรอบใหม่ที่ส่งคำสั่งเต็มสำเร็จบนAPI84df39c ไม่ใช่หลักฐานว่าbarecodeผ่านliveก่อนแก้. เก็บexactIDsในRailway APIVariablesผ่านUIแบบส่วนตัว ตรวจstagedpatchมีเฉพาะLINE_TEST_USER_IDS/LINE_TEST_GROUP_IDS แล้วcommit skipDeploys; workerอ้างอิงAPIสองค่านี้ ตรวจตรงกันและworkerยังfalse. ไม่บันทึกIDs/codes/messagesในGit/Chat/Log ไม่ต้องให้Ownerลงทะเบียนซ้ำหลังrestart
+
+Hotfix D-031 CODED/TESTED/DEPLOYED: d5aa5675b426408609166ebf0744dc3a557d3d1e, APIdeployment8e0b8403-c007-4f50-a0e3-7ad4e4a17f9b SUCCESS; Webยัง84df39c ไม่มีmigrationหรือWebchange. [CI36025270535](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36025270535) SUCCESS:46PASS/2nativeSKIP แล้วNativePG48PASS/0SKIP; typecheck/productionbuild/API+Webcontainers/smoke/M0 PASS
+
+Post-deploy PASS27checks: app.injectในprocessแยกบนdeployedcodeกับruntimePostgreSQL ใช้Owner/LINE IDs/รหัสสมมติ ไม่แตะรอบOwnerจริง. ตรวจTLS/schema/runtimeprivileges, barecode+คำสั่งเต็ม, unrelatedtext/duplicateuser/replay/ผู้ส่งgroupยังไม่สมัครถูกปฏิเสธ, complete3+1, businessLINE=false, queue/account/bindingcountsไม่เปลี่ยน,logout; ปิดfixtureOwnerหลังตรวจ. ไม่ใช่27HTTPchecksหรือliveaccountlink
+
+Public /api/health200; official LINE webhook test success=true/statusCode200; endpointตรงWebStagingและactiveหลังhotfix. API LINE_ENABLED=false / LINE_ENROLLMENT_ENABLED=true; workerfalseและยังไม่deploy ไม่ส่งแชทจากระบบในรอบนี้. Enrollmentstateในmemoryอาจหมดอายุแต่scopeเก็บในRailwayแล้ว
+
+NOT_RUN: projectallowlist, privateworker lifecycle, liveproxy/edgeครบ, realaccountlink/JOBS/group/revoke/expiry และOwnerUATรวม. ไม่Merge/M2/M3/Production/เพิ่มบริการหรืออัปเกรดแผน. Ownerไม่ต้องทำซ้ำตอนนี้ รอCodexปิดtechnicalgatesก่อนเปิดคำสั่งLINE
+
+## ประวัติก่อน hotfix — วิเคราะห์ enrollment รับรหัสอย่างเดียว
 
 Ownerแจ้งส่งครบ แต่ GETผลรอบปัจจุบันยัง0/3และ0/1 ตรวจHTTPmetadataพบWebhook200หลายครั้ง endpointactiveถูกต้อง deploymentไม่เปลี่ยน. เปรียบเทียบเฉพาะข้อความที่แสดงในOAทดสอบกับรหัสในหน้าเว็บในหน่วยความจำ: มีตัวรหัสตรง แต่ไม่มีprefixคำสั่ง ไม่เก็บข้อความ/รหัส/IDsในหลักฐาน
 

@@ -1,10 +1,10 @@
 # M1 LINE Pilot Checklist
 
-สถานะล่าสุด24กันยายน: Ownerอนุมัติpilotและเปลี่ยนWebhookแล้ว; API/Web84df39c deployed, REAL_WEBHOOK_VERIFY PASS, enrollmentพร้อมผ่าน /line-pilot; businessLINE=false/workerยังไม่deploy. ขั้นต่อไปรับ3คน1กลุ่มและตั้งexactProjectallowlistตาม [Readiness](M1_LINE_PILOT_READINESS.md). ข้อความก่อนหน้านี้ด้านล่างเป็นประวัติ ไม่ต้องขออนุมัติขอบเขตเดิมซ้ำ
+สถานะล่าสุด24กันยายน: Enrollmentจริงครบ3คน/1กลุ่มและpersistในRailway API/workerแล้ว; API d5aa567/Web84df39c deployed, CI NativePG48/48และpostdeploy27checksผ่าน, WebhookVerifyจริงผ่านซ้ำ. businessLINE=false/workerยังไม่deploy เหลือProjectallowlistและtechnicalgates. ไม่ให้Ownerทำenrollmentซ้ำ ดู [Readiness](M1_LINE_PILOT_READINESS.md). Checklistด้านล่างเป็นรายการUATที่ต้องบันทึกผลแยก ไม่ใช่ถือว่าผ่านทั้งหมด
 
-สถานะ PREPARED / NOT_READY_TO_ENABLE / REAL_LINE_NOT_RUN · 24 กันยายน2026
+สถานะ ENROLLMENT_PASS / NOT_READY_TO_ENABLE_BUSINESS_LINE · 24 กันยายน2026
 
-OwnerยืนยันJobสร้างได้แล้ว; Web/APIและmanualBackupRestoreมีหลักฐานผ่านตาม [สถานะปัจจุบัน](PROJECT_STATUS.md) แต่ยังไม่ใช่M1accepted. Read-only preflightพบLINE=false, LINEconfigยังไม่ตั้งและworkerยังไม่deploy. ปิดtechnicalgatesและยืนยันขอบเขตทดลองตาม [Readiness](M1_LINE_PILOT_READINESS.md) ก่อนเปิดจริง
+OwnerยืนยันJobสร้างได้แล้ว; Web/APIและmanualBackupRestoreมีหลักฐานผ่านตาม [สถานะปัจจุบัน](PROJECT_STATUS.md) แต่ยังไม่ใช่M1accepted. CredentialsและUser/Groupallowlistsตั้งแล้ว LINE=falseและworkerยังไม่deploy. ต้องปิดtechnicalgatesตาม [Readiness](M1_LINE_PILOT_READINESS.md) ก่อนเปิดคำสั่งใช้งานจริง
 
 LINE ใน M1 ทดลองได้เฉพาะเชื่อมบัญชี, เรียกงานของฉัน, ผูกกลุ่มกับ Project และถอนสิทธิ์ ยังไม่มีลงวันทำงาน/OT/ค่าใช้จ่าย/รูปบิลผ่าน LINE
 
@@ -49,9 +49,9 @@ LINE ใน M1 ทดลองได้เฉพาะเชื่อมบั�
 - [ ] ตั้ง Webhook URL เป็น `https://<staging-web>/api/line/webhook` หลังอนุมัติ; certificate ถูกต้อง ไม่ใช้ localhost/self-signed
 - [ ] เปิด Use webhook และ Verify ผ่าน; ปิด auto-response ที่ซ้ำกับ bot ระหว่างทดสอบตามที่ Owner อนุญาต
 - [ ] เปิด Allow bot to join group chats แล้วเพิ่ม OA ในกลุ่มทดสอบเดียวที่อนุมัติ
-- [ ] API/worker มี user/group allowlist ตรงกัน ห้าม wildcard หรือปิด allowlist เพื่อให้ทดสอบผ่าน
+- [x] API/worker มี user/group allowlist ตรงกัน ห้าม wildcard หรือปิด allowlist เพื่อให้ทดสอบผ่าน
 - [ ] วิธีได้ IDs: ใช้ Your user ID ของ channel เมื่อมีสิทธิ์ หรือให้ operator ตรวจเฉพาะ `source.userId`/`source.groupId` จาก webhook ที่ตรวจ signature แล้วในเครื่องมือ private ที่ไม่ log body; บันทึกลง secret fields โดยตรง ไม่ส่ง IDs/ชื่อสมาชิกเข้า Git
-- [ ] **ก่อนเริ่มจริงต้องเตรียมวิธีเก็บ IDs ให้เรียบร้อย:** API ปัจจุบัน discard event นอก allowlist และไม่มีหน้าจอ enrollment จึงไม่สามารถใช้ “ส่งแล้วรอดู log” เป็นขั้นตอนที่รับประกันได้ ห้ามเพิ่มระบบเก็บ raw webhook สาธารณะชั่วคราว; ถ้าไม่มี IDs ให้ operator เตรียม signed enrollment แบบ private และทดสอบก่อนนัดผู้ใช้
+- [x] เตรียม signed private enrollment และรับครบ3คน/1กลุ่มแล้ว เก็บexactIDsในRailway API/workerโดยไม่lograwwebhook ไม่มีauto-grant; Projectallowlistและworkerยังรอตรวจ
 - [ ] กลุ่มต้องไม่แสดงรายชื่อคน รายละเอียดโครงการหรือยอดเงิน ตอบเพียงยืนยันการผูก/แนะนำไปแชทส่วนตัว
 - [ ] กลุ่มผูกได้ครั้งเดียว ไม่มี silent rebind หากผิดโครงการหยุดทดลองให้ operator ตรวจ audit ไม่สร้างรหัสใหม่ทับเฉยๆ
 
