@@ -1,6 +1,19 @@
 # CHANGELOG
 
-## 24 กันยายน 2026 — รอบแก้หลัง Owner ทดลองมือถือ (ยังไม่ Deploy)
+## 24 กันยายน 2026 — Deploy รุ่นแก้80c2868แล้ว / Job ของ Owner ยังรอตรวจรับ
+
+Owner อนุมัติให้ทำ process ต่อหลังเสนอรุ่น80c2868 จึง Deploy API/Web exact80c2868b46f766ea0eb6da5e6c50eed617f6be7c ภายใน Railway Trial เดิม ไม่มี migration ใหม่ ไม่เปลี่ยนแผน ไม่เปิด LINE ไม่ Merge/M2/Production
+
+PASS: ทั้งสอง deployment SUCCESS, HTTPS health200/database ready, runtime schema/privileges/verified TLS, LINE_ENABLED=false; targeted HTTPS8 checks ด้วยบัญชี Owner/PM สมมติ สร้าง Job และ GET กลับซ้ำสองครั้งผ่านทั้งสองบทบาท; disabled LINE endpoints503 และไม่ออก binding code บัญชีสมมติทั้งหมดของรอบนี้ปิดใช้งานหลังทดสอบ
+
+PASS UI read-only: Refresh แล้วไม่มีปุ่ม LINE และหน้าโครงการแสดงรายการ Job/empty state ใต้ฟอร์ม รุ่นเดิมที่ Owner ทดลองก่อนหน้านี้ยังเป็น cda461d. ตรวจเฉพาะจำนวน Job/audit ของโครงการที่แจ้งปัญหา ไม่อ่านหรือแก้ค่าธุรกิจ พบ Job0 และ JOB_CREATED audit0 จึงยังไม่มีหลักฐานว่าการกดก่อนหน้าบันทึกสำเร็จ ไม่สรุปสาเหตุว่าเป็นเพียงการเลื่อนหน้าจอ
+
+UAT_PARTIAL / OPEN_ISSUE: Owner ทดลองมือถือได้ แต่กรณี Job ของ Owner ยังรอตรวจรับบนรุ่นใหม่นี้; LIVE_BROWSER_CREATE_NOT_RUN รอบนี้ (ทดสอบสร้างผ่าน HTTPS API ด้วย fixture แยก และตรวจ UI แบบอ่านอย่างเดียว) ขอให้ Owner Refresh หน้าเดิม เปิดโครงการ และกดเพิ่มงานย่อยครั้งเดียว ตรวจผลสำเร็จหรือข้อความผิดพลาดใต้ฟอร์ม ก่อนกดซ้ำ
+
+CI ของ source รุ่นนี้ PASS36/36บนNative PostgreSQL17; Local34PASS/2nativeSKIP; typecheck/build/container/smoke/M0 PASS ตาม CI36010347404. Log sample ล่าสุดสูงสุด100รายการต่อบริการไม่พบรูปแบบข้อมูลลับที่สแกน ไม่อ้างว่าครอบคลุม historical logs ทั้งหมด
+
+
+## ประวัติก่อน Deploy — รอบแก้หลัง Owner ทดลองมือถือ
 
 Owner ยืนยันว่ามือถือเข้าใช้งานได้ แต่รายงานสร้าง Job แล้วไม่เห็น จึงเป็น UAT_PARTIAL / OPEN_ISSUE ไม่ใช่ UAT_PASSED ทั้งระบบ งาน Job UI รับผิดชอบ task Reviwer; Codex task Milestone รับผิดชอบ LINE disabled guard และรวมผลตรวจ
 

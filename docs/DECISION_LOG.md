@@ -156,3 +156,7 @@ Owner อนุมัติสำรอง Staging ที่มีข้อม�
 ## D-026 — LINE disabled ต้องปิดขั้นตอนใน Web/API (2026-09-24)
 
 เมื่อ LINE_ENABLED ไม่เท่ากับ true แบบตรงตัว API link/unlink/group binding code ต้องปฏิเสธ503ก่อนเขียนข้อมูล และ Web ไม่เสนอ controls ทั้งสามรายการ /api/me เพิ่ม line_enabled boolean สำหรับทุกบทบาทที่ login แล้ว ไม่เปิด operational LINE counters หรือ secret ให้ PM/TECH เดิม group-code ยังตรวจ manage ก่อน feature gate (PM/TECH403) ไม่มี schema change และไม่เปิด LINE จริง
+
+## D-027 — อนุมัติ Staging follow-up80c2868 (2026-09-24)
+
+หลังแจ้ง CI ผ่านและเสนอ Deploy API/Web80c2868ไม่มี migration ใหม่ Owner ตอบให้ทำ process ต่อ พร้อมรายงานว่า Job ยังไม่ปรากฏ จึง Deploy รุ่นที่ระบุภายใน Trial เดิมและตรวจผล ไม่เปลี่ยนแผน ไม่เปิดLINE/Merge/Production ไม่ถือคำอนุมัติ Deploy เป็นการผ่าน Owner UAT ของ Job

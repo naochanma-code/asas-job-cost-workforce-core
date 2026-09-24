@@ -53,3 +53,16 @@ Restart API/Web แล้ว RESTART_DATA_DIGEST_PASS; health/runtime guard PASS
 - PR #2 คง Draft ไม่ Merge ไม่เริ่ม M2/M3/Production; เอกสาร commit หลัง release ไม่เปลี่ยน source ที่ deploy
 
 ตรวจเอกสารหลังอัปเดต: check-m0.mjs 24 PASS, check-r2.mjs 14 PASS, check-r4.mjs 7 PASS รวม45; ไม่มี application code change ใน commit หลักฐานนี้
+
+## Follow-up deployed — 24 September 2026
+
+Owner อนุมัติรุ่น80c2868หลังเสนอ release และยืนยันให้ทำ process ต่อ API/Web exact80c2868b46f766ea0eb6da5e6c50eed617f6be7c SUCCESS:
+
+- API e22c570d-1293-4b48-82a7-d8ee6c1e4f34
+- Web 36629910-ef20-4761-8fc3-9918fdf5f719
+- ไม่มี migration, LINE=false, Trial usage ที่ตรวจก่อนDeployประมาณ$0.202 ไม่เพิ่มบริการ/upgrade
+- /api/health200/database ready; runtime/TLS/schema PASS; secret-pattern log sample PASS
+- 8 targeted HTTPS checks PASS: runtime, capabilityfalse, no-siteProject, Owner create/read twice, PM create/read twice, disabledLINE503/no-code-side-effect; synthetic account cleanup disable PASS
+- UIอ่านอย่างเดียวหลังRefresh: ปุ่มLINEหาย, Job listใกล้ฟอร์ม/empty-stateแสดง. Current browser rolePM; ไม่เปลี่ยนข้อมูลจริง
+- โครงการที่ Owner รายงาน: read-only count Job0/JOB_CREATED audit0 ไม่พบการบันทึกสำเร็จ ยังไม่รู้สาเหตุการส่งครั้งก่อน ไม่ใช้ข้อมูลจริงเป็นfixtureและไม่สร้างJobซ้ำให้
+- Owner UAT JobยังOPEN_ISSUE; actual browser form submissionด้วยfixtureรอบนี้NOT_RUN (แยกจากHTTP/APIchecks)
