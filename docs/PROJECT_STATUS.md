@@ -1,46 +1,55 @@
 # PROJECT STATUS — Milestone 1
 
-อัปเดต 24 กันยายน 2026 · ผู้รับผิดชอบ: Codex (Foundation/API/เอกสาร), task Reviwer ตรวจ Job UI · branch codex/milestone-1-foundation · PR #2 ยัง Draft
+อัปเดต 24 กันยายน 2026 · Module owner: Codex (Foundation/API/LINE/เอกสาร); task Reviwer ดู design reference · branch codex/milestone-1-foundation · PR #2 ยัง Draft / ไม่ Merge
 
 ## ตอนนี้ถึงไหน
 
-**Owner ยืนยันเพิ่ม Job ได้แล้ว — ปิดปัญหา Job validation400** ตามข้อความ “โอเคเพิ่มได้แล้วค่ะ ทำขั้นตอนต่อไปได้เลย” การยืนยันนี้ครอบคลุม flow สร้าง Job และผลแก้ครั้งนี้ ไม่ใช่ตรวจรับทุก flow หรืออนุมัติ Merge/M2; ต่อมา Owner อนุมัติ LINE Pilot เฉพาะขอบเขตตาม D-030
+**Web ใช้งานได้ และ LINE Webhook ทดสอบจริงผ่านแล้ว — พร้อมลงทะเบียนผู้ทดลอง 3 คน/1 กลุ่ม** ยังไม่เปิดคำสั่งเชื่อมบัญชี/งานของฉัน/ผูกกลุ่ม จนกว่าจะรับผู้ทดลองครบ ตั้ง allowlist และตรวจ worker ผ่าน
 
-API ที่ใช้งาน: 8e47f04343c131ddc7b4af40856183542ce5f1e8 · Web: 80c2868b46f766ea0eb6da5e6c50eed617f6be7c · [เว็บ Staging](https://web-staging-cb6f.up.railway.app/)
+API และ Web ใช้ commit **84df39ce386d4892c943baae36822084a3421a4a** ทั้งคู่ ไม่มี migration ใหม่ ไม่แก้ข้อมูลจริงบน Staging
 
-| Definition of Done | สถานะจริง |
+- [Web Staging](https://web-staging-cb6f.up.railway.app/)
+- [ลงทะเบียนผู้ทดลอง LINE](https://web-staging-cb6f.up.railway.app/line-pilot) — Owner เท่านั้น ต้องเริ่มรอบเมื่อทั้ง3คนพร้อม รหัสหมดอายุ15นาที
+- [ขั้นตอนสำหรับ Owner](M1_LINE_OWNER_SETUP.md)
+
+## สถานะตาม Definition of Done
+
+| รายการ | สถานะและหลักฐาน |
 | --- | --- |
-| DESIGNED / CODED | PASS — Authentication/Roles/Customer/optional Site/Project/optional Job/Types/Assignment/Audit |
-| TESTED_LOCAL / CI | PASS — Local35PASS/2nativeSKIP, Native PostgreSQL37/37, Typecheck/Build/Containers/Smoke/M0; CI36013717502 |
-| DEPLOYED_STAGING | PASS — API/WebตามSHAด้านบน; health200/database ready ตรวจซ้ำรอบนี้ |
-| TESTED_STAGING | PASS ตามขอบเขต — HTTPS29 checks seed types/Owner/PM/responsible/empty date, สิทธิ์และRestartจากรอบก่อน; ดู Test Evidence |
-| OWNER_UAT_JOB_CREATE | PASS — Owner ยืนยันหลัง hotfix; ไม่ใช้ผล API แทนคำยืนยัน |
-| OWNER_UAT_MOBILE | PASS ตามรายงาน — มือถือใช้งานได้; ไม่ใช่ตรวจทุกอุปกรณ์ |
-| OWNER_UAT_ALL_M1 | PARTIAL — Webบางflowยืนยันแล้ว; LINEและรายการ UATอื่นที่ยังไม่ยืนยันยังไม่ผ่าน |
-| BACKUP / RESTORE | PASS แบบ manual snapshot/ฐานกู้แยก; ยังไม่มี scheduled backup/PITR/key escrow ข้ามเครื่อง |
-| REAL_LINE | NOT_RUN / DISABLED — ยังไม่เปิด webhook/worker หรือส่งข้อความจริง |
-| MERGE / M2 / PRODUCTION | NOT_AUTHORIZED — ไม่ Merge PR#2 ไม่เริ่ม M2/M3 ไม่ Deploy Production |
-
-## ขั้นตอนที่กำลังทำต่อ
-
-เตรียม LINE Pilot ใน M1 เฉพาะเชื่อมบัญชี งานของฉัน ผูกกลุ่ม และถอนสิทธิ์ ใช้ OA/กลุ่มทดสอบ ข้อมูลProjectสมมติ Owner/Admin/ช่าง1คน ไม่รวมลงเวลา OT Expense Payroll หรือรูปบิล
-
-ตรวจความพร้อมแบบอ่านอย่างเดียวแล้ว: LINE_ENABLED=false; APIยังไม่มี Channel Secret/Bot ID/Payload Key/User+Group allowlist; RailwayมีเพียงWeb/API/Postgres ยังไม่มีworker จึง **NOT_READY_TO_ENABLE** ไม่ใช่แค่เปลี่ยนสวิตช์แล้วเริ่มได้
-
-แผนและเงื่อนไขก่อนเปิดอยู่ใน [LINE Pilot Readiness](M1_LINE_PILOT_READINESS.md) ต้องเตรียม secretsผ่านRailwayโดยตรง, private allowlist enrollmentที่ไม่logข้อมูล, workerที่หยุดได้และผ่านsimulation, edge/security checksที่ยังค้าง ภายใต้Trialเดิม หากต้องเสียเงินเพิ่มหยุดแจ้งOwner
+| CODED | PASS — Foundation/Alignment เดิม + LINE Project allowlist, source revocation, worker guards และ signed private enrollment ตาม ADR-012 |
+| TESTED_LOCAL | PASS — 45 PASS / 2 native SKIP; typecheck, production build และ M0 45checks ผ่าน |
+| TESTED_CI | PASS — CI36018991502: Native PostgreSQL47/47, typecheck/build/API+Webcontainers/smoke/M0 ผ่าน |
+| DEPLOYED_STAGING_API_WEB | PASS — exact84df39c ทั้งคู่; API a8990b9a-2e7c-4b2d-8ca5-2fcb35c366e2; Web88979aa4-f253-42f1-a154-9b3cb432e401 |
+| TESTED_STAGING | PASS ตามขอบเขต — HTTPS38checks ด้วยบัญชีสมมติ Owner/Admin/TECH: health/database, Secure cookie, CSRF, role gate, disabled business LINE, signature/tamper, logout; บัญชีสมมติปิดแล้ว |
+| REAL_LINE_WEBHOOK_VERIFY | PASS — LINE official test API ตอบ success=true/statusCode200/reasonOK; endpointตรงWeb Stagingและactive |
+| LINE_ENROLLMENT | DEPLOYED / UAT_NOT_RUN — รับเฉพาะคำสั่งรหัสสุ่มของรอบที่ Owner เริ่ม เก็บ3user/1groupในmemory15นาที ไม่มีauto-grant/queue/reply |
+| LINE_WORKER | PREPARED / NOT_DEPLOYED — serviceเปล่า ไม่มีsource/deployment/publicdomain, Tokenอยู่workerเท่านั้น, LINE_ENABLED=false |
+| REAL_LINE_LINK/JOBS/GROUP/REVOKE | NOT_RUN — รอenrollmentครบ/allowlists/workerstart-stop/securitygates; ยังไม่ผ่าน M1 LINE gate |
+| OWNER_UAT_JOB_CREATE / MOBILE | PASS ตามคำยืนยันOwnerจากรอบก่อน; ไม่เท่ากับรับM1ทั้งหมด |
+| OWNER_UAT_ALL_M1 | PARTIAL — งานWebบางflowผ่าน, LINEยังไม่ตรวจรับ |
+| BACKUP/RESTORE | PASS แบบmanual snapshot/isolated recoveryจากรอบก่อน; scheduledbackup/PITR/keyescrowข้ามเครื่องยังไม่มี |
+| MERGE / M2 / M3 / PRODUCTION | NOT_AUTHORIZED — ยังไม่ดำเนินการ |
 
 ## สิ่งที่ Owner ต้องทำต่อ
 
-อนุมัติแล้ว: LINE Pilot 3คน/1กลุ่ม และเปลี่ยน Webhook เดิมของ OA ที่แจ้งได้ ขณะนี้ Codexเตรียมโค้ดและทดสอบ signed enrollment/private project scope ก่อนเปิดจริง Ownerเข้าสู่ LINE Console แล้ว รอปลายทางกรอก Secret/Token ผ่าน Railway โดยตรง ไม่ต้องส่งในแชท ไม่ต้องเทสJobซ้ำ
+ค่าลับที่กรอกผ่านRailwayได้รับและตรวจแล้ว ไม่ต้องกรอกซ้ำ Tokenตรงกับ OA ทดสอบ; ChannelSecretใช้Verifyจริงผ่าน ไม่แสดงค่าลับในหลักฐาน
 
-## หลักฐานและขอบเขตงาน
+เมื่อโอ๋ ฟ้า และช่างทดสอบ1คนพร้อม ให้ Owner เปิดหน้าลงทะเบียนแล้วกดเริ่มรอบ ส่งคำสั่งคนละรหัสในแชทส่วนตัวกับ OA จากนั้นให้ผู้ที่ลงทะเบียนแล้วส่งรหัสกลุ่มในกลุ่มทดสอบที่มี OA อยู่ กดตรวจผลจนได้รับครบ3คน/1กลุ่มแล้วแจ้งว่า “ลงทะเบียนครบแล้ว”. ห้ามส่งรหัส/IDs/TokenในแชทหรือGitHub
 
-[CI](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36013717502) · [Staging Evidence](M1_ALIGNMENT_STAGING_EVIDENCE.md) · [Test Evidence](M1_TEST_EVIDENCE.md) · [Owner UAT](M1_OWNER_UAT.md) · [ประวัติ](M1_STAGING_HISTORY.md)
+ถ้าใช้รหัสไม่ทัน15นาทีหรือAPIรีสตาร์ท ต้องเริ่มรอบใหม่ ไม่ถือเป็นข้อมูลหายจากฐาน การสมัครขั้นนี้ยังไม่ใช่การเชื่อมบัญชีแอป
 
-M1อยู่ใน .local/m1-staging โฟลเดอร์หลักเป็นงานM2ที่พักไว้ ไม่รวมโค้ดหรือschemaM2 งานรอบนี้เพิ่ม LINE pilot guard/enrollment/worker tests ตาม ADR-012 ไม่มี schema change; ยังไม่ deploy รุ่นนี้หรือเปิด LINE จริง
+## ขั้นต่อไปของ Codex / ข้อจำกัด
 
-## ความคืบหน้ารอบอนุมัติ Pilot
+1. ตรวจผู้ทดลองครบ3คน/1กลุ่ม แล้วตั้ง User/Group IDs ผ่านRailwayโดยตรง พร้อมเฉพาะ UUID ของ Projectสมมติ A/B; ห้ามเปิดwildcardหรือใช้ข้อมูลจริง
+2. ปิดenrollment ตรวจworkerprivate/sourceSHA/การหยุดและกู้ process/เครดิต ก่อนเปิดbusinessLINEและทดสอบ link→งานของฉัน→group→revoke
+3. ผลจริงยังไม่ครบ: live rate-limit/sharedproxy, full edge-querylog review, worker lifecycle และ real nonce/code expiry/replay ตาม [Test Matrix](M1_STAGING_TEST_MATRIX.md) ไม่เปลี่ยนเป็นPASSจากlocal tests
 
-CODED: private enrollment15นาที3คน1กลุ่ม/Project allowlist/source revocation guard/worker safe error. TESTED_LOCAL targeted10/10/typecheck/build PASS; Latest full45PASS/2nativeSKIP; CIรอหลังpush DEPLOYED/REAL_LINE NOT_RUN ของรุ่นนี้. TrialคงเหลือประมาณUSD4.79/28วัน ณตรวจ ไม่อัปเกรด
+Railway ยังisTrialing=true เหลือเครดิตประมาณ **USD4.792 / 28วัน** ณตรวจหลังDeploy มี4servicesรวมworkerที่ยังไม่รัน ไม่อัปเกรด/เพิ่มpaidservice หากเครดิตไม่พอหยุดรายงานOwner
 
-[UI Design Direction](UI_DESIGN_DIRECTION.md): DESIGNED_REFERENCE จากtask Reviwer ยังไม่ใช่UIที่deploy
+[UI Design Direction](UI_DESIGN_DIRECTION.md): DESIGNED_REFERENCE เท่านั้น เมนูซ้ายถ่านเข้ม/แดงแบบภาพ1 เนื้อหาการ์ดขาว/น้ำเงินแบบภาพ2–5 ยังไม่ใช่UIที่deploy
+
+## หลักฐาน
+
+[CI36018991502](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36018991502) · [Test Evidence](M1_TEST_EVIDENCE.md) · [LINE Readiness](M1_LINE_PILOT_READINESS.md) · [ADR-012](adr/012-bounded-line-pilot.md) · [Owner UAT](M1_OWNER_UAT.md)
+
+M1อยู่ใน .local/m1-staging โฟลเดอร์หลักเป็นM2ที่พักไว้ มีเพียงpointerให้อ่านสถานะM1 ไม่รวม source/schemaM2

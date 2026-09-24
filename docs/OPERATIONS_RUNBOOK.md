@@ -65,3 +65,13 @@ LINE จริงครบ account link/unlink, nonceหมดอายุ/ซ�
 ## แผน Staging ที่รออนุมัติ (2026-09-22)
 
 ใช้ [M1_STAGING_PLAN](M1_STAGING_PLAN.md), [LINE Pilot Checklist](M1_LINE_PILOT_CHECKLIST.md), [Owner UAT](M1_OWNER_UAT.md) และ [Staging test matrix](M1_STAGING_TEST_MATRIX.md) ก่อนเปิดออนไลน์ ห้าม deploy/จ่ายเงิน/ส่ง LINE จน Owner อนุมัติ ข้อจำกัด runtime migration role, proxy bucket, secret logging และ enrollment IDs ในแผนยังเป็น gate ก่อน pilot
+
+## Bounded LINE Pilot operations — ADR-012
+
+Owner approval covers test OA/group/3 participants only; retain Trial/no-merge/no-production constraints. Credential values go directly to Railway Variables; API owns Channel Secret/Bot ID/Payload Key and worker alone owns Access Token. Inspect boolean presence/format and LINE bot-info identity without printing IDs/tokens. Railway browser variable edits may remain staged: inspect that the patch includes only intended keys, then environmentPatchCommitStaged(skipDeploys:true); do not mistake staged UI rows for runtime variables.
+
+Enrollment: deploy exact CI-passed API/Web SHA; API LINE_ENABLED=false, LINE_ENROLLMENT_ENABLED=true; worker remains stopped/disabled with no public domain. Configure approved OA webhook to Web HTTPS /api/line/webhook and Verify its empty signed event. OWNER opens /line-pilot and issues 3 private +1group one-use commands. Capture is memory-only, 15 minutes; API restart invalidates active round, so finish deployments before issuing codes. No wildcard enrollment, raw-event logging or automatic identity grant.
+
+After all4 slots are received, operator privately transfers exact IDs to API/worker allowlist variables (never Chat/Git/log), configures only synthetic Project UUIDs, closes enrollment, checks worker start/stop and remaining trial credit. Only then enable business LINE and run link/jobs/group/revoke UAT. Changing API flag alone does not stop an existing worker; stop worker deployment and webhook if scope/secret/cost gate fails. No push fallback for expired reply tokens.
+
+No migration in ADR-012; roll back API/Web to previous known-good commits with both LINE modes false if needed. Never roll back schema or overwrite Staging. Blank worker service is not a deployed worker or real-pilot PASS.

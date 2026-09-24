@@ -1,5 +1,7 @@
 # M1 LINE Pilot Checklist
 
+สถานะล่าสุด24กันยายน: Ownerอนุมัติpilotและเปลี่ยนWebhookแล้ว; API/Web84df39c deployed, REAL_WEBHOOK_VERIFY PASS, enrollmentพร้อมผ่าน /line-pilot; businessLINE=false/workerยังไม่deploy. ขั้นต่อไปรับ3คน1กลุ่มและตั้งexactProjectallowlistตาม [Readiness](M1_LINE_PILOT_READINESS.md). ข้อความก่อนหน้านี้ด้านล่างเป็นประวัติ ไม่ต้องขออนุมัติขอบเขตเดิมซ้ำ
+
 สถานะ PREPARED / NOT_READY_TO_ENABLE / REAL_LINE_NOT_RUN · 24 กันยายน2026
 
 OwnerยืนยันJobสร้างได้แล้ว; Web/APIและmanualBackupRestoreมีหลักฐานผ่านตาม [สถานะปัจจุบัน](PROJECT_STATUS.md) แต่ยังไม่ใช่M1accepted. Read-only preflightพบLINE=false, LINEconfigยังไม่ตั้งและworkerยังไม่deploy. ปิดtechnicalgatesและยืนยันขอบเขตทดลองตาม [Readiness](M1_LINE_PILOT_READINESS.md) ก่อนเปิดจริง

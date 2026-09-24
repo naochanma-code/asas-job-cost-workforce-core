@@ -22,7 +22,7 @@
 
 S01 PARTIAL: HTTPShealthและSecure/HttpOnly/SameSite cookie/CSRFผ่านlivefixture; HTTPredirect/mixedcontent/edge-querylogครบวงจรยังไม่ยืนยัน
 S02 NOT_RUN live: local/CI429/forwarded spoofผ่าน ไม่ยิงloadบริการที่มีผู้ใช้จริงโดยไม่กำหนดรอบ
-S03 NOT_RUN live: LINEปิด; signedrawbytes/destination/replayผ่านCI
+S03 PARTIAL live: REAL_WEBHOOK_VERIFY PASS via official LINE API success=true/200/OK; HTTPSvalidsignature200/tampered401 และnoqueueผ่านในenrollmentmode; signedbusiness events/replayจริงยังNOT_RUN. CIทั้งหมดผ่าน
 S04 PARTIAL: logout/forced expiryของsyntheticsessionผ่านHTTPS; realLINEtoken/codeยังไม่ทดสอบ
 S05 PARTIAL: manualencryptedbackup/isolatedrestore/digest/restartผ่าน; scheduledbackup/PITR/restoreWebLoginยังไม่ทำ
 S06 PARTIAL: Web/APIcrossproject/joblevel/revokeผ่านfixtures; LINEscopeยังไม่ทดสอบ

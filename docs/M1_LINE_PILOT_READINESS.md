@@ -1,44 +1,34 @@
 # M1 LINE Pilot — Readiness 24 September 2026
 
-สถานะ PREPARED / NOT_READY_TO_ENABLE / REAL_LINE_NOT_RUN. OwnerยืนยันJob createบนWebผ่านแล้ว ต่อมา Owner อนุมัติ bounded LINE Pilot และเปลี่ยน Webhook เดิมตาม D-030; ไม่อนุมัติ Merge/M2/Production
+สถานะ **ENROLLMENT_DEPLOYED / REAL_WEBHOOK_VERIFY_PASS / BUSINESS_LINE_NOT_ENABLED** ตาม D-030/ADR-012 Ownerอนุมัติ OA/กลุ่มทดสอบกับโอ๋ ฟ้า ช่าง1คน ภายในTrial และเปลี่ยนWebhookเดิมได้ ไม่อนุมัติMerge/M2/M3/Production/ค่าใช้จ่ายเพิ่ม
 
-## ขอบเขตที่ Owner ยืนยันแล้ว
+## สิ่งที่ผ่านแล้ว
 
-ผู้ร่วมทดลอง: Owner โอ๋, Admin ฟ้า, Technician1คน; OAทดสอบที่มีอยู่และกลุ่มทดสอบ1กลุ่มเท่านั้น ใช้บัญชีแยก/Projectสมมติ Aไม่มีSiteJob และ BมีSiteJob. LINEข้อความจำกัดเชื่อมบัญชี/งานของฉัน/ผูกกลุ่ม/แจ้งถอนสิทธิ์ ไม่มีข้อความถึงลูกค้า กลุ่มจริง เวลา/OT/Expense/Payroll
+- exact84df39c API/Web SUCCESS; Local45PASS/2nativeSKIP; CI36018991502 NativePG47/47/typecheck/build/containers/smoke/M0 PASS
+- HTTPS38checks ด้วยบัญชีสมมติผ่าน; บัญชีปิดหลังตรวจ ไม่แก้ข้อมูลจริง
+- OwnerกรอกChannelSecretในAPI/AccessTokenในworkerผ่านRailway; applyเฉพาะ2stagedchangesแบบskipDeploys ตรวจbotinfoตรงOA และตั้งBotIDอย่างส่วนตัว PayloadKeyสุ่ม32bytesตั้งตรงstdin ไม่แสดงค่า
+- LINE official GET webhook endpointยืนยันตรงWebStagingและactive; POST webhook/test: success=true,statusCode200,reasonOK ไม่มีการส่งแชทจากระบบ
+- API LINE_ENABLED=false / LINE_ENROLLMENT_ENABLED=true; worker LINE_ENABLED=false ยังไม่มีsource/deployment/domain
+- log sample100linesต่อdeploymentอ่านสำเร็จไม่พบsecret patterns (ไม่ใช่รับรองlogsทุกชั้น); TrialเหลือประมาณUSD4.792/28วัน ไม่มีupgrade
 
-ไม่สมัครบริการเสียเงิน ไม่อัปเกรด ไม่ลบข้อมูลจริง ไม่เปิดAPI/DB portสาธารณะ ใช้Web HTTPSเดิมเป็นwebhook เมื่อผ่านgate. ถ้าทดลองต้องใช้ทรัพยากรเกินTrialหรือเครดิตไม่พอ หยุดแจ้งOwner
+## ขั้นที่ Owner ทำต่อ
 
-## ผลตรวจรอบนี้ (read-only ไม่มีค่า secret ในรายงาน)
+[เปิด /line-pilot](https://web-staging-cb6f.up.railway.app/line-pilot) ด้วยOwner เริ่มรอบเมื่อทั้ง3คนพร้อม ทำตาม [Owner Setup ข้อ2](M1_LINE_OWNER_SETUP.md). รหัสส่วนตัว3ชุดและกลุ่ม1ชุดใช้ครั้งเดียว15นาที ผู้ส่งรหัสกลุ่มต้องสมัครส่วนตัวแล้ว กดตรวจจนรับครบ ไม่ส่งcodes/IDsในChat/GitHub
 
-- PASS: branchตรงorigin ไม่ตกหลังmain; health200/database ready
-- PASS Owner reported: สร้างJobได้หลังseed Type validatorhotfix; มือถือใช้งานได้จากรอบก่อน
-- PASS automated: CI37/37NativePG และ Staging29checks ตาม M1_TEST_EVIDENCE
-- DISABLED: LINE_ENABLED=false
-- NOT_CONFIGURED: API Channel Secret, Bot ID, sharedPayloadKey32bytes, allowedUserIDs/GroupIDs
-- NOT_DEPLOYED: worker; providerมีเพียงWeb/API/Postgres. Access Tokenต้องอยู่workerตามแผน ไม่ถือว่าการไม่มีAccessTokenในAPIเป็นbug
-- NOT_RUN: Real OA Verify, link/group binding, real token expiry/replay และ reply delivery
-- PARTIAL: Web security/provider backupผ่านบางส่วน; live rate-limit/edge checks, scheduled backup/PITR, restoreWebLoginและworkerstopยังไม่ครบ ดู matrix ไม่เปลี่ยนทั้งหมดเป็นPASS
+Enrollmentรับเฉพาะsignature/destinationถูกต้อง+รหัสตรง รอบสูงสุด3users/1groupในmemory ไม่เก็บrawmessage ไม่linkaccount ไม่queueoutbox ไม่ส่งreply ไม่มีauto-allowlist. เริ่มใหม่หลังexpiry/restartได้ เป็นtemporarypilotไม่ใช่publicregistration
 
-## ลำดับดำเนินการหลังยืนยันขอบเขต
+## ขั้นที่ Codex ต้องทำก่อนเปิด business LINE
 
-1. ตรวจquota/creditของTrialและแผนรันworker private ก่อนเปลี่ยนservice ต้องมีsource SHA/CI และวิธีหยุด/กู้ process; ห้ามเพิ่มpaidserviceหรือวางAccessTokenในWeb. ไม่มีการสร้างworkerในรอบนี้
-2. เตรียมprivate enrollmentสำหรับuser/group IDs และทดสอบด้วยsigned synthetic events. ปัจจุบันallowlistทิ้งeventนอกscopeและไม่มีenrollment UI จึงห้ามแก้ด้วยwildcardหรือพิมพ์rawwebhookในlog
-3. OwnerกรอกChannel SecretในAPI และChannel Access Tokenในworkerผ่านRailway Variables/Secret Managerโดยตรง. Bot ID/allowlistเก็บในenvironmentโดยไม่ใส่Git. Codexเตรียมrandom32bytePayloadKeyแบบไม่แสดงค่าและตรวจเฉพาะboolean/length ไม่มีการขอSecret/Tokenในchat/screenshots
-4. ตั้งAPI/worker LINE_ENABLED=falseตลอดขั้นเตรียม ทดสอบworkerstart/stop/retry/dedupe/fail-closedแบบไม่ส่งLINEจริง, ตรวจsecretในlogและขอบเขตข้อมูลก่อนนัดผู้ใช้
-5. เมื่อtechnicalgatesผ่านและมีขอบเขตOA/กลุ่ม/ผู้ทดลองยืนยันแล้ว จึงตั้ง webhook https://web-staging-cb6f.up.railway.app/api/line/webhook และเปิดส่งข้อความเฉพาะpilotที่อนุมัติ ห้ามเปิดก่อนข้อ1–4ครบ
-6. ทดสอบตาม M1_LINE_PILOT_CHECKLIST/UAT: linkครั้งเดียว/หมดอายุ, งานAไม่มีJob, denyProjectB, groupbindingผู้สร้างถูกต้อง, ถอนassignmentสิทธิ์หาย, job-levelvisibility, replayไม่สร้างผลซ้ำ บันทึกผลแยกOwnerกับautomated
-7. ปิดLINEและหยุดworkerเมื่อจบรอบ ก่อนเริ่มรอบอื่นตรวจapproval/allowlistอีกครั้ง
+1. ตรวจผลครบและผู้ร่วมทดลองตรงขอบเขต แล้วนำIDsไปRailwayVariablesโดยตรง ตั้ง LINE_TEST_PROJECT_IDS เป็นProjectสมมติ Aไม่มีSiteJob/BมีSiteJobเท่านั้น ทั้งAPIและworker ไม่มีwildcard ไม่เปลี่ยนข้อมูลจริง
+2. ตรวจ remainingTrial, ตั้งworkerprivateจากexactCI-passedSHA ไม่มีpublicport, ตรวจruntimeTLS/start/stop/retry/dedupe/DEAD recovery ใช้simulationก่อนlive จัดการsharedproxyและedge checksที่ยังค้างตามmatrix
+3. ปิด LINE_ENROLLMENT_ENABLED ก่อนเปิด LINE_ENABLED ทั้งAPI/worker; ห้ามเริ่มขณะallowlistไม่ครบ ห้ามคิดว่าการเปลี่ยนAPIflagจะหยุดworkerเดิม
+4. ทดสอบ link/งานของฉัน/groupbinding/revoke/expiry/replay ตามchecklistด้วยsyntheticProjects; ตรวจสิทธิ์ก่อนprocessและdeliveryโดยscopeintersection ไม่ส่งprojectจริงแม้OWNER
+5. บันทึกผลแต่ละflowแยกautomated/OwnerUAT ปิดLINEและหยุดworkerหลังจบรอบ ก่อนรอบใหม่ตรวจscope/creditอีกครั้ง
 
-## วิธีหยุดเมื่อผิดปกติ
+## หยุดเมื่อผิดปกติ
 
-ปิดLINE_ENABLEDทั้งAPIและworker, หยุดworkerและwebhook. ห้ามใช้เปลี่ยนflagบนAPIอย่างเดียวแทนหยุดworkerที่กำลังรัน ไม่replayreplytokenเก่า ไม่fallbackpush ไม่ลบaudit. เก็บเฉพาะcounts/statusที่ไม่ลับแล้วแจ้งOwnerหากผิดscope/secret/cost
+ปิดLINEทั้งสองmode หยุดworkerและwebhook ไม่replayreplytokenเก่า ไม่fallbackpush ไม่ลบaudit. ถ้าพบsecret/ข้อมูลจริงผิดscope/Trialไม่พอให้หยุดแจ้งOwner ไม่มีการเพิ่มpaidserviceหรือเปิดproductionเพื่อแก้ปัญหา
 
-## Owner action
+## ยังไม่ผ่าน
 
-Owner ยืนยันแล้วและเข้าสู่ LINE Console ของ OA ทดสอบ รอกรอก Channel Secret/API และ Access Token/worker ผ่าน Railway โดยตรงเมื่อ operator เตรียมปลายทางพร้อม ห้ามส่งค่าลับในแชท
-
-## Delta D-030 — ก่อนเปิดจริง
-
-เพิ่ม LINE_TEST_PROJECT_IDS ทั้งAPI/workerให้มีเฉพาะProjectสมมติ และโหมด LINE_ENROLLMENT_ENABLED=true ร่วมกับLINE_ENABLED=falseเพื่อรับรหัสสมัครชั่วคราว ผ่าน /line-pilot (Ownerผู้เริ่มรอบ) ตาม ADR-012. รับครบแล้วตรวจ3คน1กลุ่ม ตั้งallowlistโดยตรง ปิดenrollmentแล้วค่อยเปิดbusinessLINEเมื่อworker/gatesพร้อม ไม่มี auto-grant
-
-CODED/targetedTESTED ไม่ใช่DEPLOYED ยังต้องตรวจrealVerify/workerstop/enrollmentบนStagingก่อนUAT. ConsoleมีWebhookเดิมเปิดอยู่ Ownerอนุมัติเปลี่ยนแล้ว แต่ยังไม่ได้เปลี่ยนจนendpointพร้อม
+Enrollmentจริง3คน1กลุ่ม, workerdeployment/lifecycle, accountlink/JOBS/group/revoke, realnonce/codeexpiry และ M1OwnerUATรวมยังNOT_RUN. Manualbackup/isolatedrestoreเดิมผ่านแต่scheduledbackup/PITR/restoreWebLoginยังไม่ทำ ดูmatrix; ไม่ใช้คำว่าM1เสร็จหรือพร้อมMerge

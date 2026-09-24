@@ -1,5 +1,23 @@
 # M1 Test Evidence — 2026-09-21
 
+## 24 กันยายน 2026 — LINE enrollment DEPLOYED / Webhook จริง PASS
+
+Ownerอนุมัติ boundedPilotและเปลี่ยนWebhookเดิมของOAทดสอบได้ ได้กรอกChannelSecret/APIและAccessToken/workerผ่านRailwayแล้ว Applyเฉพาะ2ตัวแปรแบบskipDeploys ไม่แสดงค่า BotinfoตรงOA; APIไม่มีAccessToken PayloadKey32bytesสุ่มส่งตรงstdin BotIDตั้งส่วนตัว
+
+CODED/DEPLOYED: API+Web exact84df39ce386d4892c943baae36822084a3421a4a SUCCESS. API deployment a8990b9a-2e7c-4b2d-8ca5-2fcb35c366e2; Web88979aa4-f253-42f1-a154-9b3cb432e401. LINE_ENABLED=false, LINE_ENROLLMENT_ENABLED=true; /line-pilot200. Worker serviceเป็นที่เก็บTokenเท่านั้นไม่มีsource/deployment/domain ไม่รัน ไม่ส่งข้อความ ไม่มีmigration/ข้อมูลจริงเปลี่ยน
+
+TESTED_LOCAL:45PASS/2nativeSKIP, typecheck/build/M0 45checks PASS. [CI36018991502](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36018991502) SUCCESS:NativePostgreSQL47PASS/0SKIP, typecheck/build/API+Webcontainers/smoke/M0 PASS. ทดสอบenrollmentรหัสใช้ครั้งเดียว/expiry/restart/creator/role/signature/ไม่มีbusinesssideeffects และprojectscopeรวมOWNER/queuedrevocation/workerfailclosed
+
+TESTED_STAGING:HTTPS38checks PASS (syntheticOwner/Admin/TECH; health/database; Secure/HttpOnly/SameSite cookie; CSRF; Ownerenrollment404ก่อนเริ่ม; Admin/TECH403; businessLINE503; signaturevalid200/tampered401; logout401; queues/accounts/bindingsไม่เพิ่ม) ปิดบัญชีfixtureแล้วโดยไม่แตะข้อมูลจริง ไม่สร้างรอบสมัครทับOwner
+
+REAL_WEBHOOK_VERIFY PASS:ตั้งendpointWebStagingตามอนุมัติ LINE official GETยืนยันตรงและactive; POST webhook/testตอบsuccess=true/statusCode200/reasonOK. ConsoleVerifyไม่แสดงผลชัดเจนจึงใช้officialAPIเป็นหลักฐาน ไม่ถือว่าลองส่งmessage/เชื่อมบัญชีผ่านแล้ว
+
+LOG_SAMPLE PASS:100linesต่อAPI/Webอ่านสำเร็จไม่พบsecretpatterns ตรวจในmemoryรายงานเฉพาะboolean ไม่ใช่รับรองedge/querylogsทุกชั้น. Trialยังtrue เหลือUSD4.79199/28วันหลังDeploy ไม่มีupgradeหรือpaidserviceใหม่
+
+PENDING_OWNER:เปิด /line-pilotด้วยOwner เมื่อ3คนพร้อม ส่งรหัสคนละชุดในแชทOAและรหัสกลุ่มตาม [Owner Setup](M1_LINE_OWNER_SETUP.md) ภายใน15นาที กดตรวจผลครบแล้วแจ้งโดยไม่ส่งcodes/IDs. Codexจะตั้งallowlists/privateworkerและตรวจgatesต่อ ไม่ต้องกรอกSecretซ้ำ
+
+NOT_RUN:ผู้ทดลองจริงenrollmentครบ, workerlifecycle, realaccountlink/JOBS/group/revoke/expiry และM1OwnerUATรวม ไม่Merge/M2/M3/Production
+
 ## 24 กันยายน 2026 — อนุมัติ LINE Pilot / เตรียมขอบเขตและ enrollment
 
 Owner อนุมัติ OA/กลุ่มทดสอบ Owner/Admin/TECH1คน และเปลี่ยน Webhook เดิมได้ ภายใน Trialเดิม ตรวจ provider read-only: isTrialing=true เหลือเครดิตประมาณ USD4.7948 และ28วัน (plan enumHOBBYไม่ได้แปลว่ามีการอัปเกรด); ไม่มีการเปลี่ยนแผน

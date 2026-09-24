@@ -72,3 +72,9 @@ ADMIN แก้ Expense หลังอนุมัติได้ก่อน F
 | Project/Job read | all | PM membership only (employee assignment not enough) | Project-level assignment: jobs in that project; Job-level assignment: only assigned jobs |
 
 Project lock serializes PM grant/revoke with team operations. Target employee/user row locks serialize status changes. Every successful assignment/revoke has actor/time/audit; duplicate assignment and repeated revoke do not create extra audit. Tests call API directly, not UI role-switch. Financial fields/Expense menus absent.
+
+## LINE Pilot ชั่วคราว — D-030 / ADR-012
+
+เฉพาะ OWNER เริ่ม private enrollment และเฉพาะ OWNER ผู้เริ่มรอบอ่านผลได้ ADMIN/PM/TECH403; ต้องเปิด enrollmentmode โดย operator และปิดbusinessLINEก่อน. ขั้นนี้ไม่เชื่อมบัญชีหรือgrantสิทธิ์อัตโนมัติ ผลIDsมีไว้ตั้งRailwayVariablesโดยตรง ไม่ส่งChat/Git/Log
+
+บนbusinessLINE ทุกบทบาทรวมOWNERเห็นได้เฉพาะ intersection ของสิทธิ์เดิมกับ LINE_TEST_PROJECT_IDS; allowlistว่างไม่เห็นProjectใด. Group codeต้องอยู่ในallowlistทั้งตอนสร้างและconsume. Sourceผู้ส่ง/กลุ่มตรวจซ้ำก่อนprocessและdelivery ไม่แก้สิทธิ์WebหรืออนุมัติM2/M3

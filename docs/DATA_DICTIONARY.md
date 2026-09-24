@@ -124,3 +124,7 @@ Won สร้าง Project.source_opportunity_id ใหม่; ไม่ย้�
 work_entries/overtime_entries: employee_id เป็นผู้ทำงาน; เพิ่ม submitted_by:ref(users) NOT NULL, source_channel:WEB/LINE NOT NULL และ submitted_at ตามเดิม แยกผู้กรอกออกจากพนักงาน ตรวจassignment/overlapตามemployee_id ไม่ใช้submitted_by
 
 expense_submissions: submitted_by:ref(users) NOT NULL, source_channel:WEB/LINE NOT NULL; employee_id ต้องnullableเมื่อผู้ส่งไม่ใช่พนักงานที่มีemployee record ไม่ปลอมพนักงาน TECH/PM query own ตามsubmitted_by ทุกroleเข้าPENDING_REVIEW reviewed_by/atแยกจากsubmitted_by/at ก่อนลงledger
+
+## LINE Pilot transient enrollment — ADR-012
+
+ไม่มีตารางหรือmigrationใหม่: process memoryเก็บ hash ของรหัส192bit, kind USER/GROUP, ownerผู้เริ่ม, expiresAt15นาที, captured userId/groupId สูงสุด3คน/1กลุ่ม. ไม่เก็บrawmessage/replyToken; restart/expiryทำให้ข้อมูลอ่านไม่ได้และต้องเริ่มรอบใหม่ ไม่มีFK/สิทธิ์/บัญชีแอปเกิดจากcapture. audit LINE_PILOT_ENROLLMENT_STARTEDมีactor/timeแต่ไม่มีcodes/IDs. Businessqueue schemaและencryptedpayloadเดิมไม่เปลี่ยน
