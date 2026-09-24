@@ -164,3 +164,7 @@ Owner อนุมัติสำรอง Staging ที่มีข้อม�
 ## D-028 — Preserve deterministic seed Type IDs (2026-09-24)
 
 003 seeds use md5::uuid values valid in PostgreSQL but not necessarily RFC UUID version/variant bits. Accept canonical hexadecimal 8-4-4-4-12 identifiers only for Project/Job Type references and master type PATCH; keep all existing IDs, FK/existence/enabled checks, role/scope guards and strict UUID validators for other entities. Do not rewrite deployed migration or backfill IDs. This fixes Web dropdown validation400 while preserving historical references; regression uses all15 shipped types and actual form serializers.
+
+## D-029 — Owner ยืนยัน Job hotfix และขั้นถัดไป (2026-09-24)
+
+Owner ยืนยันเพิ่มJobได้หลังhotfixและให้ทำขั้นถัดไป จึงปิดissueJob validation400เป็นOwner UAT PASSเฉพาะflowนี้ เตรียมM1LINEPilot/readinessต่อได้ แต่ไม่ถือเป็นยืนยันทุกUATหรืออนุมัติข้ามข้อห้ามRealLINE/Merge/M2/Production. ต้องยืนยันขอบเขตOA/กลุ่ม/ผู้ร่วมทดลองและปิดtechnicalgatesก่อนlive ข้อมูลลับกรอกในsecretmanagerเท่านั้น

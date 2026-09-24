@@ -1,10 +1,8 @@
 # M1 LINE Pilot Checklist
 
-สถานะ PREPARED / REAL_LINE_NOT_RUN / LINE_ENABLED=false · อัปเดต 2026-09-23 · ใช้คู่กับ [สถานะปัจจุบัน](PROJECT_STATUS.md) และ [Owner UAT](M1_OWNER_UAT.md)
+สถานะ PREPARED / NOT_READY_TO_ENABLE / REAL_LINE_NOT_RUN · 24 กันยายน2026
 
-Owner อนุญาตดำเนินการขั้นถัดไปและถามเรื่องเริ่ม LINE แต่ gate A–E ยังไม่ครบ จึงยังไม่ตั้ง webhook/เปิด LINE หรือส่งข้อความจริง Web พื้นฐานที่ Owner รายงาน 5 flow ผ่านแล้ว; TECH Login/เมนูตามบทบาท, native restore ชุดสมมติแยก, Web/API restart และข้อมูลคงอยู่ผ่านแล้ว ไม่ใช้ข้อมูลจริงที่ปนใน Staging ทำ pilot ดู D-019
-
-ก่อนเปิดจริงยังต้องปิดผล Admin/TECH/PM cross-project และ revoke, live cookie/expiry และ edge/allowlist/log handling ไม่ถือว่า CI หรือฐาน restore ที่ไม่เปิด Web เป็น Owner UAT ของ LINE
+OwnerยืนยันJobสร้างได้แล้ว; Web/APIและmanualBackupRestoreมีหลักฐานผ่านตาม [สถานะปัจจุบัน](PROJECT_STATUS.md) แต่ยังไม่ใช่M1accepted. Read-only preflightพบLINE=false, LINEconfigยังไม่ตั้งและworkerยังไม่deploy. ปิดtechnicalgatesและยืนยันขอบเขตทดลองตาม [Readiness](M1_LINE_PILOT_READINESS.md) ก่อนเปิดจริง
 
 LINE ใน M1 ทดลองได้เฉพาะเชื่อมบัญชี, เรียกงานของฉัน, ผูกกลุ่มกับ Project และถอนสิทธิ์ ยังไม่มีลงวันทำงาน/OT/ค่าใช้จ่าย/รูปบิลผ่าน LINE
 

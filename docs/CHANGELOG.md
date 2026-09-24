@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 24 กันยายน 2026 — Owner ยืนยัน Job create ผ่าน / เตรียม LINE Pilot
+
+Ownerแจ้งเพิ่มJobได้แล้ว ปิดปัญหาseedType validation400เป็น OWNER_UAT_JOB_CREATE=PASS; ไม่ถือเป็นรับM1ทั้งหมด. ตรวจread-only: health200, branchตรงorigin/ไม่ตกmain, LINE=false, APIยังไม่มีLINEconfigและยังไม่มีworker (มีWeb/API/Postgres3services). เตรียม [LINE Readiness](M1_LINE_PILOT_READINESS.md) แต่ยังไม่เปิดจริง ไม่Merge/M2/Production. ไม่มีapplication/schema/deployment changeรอบนี้
+
+
 ## 24 กันยายน 2026 — Seed Type hotfix DEPLOYED / รอ Owner ยืนยัน Job
 
 พบและพิสูจน์สาเหตุ400: seed Type IDจาก003ใช้ md5::uuid ซึ่ง strict RFC UUID validator ปฏิเสธ เมื่อส่งจาก dropdownจริง ต่างจาก tests เดิมที่ใช้ custom type หรือ defaultโดยไม่ส่งID. ก่อนแก้ regression REDข้อความตรงภาพ หลังแก้ canonical Type ID validator GREEN โดยไม่แก้ migration/ID/ข้อมูลจริงและไม่ลด role/scope checks
