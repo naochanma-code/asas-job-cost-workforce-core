@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 24 กันยายน 2026 — รอบแก้หลัง Owner ทดลองมือถือ (ยังไม่ Deploy)
+
+Owner ยืนยันว่ามือถือเข้าใช้งานได้ แต่รายงานสร้าง Job แล้วไม่เห็น จึงเป็น UAT_PARTIAL / OPEN_ISSUE ไม่ใช่ UAT_PASSED ทั้งระบบ งาน Job UI รับผิดชอบ task Reviwer; Codex task Milestone รับผิดชอบ LINE disabled guard และรวมผลตรวจ
+
+พบ LINE=false ยังสร้าง group binding code และแสดง LINE controls ได้ แก้ /api/me ให้คืน line_enabled boolean และปิด controls ตามค่า true เท่านั้น; API ปฏิเสธ link/unlink/group-code เมื่อ disabled ก่อนเปลี่ยนข้อมูล ไม่เปิด LINE ไม่เปลี่ยน schema/permission role
+
+Local 33 PASS / 2 native-only SKIP / 0 FAIL; typecheck และ production build PASS (หลังรับ Job UI patch และ LINE guards) CI/container รอผล; Staging ยังเป็น cda461d ไม่อ้างว่า patch Deploy แล้ว ไม่แก้ข้อมูลจริง ไม่ Merge/M2/Production
+
+
 ## 24 กันยายน 2026 — DEPLOYED_STAGING / รอ Owner UAT
 
 Owner อนุมัติ Backup/Recovery และ migration003/grants/Deploy SHA cda461d แล้ว ทั้ง API/Web Online; encrypted backup และ isolated restore PASS; legacy business digest ไม่เปลี่ยน; HTTPS24 checks และ restart persistence PASS; log sample ไม่พบ secret patterns LINE=false ไม่เปลี่ยนแผน ไม่ Merge/M2/M3/Production ดู [หลักฐาน Staging](M1_ALIGNMENT_STAGING_EVIDENCE.md) สถานะรออนุมัติด้านล่างเป็นประวัติที่แก้ไขแล้ว
@@ -285,3 +294,6 @@ Artifactที่ตรวจ 2294814994d7a244be1989ffe4cc7f7ee074c13e; บั�
 - หลักฐานรอบเตรียม Staging: local typecheck/build PASS; 18 tests PASS และ native restore 1 SKIP รอ CI; M0 45 checks PASS
 
 - CI code45be1ac run35685633979 SUCCESS รวม native PostgreSQL17 restore case, security tests, build และ M0; commitถัดมาบันทึกผลใน PROJECT_STATUS/M1_TEST_EVIDENCE เท่านั้น
+
+Job UI patch จาก task Reviwer: เพิ่มรายการข้างฟอร์มและผลสำเร็จ/ข้อผิดพลาดใกล้ปุ่ม หลัง POST สำเร็จล้างฟอร์มทันที; GET refresh fail แสดงคำเตือนว่าบันทึกแล้วไม่ชวนสร้างซ้ำ. ยังไม่พิสูจน์สาเหตุ Job เดิมที่ Owner รายงาน และไม่ถือว่าผ่าน browser/UAT ของ patch. ไม่มี migration ใหม่
+

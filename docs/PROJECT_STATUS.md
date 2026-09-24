@@ -1,5 +1,14 @@
 # PROJECT STATUS — M1 Alignment v3.0
 
+## 24 กันยายน 2026 — รอบแก้หลัง Owner ทดลองมือถือ (ยังไม่ Deploy)
+
+Owner ยืนยันว่ามือถือเข้าใช้งานได้ แต่รายงานสร้าง Job แล้วไม่เห็น จึงเป็น UAT_PARTIAL / OPEN_ISSUE ไม่ใช่ UAT_PASSED ทั้งระบบ งาน Job UI รับผิดชอบ task Reviwer; Codex task Milestone รับผิดชอบ LINE disabled guard และรวมผลตรวจ
+
+พบ LINE=false ยังสร้าง group binding code และแสดง LINE controls ได้ แก้ /api/me ให้คืน line_enabled boolean และปิด controls ตามค่า true เท่านั้น; API ปฏิเสธ link/unlink/group-code เมื่อ disabled ก่อนเปลี่ยนข้อมูล ไม่เปิด LINE ไม่เปลี่ยน schema/permission role
+
+Local 33 PASS / 2 native-only SKIP / 0 FAIL; typecheck และ production build PASS (หลังรับ Job UI patch และ LINE guards) CI/container รอผล; Staging ยังเป็น cda461d ไม่อ้างว่า patch Deploy แล้ว ไม่แก้ข้อมูลจริง ไม่ Merge/M2/Production
+
+
 อัปเดต 24 กันยายน 2026 · ผู้รับผิดชอบ: Codex · branch codex/milestone-1-foundation · PR #2 ยัง Draft
 
 ## ตอนนี้ถึงไหน
@@ -16,7 +25,7 @@
 | BACKUP / RECOVERY | PASS — encrypted backup บน volume และนอก provider; restore ฐานใหม่ ตรวจ business digest ตรงกัน runtime เข้า recovery ไม่ได้ |
 | DEPLOYED_STAGING | PASS — migration003 บน PostgreSQL18; API/Web exact cda461d Online; HTTPS health200/database ready |
 | TESTED_STAGING | PASS — 24 HTTPS checks ด้วยข้อมูลสมมติ; runtime/TLS, restart และ data digest; log sample ไม่พบ secret patterns |
-| UAT_PASSED | NOT_RUN — Owner ยังไม่ได้ตรวจรับหน้าจอ Alignment รุ่นนี้ |
+| UAT_PASSED | PARTIAL / OPEN_ISSUE — Owner ทดลองมือถือใช้งานได้ แต่ Job visibility ยังรอตรวจรับ |
 | REAL_LINE | NOT_RUN — LINE_ENABLED=false |
 | PRODUCTION_READY | NO — ไม่มีการอนุมัติ Production หรือ Merge |
 
@@ -40,3 +49,6 @@ Backup ที่ตรวจครั้งนี้เป็น snapshot ก่
 ไม่มีคำถามอนุมัติค้างจากรอบนี้ การอนุมัติ Backup และ Migration ที่เคยติดได้รับแล้ว รายละเอียดดู [Staging Evidence](M1_ALIGNMENT_STAGING_EVIDENCE.md), [Test Evidence](M1_TEST_EVIDENCE.md), [Recovery Plan](M1_ALIGNMENT_MIGRATION_PLAN.md)
 
 งาน M1 อยู่ใน .local/m1-staging โฟลเดอร์หลักเป็นงาน M2 ที่พักไว้ ไม่รวมการแก้ M2 ใน PR นี้
+
+Job UI patch จาก task Reviwer: เพิ่มรายการข้างฟอร์มและผลสำเร็จ/ข้อผิดพลาดใกล้ปุ่ม หลัง POST สำเร็จล้างฟอร์มทันที; GET refresh fail แสดงคำเตือนว่าบันทึกแล้วไม่ชวนสร้างซ้ำ. ยังไม่พิสูจน์สาเหตุ Job เดิมที่ Owner รายงาน และไม่ถือว่าผ่าน browser/UAT ของ patch. ไม่มี migration ใหม่
+

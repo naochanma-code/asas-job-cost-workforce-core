@@ -98,6 +98,8 @@ export async function registerLine(
     };
   });
   app.delete("/api/line/link", async (req) => {
+    if (process.env.LINE_ENABLED !== "true")
+      throw new Denied(503, "LINE ยังไม่เปิดใช้งาน");
     await db.transaction(async (tx) => {
       await tx.query("DELETE FROM line_accounts WHERE user_id=$1", [
         req.actor.id,
@@ -111,6 +113,8 @@ export async function registerLine(
   });
   app.post("/api/projects/:id/line-code", async (req) => {
     manage(req.actor);
+    if (process.env.LINE_ENABLED !== "true")
+      throw new Denied(503, "LINE ยังไม่เปิดใช้งาน");
     const id = z
         .string()
         .uuid()

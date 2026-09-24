@@ -70,3 +70,7 @@ GET projects และ projects/:id คืน customer_name และ site_name 
 - GET assignments: PM receives TECH team only in own Project; assign/revoke enforces role+membership+target role on server in locked transaction
 
 Disabled type remains usable on unchanged record and retains snapshot; new/different selection rejects409. Assign duplicate409/revoke repeated404 do not create another audit. Code reservation and insert/audit share transaction; no code reset/reuse endpoint. Project code PRJ-YYMM-NNN Bangkok month; Job code JOB-projectNamespace-NN. Padding minimum expands at 1000/100. Legacy code remains unchanged. Primary PM backfill and membership compatibility documented in ADR-011.
+
+## LINE disabled capability — D-026
+
+GET /me เพิ่ม line_enabled:boolean (true เฉพาะ LINE_ENABLED=true); ยังต้องมี session ไม่มี secret/counters. Web ใช้ boolean นี้ปิด link/unlink/group-code controls. POST/DELETE /line/link และ POST /projects/:id/line-code คืน503เมื่อ disabled โดยไม่เปลี่ยน DB; group-code คง role guard เดิม OWNER/ADMIN ก่อน feature gate. LINE status/webhook/worker คงกติกาเดิม ไม่เปิด Real LINE.

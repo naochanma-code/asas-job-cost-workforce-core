@@ -31,6 +31,8 @@ export default function Home() {
     [technicians, setTechnicians] = useState<Row[]>([]),
     [users, setUsers] = useState<Row[]>([]),
     [selected, setSelected] = useState<Row | null>(null),
+    [createdJob, setCreatedJob] = useState<Row | null>(null),
+    [jobError, setJobError] = useState(""),
     [assignments, setAssignments] = useState<Row[]>([]),
     [page, setPage] = useState("projects"),
     [customer, setCustomer] = useState(""),
@@ -69,13 +71,18 @@ export default function Home() {
       .catch(() => {})
       .finally(() => setReady(true));
   }, []);
-  async function act(fn: () => Promise<void>) {
+  async function act(
+    fn: () => Promise<void>,
+    onError?: (message: string) => void,
+  ) {
     setBusy(true);
     setMessage("");
     try {
       await fn();
     } catch (e) {
-      setMessage((e as Error).message);
+      const error = (e as Error).message;
+      setMessage(error);
+      onError?.(error);
     } finally {
       setBusy(false);
     }
@@ -85,11 +92,13 @@ export default function Home() {
     return Object.fromEntries(new FormData(e.currentTarget));
   };
   async function open(id: string) {
-    setSelected(await api("/projects/" + id));
+    const detail = await api("/projects/" + id);
+    setSelected(detail);
     if (manager || me?.role === "PM") {
       setAssignments(await api("/projects/" + id + "/assignments"));
       setTechnicians(await api("/projects/" + id + "/assignable-technicians"));
     }
+    return detail;
   }
   if (!ready) return <main>กำลังโหลด…</main>;
   return (
@@ -166,7 +175,7 @@ export default function Home() {
           </form>
         ) : (
           <>
-            {linkToken && (
+            {me.line_enabled === true && linkToken && (
               <section className="card">
                 <h2>เชื่อมบัญชี LINE</h2>
                 <p>
@@ -206,19 +215,21 @@ export default function Home() {
               {me.role === "OWNER" && (
                 <button onClick={() => setPage("accounts")}>บัญชีผู้ใช้</button>
               )}
-              <button
-                className="secondary"
-                onClick={() =>
-                  act(async () => {
-                    await api("/line/link", "DELETE");
-                    setLinkToken("");
-                    history.replaceState(null, "", "/");
-                    setMessage("ยกเลิกการเชื่อม LINE แล้ว");
-                  })
-                }
-              >
-                ยกเลิกเชื่อม LINE
-              </button>
+              {me.line_enabled === true && (
+                <button
+                  className="secondary"
+                  onClick={() =>
+                    act(async () => {
+                      await api("/line/link", "DELETE");
+                      setLinkToken("");
+                      history.replaceState(null, "", "/");
+                      setMessage("ยกเลิกการเชื่อม LINE แล้ว");
+                    })
+                  }
+                >
+                  ยกเลิกเชื่อม LINE
+                </button>
+              )}
             </nav>
             {page === "projects" && !selected && (
               <div className="grid">
@@ -248,7 +259,15 @@ export default function Home() {
                         </p>
                         <small>{p.code}</small>
                       </div>
-                      <button onClick={() => act(() => open(p.id))}>
+                      <button
+                        onClick={() =>
+                          act(async () => {
+                            setCreatedJob(null);
+                            setJobError("");
+                            await open(p.id);
+                          })
+                        }
+                      >
                         เปิดโครงการ
                       </button>
                     </div>
@@ -562,14 +581,49 @@ export default function Home() {
                       <form
                         onSubmit={(e) => {
                           const b = fields(e);
-                          act(async () => {
-                            await api(
-                              "/projects/" + selected.id + "/jobs",
-                              "POST",
-                              jobInput(b),
-                            );
-                            await open(selected.id);
-                          });
+                          const form = e.currentTarget;
+                          setJobError("");
+                          setCreatedJob(null);
+                          act(
+                            async () => {
+                              const created = await api(
+                                "/projects/" + selected.id + "/jobs",
+                                "POST",
+                                jobInput(b),
+                              );
+                              setCreatedJob({
+                                projectId: selected.id,
+                                id: created.id,
+                                code: created.code,
+                                name: b.name,
+                              });
+                              form.reset();
+                              try {
+                                const detail = await api(
+                                  "/projects/" + selected.id,
+                                );
+                                setSelected(detail);
+                                if (
+                                  !detail.jobs.some(
+                                    (j: Row) => j.id === created.id,
+                                  )
+                                ) {
+                                  setJobError(
+                                    "บันทึกแล้ว แต่รายการยังไม่อัปเดต กรุณาโหลดหน้าใหม่ตรวจอีกครั้ง",
+                                  );
+                                }
+                              } catch {
+                                setJobError(
+                                  "บันทึกแล้ว แต่โหลดรายการไม่สำเร็จ กรุณาโหลดหน้าใหม่ตรวจอีกครั้ง",
+                                );
+                              }
+                            },
+                            (error) =>
+                              setJobError(
+                                error +
+                                  " หากไม่แน่ใจว่าบันทึกแล้วหรือไม่ กรุณาโหลดหน้าใหม่ตรวจรายการก่อนกดซ้ำ",
+                              ),
+                          );
                         }}
                       >
                         <label>
@@ -596,6 +650,29 @@ export default function Home() {
                           เพิ่มงานย่อย
                         </button>
                       </form>
+                      {jobError && (
+                        <p role="alert" className="message">
+                          {jobError}
+                        </p>
+                      )}
+                      {createdJob && createdJob.projectId === selected.id && (
+                        <p role="status" className="message">
+                          เพิ่มงานย่อย {createdJob.name} ({createdJob.code})
+                          แล้ว
+                        </p>
+                      )}
+                      <h3>งานย่อยในโครงการ ({selected.jobs.length})</h3>
+                      {selected.jobs.length === 0 ? (
+                        <p className="muted">ยังไม่มีงานย่อย</p>
+                      ) : (
+                        <ul>
+                          {selected.jobs.map((j: Row) => (
+                            <li key={j.id}>
+                              {j.name} · {j.code} · {j.job_type_name}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                       {manager && (
                         <>
                           <details>
@@ -640,23 +717,25 @@ export default function Home() {
                               <button disabled={busy}>บันทึก PM</button>
                             </form>
                           </details>
-                          <button
-                            className="secondary"
-                            onClick={() =>
-                              act(async () => {
-                                const r = await api(
-                                  "/projects/" + selected.id + "/line-code",
-                                  "POST",
-                                );
-                                setMessage(
-                                  "ใช้ในกลุ่มทดสอบภายใน 10 นาที ด้วย LINE ที่เชื่อมกับบัญชีนี้:\n" +
-                                    r.command,
-                                );
-                              })
-                            }
-                          >
-                            สร้างรหัสผูกกลุ่ม LINE
-                          </button>
+                          {me.line_enabled === true && (
+                            <button
+                              className="secondary"
+                              onClick={() =>
+                                act(async () => {
+                                  const r = await api(
+                                    "/projects/" + selected.id + "/line-code",
+                                    "POST",
+                                  );
+                                  setMessage(
+                                    "ใช้ในกลุ่มทดสอบภายใน 10 นาที ด้วย LINE ที่เชื่อมกับบัญชีนี้:\n" +
+                                      r.command,
+                                  );
+                                })
+                              }
+                            >
+                              สร้างรหัสผูกกลุ่ม LINE
+                            </button>
+                          )}
                         </>
                       )}
                     </section>

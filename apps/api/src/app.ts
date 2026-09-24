@@ -96,16 +96,14 @@ export async function buildApp(db: Database, origin = "http://127.0.0.1:3000") {
       error instanceof Denied
         ? error.status
         : (error as { statusCode?: number }).statusCode || 500;
-    reply
-      .code(status)
-      .send({
-        error:
-          status === 500
-            ? "ระบบขัดข้อง กรุณาลองใหม่"
-            : error instanceof Denied
-              ? error.message
-              : "คำขอไม่ถูกต้องหรือถี่เกินไป",
-      });
+    reply.code(status).send({
+      error:
+        status === 500
+          ? "ระบบขัดข้อง กรุณาลองใหม่"
+          : error instanceof Denied
+            ? error.message
+            : "คำขอไม่ถูกต้องหรือถี่เกินไป",
+    });
   });
   app.get("/api/health", async (_, reply) => {
     try {
@@ -171,7 +169,10 @@ export async function buildApp(db: Database, origin = "http://127.0.0.1:3000") {
     reply.clearCookie("sid", { path: "/" });
     return { ok: true };
   });
-  app.get("/api/me", async (req) => req.actor);
+  app.get("/api/me", async (req) => ({
+    ...req.actor,
+    line_enabled: process.env.LINE_ENABLED === "true",
+  }));
   app.get("/api/users", async (req) => {
     manage(req.actor);
     return (

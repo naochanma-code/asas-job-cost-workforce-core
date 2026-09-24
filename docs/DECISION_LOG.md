@@ -152,3 +152,7 @@ Owner ยืนยัน “ยืนยันผ่านทั้ง 7 งา�
 Owner อนุมัติสำรอง Staging ที่มีข้อมูลจริงแบบเข้ารหัสบน Railway เดิม ดาวน์โหลดเฉพาะไฟล์เข้ารหัสไป local AppData/ASAS-CoreApp/backups/m1-20260924 นอก OneDrive/Git และ restore ลงฐานใหม่ m1_recovery_20260924_alignment โดยไม่เขียนทับฐานเดิมและไม่ให้ runtime เข้าได้
 
 หลัง Backup/Recovery PASS Owner อนุมัติ 003_m1_alignment.sql, runtime grants สำหรับ types/counters/registry และ maintenance เพื่อ Deploy API/Web exact cda461dd3ca540f91b5857e245304aa2c1fe41f7 ไม่เปลี่ยนแผน ไม่เปิด LINE ไม่ Merge/Production การอนุมัตินี้ไม่ครอบคลุม destructive rollback หรือใช้ข้อมูลจริงเป็น test fixture ผลจริงดู M1_ALIGNMENT_STAGING_EVIDENCE.md
+
+## D-026 — LINE disabled ต้องปิดขั้นตอนใน Web/API (2026-09-24)
+
+เมื่อ LINE_ENABLED ไม่เท่ากับ true แบบตรงตัว API link/unlink/group binding code ต้องปฏิเสธ503ก่อนเขียนข้อมูล และ Web ไม่เสนอ controls ทั้งสามรายการ /api/me เพิ่ม line_enabled boolean สำหรับทุกบทบาทที่ login แล้ว ไม่เปิด operational LINE counters หรือ secret ให้ PM/TECH เดิม group-code ยังตรวจ manage ก่อน feature gate (PM/TECH403) ไม่มี schema change และไม่เปิด LINE จริง
