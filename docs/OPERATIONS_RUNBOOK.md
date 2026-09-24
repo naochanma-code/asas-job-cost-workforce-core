@@ -1,6 +1,11 @@
 # Foundation operations — local / test only
 
-## M1 Alignment 003 — ต้องรอ Owner อนุมัติ Staging
+## 24 กันยายน 2026 — DEPLOYED_STAGING / รอ Owner UAT
+
+Owner อนุมัติ Backup/Recovery และ migration003/grants/Deploy SHA cda461d แล้ว ทั้ง API/Web Online; encrypted backup และ isolated restore PASS; legacy business digest ไม่เปลี่ยน; HTTPS24 checks และ restart persistence PASS; log sample ไม่พบ secret patterns LINE=false ไม่เปลี่ยนแผน ไม่ Merge/M2/M3/Production ดู [หลักฐาน Staging](M1_ALIGNMENT_STAGING_EVIDENCE.md) สถานะรออนุมัติด้านล่างเป็นประวัติที่แก้ไขแล้ว
+
+
+## M1 Alignment 003 — อนุมัติและ Deploy แล้ว 24 กันยายน
 
 ใช้ [Dry Run / Recovery Plan](M1_ALIGNMENT_MIGRATION_PLAN.md) รุ่นใหม่เพิ่ม types/counters/fields ต้องรัน approved migration job ด้วย operator แยก runtime และ MIGRATION_ROLE=asas_m1_migrator ก่อน Deploy Web/API คู่กัน ห้ามชี้ฐานจริงทดสอบ รหัสผ่านสมมติสร้างอัตโนมัติใน tests ไม่ต้องให้ Owner สลับบัญชี
 

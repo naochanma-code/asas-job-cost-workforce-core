@@ -1,10 +1,15 @@
 # Master Prompt v3.0 — Gap Analysis
 
+## 24 กันยายน 2026 — DEPLOYED_STAGING / รอ Owner UAT
+
+Owner อนุมัติ Backup/Recovery และ migration003/grants/Deploy SHA cda461d แล้ว ทั้ง API/Web Online; encrypted backup และ isolated restore PASS; legacy business digest ไม่เปลี่ยน; HTTPS24 checks และ restart persistence PASS; log sample ไม่พบ secret patterns LINE=false ไม่เปลี่ยนแผน ไม่ Merge/M2/M3/Production ดู [หลักฐาน Staging](M1_ALIGNMENT_STAGING_EVIDENCE.md) สถานะรออนุมัติด้านล่างเป็นประวัติที่แก้ไขแล้ว
+
+
 ## M1 Alignment — implementation รอบ 23 กันยายน 2026
 
-ช่องว่าง 1–6 มี implementation ใน 003/API/Web/permission tests แล้ว: types, fields, atomic codes, scoped PM assignment/revoke และ Job-level TECH read ขอบเขตแยก Project seed5 ตามคำตอบ Owner D-023; Job seed10 Local 32 PASS/2 native-only SKIP; Native PostgreSQL 34/34 PASS; typecheck/build/container/smoke PASS ตาม [CI 35872122374](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35872122374) สถานะ TESTED ยังไม่ใช่ DEPLOYED_STAGING/UAT
+ช่องว่าง 1–6 มี implementation ใน 003/API/Web/permission tests แล้ว: types, fields, atomic codes, scoped PM assignment/revoke และ Job-level TECH read ขอบเขตแยก Project seed5 ตามคำตอบ Owner D-023; Job seed10 Local 32 PASS/2 native-only SKIP; Native PostgreSQL 34/34 PASS; typecheck/build/container/smoke PASS ตาม [CI 35872122374](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/35872122374) สถานะ DEPLOYED_STAGING ตามหลักฐาน 24 กันยายน; UAT ยังไม่ผ่าน
 
-ช่องว่าง7–8ยังไม่ปิด: migrationและรุ่นใหม่ไม่ deploy; Real LINE ยังปิด และไม่เริ่ม M2/M3 ดู [แผน migration](M1_ALIGNMENT_MIGRATION_PLAN.md), [หลักฐาน](M1_TEST_EVIDENCE.md), [Expense future test plan](M3_EXPENSE_TEST_PLAN.md).
+ช่องว่าง7 ส่วน migration/deploy ผ่านแล้ว 24 กันยายน แต่ Owner UAT ยังรอ; ช่องว่าง8 Real LINE ยังปิด และไม่เริ่ม M2/M3 ดู [แผน migration](M1_ALIGNMENT_MIGRATION_PLAN.md), [หลักฐาน](M1_TEST_EVIDENCE.md), [Expense future test plan](M3_EXPENSE_TEST_PLAN.md).
 
 วันที่ตรวจ: 23 กันยายน 2026  
 ฐานที่ตรวจ: Draft PR #2 branch `codex/milestone-1-foundation`  

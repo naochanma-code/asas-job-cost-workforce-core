@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 24 กันยายน 2026 — DEPLOYED_STAGING / รอ Owner UAT
+
+Owner อนุมัติ Backup/Recovery และ migration003/grants/Deploy SHA cda461d แล้ว ทั้ง API/Web Online; encrypted backup และ isolated restore PASS; legacy business digest ไม่เปลี่ยน; HTTPS24 checks และ restart persistence PASS; log sample ไม่พบ secret patterns LINE=false ไม่เปลี่ยนแผน ไม่ Merge/M2/M3/Production ดู [หลักฐาน Staging](M1_ALIGNMENT_STAGING_EVIDENCE.md) สถานะรออนุมัติด้านล่างเป็นประวัติที่แก้ไขแล้ว
+
 ## 23 กันยายน 2026 — Staging preflight หลัง Owner ให้เริ่ม
 
 - ตรวจ head 9bcbe3e/CI SUCCESS และ Railway Trial $4.89/29 วัน บริการเดิม Online

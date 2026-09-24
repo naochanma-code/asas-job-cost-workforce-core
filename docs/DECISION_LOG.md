@@ -146,3 +146,9 @@ Owner ยืนยัน “ยืนยันผ่านทั้ง 7 งา�
 ## D-013 — Owner อนุญาต Merge M0
 
 วันที่2026-09-21 OwnerยืนยันรับMilestone0และสั่งMerge PR#1เข้าmain; merged a7e5c9e08a4d2c8185a12ef65f705a190c243a8d สำเร็จ ตรวจเอกสาร/prototypeครบและ45checks+ZIPผ่าน ยังไม่เริ่มMilestone1 ขอบเขตใน M1_FOUNDATION_PROPOSAL เป็นข้อเสนอเท่านั้น ไม่ได้เปลี่ยนGate MASTER หรืออนุญาตimplementation/deploy/LINEจริง
+
+## D-025 — อนุมัติ Backup/Recovery และ Deploy Alignment (Accepted, 2026-09-24)
+
+Owner อนุมัติสำรอง Staging ที่มีข้อมูลจริงแบบเข้ารหัสบน Railway เดิม ดาวน์โหลดเฉพาะไฟล์เข้ารหัสไป local AppData/ASAS-CoreApp/backups/m1-20260924 นอก OneDrive/Git และ restore ลงฐานใหม่ m1_recovery_20260924_alignment โดยไม่เขียนทับฐานเดิมและไม่ให้ runtime เข้าได้
+
+หลัง Backup/Recovery PASS Owner อนุมัติ 003_m1_alignment.sql, runtime grants สำหรับ types/counters/registry และ maintenance เพื่อ Deploy API/Web exact cda461dd3ca540f91b5857e245304aa2c1fe41f7 ไม่เปลี่ยนแผน ไม่เปิด LINE ไม่ Merge/Production การอนุมัตินี้ไม่ครอบคลุม destructive rollback หรือใช้ข้อมูลจริงเป็น test fixture ผลจริงดู M1_ALIGNMENT_STAGING_EVIDENCE.md
