@@ -1,6 +1,19 @@
 # PROJECT STATUS — M1 Alignment v3.0
 
-## 24 กันยายน 2026 — พบสาเหตุจริงจากฟอร์ม Job ที่เลือก Installation
+## 24 กันยายน 2026 — Seed Type hotfix DEPLOYED / รอ Owner ยืนยัน Job
+
+พบและพิสูจน์สาเหตุ400: seed Type IDจาก003ใช้ md5::uuid ซึ่ง strict RFC UUID validator ปฏิเสธ เมื่อส่งจาก dropdownจริง ต่างจาก tests เดิมที่ใช้ custom type หรือ defaultโดยไม่ส่งID. ก่อนแก้ regression REDข้อความตรงภาพ หลังแก้ canonical Type ID validator GREEN โดยไม่แก้ migration/ID/ข้อมูลจริงและไม่ลด role/scope checks
+
+API exact8e47f04343c131ddc7b4af40856183542ce5f1e8 SUCCESS deployment55fecd13-bfb2-4fb0-ae15-cc822ef4f641; Webยัง80c2868 (ไม่มี Web change ในhotfix). ดำเนินการต่อใน processแก้ Staging ที่ Ownerให้ทำต่อและส่งภาพปัญหา ไม่เปิด LINE/Production ไม่ Merge/M2 ไม่เพิ่มบริการหรือเปลี่ยนแผน
+
+TESTED: [CI36013717502](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36013717502) SUCCESS — Local35PASS/2nativeSKIP, Native PostgreSQL37PASS/0SKIP, typecheck/build/containers/smoke/M0 PASS. Regressionใช้ serializersของWebทดสอบครบ Project Type5/Job Type10 ทั้งcreate/edit/type rename-disable-enable/invalid-unknown IDs
+
+TESTED_STAGING: HTTPS29 checks PASS ด้วยบัญชีและข้อมูลสมมติแยก: Owner+PMสร้างและอ่าน Jobทุก10seed โดยใส่ผู้รับผิดชอบสมมติและวันที่null, Projectทุก5seedไม่มีSite/Job, runtime/schema/TLS, LINEfalse/capabilityและdisabledno-write. Health200/database ready; log sampleไม่พบsecret patterns. ปิดบัญชีสมมติหลังทดสอบ ไม่ลบข้อมูลจริง ไม่เขียนในโครงการที่ Ownerแจ้ง
+
+UAT_PENDING: root causeแก้และทดสอบบนStagingแล้ว แต่ Ownerยังไม่ได้ยืนยันกดจากฟอร์มเดิมหลังhotfix. API-only updateไม่ต้องล้างฟอร์มหรือเปลี่ยนประเภท Installation ไม่ต้องใส่วันที่เพื่อเลี่ยงbug. Live browser form submissionของOwnerไม่ทำแทนเพื่อไม่แก้ข้อมูลจริง
+
+
+## ประวัติก่อน hotfix — พบสาเหตุจริงจากฟอร์ม Job ที่เลือก Installation
 
 ภาพ Owner แสดง validation400ก่อนบันทึก จำลองซ้ำด้วย jobInput ของ Web + seed type ID + ผู้รับผิดชอบสมมติ + วันที่ว่าง + progress0 ได้ข้อความเดียวกัน (RED). Seed003ใช้ md5::uuid ซึ่ง PostgreSQL ยอมรับแต่ z.string().uuid() ปฏิเสธ version/variant bits; การทดสอบเดิมส่ง custom randomUUID type หรือไม่ส่ง type ID จึงไม่ครอบคลุม dropdownจริง
 

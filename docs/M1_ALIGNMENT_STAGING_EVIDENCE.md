@@ -66,3 +66,11 @@ Owner อนุมัติรุ่น80c2868หลังเสนอ release �
 - UIอ่านอย่างเดียวหลังRefresh: ปุ่มLINEหาย, Job listใกล้ฟอร์ม/empty-stateแสดง. Current browser rolePM; ไม่เปลี่ยนข้อมูลจริง
 - โครงการที่ Owner รายงาน: read-only count Job0/JOB_CREATED audit0 ไม่พบการบันทึกสำเร็จ ยังไม่รู้สาเหตุการส่งครั้งก่อน ไม่ใช้ข้อมูลจริงเป็นfixtureและไม่สร้างJobซ้ำให้
 - Owner UAT JobยังOPEN_ISSUE; actual browser form submissionด้วยfixtureรอบนี้NOT_RUN (แยกจากHTTP/APIchecks)
+
+## Seed type hotfix — 24 September 2026
+
+API8e47f04343c131ddc7b4af40856183542ce5f1e8 deployed SUCCESS in55fecd13-bfb2-4fb0-ae15-cc822ef4f641; Web80c2868 unchanged. No migration/seed/data rewrite. Root causeD-028 reproduced using actual Web serializers then fixed by canonical type-only identifier validation.
+
+CI36013717502 SUCCESS: Local35PASS/2SKIP, Native PostgreSQL37PASS/0SKIP, typecheck/build/containers/smoke/M0. LiveHTTPS29checks PASS: runtime/TLS/schema/LINEfalse, capabilityfalse, noSiteProject, Owner10+PM10 seeded Job create/read with responsible PM fixture and null planned_date,5seededProject create/read, disabledLINE no binding code. Fixture accounts disabled automatically; no changes to real rows or master type configuration.
+
+Health200/database ready and API sample100log entries no scanned secret pattern. Native and HTTP tests cover shipped seed IDs explicitly; previous custom/default-only tests were insufficient. Owner form UAT remains pending; no claim of live browser submission of real data.
