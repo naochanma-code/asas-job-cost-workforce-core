@@ -297,3 +297,4 @@ Artifactที่ตรวจ 2294814994d7a244be1989ffe4cc7f7ee074c13e; บั�
 
 Job UI patch จาก task Reviwer: เพิ่มรายการข้างฟอร์มและผลสำเร็จ/ข้อผิดพลาดใกล้ปุ่ม หลัง POST สำเร็จล้างฟอร์มทันที; GET refresh fail แสดงคำเตือนว่าบันทึกแล้วไม่ชวนสร้างซ้ำ. ยังไม่พิสูจน์สาเหตุ Job เดิมที่ Owner รายงาน และไม่ถือว่าผ่าน browser/UAT ของ patch. ไม่มี migration ใหม่
 
+หลักฐานเพิ่ม: code patch de99037 CI [36009851061](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36009851061) SUCCESS ครบ Local/Native PostgreSQL17/typecheck/build/API+Web containers/smoke/M0. เพิ่ม Owner-specific POST Job/GET ซ้ำสองครั้งด้วย Project สมมติไม่มี Site แล้ว targeted alignment10/10 PASS โดย task Reviwer; CI ของ test follow-up รอผล ไม่ใช่การยืนยัน Job จริงที่ Owner รายงานหรือ Deploy patch

@@ -501,6 +501,30 @@ test("Alignment API: configurable types, richer data, PM authorization and atomi
       },
     );
     await t.test(
+      "Owner creates a Job in a Project without Site and reads it after reopening",
+      async () => {
+        const project = (
+          await ok("OWNER", "POST", "/api/projects", {
+            name: "Owner no-site Job visibility",
+            customer_id: customer,
+          })
+        ).id;
+        const before = await ok("OWNER", "GET", "/api/projects/" + project);
+        assert.equal(before.site_id, null);
+        assert.deepEqual(before.jobs, []);
+        const created = await ok("OWNER", "POST", `/api/projects/${project}/jobs`, {
+          name: "Owner created Job",
+        });
+        for (let i = 0; i < 2; i++) {
+          const reopened = await ok("OWNER", "GET", "/api/projects/" + project);
+          assert.equal(reopened.jobs.length, 1);
+          assert.equal(reopened.jobs[0].id, created.id);
+          assert.equal(reopened.jobs[0].code, created.code);
+          assert.equal(reopened.jobs[0].name, "Owner created Job");
+        }
+      },
+    );
+    await t.test(
       "PM cannot create user/change roles/appoint PM or exploit ordinary assignment",
       async () => {
         assert.equal(
