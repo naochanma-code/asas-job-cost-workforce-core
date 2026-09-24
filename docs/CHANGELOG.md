@@ -6,7 +6,7 @@ Owner ยืนยันว่ามือถือเข้าใช้งา�
 
 พบ LINE=false ยังสร้าง group binding code และแสดง LINE controls ได้ แก้ /api/me ให้คืน line_enabled boolean และปิด controls ตามค่า true เท่านั้น; API ปฏิเสธ link/unlink/group-code เมื่อ disabled ก่อนเปลี่ยนข้อมูล ไม่เปิด LINE ไม่เปลี่ยน schema/permission role
 
-Local 33 PASS / 2 native-only SKIP / 0 FAIL; typecheck และ production build PASS (หลังรับ Job UI patch และ LINE guards) CI/container รอผล; Staging ยังเป็น cda461d ไม่อ้างว่า patch Deploy แล้ว ไม่แก้ข้อมูลจริง ไม่ Merge/M2/Production
+Local/CI ล่าสุด: 34 PASS / 2 native-only SKIP / 0 FAIL; Native PostgreSQL17 36 PASS / 0 SKIP / 0 FAIL; typecheck, production build, API/Web container build และ smoke, M0 checks PASS — [CI36010347404](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36010347404) ที่ code+test commit 80c2868b46f766ea0eb6da5e6c50eed617f6be7c. พร้อมเสนอ Deploy API/Web รุ่นแก้ ไม่มี migration ใหม่; รอ Owner อนุมัติ เพราะการอนุมัติครั้งก่อนระบุ release cda461d. Staging ยังเป็น cda461d ไม่แก้ข้อมูลจริง ไม่ Merge/M2/Production
 
 
 ## 24 กันยายน 2026 — DEPLOYED_STAGING / รอ Owner UAT
@@ -297,4 +297,4 @@ Artifactที่ตรวจ 2294814994d7a244be1989ffe4cc7f7ee074c13e; บั�
 
 Job UI patch จาก task Reviwer: เพิ่มรายการข้างฟอร์มและผลสำเร็จ/ข้อผิดพลาดใกล้ปุ่ม หลัง POST สำเร็จล้างฟอร์มทันที; GET refresh fail แสดงคำเตือนว่าบันทึกแล้วไม่ชวนสร้างซ้ำ. ยังไม่พิสูจน์สาเหตุ Job เดิมที่ Owner รายงาน และไม่ถือว่าผ่าน browser/UAT ของ patch. ไม่มี migration ใหม่
 
-หลักฐานเพิ่ม: code patch de99037 CI [36009851061](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36009851061) SUCCESS ครบ Local/Native PostgreSQL17/typecheck/build/API+Web containers/smoke/M0. เพิ่ม Owner-specific POST Job/GET ซ้ำสองครั้งด้วย Project สมมติไม่มี Site แล้ว targeted alignment10/10 PASS โดย task Reviwer; CI ของ test follow-up รอผล ไม่ใช่การยืนยัน Job จริงที่ Owner รายงานหรือ Deploy patch
+หลักฐานเพิ่ม: code patch de99037 CI [36009851061](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36009851061) SUCCESS ครบ Local/Native PostgreSQL17/typecheck/build/API+Web containers/smoke/M0. เพิ่ม Owner-specific POST Job/GET ซ้ำสองครั้งด้วย Project สมมติไม่มี Site แล้ว targeted alignment10/10 PASS โดย task Reviwer; CI ของ test follow-up80c2868 SUCCESS ตามลิงก์ด้านบน ไม่ใช่การยืนยัน Job จริงที่ Owner รายงานหรือ Deploy patch
