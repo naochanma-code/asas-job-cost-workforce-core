@@ -25,3 +25,7 @@ Staging มีข้อมูลจริงปนอยู่ OWNER เห็�
 การถือรหัสเป็นหลักฐานการเข้าร่วมทดลอง ไม่ใช่การยืนยันตัวบุคคลหรือแอปบัญชี; ต้องตรวจผู้ทดลอง3คนและเชื่อมบัญชีตาม nonce flow เดิมภายหลัง ไม่ใช่ public onboarding. หมดอายุ/restartต้องเริ่มใหม่ ไม่แก้ปัญหาด้วยlog raw eventsหรือเปิดwildcard. LINE provider auto-reply/greeting เดิมอาจตอบเอง ต้องตรวจแยกจาก worker
 
 อ้างอิงทางการ: [LINE signature](https://developers.line.biz/en/docs/messaging-api/verify-webhook-signature/), [User IDs](https://developers.line.biz/en/docs/messaging-api/getting-user-ids/), [Group source](https://developers.line.biz/en/docs/messaging-api/group-chats/). Verification/ID collection ไม่ได้ถือว่า account linking/UAT ผ่าน
+
+## D-031 — รูปแบบข้อความที่รับ
+
+ส่งทั้งคำสั่ง หรือส่งเฉพาะตัวรหัส32ตัวอักษรได้ ใช้exacthashและกติกาเดิมทุกข้อ ไม่ดึงcodeจากข้อความอื่นแบบfuzzy. ผู้ทดลอง3คนต้องใช้LINEคนละบัญชี ห้ามส่งรหัสส่วนตัวทั้ง3ชุดจากLINEบัญชีเดียว; รหัสกลุ่มส่งโดยหนึ่งในผู้สมัครส่วนตัวแล้ว ไม่ต้องใช้LINEคนที่4 ไม่มีschemaเปลี่ยน

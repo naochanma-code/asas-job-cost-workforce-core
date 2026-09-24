@@ -1,5 +1,9 @@
 # DECISION LOG
 
+## D-031 — Enrollment รับรหัสอย่างเดียวได้ (24 กันยายน 2026)
+
+จากpilotจริงพบผู้ทดลองส่งbarecodeที่ตรงกับรหัสในเว็บ แต่ตัวรับต้องการprefix จึงได้Webhook200โดยยังไม่ลงทะเบียน รับbarecode32ตัวอักษรหรือคำสั่ง “ลงทะเบียนทดลอง <รหัส>” ที่มีwhitespaceคั่นได้; ไม่รับข้อความอื่นที่เพียงมีcodeแทรก ห้ามลดentropy/hash/expiry/one-use/source/distinct-user checks. ไม่มีschema/permission expansion นอกADR-012 ใช้OAเดิมต่อได้ ข้อผิดพลาดนี้ไม่ต้องสร้างOAใหม่
+
 ## D-030 — Owner อนุมัติ bounded LINE Pilot (24 กันยายน 2026)
 
 Owner ตอบ “ได้เลยค่ะ” ต่อขอบเขต OA/กลุ่มทดสอบ Owner/Admin/TECH1คน ภายใน Railway Trial และยืนยันภายหลังว่าใช้ OA ที่แจ้งทดสอบและเปลี่ยน Webhook เดิมได้ การอนุมัตินี้ไม่ครอบคลุม Production/Merge/M2/เพิ่มค่าบริการ

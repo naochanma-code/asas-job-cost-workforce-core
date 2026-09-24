@@ -1,5 +1,13 @@
 # M1 Test Evidence — 2026-09-21
 
+## 24 กันยายน 2026 — แก้ enrollment รับรหัสอย่างเดียว (ยังไม่ Deploy)
+
+Ownerแจ้งส่งครบ แต่ GETผลรอบปัจจุบันยัง0/3และ0/1 ตรวจHTTPmetadataพบWebhook200หลายครั้ง endpointactiveถูกต้อง deploymentไม่เปลี่ยน. เปรียบเทียบเฉพาะข้อความที่แสดงในOAทดสอบกับรหัสในหน้าเว็บในหน่วยความจำ: มีตัวรหัสตรง แต่ไม่มีprefixคำสั่ง ไม่เก็บข้อความ/รหัส/IDsในหลักฐาน
+
+Root cause: captureรับเฉพาะ “ลงทะเบียนทดลอง <รหัส>” จึงไม่รับ barecode. แก้ให้ยอมรับทั้ง barecode32ตัวอักษรและคำสั่งเดิม โดยยังตรวจexacthash/one-use/15นาที/3LINEusersไม่ซ้ำ/groupโดยผู้สมัครแล้ว/signature/destination ไม่มีauto-grantหรือwildcard ไม่มีschema/Web change
+
+Regression synthetic REDก่อนแก้2tests; GREENหลังแก้3/3 + typecheck PASS. CI/fullNativePGรอpush. OwnerUAT/enrollmentจริงยังไม่ผ่านและbusinessLINEยังfalse. รอบเดิมหมดอายุแล้ว ต้องเริ่มรอบใหม่หลังDeployที่ตรวจผ่าน ไม่ให้ส่งซ้ำระหว่างกำลังแก้
+
 ## 24 กันยายน 2026 — LINE enrollment DEPLOYED / Webhook จริง PASS
 
 Ownerอนุมัติ boundedPilotและเปลี่ยนWebhookเดิมของOAทดสอบได้ ได้กรอกChannelSecret/APIและAccessToken/workerผ่านRailwayแล้ว Applyเฉพาะ2ตัวแปรแบบskipDeploys ไม่แสดงค่า BotinfoตรงOA; APIไม่มีAccessToken PayloadKey32bytesสุ่มส่งตรงstdin BotIDตั้งส่วนตัว

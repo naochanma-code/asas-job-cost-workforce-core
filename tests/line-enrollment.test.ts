@@ -53,6 +53,39 @@ test("enrollment invitations are bounded, one-use, creator-private, expire and d
   assert.equal(session.result("owner")!.userIds.length, 0);
 });
 
+test("bare enrollment codes support private/group slots without weakening invitation checks", () => {
+  let now = 0;
+  const session = new LineEnrollment(() => now);
+  const started = session.start("owner")!;
+  const codes = started.invitations.map((i) => i.command.split(" ")[1]);
+  for (const invalid of [
+    "hello " + codes[0],
+    codes[0] + " extra",
+    codes[0] + codes[1],
+    codes[0].slice(1),
+    "x".repeat(32),
+  ])
+    session.capture(event(invalid));
+  assert.equal(session.result("owner")!.userIds.length, 0);
+  session.capture(event(codes[3], user(1), group));
+  session.capture(event(codes[0], user(1), group));
+  assert.equal(session.result("owner")!.userIds.length, 0);
+  assert.equal(session.result("owner")!.groupIds.length, 0);
+  session.capture(event("  " + codes[0] + "\n"));
+  assert.deepEqual(session.result("owner")!.userIds, [user(1)]);
+  session.capture(event(codes[0], user(2)));
+  session.capture(event(codes[1], user(1)));
+  assert.equal(session.result("owner")!.userIds.length, 1);
+  session.capture(event(started.invitations[1].command, user(2)));
+  session.capture(event(codes[2], user(3)));
+  session.capture(event(codes[3], user(1), group));
+  assert.equal(session.result("owner")!.complete, true);
+  now = 15 * 60 * 1000;
+  session.start("owner");
+  session.capture(event(codes[0]));
+  assert.equal(session.result("owner")!.userIds.length, 0);
+});
+
 test("signed enrollment is OWNER-only and cannot queue/link/send business LINE", async () => {
   const names = [
     "LINE_ENABLED",
@@ -122,7 +155,7 @@ test("signed enrollment is OWNER-only and cannot queue/link/send business LINE",
     const before = await counts();
     const raw = JSON.stringify({
       destination: "synthetic-bot",
-      events: [event(started.json().invitations[0].command)],
+      events: [event(started.json().invitations[0].command.split(" ")[1])],
     });
     const hook = (body: string, signature: string) =>
       app.inject({

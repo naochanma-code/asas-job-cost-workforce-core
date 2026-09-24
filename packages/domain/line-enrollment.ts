@@ -51,7 +51,7 @@ export class LineEnrollment {
       return;
     }
     if (event.type !== "message" || event.message?.type !== "text") return;
-    const match = /^ลงทะเบียนทดลอง ([A-Za-z0-9_-]{32})$/.exec(
+    const match = /^(?:ลงทะเบียนทดลอง\s+)?([A-Za-z0-9_-]{32})$/.exec(
       event.message.text?.trim() || "",
     );
     const source = event.source;

@@ -86,3 +86,5 @@ project_type_id/job_type_id and /project-types/:id or /job-types/:id accept cano
 - GET /line/enrollment: creator OWNER only; returns slots/count status and private userIds/groupIds for direct secret-manager setup, no-store; 404 if absent/expired/another OWNER. Other roles403; disabled mode503.
 - Enrollment webhook retains signature/destination validation, stores at most3 user IDs/1group ID in process memory, no persistent message payload or business side effects. Restart/expiry clears collection. Both modes enabled => webhook503. No automatic allowlist updates.
 - Worker rejects incomplete/malformed scope/config and emits only fixed safe fatal errors. Processing rechecks source access; disabled/enrollment mode leaves queues untouched. Provider worker lifecycle and actual LINE remain separate Staging/UAT gates.
+
+D-031 input compatibility: enrollment accepts an exact bare32-character invitation code or the original Thai command with whitespace between prefix/code. Other embedded text, altered/expired/used codes and duplicate private senders remain rejected. No schema/role/response change; business LINE remains disabled during enrollment.
