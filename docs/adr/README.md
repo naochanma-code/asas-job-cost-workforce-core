@@ -20,3 +20,5 @@ ADR เหล่านี้บันทึก baseline ที่มีอยู
 | [010](010-foundation-implementation.md) | M1 implementation, authentication/schema/LINE/backup | Accepted implementation; deployment pending |
 
 | [011](011-m1-v3-alignment.md) | M1 v3 types, fields, code reservation, PM assignment และ recovery | Implementation ตาม D-021–023; Staging approval pending |
+
+| [012](012-bounded-line-pilot.md) | Bounded LINE project scope, signed private enrollment, worker guards | Owner bounded pilot approved; runtime evidence in PROJECT_STATUS |

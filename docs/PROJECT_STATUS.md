@@ -4,7 +4,7 @@
 
 ## ตอนนี้ถึงไหน
 
-**Owner ยืนยันเพิ่ม Job ได้แล้ว — ปิดปัญหา Job validation400** ตามข้อความ “โอเคเพิ่มได้แล้วค่ะ ทำขั้นตอนต่อไปได้เลย” การยืนยันนี้ครอบคลุม flow สร้าง Job และผลแก้ครั้งนี้ ไม่ใช่ตรวจรับทุก flow หรืออนุมัติ Merge/M2/LINE จริง
+**Owner ยืนยันเพิ่ม Job ได้แล้ว — ปิดปัญหา Job validation400** ตามข้อความ “โอเคเพิ่มได้แล้วค่ะ ทำขั้นตอนต่อไปได้เลย” การยืนยันนี้ครอบคลุม flow สร้าง Job และผลแก้ครั้งนี้ ไม่ใช่ตรวจรับทุก flow หรืออนุมัติ Merge/M2; ต่อมา Owner อนุมัติ LINE Pilot เฉพาะขอบเขตตาม D-030
 
 API ที่ใช้งาน: 8e47f04343c131ddc7b4af40856183542ce5f1e8 · Web: 80c2868b46f766ea0eb6da5e6c50eed617f6be7c · [เว็บ Staging](https://web-staging-cb6f.up.railway.app/)
 
@@ -31,10 +31,16 @@ API ที่ใช้งาน: 8e47f04343c131ddc7b4af40856183542ce5f1e8 · Web
 
 ## สิ่งที่ Owner ต้องทำต่อ
 
-ยืนยันขอบเขตทดลอง LINE เฉพาะ OA/กลุ่มทดสอบ (ตามข้อห้ามเดิมยังไม่เปิดจริง). หลังอนุมัติ Codexจะเตรียมและทดสอบส่วนเทคนิคก่อนให้กรอก Secret/Token ในRailwayเอง ไม่ขอค่าเหล่านี้ผ่านแชท/GitHub ไม่ต้องทดสอบ Job ซ้ำรอบนี้
+อนุมัติแล้ว: LINE Pilot 3คน/1กลุ่ม และเปลี่ยน Webhook เดิมของ OA ที่แจ้งได้ ขณะนี้ Codexเตรียมโค้ดและทดสอบ signed enrollment/private project scope ก่อนเปิดจริง Ownerเข้าสู่ LINE Console แล้ว รอปลายทางกรอก Secret/Token ผ่าน Railway โดยตรง ไม่ต้องส่งในแชท ไม่ต้องเทสJobซ้ำ
 
 ## หลักฐานและขอบเขตงาน
 
 [CI](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36013717502) · [Staging Evidence](M1_ALIGNMENT_STAGING_EVIDENCE.md) · [Test Evidence](M1_TEST_EVIDENCE.md) · [Owner UAT](M1_OWNER_UAT.md) · [ประวัติ](M1_STAGING_HISTORY.md)
 
-M1อยู่ใน .local/m1-staging โฟลเดอร์หลักเป็นงานM2ที่พักไว้ ไม่รวมโค้ดหรือschemaM2 งานรอบนี้เป็นบันทึกOwner acceptanceและreadinessเท่านั้น ไม่มีapplication/schema/deployment change
+M1อยู่ใน .local/m1-staging โฟลเดอร์หลักเป็นงานM2ที่พักไว้ ไม่รวมโค้ดหรือschemaM2 งานรอบนี้เพิ่ม LINE pilot guard/enrollment/worker tests ตาม ADR-012 ไม่มี schema change; ยังไม่ deploy รุ่นนี้หรือเปิด LINE จริง
+
+## ความคืบหน้ารอบอนุมัติ Pilot
+
+CODED: private enrollment15นาที3คน1กลุ่ม/Project allowlist/source revocation guard/worker safe error. TESTED_LOCAL targeted10/10/typecheck/build PASS; Latest full45PASS/2nativeSKIP; CIรอหลังpush DEPLOYED/REAL_LINE NOT_RUN ของรุ่นนี้. TrialคงเหลือประมาณUSD4.79/28วัน ณตรวจ ไม่อัปเกรด
+
+[UI Design Direction](UI_DESIGN_DIRECTION.md): DESIGNED_REFERENCE จากtask Reviwer ยังไม่ใช่UIที่deploy

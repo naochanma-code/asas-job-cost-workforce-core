@@ -78,3 +78,11 @@ GET /me เพิ่ม line_enabled:boolean (true เฉพาะ LINE_ENABLED=
 ## Seed Type identifier compatibility — D-028
 
 project_type_id/job_type_id and /project-types/:id or /job-types/:id accept canonical hexadecimal 8-4-4-4-12 IDs matching PostgreSQL uuid storage, including deterministic003 seeds without RFC version/variant bits. Invalid format400; unknown/disabled selected type409; all permission/FK/scope checks remain. Other entity identifiers keep strict UUID validation. No migration or existing identity changes.
+
+## Bounded LINE Pilot — D-030 / ADR-012
+
+- LINE_TEST_PROJECT_IDS: exact UUIDs of approved synthetic Projects; additional to normal role/assignment permission. Empty denies every Project on LINE, including OWNER. POST projects/:id/line-code rejects404 without audit/code insert outside allowlist; rechecked at code consumption and JOBS delivery.
+- POST /line/enrollment/start: OWNER/session/Origin required, enrollment=true and business LINE=false; returns four one-use invitation commands + expiresAt (15 minutes), 409 if a round remains active. Audit includes actor/action only.
+- GET /line/enrollment: creator OWNER only; returns slots/count status and private userIds/groupIds for direct secret-manager setup, no-store; 404 if absent/expired/another OWNER. Other roles403; disabled mode503.
+- Enrollment webhook retains signature/destination validation, stores at most3 user IDs/1group ID in process memory, no persistent message payload or business side effects. Restart/expiry clears collection. Both modes enabled => webhook503. No automatic allowlist updates.
+- Worker rejects incomplete/malformed scope/config and emits only fixed safe fatal errors. Processing rechecks source access; disabled/enrollment mode leaves queues untouched. Provider worker lifecycle and actual LINE remain separate Staging/UAT gates.

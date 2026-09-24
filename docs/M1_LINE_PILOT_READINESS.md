@@ -1,8 +1,8 @@
 # M1 LINE Pilot — Readiness 24 September 2026
 
-สถานะ PREPARED / NOT_READY_TO_ENABLE / REAL_LINE_NOT_RUN. OwnerยืนยันJob createบนWebผ่านแล้ว แต่คำสั่งทำขั้นถัดไปไม่ข้ามข้อห้ามเดิมเรื่องเปิดLINEจริง/Merge/M2/Production
+สถานะ PREPARED / NOT_READY_TO_ENABLE / REAL_LINE_NOT_RUN. OwnerยืนยันJob createบนWebผ่านแล้ว ต่อมา Owner อนุมัติ bounded LINE Pilot และเปลี่ยน Webhook เดิมตาม D-030; ไม่อนุมัติ Merge/M2/Production
 
-## ขอบเขตที่เสนอให้ Owner ยืนยัน
+## ขอบเขตที่ Owner ยืนยันแล้ว
 
 ผู้ร่วมทดลอง: Owner โอ๋, Admin ฟ้า, Technician1คน; OAทดสอบที่มีอยู่และกลุ่มทดสอบ1กลุ่มเท่านั้น ใช้บัญชีแยก/Projectสมมติ Aไม่มีSiteJob และ BมีSiteJob. LINEข้อความจำกัดเชื่อมบัญชี/งานของฉัน/ผูกกลุ่ม/แจ้งถอนสิทธิ์ ไม่มีข้อความถึงลูกค้า กลุ่มจริง เวลา/OT/Expense/Payroll
 
@@ -35,4 +35,10 @@
 
 ## Owner action
 
-ยืนยันว่าจะเริ่มpilotเฉพาะขอบเขตข้างต้นหรือยังพักLINE. ยังไม่ต้องส่งcredentialsหรือกรอกvariablesจนoperatorเตรียมปลายทางและวิธีenrollmentพร้อม ไม่มีคำถามเกี่ยวกับprogrammingให้Ownerตัดสินใจ
+Owner ยืนยันแล้วและเข้าสู่ LINE Console ของ OA ทดสอบ รอกรอก Channel Secret/API และ Access Token/worker ผ่าน Railway โดยตรงเมื่อ operator เตรียมปลายทางพร้อม ห้ามส่งค่าลับในแชท
+
+## Delta D-030 — ก่อนเปิดจริง
+
+เพิ่ม LINE_TEST_PROJECT_IDS ทั้งAPI/workerให้มีเฉพาะProjectสมมติ และโหมด LINE_ENROLLMENT_ENABLED=true ร่วมกับLINE_ENABLED=falseเพื่อรับรหัสสมัครชั่วคราว ผ่าน /line-pilot (Ownerผู้เริ่มรอบ) ตาม ADR-012. รับครบแล้วตรวจ3คน1กลุ่ม ตั้งallowlistโดยตรง ปิดenrollmentแล้วค่อยเปิดbusinessLINEเมื่อworker/gatesพร้อม ไม่มี auto-grant
+
+CODED/targetedTESTED ไม่ใช่DEPLOYED ยังต้องตรวจrealVerify/workerstop/enrollmentบนStagingก่อนUAT. ConsoleมีWebhookเดิมเปิดอยู่ Ownerอนุมัติเปลี่ยนแล้ว แต่ยังไม่ได้เปลี่ยนจนendpointพร้อม

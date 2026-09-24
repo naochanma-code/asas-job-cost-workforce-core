@@ -1,5 +1,12 @@
 # DECISION LOG
 
+## D-030 — Owner อนุมัติ bounded LINE Pilot (24 กันยายน 2026)
+
+Owner ตอบ “ได้เลยค่ะ” ต่อขอบเขต OA/กลุ่มทดสอบ Owner/Admin/TECH1คน ภายใน Railway Trial และยืนยันภายหลังว่าใช้ OA ที่แจ้งทดสอบและเปลี่ยน Webhook เดิมได้ การอนุมัตินี้ไม่ครอบคลุม Production/Merge/M2/เพิ่มค่าบริการ
+
+ตาม [ADR-012](adr/012-bounded-line-pilot.md) เพิ่ม exact Project allowlist กันข้อมูลจริงบน Staging ออกจาก LINE รวม OWNER, recheck source ก่อน process, worker fail-closed และ private signed enrollment 3คน1กลุ่มใน memory15นาที ไม่แก้ schema ไม่เก็บ raw webhook ไม่ใช้ wildcard ไม่มีสิทธิ์อัตโนมัติจาก enrollment ก่อนเปิดจริงต้องผ่าน CI/deploy/security และใช้ credentials ผ่าน Railway โดยตรงเท่านั้น
+
+
 ## D-024 — Owner ให้เริ่ม Staging Alignment ตามแผน (2026-09-23)
 
 หลังส่งผล Local/CI และแผน Backup/maintenance/migration003/Deploy คู่กัน Owner ตอบ “เริ่ม process ต่อไปได้เลยค่ะ” ถือเป็นการอนุมัติให้ดำเนินการตามแผนภายใน Railway Trial เดิม โดยยังต้องมี recoverable private/encrypted backup ก่อน migration ไม่อนุมัติ Pro/ค่าใช้จ่ายเพิ่ม/ข้าม Backup/เปิด LINE/Merge/M2/M3/Production

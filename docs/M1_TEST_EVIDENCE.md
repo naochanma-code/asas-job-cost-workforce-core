@@ -1,5 +1,18 @@
 # M1 Test Evidence — 2026-09-21
 
+## 24 กันยายน 2026 — อนุมัติ LINE Pilot / เตรียมขอบเขตและ enrollment
+
+Owner อนุมัติ OA/กลุ่มทดสอบ Owner/Admin/TECH1คน และเปลี่ยน Webhook เดิมได้ ภายใน Trialเดิม ตรวจ provider read-only: isTrialing=true เหลือเครดิตประมาณ USD4.7948 และ28วัน (plan enumHOBBYไม่ได้แปลว่ามีการอัปเกรด); ไม่มีการเปลี่ยนแผน
+
+CODED: exact synthetic Project allowlist รวม OWNER, recheck source ก่อน consume nonce/binding, worker fail-closed/safe fatal log, private signed enrollment /line-pilot (OWNERผู้เริ่มรอบเท่านั้น,3คน1กลุ่ม,15นาที,one-use,process memory,ไม่grantสิทธิ์/ไม่queue/ไม่reply). ไม่มี migration เปลี่ยนข้อมูลจริง หรือเปิด LINE รอบนี้ API contract/ADR-012/D-030 อัปเดตแล้ว
+
+TESTED_LOCAL: targeted scope6/6 + enrollment/worker4/4 PASS; typecheckและproduction build PASSหลังแก้ test config type. Full latest regression45PASS/2nativeSKIP และM0 45checks PASS. NativePG/container CIรอหลังpush จะแยกผลออกจาก Staging
+
+DEPLOYED/REAL_LINE: รุ่นเตรียมนี้ยังไม่deploy; workerสร้างเป็นserviceเปล่าแล้ว ยังไม่deploy; signed real Verify/link/group/UAT NOT_RUN ต้องตั้งcredentialsโดยตรงและผ่านgatesก่อนเปิด ไม่มีMerge/M2/M3/Production
+
+Design reference จาก task Reviwer: [UI_DESIGN_DIRECTION](UI_DESIGN_DIRECTION.md) สถานะ DESIGNED_REFERENCE — เมนูซ้ายถ่านเข้ม/แดงแบบภาพ1 เนื้อหาการ์ดขาว/น้ำเงินแบบภาพ2–5 ยังไม่ใช่ UI ที่ deploy
+
+
 ## 24 กันยายน 2026 — Owner ยืนยัน Job create ผ่าน / เตรียม LINE Pilot
 
 Ownerแจ้งเพิ่มJobได้แล้ว ปิดปัญหาseedType validation400เป็น OWNER_UAT_JOB_CREATE=PASS; ไม่ถือเป็นรับM1ทั้งหมด. ตรวจread-only: health200, branchตรงorigin/ไม่ตกmain, LINE=false, APIยังไม่มีLINEconfigและยังไม่มีworker (มีWeb/API/Postgres3services). เตรียม [LINE Readiness](M1_LINE_PILOT_READINESS.md) แต่ยังไม่เปิดจริง ไม่Merge/M2/Production. ไม่มีapplication/schema/deployment changeรอบนี้

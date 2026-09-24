@@ -4,27 +4,37 @@ import {
   deliverLine,
   liveTransport,
 } from "../apps/api/src/line";
-if (
-  process.env.LINE_ENABLED !== "true" ||
-  !process.env.LINE_CHANNEL_ACCESS_TOKEN ||
-  !process.env.DATABASE_URL ||
-  !process.env.WEB_ORIGIN?.startsWith("https://") ||
-  !process.env.LINE_TEST_USER_IDS ||
-  !process.env.LINE_TEST_GROUP_IDS ||
-  Buffer.from(process.env.LINE_PAYLOAD_KEY || "", "base64").length !== 32
-)
-  throw Error(
-    "Live worker requires explicit LINE configuration, test allowlists, encryption key, PostgreSQL and HTTPS origin",
-  );
-const db = await openDatabase(process.env.DATABASE_URL),
-  transport = liveTransport(process.env.LINE_CHANNEL_ACCESS_TOKEN);
-await verifySchema(db);
-let stopping = false;
-for (const signal of ["SIGINT", "SIGTERM"])
-  process.on(signal, () => (stopping = true));
-while (!stopping) {
-  await processLineEvent(db);
-  await deliverLine(db, transport, process.env.WEB_ORIGIN);
-  await new Promise((r) => setTimeout(r, 500));
+import { lineWorkerConfigured } from "../packages/domain/line-worker-config";
+
+async function main() {
+  if (!lineWorkerConfigured(process.env)) throw Error("Configuration");
+  const db = await openDatabase(process.env.DATABASE_URL);
+  let stopping = false;
+  const stop = () => {
+    stopping = true;
+  };
+  for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, stop);
+  try {
+    await verifySchema(db);
+    const transport = liveTransport(process.env.LINE_CHANNEL_ACCESS_TOKEN!);
+    while (!stopping) {
+      await processLineEvent(db);
+      if (stopping) break;
+      await deliverLine(db, transport, process.env.WEB_ORIGIN!);
+      if (!stopping) await new Promise((r) => setTimeout(r, 500));
+    }
+  } finally {
+    for (const signal of ["SIGINT", "SIGTERM"]) process.off(signal, stop);
+    await db.close();
+  }
 }
-await db.close();
+
+try {
+  await main();
+} catch {
+  // Database/transport errors can carry connection details. Never log the error.
+  console.error(
+    "LINE worker stopped: check private configuration and database health",
+  );
+  process.exitCode = 1;
+}

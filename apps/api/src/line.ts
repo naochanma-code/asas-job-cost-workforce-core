@@ -11,10 +11,12 @@ import {
   hashToken,
 } from "../../../packages/domain/identity";
 import { projectsFor, requireProject } from "../../../packages/domain/projects";
+import { LineEnrollment } from "../../../packages/domain/line-enrollment";
 import {
   seal,
   unseal,
-  allowedLineSource,
+  allowedLineEventSource,
+  allowedLineProject,
 } from "../../../packages/domain/line-payload";
 
 const eventSchema = z.object({
@@ -38,10 +40,46 @@ export async function registerLine(
   db: Database,
   origin: string,
 ) {
+  const enrollment = new LineEnrollment();
+  const enrolling = () =>
+    process.env.LINE_ENROLLMENT_ENABLED === "true" &&
+    process.env.LINE_ENABLED !== "true";
+  const enrollmentOwner = (actor: Actor) => {
+    if (actor.role !== "OWNER") throw new Denied(403);
+    if (!enrolling()) throw new Denied(503, "ยังไม่เปิดขั้นลงทะเบียนผู้ทดลอง");
+  };
+  app.post("/api/line/enrollment/start", async (req) => {
+    enrollmentOwner(req.actor);
+    const result = enrollment.start(req.actor.id);
+    if (!result)
+      throw new Denied(409, "รอบลงทะเบียนยังไม่หมดอายุ กรุณาใช้รอบเดิม");
+    try {
+      await audit(db, req.actor, "LINE_PILOT_ENROLLMENT_STARTED", req.actor.id);
+    } catch (error) {
+      enrollment.clear();
+      throw error;
+    }
+    return result;
+  });
+  app.get("/api/line/enrollment", async (req) => {
+    enrollmentOwner(req.actor);
+    const result = enrollment.result(req.actor.id);
+    if (!result) throw new Denied(404, "ยังไม่มีรอบลงทะเบียนหรือหมดอายุแล้ว");
+    return result;
+  });
   app.post("/api/line/webhook", async (req) => {
+    if (
+      process.env.LINE_ENABLED === "true" &&
+      process.env.LINE_ENROLLMENT_ENABLED === "true"
+    )
+      throw new Denied(503, "ตั้งค่าโหมด LINE ไม่ถูกต้อง");
     const secret = process.env.LINE_CHANNEL_SECRET,
       bot = process.env.LINE_BOT_ID;
-    if (process.env.LINE_ENABLED !== "true" || !secret || !bot)
+    if (
+      (process.env.LINE_ENABLED !== "true" && !enrolling()) ||
+      !secret ||
+      !bot
+    )
       throw new Denied(503, "LINE ยังไม่เปิดใช้งาน");
     const raw = req.body as Buffer,
       signature = Buffer.from(
@@ -66,10 +104,14 @@ export async function registerLine(
         events: z.array(eventSchema).max(100),
       })
       .parse(parsed);
+    if (enrolling()) {
+      for (const event of body.events) enrollment.capture(event);
+      return { ok: true };
+    }
+    enrollment.clear();
     await db.transaction(async (tx) => {
       for (const event of body.events) {
-        if (!allowedLineSource(event.source?.userId, event.source?.groupId))
-          continue;
+        if (!allowedLineEventSource(event.source)) continue;
         await tx.query(
           "INSERT INTO line_event_inbox(id,payload) VALUES($1,$2) ON CONFLICT(id) DO NOTHING",
           [event.webhookEventId, JSON.stringify(seal(event))],
@@ -122,6 +164,7 @@ export async function registerLine(
       code = token();
     await db.transaction(async (tx) => {
       await requireProject(tx, req.actor, id);
+      if (!allowedLineProject(id)) throw new Denied(404);
       await tx.query(
         "INSERT INTO line_binding_codes(code_hash,project_id,created_by,expires_at) VALUES($1,$2,$3,now()+interval '10 minutes')",
         [hashToken(code), id, req.actor.id],
@@ -159,6 +202,11 @@ async function lineActor(
   ).rows[0];
 }
 export async function processLineEvent(db: Database): Promise<boolean> {
+  if (
+    process.env.LINE_ENABLED !== "true" ||
+    process.env.LINE_ENROLLMENT_ENABLED === "true"
+  )
+    return false;
   const event = await db.transaction(async (tx) => {
     const r = (
       await tx.query(
@@ -177,6 +225,14 @@ export async function processLineEvent(db: Database): Promise<boolean> {
     await db.transaction(async (tx) => {
       const e = unseal(event.payload) as z.infer<typeof eventSchema>,
         lineUser = e.source?.userId;
+      // Revocation after receipt must prevent linking/binding as well as replies.
+      if (!allowedLineEventSource(e.source)) {
+        await tx.query(
+          "UPDATE line_event_inbox SET state='DONE',payload='{}',lease_until=NULL WHERE id=$1",
+          [event.id],
+        );
+        return;
+      }
       let kind = "NONE";
       if (e.type === "accountLink" && e.link?.result === "ok" && lineUser) {
         const nonce = (
@@ -233,7 +289,12 @@ export async function processLineEvent(db: Database): Promise<boolean> {
               [hashToken(text.slice("ผูกโครงการ ".length))],
             )
           ).rows[0];
-          if (code && code.created_by === actor.id && e.source.groupId) {
+          if (
+            code &&
+            code.created_by === actor.id &&
+            e.source.groupId &&
+            allowedLineProject(code.project_id)
+          ) {
             const existing = (
               await tx.query(
                 "SELECT project_id FROM line_group_bindings WHERE group_id=$1",
@@ -293,6 +354,11 @@ export async function deliverLine(
   transport: LineTransport,
   origin: string,
 ): Promise<boolean> {
+  if (
+    process.env.LINE_ENABLED !== "true" ||
+    process.env.LINE_ENROLLMENT_ENABLED === "true"
+  )
+    return false;
   const item = await db.transaction(async (tx) => {
     const r = (
       await tx.query(
@@ -309,7 +375,13 @@ export async function deliverLine(
   if (!item) return false;
   try {
     const p = unseal(item.payload);
-    if (!allowedLineSource(p.lineUser, p.groupId)) {
+    if (
+      !allowedLineEventSource({
+        type: p.sourceType,
+        userId: p.lineUser,
+        groupId: p.groupId,
+      })
+    ) {
       await db.query(
         "UPDATE notification_outbox SET state='CANCELLED',payload='{}',lease_until=NULL WHERE id=$1",
         [item.id],
@@ -330,7 +402,7 @@ export async function deliverLine(
         text = "พิมพ์ เชื่อมบัญชี เพื่อเข้าสู่ระบบและเชื่อมบัญชีก่อน";
       else if (p.kind === "JOBS") {
         const rows = (await projectsFor(db, actor)).filter(
-          (p) => p.status === "ACTIVE",
+          (p) => p.status === "ACTIVE" && allowedLineProject(p.id),
         );
         text = rows.length
           ? rows

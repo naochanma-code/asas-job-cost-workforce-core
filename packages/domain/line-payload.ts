@@ -47,3 +47,25 @@ export function allowedLineSource(userId?: string, groupId?: string) {
     !!userId && users.includes(userId) && (!groupId || groups.includes(groupId))
   );
 }
+
+// Pilot scope is additional to normal project permissions, never a replacement.
+export function allowedLineProject(projectId: string) {
+  return (process.env.LINE_TEST_PROJECT_IDS || "")
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean)
+    .includes(projectId);
+}
+
+export function allowedLineEventSource(source?: {
+  type: string;
+  userId?: string;
+  groupId?: string;
+}) {
+  if (!source) return false;
+  if (source.type === "user")
+    return !source.groupId && allowedLineSource(source.userId);
+  if (source.type === "group")
+    return !!source.groupId && allowedLineSource(source.userId, source.groupId);
+  return false;
+}

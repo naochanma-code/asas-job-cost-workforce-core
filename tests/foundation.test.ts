@@ -328,6 +328,7 @@ test("Foundation: real sessions, database constraints, scope and durable LINE co
         process.env.LINE_PAYLOAD_KEY = Buffer.alloc(32, 7).toString("base64");
         process.env.LINE_TEST_USER_IDS = "line-tech,line-admin";
         process.env.LINE_TEST_GROUP_IDS = "group-1,group-2,group-3";
+        process.env.LINE_TEST_PROJECT_IDS = [a, b].join(",");
         const linked = await ok("TECH", "POST", "/api/line/link", {
           linkToken: "synthetic-link-token",
         });
@@ -663,5 +664,6 @@ test("Foundation: real sessions, database constraints, scope and durable LINE co
     delete process.env.LINE_PAYLOAD_KEY;
     delete process.env.LINE_TEST_USER_IDS;
     delete process.env.LINE_TEST_GROUP_IDS;
+    delete process.env.LINE_TEST_PROJECT_IDS;
   }
 });
