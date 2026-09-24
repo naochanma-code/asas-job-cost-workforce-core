@@ -6,6 +6,7 @@ import { Denied, audit, manage } from "../../../packages/domain/identity";
 import { projectsFor, requireProject } from "../../../packages/domain/projects";
 import {
   uuid,
+  typeId,
   name,
   projectFields,
   jobFields,
@@ -56,7 +57,7 @@ export async function registerFoundation(app: FastifyInstance, db: Database) {
     });
     app.patch(path + "/:id", async (req) => {
       manage(req.actor);
-      const id = uuid.parse((req.params as any).id),
+      const id = typeId.parse((req.params as any).id),
         b = z
           .object({
             display_name: name.optional(),

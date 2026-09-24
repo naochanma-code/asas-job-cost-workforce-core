@@ -1,5 +1,14 @@
 # M1 Test Evidence — 2026-09-21
 
+## 24 กันยายน 2026 — พบสาเหตุจริงจากฟอร์ม Job ที่เลือก Installation
+
+ภาพ Owner แสดง validation400ก่อนบันทึก จำลองซ้ำด้วย jobInput ของ Web + seed type ID + ผู้รับผิดชอบสมมติ + วันที่ว่าง + progress0 ได้ข้อความเดียวกัน (RED). Seed003ใช้ md5::uuid ซึ่ง PostgreSQL ยอมรับแต่ z.string().uuid() ปฏิเสธ version/variant bits; การทดสอบเดิมส่ง custom randomUUID type หรือไม่ส่ง type ID จึงไม่ครอบคลุม dropdownจริง
+
+แก้เฉพาะ Type ID validator ให้รับ canonical128bit hex 8-4-4-4-12 สำหรับ project_type_id/job_type_id และ type master PATCH โดยยัง lookup FK/checkedType/สิทธิ์เดิม ไม่เปลี่ยน validator Project/User/Employee ID ไม่แก้ migration003หรือรหัส/ข้อมูลเดิม ไม่มี migrationใหม่
+
+เพิ่ม regression ทุก seed Project5/Job10 ผ่าน payload จากตัวแปลงฟอร์มจริง: create/edit, responsible person, empty date, rename/disable/re-enable, invalid/unknown ID และ disabled rejection. Targeted11/11 PASS (GREEN); full regression35PASS/2nativeSKIP/typecheck/build/M0 PASS; targeted11PASSหลังจำกัดvalidatorเฉพาะType; CI รอผล ยังไม่ deploy hotfix และยังไม่ผ่าน Owner UAT
+
+
 ## 24 กันยายน 2026 — Deploy รุ่นแก้80c2868แล้ว / Job ของ Owner ยังรอตรวจรับ
 
 Owner อนุมัติให้ทำ process ต่อหลังเสนอรุ่น80c2868 จึง Deploy API/Web exact80c2868b46f766ea0eb6da5e6c50eed617f6be7c ภายใน Railway Trial เดิม ไม่มี migration ใหม่ ไม่เปลี่ยนแผน ไม่เปิด LINE ไม่ Merge/M2/Production

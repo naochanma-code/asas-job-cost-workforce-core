@@ -160,3 +160,7 @@ Owner อนุมัติสำรอง Staging ที่มีข้อม�
 ## D-027 — อนุมัติ Staging follow-up80c2868 (2026-09-24)
 
 หลังแจ้ง CI ผ่านและเสนอ Deploy API/Web80c2868ไม่มี migration ใหม่ Owner ตอบให้ทำ process ต่อ พร้อมรายงานว่า Job ยังไม่ปรากฏ จึง Deploy รุ่นที่ระบุภายใน Trial เดิมและตรวจผล ไม่เปลี่ยนแผน ไม่เปิดLINE/Merge/Production ไม่ถือคำอนุมัติ Deploy เป็นการผ่าน Owner UAT ของ Job
+
+## D-028 — Preserve deterministic seed Type IDs (2026-09-24)
+
+003 seeds use md5::uuid values valid in PostgreSQL but not necessarily RFC UUID version/variant bits. Accept canonical hexadecimal 8-4-4-4-12 identifiers only for Project/Job Type references and master type PATCH; keep all existing IDs, FK/existence/enabled checks, role/scope guards and strict UUID validators for other entities. Do not rewrite deployed migration or backfill IDs. This fixes Web dropdown validation400 while preserving historical references; regression uses all15 shipped types and actual form serializers.

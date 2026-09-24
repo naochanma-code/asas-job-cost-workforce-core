@@ -74,3 +74,7 @@ Disabled type remains usable on unchanged record and retains snapshot; new/diffe
 ## LINE disabled capability — D-026
 
 GET /me เพิ่ม line_enabled:boolean (true เฉพาะ LINE_ENABLED=true); ยังต้องมี session ไม่มี secret/counters. Web ใช้ boolean นี้ปิด link/unlink/group-code controls. POST/DELETE /line/link และ POST /projects/:id/line-code คืน503เมื่อ disabled โดยไม่เปลี่ยน DB; group-code คง role guard เดิม OWNER/ADMIN ก่อน feature gate. LINE status/webhook/worker คงกติกาเดิม ไม่เปิด Real LINE.
+
+## Seed Type identifier compatibility — D-028
+
+project_type_id/job_type_id and /project-types/:id or /job-types/:id accept canonical hexadecimal 8-4-4-4-12 IDs matching PostgreSQL uuid storage, including deterministic003 seeds without RFC version/variant bits. Invalid format400; unknown/disabled selected type409; all permission/FK/scope checks remain. Other entity identifiers keep strict UUID validation. No migration or existing identity changes.

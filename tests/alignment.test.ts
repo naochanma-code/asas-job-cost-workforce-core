@@ -21,6 +21,7 @@ import {
   reserveJobCode,
 } from "../packages/domain/foundation";
 import { buildApp } from "../apps/api/src/app";
+import { jobInput, projectInput } from "../apps/web/app/foundation-fields";
 
 async function isolated() {
   if (!process.env.TEST_DATABASE_URL)
@@ -501,6 +502,155 @@ test("Alignment API: configurable types, richer data, PM authorization and atomi
       },
     );
     await t.test(
+      "seeded types accept real form payloads and retain immutable IDs",
+      async () => {
+        const jobs = (await ok("OWNER", "GET", "/api/job-types")).filter(
+          (r: any) =>
+            [
+              "INSTALLATION",
+              "SERVICE_SUPPORT",
+              "PM_VISIT",
+              "SITE_SURVEY",
+              "POC",
+              "CONFIGURATION",
+              "TESTING",
+              "TRAINING",
+              "OFFICE_WORK",
+              "OTHER",
+            ].includes(r.code),
+        );
+        const projects = (
+          await ok("OWNER", "GET", "/api/project-types")
+        ).filter((r: any) =>
+          ["INSTALLATION", "SERVICE", "SURVEY", "POC", "OTHER"].includes(
+            r.code,
+          ),
+        );
+        const p = (
+          await ok("OWNER", "POST", "/api/projects", {
+            name: "Seed form fixture",
+            customer_id: customer,
+            project_manager_id: users.PM.id,
+          })
+        ).id;
+        await ok("OWNER", "POST", `/api/projects/${p}/assignments`, {
+          employee_id: users.TECH.employee_id,
+        });
+        for (const [i, type] of jobs.entries()) {
+          const actor = i % 2 ? "PM" : "OWNER";
+          const payload = jobInput({
+            name: "Job1 " + type.code,
+            job_type_id: type.id,
+            description: "test",
+            responsible_person_id: users.TECH.employee_id,
+            planned_date: "",
+            status: "PLANNED",
+            progress: "0",
+          });
+          const made = await ok(
+            actor,
+            "POST",
+            `/api/projects/${p}/jobs`,
+            payload,
+          );
+          const job = (await ok(actor, "GET", `/api/projects/${p}`)).jobs.find(
+            (j: any) => j.id === made.id,
+          );
+          assert.equal(job.job_type_id, type.id);
+          assert.equal(job.planned_date, null);
+          await ok(actor, "PATCH", `/api/projects/${p}/jobs/${made.id}`, {
+            ...payload,
+            status: "ACTIVE",
+            version: job.version,
+          });
+        }
+        for (const type of projects) {
+          const payload = projectInput({
+            name: "Seed project " + type.code,
+            customer_id: customer,
+            project_type_id: type.id,
+            start_date: "",
+            target_completion_date: "",
+            progress: "0",
+          });
+          const created = await ok("ADMIN", "POST", "/api/projects", payload);
+          const detail = await ok(
+            "ADMIN",
+            "GET",
+            "/api/projects/" + created.id,
+          );
+          assert.equal(detail.project_type_id, type.id);
+          await ok("ADMIN", "PATCH", "/api/projects/" + created.id, {
+            project_type_id: type.id,
+            version: detail.version,
+            description: "Seed edit",
+          });
+        }
+        for (const [kind, types] of [
+          ["project", projects],
+          ["job", jobs],
+        ] as const) {
+          for (const type of types) {
+            await ok("ADMIN", "PATCH", `/api/${kind}-types/${type.id}`, {
+              version: type.version,
+              enabled: false,
+              display_name: type.display_name + " fixture",
+              sort_order: type.sort_order,
+            });
+            const disabled = (
+              await ok("OWNER", "GET", `/api/${kind}-types`)
+            ).find((r: any) => r.id === type.id);
+            assert.equal(disabled.code, type.code);
+            assert.equal(disabled.enabled, false);
+            const r =
+              kind === "job"
+                ? await request("OWNER", "POST", `/api/projects/${p}/jobs`, {
+                    name: "Disabled",
+                    job_type_id: type.id,
+                  })
+                : await request("OWNER", "POST", "/api/projects", {
+                    name: "Disabled",
+                    customer_id: customer,
+                    project_type_id: type.id,
+                  });
+            assert.equal(r.statusCode, 409);
+            await ok("OWNER", "PATCH", `/api/${kind}-types/${type.id}`, {
+              version: disabled.version,
+              enabled: true,
+              display_name: type.display_name,
+            });
+          }
+          assert.equal(
+            (
+              await request("OWNER", "PATCH", `/api/${kind}-types/not-an-id`, {
+                version: 1,
+                enabled: false,
+              })
+            ).statusCode,
+            400,
+          );
+        }
+        assert.equal(
+          (
+            await request("OWNER", "POST", `/api/projects/${p}/jobs`, {
+              name: "Invalid",
+              job_type_id: "not-an-id",
+            })
+          ).statusCode,
+          400,
+        );
+        assert.equal(
+          (
+            await request("OWNER", "POST", `/api/projects/${p}/jobs`, {
+              name: "Unknown",
+              job_type_id: randomUUID(),
+            })
+          ).statusCode,
+          409,
+        );
+      },
+    );
+    await t.test(
       "Owner creates a Job in a Project without Site and reads it after reopening",
       async () => {
         const project = (
@@ -512,9 +662,14 @@ test("Alignment API: configurable types, richer data, PM authorization and atomi
         const before = await ok("OWNER", "GET", "/api/projects/" + project);
         assert.equal(before.site_id, null);
         assert.deepEqual(before.jobs, []);
-        const created = await ok("OWNER", "POST", `/api/projects/${project}/jobs`, {
-          name: "Owner created Job",
-        });
+        const created = await ok(
+          "OWNER",
+          "POST",
+          `/api/projects/${project}/jobs`,
+          {
+            name: "Owner created Job",
+          },
+        );
         for (let i = 0; i < 2; i++) {
           const reopened = await ok("OWNER", "GET", "/api/projects/" + project);
           assert.equal(reopened.jobs.length, 1);

@@ -3,6 +3,11 @@ import type { Queryable } from "../database/index";
 import { Actor, Denied, audit } from "./identity";
 
 export const uuid = z.string().uuid();
+// Migration 003 seeds deterministic md5 UUID values without RFC version/variant bits.
+// Keep existing type identities; other entity IDs retain strict UUID validation.
+export const typeId = z
+  .string()
+  .regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
 export const name = z.string().trim().min(1).max(160);
 export const date = z
   .string()
@@ -15,7 +20,7 @@ export const date = z
   }, "Invalid calendar date");
 export const projectFields = {
   name,
-  project_type_id: uuid.optional(),
+  project_type_id: typeId.optional(),
   project_manager_id: uuid.nullable().optional(),
   start_date: date.nullable().optional(),
   target_completion_date: date.nullable().optional(),
@@ -26,7 +31,7 @@ export const projectFields = {
 };
 export const jobFields = {
   name,
-  job_type_id: uuid.optional(),
+  job_type_id: typeId.optional(),
   description: z.string().trim().max(4000).optional(),
   responsible_person_id: uuid.nullable().optional(),
   planned_date: date.nullable().optional(),
