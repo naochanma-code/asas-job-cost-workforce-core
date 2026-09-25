@@ -1,5 +1,21 @@
 # M1 Test Evidence — 2026-09-21
 
+## 25 กันยายน 2026 — bounded LINE เปิดรอ Owner UAT
+
+Release dc289ee3088cd84639cc828b49a6f5c50a665f55 CODED/TESTED/DEPLOYED. CI36102233232 NativePG50PASS/0SKIP, typecheck/build/API+Webcontainers/smoke/M0 PASS; local48PASS/2nativeSKIP, targeted10/10และM0เอกสาร45checks
+
+API c4d8f20b-9524-4b59-bc15-3c86b0558737 / Web d3bca251-a686-402e-a0d8-0e5dd2cddbb9 / privateworker a4e694c8-9ba8-412b-a7cc-2cc8b592c1e7 SUCCESS exactSHAเดียวกัน. LINE_ENABLED=trueทั้งAPI/worker; enrollmentfalse; ขอบเขตเดิม3users/1groupและ2Projectสมมติใหม่ Aไม่มีSiteJob/BมีSiteJob. ไม่มีmigration/serviceใหม่/upgrade/Merge/M2/Production
+
+Staging PASS24checks: injectสร้างfixturesผ่านdeployedapplication, publicHTTPShealth/HTTPredirect, boundedlogin10x401/11th429+Retry-Afterแม้เปลี่ยนforwardedheader. PASS21HTTPSchecksแยกOwner/Admin/TECHสมมติรวมsecurecookie/CSRF/logout; บัญชีปิดหลังตรวจ ไม่มีรหัสในหลักฐาน
+
+Worker PASS16checks: runtimePGTLS/schema/leastprivilege, spawnedchildworkerloop+SIGTERMexit0และDBconnectionปิด, mocktransportretry→expiredlease→DEAD,24hcontentexpiryซ้ำได้โดยเก็บevent/status. Providerdrill: deployeae38278...SUCCESS→deploymentStop→deploymentStopped=true (recordstatusยังSUCCESSตามRailway)→deployใหม่a4e694c8...SUCCESS. ไม่ส่งแชทจากmocktests
+
+Privacy: browserDOMตรวจlocation.hash/searchว่างหลังอ่านsyntheticfragmentและreloadล้างmemory; tabmetadataURLเคยค้างจึงใช้actualbrowserlocationเป็นหลักฐาน. ApplicationlogsampleAPI/Web/workerอ่านได้ไม่พบsecretpatterns. HTTPedgeCLIทั้งAPI/Webได้0แถว; projectwideไม่มีserviceอ่านไม่ได้ จึงNOT_OBSERVEDไม่ถือlogครบทุกชั้นผ่าน. Coretokenใหม่อยู่fragmentที่ไม่ส่งในHTTPrequest target; no-referrerและloggerfalseเดิม. คงข้อจำกัดsharedproxyและphysicalretentionเมื่อproviderdownในPROJECT_STATUS
+
+ตรวจruntimeหลังเปิด: linkedRolesยังว่าง (ยังไม่เชื่อมสำเร็จ); inboxDONE2/outboxSENT1/DEAD1. DEAD1เป็นmockfixtureจากstop/retrydrillที่ล้างpayloadแล้ว ไม่ใช่livefailure; SENT1ยืนยันproviderรับreplyหนึ่งรายการ แต่ยังไม่ทราบคำสั่งหรือผลบนโทรศัพท์ จึงไม่อ้างLINK/JOBS UATผ่าน
+
+OfficialLINEwebhook/testหลังเปิดbusinessAPI success=true/200. TrialยังtrueประมาณUSD4.7354/28วัน. ส่งขั้นตอนให้Ownerพิมพ์เชื่อมบัญชี→Login/ยืนยัน→งานของฉัน แต่ยังไม่มีหลักฐานrealaccountlink/JOBS/group/revoke/nonceexpiryหรือOwnerM1acceptanceในรายการนี้
+
 ## 25 กันยายน 2026 — เตรียมเปิด LINE หลัง enrollment ครบ
 
 Ownerให้ทำLINEต่อและอนุมัติqueuepayloadTTL24ชั่วโมงตามD-033. CODED: fragment linkเพื่อไม่ส่งtokenในCoreAppURLquery; Webอ่านในmemoryแล้วล้างaddressbar ไม่รับlegacyquerytoken; workerตรวจruntimeTLS/privilegesและsweepexpiredqueueโดยคงaudit/identities. ยังไม่มีmigration ไม่แตะข้อมูลจริง ไม่เพิ่มบริการ/แผน

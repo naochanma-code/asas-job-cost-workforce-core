@@ -1,10 +1,6 @@
 # M1 LINE Pilot Checklist
 
-สถานะล่าสุด24กันยายน: Enrollmentจริงครบ3คน/1กลุ่มและpersistในRailway API/workerแล้ว; API d5aa567/Web84df39c deployed, CI NativePG48/48และpostdeploy27checksผ่าน, WebhookVerifyจริงผ่านซ้ำ. businessLINE=false/workerยังไม่deploy เหลือProjectallowlistและtechnicalgates. ไม่ให้Ownerทำenrollmentซ้ำ ดู [Readiness](M1_LINE_PILOT_READINESS.md). Checklistด้านล่างเป็นรายการUATที่ต้องบันทึกผลแยก ไม่ใช่ถือว่าผ่านทั้งหมด
-
-สถานะ ENROLLMENT_PASS / NOT_READY_TO_ENABLE_BUSINESS_LINE · 24 กันยายน2026
-
-OwnerยืนยันJobสร้างได้แล้ว; Web/APIและmanualBackupRestoreมีหลักฐานผ่านตาม [สถานะปัจจุบัน](PROJECT_STATUS.md) แต่ยังไม่ใช่M1accepted. CredentialsและUser/Groupallowlistsตั้งแล้ว LINE=falseและworkerยังไม่deploy. ต้องปิดtechnicalgatesตาม [Readiness](M1_LINE_PILOT_READINESS.md) ก่อนเปิดคำสั่งใช้งานจริง
+สถานะล่าสุด25กันยายน: BOUNDED_LINE_ENABLED / WAITING_OWNER_UAT. API/Web/worker exactdc289ee, CI NativePG50/50, HTTPSและworkerstop/startผ่าน enrollmentครบและเก็บscope3คน/1กลุ่ม/2Projectสมมติแล้ว. ไม่ต้องสมัครซ้ำ ขั้นแรกOwnerส่งเชื่อมบัญชีและงานของฉัน ดู [สถานะกลาง](PROJECT_STATUS.md). ไม่ถือว่าทุกUATผ่านจากการเปิดservice
 
 LINE ใน M1 ทดลองได้เฉพาะเชื่อมบัญชี, เรียกงานของฉัน, ผูกกลุ่มกับ Project และถอนสิทธิ์ ยังไม่มีลงวันทำงาน/OT/ค่าใช้จ่าย/รูปบิลผ่าน LINE
 
@@ -46,8 +42,8 @@ LINE ใน M1 ทดลองได้เฉพาะเชื่อมบั�
 ## LINE OA และ LINE Group ทดสอบ
 
 - [ ] ยืนยันเป็น OA แยกจากลูกค้าจริง และมี Messaging API channel ของ OA นี้
-- [ ] ตั้ง Webhook URL เป็น `https://<staging-web>/api/line/webhook` หลังอนุมัติ; certificate ถูกต้อง ไม่ใช้ localhost/self-signed
-- [ ] เปิด Use webhook และ Verify ผ่าน; ปิด auto-response ที่ซ้ำกับ bot ระหว่างทดสอบตามที่ Owner อนุญาต
+- [x] ตั้ง Webhook URL เป็น `https://<staging-web>/api/line/webhook` หลังอนุมัติ; certificate ถูกต้อง ไม่ใช้ localhost/self-signed
+- [x] เปิด Use webhook และ officialVerify ผ่าน; providerauto-responseเดิมแยกจากworker ไม่ถือข้อความรับทราบอัตโนมัติเป็นผลCoreApp
 - [ ] เปิด Allow bot to join group chats แล้วเพิ่ม OA ในกลุ่มทดสอบเดียวที่อนุมัติ
 - [x] API/worker มี user/group allowlist ตรงกัน ห้าม wildcard หรือปิด allowlist เพื่อให้ทดสอบผ่าน
 - [ ] วิธีได้ IDs: ใช้ Your user ID ของ channel เมื่อมีสิทธิ์ หรือให้ operator ตรวจเฉพาะ `source.userId`/`source.groupId` จาก webhook ที่ตรวจ signature แล้วในเครื่องมือ private ที่ไม่ log body; บันทึกลง secret fields โดยตรง ไม่ส่ง IDs/ชื่อสมาชิกเข้า Git

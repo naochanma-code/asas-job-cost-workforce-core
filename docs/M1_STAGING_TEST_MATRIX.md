@@ -29,3 +29,8 @@ S06 PARTIAL: Web/APIcrossproject/joblevel/revokeผ่านfixtures; LINEscope�
 S07 PARTIAL: runtime/TLS/privateAPI/backupนอกprovider/logsampleผ่าน; workerยังไม่deploy/stopdrillยังไม่ทำ
 
 อ้าง M1_ALIGNMENT_STAGING_EVIDENCE.md และ M1_TEST_EVIDENCE.md ไม่ให้ผลPASSของบางส่วนแทนทั้งแถว
+
+## เพิ่มหลักฐาน 25 กันยายน — bounded activation dc289ee
+
+S01: HTTPShealth/HTTPredirect,สามrole securecookie/CSRF/logoutผ่าน; browserfragmentconsumption/stripผ่าน. EdgeHTTPCLI0แถว NOT_OBSERVED ไม่รับรองquerylogทุกชั้น. S02: live10x401/11th429+RetryAfterแม้ปลอมforwardedheaders;3roleloginผ่าน ใช้sharedproxybucketต่อเฉพาะpilot3คน ไม่อ้างper-clientหรือglobal120liveผ่าน.
+S03: officialVerify200หลังbusinessmodetrue; actualmessage/link/JOBSรอOwner. S07: privateworkerSUCCESS/start-stop(deploymentStopped=true)/startใหม่SUCCESS และchildSIGTERMexit0/runtimeTLS/leastprivilegeผ่าน; mockretry/DEAD/retentionผ่าน16checks. S04/S06LINEbusiness/OwnerUAT/S05scheduled/PITRยังไม่รับรองเพิ่ม ดูPROJECT_STATUSและM1_TEST_EVIDENCE
