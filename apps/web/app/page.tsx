@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState, FormEvent } from "react";
+import { consumeLineLinkUrl } from "../../../packages/domain/line-link-url";
 import {
   ProjectFields,
   JobFields,
@@ -58,11 +59,9 @@ export default function Home() {
     }
   }
   useEffect(() => {
-    const token = new URLSearchParams(location.search).get("linkToken");
-    if (token) {
-      setLinkToken(token);
-      history.replaceState(null, "", "/");
-    }
+    const link = consumeLineLinkUrl(location.href);
+    if (link.token) setLinkToken(link.token);
+    history.replaceState(null, "", link.cleanPath);
     api("/me")
       .then(async (u) => {
         setMe(u);

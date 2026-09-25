@@ -56,7 +56,7 @@ Admin ที่เชื่อมแล้วสร้าง code ในหน�
 
 ตรวจ `/api/line/status` ด้วย Admin/Owner เมื่อ DEAD ให้ตรวจ token/network/expiry โดยไม่พิมพ์ payload ใน log ให้ผู้ใช้ส่งคำสั่งใหม่ ห้าม manual replay reply token หมดอายุหรือ push ไปกลุ่มอื่น การ replay UI ยังไม่มี
 
-ปิด pilot ด้วย LINE_ENABLED=false และหยุด worker เพิกถอน test tokens ตามต้องการ; เก็บ payload ที่ล้มเหลวแบบเข้ารหัส จำกัด DB/operator access ยังต้องกำหนด TTL/purge ก่อน real pilot ไม่มี automated purge ของ DEAD payload ในรุ่นนี้
+ปิด pilot ด้วย LINE_ENABLED=false และหยุด worker เพิกถอน test tokens ตามต้องการ; เก็บ payload ที่ล้มเหลวแบบเข้ารหัส จำกัด DB/operator access OwnerอนุมัติTTL24ชั่วโมงตามD-033แล้ว; workerล้างเฉพาะqueuepayloadหมดอายุและคงสถานะ/Audit ต้องตรวจsweepก่อนเปิดpilot
 
 ## สิ่งที่ต้องตรวจบน staging ก่อนปิด M1
 
@@ -75,3 +75,9 @@ Enrollment: deploy exact CI-passed API/Web SHA; API LINE_ENABLED=false, LINE_ENR
 After all4 slots are received, operator privately transfers exact IDs to API/worker allowlist variables (never Chat/Git/log), configures only synthetic Project UUIDs, closes enrollment, checks worker start/stop and remaining trial credit. Only then enable business LINE and run link/jobs/group/revoke UAT. Changing API flag alone does not stop an existing worker; stop worker deployment and webhook if scope/secret/cost gate fails. No push fallback for expired reply tokens.
 
 No migration in ADR-012; roll back API/Web to previous known-good commits with both LINE modes false if needed. Never roll back schema or overwrite Staging. Blank worker service is not a deployed worker or real-pilot PASS.
+
+## D-033 — link privacy / retention operations
+
+Deploy Web+API+worker from tested code before enabling business LINE. Links use fragment only, client strips it; legacyquerytoken must request new link. Core usesno-referrer; never inspect/log rawaccountLinkredirect orbody/token. Testedge with syntheticcanary only.
+
+Worker sweeps encrypted queuepayload atstartup/eachloop forinboxreceived_at olderthan24h, noevent/auditrowdeletion. Claimsrejectexpiredworkevenbeforesweep. Ifworker/providerdown,physicalcleanupwaitsrestart: inspectoverduepayloadcountonly andrunexpireLinePayloads beforebusinessresumes. Never claimexactwallclockphysicaldeletionduringoutage; stoppilotifcleanupfails. ExistingEmployee/Project/AccountLinkunaffected.

@@ -5,6 +5,11 @@ import {
   liveTransport,
 } from "../apps/api/src/line";
 import { lineWorkerConfigured } from "../packages/domain/line-worker-config";
+import { expireLinePayloads } from "../packages/domain/line-retention";
+import {
+  verifyRuntimePrivileges,
+  verifyDatabaseTls,
+} from "../packages/database/runtime-security";
 
 async function main() {
   if (!lineWorkerConfigured(process.env)) throw Error("Configuration");
@@ -16,8 +21,13 @@ async function main() {
   for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, stop);
   try {
     await verifySchema(db);
+    if (process.env.NODE_ENV === "production") {
+      await verifyRuntimePrivileges(db);
+      await verifyDatabaseTls(db);
+    }
     const transport = liveTransport(process.env.LINE_CHANNEL_ACCESS_TOKEN!);
     while (!stopping) {
+      await expireLinePayloads(db);
       await processLineEvent(db);
       if (stopping) break;
       await deliverLine(db, transport, process.env.WEB_ORIGIN!);

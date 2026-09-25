@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 25 กันยายน 2026 — เตรียมเปิด LINE หลัง enrollment ครบ
+
+Ownerให้ทำLINEต่อและอนุมัติqueuepayloadTTL24ชั่วโมงตามD-033. CODED: fragment linkเพื่อไม่ส่งtokenในCoreAppURLquery; Webอ่านในmemoryแล้วล้างaddressbar ไม่รับlegacyquerytoken; workerตรวจruntimeTLS/privilegesและsweepexpiredqueueโดยคงaudit/identities. ยังไม่มีmigration ไม่แตะข้อมูลจริง ไม่เพิ่มบริการ/แผน
+
+Targetedtests10/10, typecheck, fullregression48PASS/2nativeSKIP และproductionbuildPASS; NativePG/containerCIและStaginggatesรอตรวจ ยังไม่เปิดbusinessLINE. Trialอ่านล่าสุดisTrialing=true เหลือUSD4.736855/28วัน. ขั้นต่อไปใช้Projectสมมติ A/B, privateworker, HTTPS/proxy/stopdrillก่อนเปิด3ผู้ทดลองเดิม ไม่มีการลงทะเบียนซ้ำ
+
 ## 25 กันยายน 2026 — กำหนดขอบเขตเชื่อมระบบบัญชี/คลัง (D-032)
 
 Owner ยืนยัน Core ต้องไม่ผูกกับผู้ให้บริการ: AccountingConnector และ InventoryConnector เป็น contract กลาง; FlowAccount OpenAPI เป็น candidate ในอนาคต ส่วน FlowAccount MCP เป็น optional AI interface ห้ามใช้เป็นช่องทาง System of Record. เปลี่ยน Inventory Master ต้องผ่าน Stock/Warehouse/Serial POC + Reconciliation Gate และอนุมัติ cutover แยก ตาม [ADR-013](adr/013-provider-agnostic-integrations.md)

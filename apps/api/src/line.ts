@@ -12,6 +12,7 @@ import {
 } from "../../../packages/domain/identity";
 import { projectsFor, requireProject } from "../../../packages/domain/projects";
 import { LineEnrollment } from "../../../packages/domain/line-enrollment";
+import { lineLinkUrl } from "../../../packages/domain/line-link-url";
 import {
   seal,
   unseal,
@@ -210,7 +211,7 @@ export async function processLineEvent(db: Database): Promise<boolean> {
   const event = await db.transaction(async (tx) => {
     const r = (
       await tx.query(
-        "SELECT * FROM line_event_inbox WHERE (state IN ('RECEIVED','RETRY') AND next_attempt_at<=now()) OR (state='PROCESSING' AND lease_until<now()) ORDER BY received_at FOR UPDATE SKIP LOCKED LIMIT 1",
+        "SELECT * FROM line_event_inbox WHERE received_at>now()-interval '24 hours' AND ((state IN ('RECEIVED','RETRY') AND next_attempt_at<=now()) OR (state='PROCESSING' AND lease_until<now())) ORDER BY received_at FOR UPDATE SKIP LOCKED LIMIT 1",
       )
     ).rows[0];
     if (!r) return;
@@ -362,7 +363,7 @@ export async function deliverLine(
   const item = await db.transaction(async (tx) => {
     const r = (
       await tx.query(
-        "SELECT * FROM notification_outbox WHERE (state IN ('PENDING','RETRY') AND next_attempt_at<=now()) OR (state='SENDING' AND lease_until<now()) ORDER BY id FOR UPDATE SKIP LOCKED LIMIT 1",
+        "SELECT o.* FROM notification_outbox o JOIN line_event_inbox e ON e.id=o.event_id WHERE e.received_at>now()-interval '24 hours' AND ((o.state IN ('PENDING','RETRY') AND o.next_attempt_at<=now()) OR (o.state='SENDING' AND o.lease_until<now())) ORDER BY o.id FOR UPDATE OF o SKIP LOCKED LIMIT 1",
       )
     ).rows[0];
     if (r)
@@ -395,9 +396,7 @@ export async function deliverLine(
         const link = await transport.linkToken(p.lineUser);
         text =
           "เข้าสู่ระบบเพื่อเชื่อมบัญชี (ยกเลิกได้ในหน้าเว็บ): " +
-          origin +
-          "/?" +
-          new URLSearchParams({ linkToken: link });
+          lineLinkUrl(origin, link);
       } else if (!actor)
         text = "พิมพ์ เชื่อมบัญชี เพื่อเข้าสู่ระบบและเชื่อมบัญชีก่อน";
       else if (p.kind === "JOBS") {

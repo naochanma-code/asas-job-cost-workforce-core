@@ -88,3 +88,5 @@ project_type_id/job_type_id and /project-types/:id or /job-types/:id accept cano
 - Worker rejects incomplete/malformed scope/config and emits only fixed safe fatal errors. Processing rechecks source access; disabled/enrollment mode leaves queues untouched. Provider worker lifecycle and actual LINE remain separate Staging/UAT gates.
 
 D-031 input compatibility: enrollment accepts an exact bare32-character invitation code or the original Thai command with whitespace between prefix/code. Other embedded text, altered/expired/used codes and duplicate private senders remain rejected. No schema/role/response change; business LINE remains disabled during enrollment.
+
+D-033: CoreApp enrollment link from worker is /#linkToken=... (fragment, never HTTPquery). Web consumes once into memory, strips addressbar, rejects legacy query input; refresh needs fresh LINE link. POST /line/link remains unchanged and provideraccountLinkredirect followsLINEprotocol. Worker requiresproductionDBTLS/runtimeleastprivilege. Queuecontentexpires24hours from inbox.received_at; expireditemsneverclaimed and worker sweepscontent beforeeachpoll keepingeventIDs/status/audit. No schema change.

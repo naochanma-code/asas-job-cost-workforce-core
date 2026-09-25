@@ -1,5 +1,11 @@
 # DECISION LOG
 
+## D-033 — LINE link privacy และ queue retention (Accepted, 2026-09-25)
+
+Ownerอนุมัติ24ชั่วโมงตามคำถาม: เก็บเนื้อหาคิวเข้ารหัสไม่เกิน24ชั่วโมง ล้างเฉพาะpayloadหมดอายุ คงสถานะ/event identity/Audit ไม่ลบemployee/project/linkedaccount. Workerตรวจและล้างก่อนแต่ละรอบ; claimปฏิเสธeventอายุ24ชั่วโมงขึ้นไปทั้งinbox/outbox ไม่ส่งย้อนหลัง. สำเร็จยังล้างpayloadทันทีตามเดิม; ไม่มีmigrationใหม่. หากworkerหยุด ต้องsweepตอนstartupก่อนรับงานและตรวจbacklog; retentionเป็นTTLงานและactivecleanup ไม่ใช่การรับรองphysicaldeletionตรงเวลาเมื่อprovider/workerdown ห้ามเปิดทิ้งโดยไม่มีoperatorตรวจ
+
+ลิงก์CoreAppที่ส่งจากLINEใช้fragment #linkToken แทนquery เพื่อลดการนำtokenเข้าHTTP/edgeaccesslog; Webอ่านเก็บในmemoryและลบออกจากaddressbarทันที ไม่ใช้local/sessionstorage และไม่รับlegacyquerytoken. POSTยืนยันและLINEofficialaccountLinkredirectยังใช้protocolเดิมพร้อมno-referrer ไม่มีrequestbody/URLloggingในแอป. WorkerตรวจDBTLS/runtimeprivilegesเท่าAPIก่อนเริ่ม ทุกข้อทดสอบด้วยข้อมูลสมมติก่อนเปิดpilot
+
 ## D-032 — Provider-agnostic ERP/Accounting boundary (Accepted, 2026-09-25)
 
 Ownerกำหนดให้ ASAS Core ไม่ผูก Business Logic กับ SMEMOVE/FlowAccount ต้องมี AccountingConnector และ InventoryConnector แยก integration boundary. FlowAccount OpenAPI เป็น candidate สำหรับ Expense/Accounting และ Inventory ในอนาคต; FlowAccount MCP เป็น optional AI interface ห้ามใช้เป็น System-of-Record integration path
