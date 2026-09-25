@@ -1,8 +1,8 @@
 # เริ่ม LINE Pilot — สำหรับ Owner
 
-## สถานะปัจจุบัน — รับ Admin ใหม่ตาม D-034
+## สถานะปัจจุบัน — เปิด LINE กลับหลังรับ Admin ใหม่
 
-พักbusiness LINE: API false/enrollment true; worker falseและหยุดแล้ว. OWNER/TECHเชื่อมคงเดิม ช่างได้รับเฉพาะassignmentสมมติAแล้ว. OwnerขอLINEAdminใหม่ที่ยังไม่เคยสมัคร ใช้รหัสส่วนตัวช่อง1จากหน้าOwnerเท่านั้น ไม่ต้องส่งอีก2ช่องหรือกลุ่ม. หลังรับเก็บ2บัญชีที่เชื่อมแล้ว + Adminใหม่ รวม3คนก่อนปิดenrollment/เปิดbusiness. ระหว่างนี้ไม่มีreplyของงาน/เชื่อมบัญชี ไม่ใช่รหัสเสีย. ผลท้ายรอบดูPROJECT_STATUS
+Adminลงทะเบียนเข้าขอบเขตทดลองแล้วและบันทึกRailwayเรียบร้อย; API/workerLINE=true/enrollment=false. OWNER/TECHเดิมยังเชื่อมอยู่ ไม่ต้องสมัครใหม่. Adminส่ง “เชื่อมบัญชี” แล้วLoginบัญชีADMINของตนและยืนยัน; TECHส่ง “งานของฉัน” ใหม่ต้องเห็นPILOT LINE Aเท่านั้น. Group/revoke/expiryยังไม่ผ่านจริง รายละเอียดและdeploymentล่าสุดดู [สถานะกลาง](PROJECT_STATUS.md). ข้อความพัก/enrollment/รอAdminส่งในส่วนประวัติด้านล่างถูกแทนด้วยสถานะนี้
 
 ## รอบถัดไป — Admin/TECH/กลุ่ม
 

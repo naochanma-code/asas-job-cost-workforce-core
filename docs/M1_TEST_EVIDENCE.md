@@ -1,5 +1,15 @@
 # M1 Test Evidence — 2026-09-21
 
+## 25 กันยายน 2026 — รับ Admin ใหม่สำเร็จและเปิด LINE กลับ
+
+Ownerแจ้งส่งแล้ว; หน้าOwnerตรวจช่องส่วนตัว1ได้รับจริง. runtimeก่อนเปลี่ยนยืนยันallowlistเดิม3บัญชีและlinked OWNER1/TECH1 มีช่องไม่ผูกเพียง1. เก็บ2บัญชีที่เชื่อมไว้ แทนเฉพาะช่องว่างด้วยAdminใหม่ตามD-034 ไม่เพิ่มจำนวน ไม่แตะline_accountsเดิม. ย้ายIDจากหน้าOwnerเข้าRailwayโดยตรงในmemory ไม่พิมพ์/บันทึกcodeหรือIDsในGit/Chat/Log. ตรวจstagedpatchมีเฉพาะapi.LINE_TEST_USER_IDSแล้วcommit skipDeploys; API/worker user/group/projectallowlistsตรงกัน3/1/2
+
+ปิดenrollmentและเปิดbusinessAPI exactdc289ee: deployment81db9569-03bd-4d63-b64f-b36b3b3e5bf2 SUCCESS. ตรวจschema/TLS/leastprivilege, OWNER/TECHคงอยู่, expiry sweepก่อนresumeสำเร็จและoverdueก่อนsweep0 แล้วเปิดworker45e3de67-ee8f-44d6-9e2c-3a97d6a3ae2e exactdc289ee SUCCESS/deploymentStopped=false. flagsทั้งคู่LINE=true/enrollment=false ขอบเขตและreleaseตรงกัน HTTPShealth200
+
+ADMIN_ENROLLMENT=PASS; ADMIN_ACCOUNT_LINK=WAITING_USER ไม่ถือว่าลงทะเบียนเท่ากับเชื่อมบัญชี. TECHเชื่อมแล้วและมีassignmentสมมติAจากรอบก่อน พร้อมdomainprojectionเห็นAไม่เห็นB/auditหนึ่งครั้ง แต่ผลคำขอใหม่บนโทรศัพท์ยังWAITING_USER. Group/revoke/expiryจริงยังNOT_RUN. ให้Adminส่งเชื่อมบัญชี/LoginบัญชีADMINของตน ส่วนTECHส่งงานของฉันใหม่; Ownerไม่ต้องสมัครซ้ำ
+
+ไม่มีapp/schema changeหรือRichMenu/Merge/M2/Production ไม่มีบริการหรือแผนเพิ่ม. CIเดิม36105399785 Native52/52ยังตรงapplicationcode; รอบนี้ตรวจconfig/runtimeข้างต้นและเอกสาร45checks/diffcheck ไม่รันapplicationtestsซ้ำ
+
 ## 25 กันยายน 2026 — TECH เชื่อมแล้ว / รับ Admin ใหม่
 
 ตรวจ TECH ผู้ทดลอง: user/employee active, LINEเชื่อมและอยู่allowlist แต่ไม่มีassignmentในProjectPilot จึงไม่แสดงโครงการ; งานเดิมนอกPilotไม่ถูกเปิดผ่านLINE. มอบหมายเฉพาะPILOT LINE A PRJ-2609-014 ผ่านdeployedApplication/app.injectด้วยoperatorสมมติแล้ว: domain projectionเห็นAไม่เห็นB, ASSIGNED auditหนึ่งครั้ง, assignmentนอกPilotไม่เปลี่ยน. ปิดoperator/sessionหลังตรวจ ไม่บันทึกชื่อบัญชีหรือLINE IDในเอกสาร. ผลคำขอใหม่บนโทรศัพท์ยังWAITING_USER

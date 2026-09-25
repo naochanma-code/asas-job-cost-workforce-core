@@ -1,5 +1,9 @@
 # M1 LINE — รอบทดสอบ Admin / ช่าง / กลุ่ม
 
+## ผลล่าสุดหลังรับ Admin ใหม่
+
+TECHเชื่อมสำเร็จและผลไม่มีโครงการก่อนมอบหมายตรงกับR2-02 (ไม่มีPilot assignment). R2-03มอบหมายAผ่านApplication/domainแล้ว รอTECHเรียกงานใหม่บนโทรศัพท์. AdminลงทะเบียนLINEใหม่ตามD-034แล้ว แต่R2-01ยังPARTIALจนAdminเชื่อมกับบัญชีแอปADMIN; R2-04–07ยังNOT_RUN. เปิดbusinessAPI/workerกลับแล้ว รหัสลงทะเบียนเก่าใช้ต่อไม่ได้ ดูPROJECT_STATUS
+
 วันที่ 25 กันยายน 2026 · ผู้ดูแลรอบ: Codex · Railway Trial เดิม · ยังไม่รับ M1 ทั้งหมด
 
 Owner ให้พัก Rich Menu จนส่วน LINE ของ Milestone ครบ ไม่สร้างหรือเปลี่ยนเมนูในรอบนี้ ใช้คำสั่งข้อความแทน ไม่มีการเริ่มลงวัน/OT/Expense/Payroll
