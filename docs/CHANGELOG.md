@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 25 กันยายน 2026 — มอบหมาย Job B หลังถอน A
+
+Owner อนุญาตทดสอบต่อ หลังยืนยันคำขอ LINE หลังถอน A ไม่พบโครงการแล้ว. มอบหมายเฉพาะ Job สมมติใน PILOT LINE B (PRJ-2609-015) ให้ TECH ผู้ทดลองผ่าน deployed Application สำเร็จ ไม่เพิ่ม assignment ระดับ Project. ตรวจ project/job scope ตรงกัน, domain projection เห็นเฉพาะ B ไม่เห็น A, ASSIGNED audit 1 ครั้ง และ assignment นอก Pilot ไม่เปลี่ยน. ปิด operator สมมติและหมดอายุ session หลังตรวจ เก็บ audit ไว้
+
+**R2-06 Job B: backend PASS / phone WAITING_USER.** ให้ TECH ส่ง “งานของฉัน” ใหม่ ควรเห็นเฉพาะ PILOT LINE B. ผลนี้ยังไม่แทนการตรวจหน้ารายละเอียด Job บน Web หรือการตอบจริงบนโทรศัพท์. ไม่ต้องลงทะเบียน LINE ใหม่. ขั้นถอน A บนโทรศัพท์ UAT_PASSED แล้ว; replay/expiry และ Staging browser restore ยังไม่ครบ
+
+ไม่มี code/schema/deploy/merge/บริการเพิ่ม. Release เดิม dc289ee; CI เดิม 36109173357 Native PostgreSQL 52/52 PASS. รอบนี้ตรวจเอกสาร 45 checks และ git diff --check ผ่าน ไม่รัน application tests ซ้ำ
+
+
 ## 25 กันยายน 2026 — ยืนยันผลถอนสิทธิ์บน LINE
 
 Owner รายงานคำตอบใหม่ว่า “ไม่มีโครงการที่รับมอบหมาย” หลังถอน assignment สมมติ A. R2-06 REVOKE = UAT_PASSED จากรายงานบนโทรศัพท์ร่วมกับหลักฐาน backend รอบก่อน: visible Pilot projects 0, assignment นอก Pilot ไม่เปลี่ยน และมี ASSIGNMENT_REVOKED audit. ไม่ได้ตรวจภาพโทรศัพท์โดยตรง
