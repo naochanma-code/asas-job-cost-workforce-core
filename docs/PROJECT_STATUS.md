@@ -4,7 +4,7 @@
 
 ## ตอนนี้ถึงไหน
 
-**เปิด bounded LINE Pilot แล้ว — รอ Owner เชื่อมบัญชีจริงและเรียกงานของฉัน** ผู้ทดลอง3คน/กลุ่ม1กลุ่มจากenrollmentเดิมถูกบันทึกในRailwayแล้ว ไม่ต้องลงทะเบียนซ้ำ
+**เปิด bounded LINE Pilot แล้ว — Owner ยืนยันเห็นโครงการทดสอบผ่าน “งานของฉัน” แล้ว** ผู้ทดลอง3คน/กลุ่ม1กลุ่มจากenrollmentเดิมถูกบันทึกในRailwayแล้ว ไม่ต้องลงทะเบียนซ้ำ
 
 API/worker LINE_ENABLED=true, LINE_ENROLLMENT_ENABLED=false; จำกัดLINEเฉพาะ2Projectสมมติที่สร้างรอบนี้: **PILOT LINE A - no Site or Job**, **PILOT LINE B - Site and Job**. สิทธิ์ปกติยังบังคับร่วมกับallowlist จึงไม่เปิดโครงการจริงแม้OWNER
 
@@ -25,23 +25,22 @@ Web/API/worker exact **dc289ee3088cd84639cc828b49a6f5c50a665f55** ไม่ม�
 | LINK_PRIVACY | PASSตามขอบเขต — ใช้fragmentไม่ใส่tokenในHTTPquery; browserอ่านแล้วล้างhash/queryจริง ไม่เก็บในstorage; deploymentlogsampleไม่พบsecretpatterns. EdgeHTTPlogรอบนี้ได้0แถวจึงไม่รับรองedgeทุกชั้น |
 | REAL_WEBHOOK_VERIFY | PASS — officialLINEtest success=true/statusCode200หลังAPIเปิดbusinessmode |
 | LINE_ENROLLMENT_REAL | PASSจากรอบก่อน — 3users/1groupครบและpersistแล้ว ปิดenrollmentขณะใช้งาน |
-| REAL_LINE_LINK/JOBS/GROUP/REVOKE | WAITING_OWNER / NOT_RUN — ส่งขั้นตอนให้Ownerเริ่มเชื่อมและเรียกงานแล้ว ยังไม่อ้างว่าflowจริงผ่าน |
+| OWNER_LINE_JOBS | UAT_PASSED — Owner แจ้งพร้อมภาพบนโทรศัพท์ว่า “งานของฉัน” แสดง PILOT LINE A/B ถูกต้อง |
+| REAL_LINE_LINK/GROUP/REVOKE | PARTIAL / NOT_RUN — เรียกงานได้แล้ว แต่หลักฐานนี้ไม่แทนการตรวจ link ทุกขั้น; Admin/TECH, group binding, revoke และ expiry/replay ยังรอทดสอบจริง |
 | OWNER_UAT_ALL_M1 | PARTIAL — Web/Job/mobile/enrollmentรอบก่อนผ่านตามหลักฐาน ยังไม่รับM1ทั้งหมด |
 | BACKUP/RESTORE | PASSแบบmanualencrypted/isolatedrecoveryรอบก่อน; scheduledbackup/PITR/restoreWebLoginยังไม่ผ่าน |
 | ERP/ACCOUNTING_CONNECTORS | DESIGNED / NOT_CODED ตามD-032/ADR-013; ไม่เกี่ยวกับการเปิดLINEรอบนี้ |
 | MERGE / M2 / M3 / PRODUCTION | NOT_AUTHORIZED — ไม่ดำเนินการ |
 
-ตรวจruntimeหลังเปิด: linkedRolesยังว่าง (ยังไม่เชื่อมสำเร็จ); inboxDONE2/outboxSENT1/DEAD1. DEAD1เป็นmockfixtureจากstop/retrydrillที่ล้างpayloadแล้ว ไม่ใช่livefailure; SENT1ยืนยันproviderรับreplyหนึ่งรายการ แต่ยังไม่ทราบคำสั่งหรือผลบนโทรศัพท์ จึงไม่อ้างLINK/JOBS UATผ่าน
+Owner ยืนยันผลบนโทรศัพท์วันที่25กันยายน: “งานของฉัน” แสดง PILOT LINE A/B แล้ว (Owner-reported). Aggregate runtime ในหลักฐานก่อนหน้าเป็นค่าก่อน Owner ทดลอง ไม่ใช่สถานะปัจจุบัน
 
 ## สิ่งที่ Owner ทำต่อ
 
-1. ในแชทส่วนตัวกับ **@ASAS-WORK** ส่ง **เชื่อมบัญชี** แล้วเปิดลิงก์ตอบกลับ
-2. Loginด้วยบัญชีOwnerของโอ๋ในหน้าWeb กด **ยืนยันเชื่อมบัญชี** และยืนยันในหน้าของLINEหากแสดง
-3. กลับLINEส่ง **งานของฉัน** ต้องเห็นเฉพาะ2โครงการPILOT LINEข้างต้น แล้วแจ้งผลโดยไม่ส่งpassword/token/ลิงก์ที่มีรหัส
+ไม่ต้องทดสอบ “งานของฉัน” ซ้ำตอนนี้ ขั้นต่อไปคือ Admin/TECH ใช้บัญชีของตนและตรวจสิทธิ์โครงการสมมติ รวมกลุ่ม/revoke/expiry โดย Codex เตรียมรอบทดสอบต่อ ไม่ถือว่ารับ M1 ทั้งหมด
 
-ทำOwnerก่อนหนึ่งบัญชี จากนั้นAdmin/TECHใช้บัญชีแอปของตนห้ามใช้Ownerร่วมกัน. TECHจะเห็นเฉพาะProjectสมมติที่มอบหมายให้ ไม่ใช่ทุกProjectในallowlist. ขั้นต่อไปCodexตรวจgroupbinding/revoke/expiryกับข้อมูลสมมติ ไม่ให้Ownerสลับบัญชีเพื่อทดสอบเทคนิคซ้ำ
+Rich Menu ในภาพยังเป็นรุ่นเก่า จึงมีปุ่มไม่ตรงกับคำสั่งปัจจุบัน. เสนอเปลี่ยนบน OA เดิมเป็น งานของฉัน / เชื่อมบัญชี / เปิดเว็บ สำหรับ M1 และทดลองเฉพาะผู้ร่วม Pilot ก่อน; ยังไม่ได้สร้างหรือ Deploy เมนูใหม่. ไม่เพิ่มเมนูลงวัน/OT/Expense/Leave ใน M1
 
-ลิงก์ใช้ครั้งเดียว/อายุ10นาที ถ้าrefreshระหว่างเชื่อมจนรหัสในmemoryหายให้ส่ง **เชื่อมบัญชี** ใหม่ ไม่ใช้รหัสenrollmentเดิม. [Web Staging](https://web-staging-cb6f.up.railway.app/) · [Owner Setup](M1_LINE_OWNER_SETUP.md)
+[Web Staging](https://web-staging-cb6f.up.railway.app/) · [Owner Setup](M1_LINE_OWNER_SETUP.md)
 
 ## ข้อจำกัดและการหยุดทดลอง
 

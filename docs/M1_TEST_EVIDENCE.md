@@ -1,5 +1,13 @@
 # M1 Test Evidence — 2026-09-21
 
+## 25 กันยายน 2026 — Owner เห็นงานผ่าน LINE แล้ว / เมนูเดิมยังค้าง
+
+Owner แจ้งและแสดงผลบนโทรศัพท์ว่า “งานของฉัน” ตอบกลับโครงการสมมติ PILOT LINE A/B ถูกต้อง: OWNER_LINE_JOBS = UAT_PASSED (Owner-reported visual evidence). ไม่เก็บภาพหรือลิงก์เชื่อมบัญชีลง Repository. หลักฐานนี้ยืนยันผลเรียกงาน ไม่ใช้แทนการตรวจขั้นเชื่อมบัญชีทุกขั้นหรือ expiry/replay; Admin/TECH, group binding และ revoke ยัง NOT_RUN ในรอบจริง
+
+Rich Menu ยังเป็นรุ่นเก่า; “งานวันนี้” ได้ข้อความแนะนำให้ใช้ “งานของฉัน”. บันทึกเป็นข้อสังเกต UX ไม่ใช่ข้อมูลโครงการหาย. เปลี่ยน Rich Menu บน OA เดิมได้แยกจาก Web/API deployment; เสนอ M1 เฉพาะ งานของฉัน / เชื่อมบัญชี / เปิดเว็บ และทดลองเฉพาะผู้ร่วม Pilot ก่อน. ยังไม่ได้สร้างหรือเปลี่ยนเมนูจริง ไม่เพิ่มเมนูลงวัน/OT/Expense/Leave ใน M1. อ้างอิง https://developers.line.biz/en/docs/messaging-api/using-rich-menus/
+
+รอบนี้แก้เอกสารเท่านั้น ไม่เปลี่ยน code/schema/deployment/allowlist และไม่ถือว่ารับ M1 ทั้งหมด. ตรวจ check-m0 24/24, check-r2 14/14, check-r4 7/7 รวม45checks และ git diff --check ผ่าน; ไม่รัน application tests ซ้ำเพราะไม่มี code change
+
 ## 25 กันยายน 2026 — bounded LINE เปิดรอ Owner UAT
 
 Release dc289ee3088cd84639cc828b49a6f5c50a665f55 CODED/TESTED/DEPLOYED. CI36102233232 NativePG50PASS/0SKIP, typecheck/build/API+Webcontainers/smoke/M0 PASS; local48PASS/2nativeSKIP, targeted10/10และM0เอกสาร45checks

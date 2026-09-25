@@ -1,6 +1,6 @@
 # M1 LINE Pilot Checklist
 
-สถานะล่าสุด25กันยายน: BOUNDED_LINE_ENABLED / WAITING_OWNER_UAT. API/Web/worker exactdc289ee, CI NativePG50/50, HTTPSและworkerstop/startผ่าน enrollmentครบและเก็บscope3คน/1กลุ่ม/2Projectสมมติแล้ว. ไม่ต้องสมัครซ้ำ ขั้นแรกOwnerส่งเชื่อมบัญชีและงานของฉัน ดู [สถานะกลาง](PROJECT_STATUS.md). ไม่ถือว่าทุกUATผ่านจากการเปิดservice
+สถานะล่าสุด25กันยายน: Owner ยืนยันพร้อมภาพว่า “งานของฉัน” แสดงโครงการสมมติ PILOT LINE A/B แล้ว (UAT_PASSED เฉพาะ flow นี้). ไม่ต้องทำซ้ำหรือสมัครใหม่; Admin/TECH/group/revoke/expiry ยังรอทดสอบจริง. Rich Menu เดิมยังค้างและยังไม่ได้เปลี่ยนเมนูใหม่ ดู [สถานะกลาง](PROJECT_STATUS.md). ยังไม่ใช่การรับ M1 ทั้งหมด
 
 LINE ใน M1 ทดลองได้เฉพาะเชื่อมบัญชี, เรียกงานของฉัน, ผูกกลุ่มกับ Project และถอนสิทธิ์ ยังไม่มีลงวันทำงาน/OT/ค่าใช้จ่าย/รูปบิลผ่าน LINE
 
