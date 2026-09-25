@@ -41,7 +41,7 @@ PM/Admin/Owner ลงวันทำงานและ OT แทนพนัก�
 
 ## Master v3.0 target delta — 2026-09-23
 
-Target schema เพิ่ม/ยืนยัน entities: project_types, job_types, project_financial_profiles, project_operational_plans, project_milestones, employee_rate_versions, holiday_calendars, smemove_actual_cost_entries, commercial_references, expense review/evidence, immutable cost ledger และ payroll ledgers/revisions ตาม MASTER v3.0
+Target schema เพิ่ม/ยืนยัน entities: project_types, job_types, project_financial_profiles, project_operational_plans, project_milestones, employee_rate_versions, holiday_calendars, external_actual_cost_entries, commercial_references, expense review/evidence, immutable cost ledger และ payroll ledgers/revisions ตาม MASTER v3.0
 
 M1 migration 001/002 เป็น executable subset ที่ใช้แล้ว ห้ามแก้ย้อนหลัง ช่องว่าง M1 ต้องเพิ่ม migration ใหม่สำหรับ configurable types และ Project/Job fields ส่วน financial/work/expense/payroll tables สร้างใน milestone เจ้าของ module หลัง ADR/API/permission review ห้ามสร้าง speculative migration ทั้งหมดพร้อมกัน
 
@@ -58,3 +58,9 @@ jobs เพิ่ม job_type_id, type_name_snapshot, description, responsible_p
 code_counters(scope PK,last_value) และ code_reservations(code PK,entity_id UNIQUE,kind,issued_at) รองรับ atomic code allocation; รักษา human codes เดิม เติม namespace แยก Legacy Project ไม่ถูก rename Counter ห้ามลด/ลบ registry ห้าม update/delete โดย runtime และไม่มี API reset/delete สำรองทั้งสองตารางเพื่อไม่ reuse
 
 ไม่มี schema เวลา/Expense/Payroll/financial ใน 003 ไม่มี Site/Job ปลอม ใช้ constraint เดิม customer/site และ project/job; progress integer 0–100, วันจบไม่ก่อนวันเริ่ม ดู [dry run/recovery](M1_ALIGNMENT_MIGRATION_PLAN.md) และ [API](M1_API_CONTRACT.md)
+
+## Provider-neutral target — D-032 / ADR-013 (DESIGNED, 2026-09-25)
+
+ชื่อ logical target `external_actual_cost_entries` แทน `smemove_actual_cost_entries` ที่ยังไม่เคยเป็น M1 migration. Source type ใช้ `EXTERNAL_ACTUAL_COST`; external references แยก provider, connection/company scope, entity type, external ID และ source revision จาก Core internal UUID. Mapping/sync metadata อยู่ integration boundary ไม่เพิ่ม provider-specific fields/enum ลง business rules
+
+ยังไม่สร้าง connector mapping/stock/warehouse/serial tables ในรอบนี้ ไม่ rename ตาราง deployed ไม่แก้ migration001–003. หากพบข้อมูลเก่าที่ใช้ชื่อ provider จริงต้องออก append-only migration/mapping plan แยก การเลือก Inventory Master และ Reconciliation Gate ตาม [ADR-013](adr/013-provider-agnostic-integrations.md)

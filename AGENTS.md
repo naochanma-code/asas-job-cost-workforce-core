@@ -44,3 +44,7 @@ Repository นี้เป็นระบบใหม่ของ ASAS Job Cost 
 - ตาม D-022 ADMIN/OWNER อนุมัติ Expense ของตนเองได้ PM/TECH อนุมัติไม่ได้; ทุก approval มี audit และการแก้หลังอนุมัติใช้ correction/revision/reversal
 
 - PM เพิ่ม/ถอน TECH ได้เฉพาะ Project ที่ตนรับผิดชอบ ห้ามสร้างผู้ใช้ เปลี่ยน Role หรือแต่งตั้ง PM คนอื่น ทุก action ต้องมี audit
+
+## ERP/Accounting boundary — D-032
+
+Core ต้อง provider agnostic ผ่าน AccountingConnector และ InventoryConnector; ห้ามผูก Business Logic โดยตรงกับ SMEMOVE/FlowAccount. FlowAccount OpenAPI เป็น candidate ในอนาคต MCPเป็นoptionalAIinterface ไม่ใช่System-of-Recordintegrationpath. ห้ามเปลี่ยนInventoryMasterก่อนStock+Warehouse+SerialPOCและReconciliationGateผ่านพร้อมOwnerอนุมัติ ดูdocs/adr/013-provider-agnostic-integrations.md; ยังไม่implementintegrationในM1

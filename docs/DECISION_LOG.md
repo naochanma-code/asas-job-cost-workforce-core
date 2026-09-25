@@ -1,5 +1,11 @@
 # DECISION LOG
 
+## D-032 — Provider-agnostic ERP/Accounting boundary (Accepted, 2026-09-25)
+
+Ownerกำหนดให้ ASAS Core ไม่ผูก Business Logic กับ SMEMOVE/FlowAccount ต้องมี AccountingConnector และ InventoryConnector แยก integration boundary. FlowAccount OpenAPI เป็น candidate สำหรับ Expense/Accounting และ Inventory ในอนาคต; FlowAccount MCP เป็น optional AI interface ห้ามใช้เป็น System-of-Record integration path
+
+การเปลี่ยน Inventory Master ไป FlowAccount ต้องผ่าน Stock+Warehouse+Serial POC และ Reconciliation Gate ก่อน พร้อม Owner อนุมัติ cutoverแยก ตาม [ADR-013](adr/013-provider-agnostic-integrations.md). ใช้ชื่อกลาง External Actual Cost ใน target design แทนชื่อSMEMOVE โดยไม่แก้migrationเก่า. Supersedes D-021/Masterเดิมเฉพาะการผูกชื่อprovider ไม่เปลี่ยนCorefinancialpermissions/approval/ledger/หลักฐานต้นฉบับ และไม่อนุมัติintegration/ย้ายข้อมูล/เริ่มM2/M3/deploy/ค่าใช้จ่าย
+
 ## D-031 — Enrollment รับรหัสอย่างเดียวได้ (24 กันยายน 2026)
 
 จากpilotจริงพบผู้ทดลองส่งbarecodeที่ตรงกับรหัสในเว็บ แต่ตัวรับต้องการprefix จึงได้Webhook200โดยยังไม่ลงทะเบียน รับbarecode32ตัวอักษรหรือคำสั่ง “ลงทะเบียนทดลอง <รหัส>” ที่มีwhitespaceคั่นได้; ไม่รับข้อความอื่นที่เพียงมีcodeแทรก ห้ามลดentropy/hash/expiry/one-use/source/distinct-user checks. ไม่มีschema/permission expansion นอกADR-012 ใช้OAเดิมต่อได้ ข้อผิดพลาดนี้ไม่ต้องสร้างOAใหม่

@@ -22,3 +22,4 @@ ADR เหล่านี้บันทึก baseline ที่มีอยู
 | [011](011-m1-v3-alignment.md) | M1 v3 types, fields, code reservation, PM assignment และ recovery | Implementation ตาม D-021–023; Staging approval pending |
 
 | [012](012-bounded-line-pilot.md) | Bounded LINE project scope, signed private enrollment, worker guards | Owner bounded pilot approved; runtime evidence in PROJECT_STATUS |
+| [013](013-provider-agnostic-integrations.md) | AccountingConnector/InventoryConnector, OpenAPI candidate, MCP boundary และ Inventory cutover gates | Accepted D-032; DESIGNED / NOT_IMPLEMENTED |

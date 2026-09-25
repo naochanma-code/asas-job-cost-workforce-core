@@ -46,7 +46,7 @@ PM/Admin/Owner ลงวันทำงานและ OT แทนพนัก�
 
 ## Master v3.0 additions — 2026-09-23
 
-- OWNER เท่านั้นเข้าถึง Selling Price, Estimated/Actual Cost aggregate, Budget, Profit, Margin, Forecast, Rate, Payroll, Financial Adjustment/Lock และ SMEMOVE Actual Cost
+- OWNER เท่านั้นเข้าถึง Selling Price, Estimated/Actual Cost aggregate, Budget, Profit, Margin, Forecast, Rate, Payroll, Financial Adjustment/Lock และ External Actual Cost
 - ADMIN อ่าน/แก้/อนุมัติ Expense transaction พร้อม amount/evidence ได้ แต่ API/export/dashboard ห้ามคืน Project cost total, budget-vs-actual หรือ profitability
 - PM ส่งและอ่าน Expense ของตนตาม assigned Project ได้ ไม่อ่านของผู้อื่นและไม่เป็น reviewer โดย default
 - ADMIN และ OWNER อนุมัติ Expense ที่ตนกรอกได้ตาม D-022 ทุกครั้งต้องมี actor/time/audit; PM/TECH อนุมัติไม่ได้
@@ -78,3 +78,6 @@ Project lock serializes PM grant/revoke with team operations. Target employee/us
 เฉพาะ OWNER เริ่ม private enrollment และเฉพาะ OWNER ผู้เริ่มรอบอ่านผลได้ ADMIN/PM/TECH403; ต้องเปิด enrollmentmode โดย operator และปิดbusinessLINEก่อน. ขั้นนี้ไม่เชื่อมบัญชีหรือgrantสิทธิ์อัตโนมัติ ผลIDsมีไว้ตั้งRailwayVariablesโดยตรง ไม่ส่งChat/Git/Log
 
 บนbusinessLINE ทุกบทบาทรวมOWNERเห็นได้เฉพาะ intersection ของสิทธิ์เดิมกับ LINE_TEST_PROJECT_IDS; allowlistว่างไม่เห็นProjectใด. Group codeต้องอยู่ในallowlistทั้งตอนสร้างและconsume. Sourceผู้ส่ง/กลุ่มตรวจซ้ำก่อนprocessและdelivery ไม่แก้สิทธิ์WebหรืออนุมัติM2/M3
+
+
+D-032: AccountingConnector/InventoryConnector และ optionalAIinterface ต้องบังคับ permission/scope เดิม ไม่ให้servicecredentialหรือproviderresponseขยายสิทธิ์ actor. เปลี่ยนproviderไม่เปลี่ยนสิทธิ์OWNER/ADMIN/PM/TECH และไม่ทำauto-approval; ดู [ADR-013](adr/013-provider-agnostic-integrations.md)

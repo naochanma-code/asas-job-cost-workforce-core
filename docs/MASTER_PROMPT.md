@@ -1,6 +1,6 @@
 # ASAS Job Cost & Workforce Core — Master Prompt v3.0
 
-วันที่ปรับปรุง: 23 กันยายน 2026  
+วันที่ปรับปรุง: 25 กันยายน 2026
 Product Owner: โอ๋ / ASAS IT Co., Ltd.  
 ผู้พัฒนา: Codex และ Work ผ่าน Repository กลาง  
 สถานะ: Canonical Product Specification
@@ -24,7 +24,7 @@ Product Owner: โอ๋ / ASAS IT Co., Ltd.
 9. สรุปค่าจ้างจาก Work / OT
 10. LINE เป็นช่องทางหลักสำหรับ Technician
 
-ระบบต้องเรียบง่าย ใช้งานจริงได้ ตรวจสอบย้อนหลังได้ และไม่สร้าง ERP ซ้ำกับ SMEMOVE
+ระบบต้องเรียบง่าย ใช้งานจริงได้ ตรวจสอบย้อนหลังได้ และไม่สร้าง ERP ซ้ำกับระบบภายนอก
 
 ### 1.1 Product boundary
 
@@ -32,7 +32,7 @@ ASAS Core รับผิดชอบ:
 
 `Project + Job + Workforce + Work Day + OT + Expense + Evidence + Project Cost + Owner Financial + Payroll Summary`
 
-SMEMOVE ยังคงเป็นระบบหลักสำหรับ:
+ระบบ ERP/Accounting ภายนอกที่ Owner เลือก (ปัจจุบันใช้ SMEMOVE) รับผิดชอบ:
 
 `Product + Purchase + Receiving + Inventory + Stock + Serial + Accounting Operations`
 
@@ -41,6 +41,14 @@ Core เก็บเพียงยอด Actual Hardware/Material ที่ Own
 ### 1.2 Final scope rule
 
 ก่อนเพิ่ม Feature ให้ถามว่า “จำเป็นต่อ Project, Workforce, Expense, Cost หรือ Profit หรือไม่” หากไม่ใช่ ให้พิจารณาไม่สร้างใน Core เป้าหมายคือข้อมูลน้อยแต่ถูกต้อง ใช้งานง่าย ตรวจสอบย้อนหลังได้ และทำให้ OWNER เห็นต้นทุนกับกำไรของ Project ได้จริง
+
+### 1.3 ERP/Accounting-provider agnostic — D-032
+
+ASAS Core ห้ามผูก Business Logic โดยตรงกับ SMEMOVE, FlowAccount หรือผู้ให้บริการรายอื่น ต้องมี `AccountingConnector` และ `InventoryConnector` เป็น Integration Boundary แยกจาก domain/application rules โดย provider adapter แปลง API/SDK/schema/status เป็น contract กลาง
+
+FlowAccount OpenAPI เป็น Candidate Integration สำหรับ Expense/Accounting และ Inventory ในอนาคต ยังไม่ใช่การเลือก provider หรือยืนยันความสามารถ API. FlowAccount MCP เป็น Optional AI Interface ห้ามใช้เป็น System-of-Record Integration Path หรือ fallback สำหรับ sync/reconciliation
+
+Inventory Master ยังใช้ระบบเดิม การเปลี่ยนไป FlowAccount ต้องผ่าน Stock + Warehouse + Serial POC และ Reconciliation Gate พร้อม Owner อนุมัติ cutover แยกต่างหาก รายละเอียดขอบเขต/แผนทดสอบอยู่ [ADR-013](adr/013-provider-agnostic-integrations.md). Decision นี้เป็น design ไม่เริ่ม integration/Inventory/Expense ใน M1
 
 ## 2. Product และ UX principles
 
@@ -77,7 +85,7 @@ OWNER เห็นและจัดการ:
 - Financial Budget และ Actual Cost รวม
 - Cost Ledger, Budget vs Actual, Profit, Margin และ Forecast
 - Employee Rate และ Payroll Amount
-- SMEMOVE Actual Hardware/Material Cost
+- External Actual Hardware/Material Cost
 - Financial Adjustment, Reconciliation, Audit และ Financial Lock
 
 ### 3.2 ADMIN
@@ -376,7 +384,7 @@ Owner สามารถเริ่มด้วย Selling Price และ Esti
 
 Release แรกใช้ Rule-based Forecast ไม่ใช้ AI
 
-## 8. SMEMOVE Actual Cost และ Commercial References
+## 8. External Actual Cost และ Commercial References
 
 Core ไม่สร้าง Procurement, PO, Receiving, Inventory, Stock, Serial หรือ Accounting Operation
 
@@ -386,9 +394,9 @@ Project Financial Profile มี Hardware Cost Status:
 - PENDING — มี Hardware Cost แต่ Owner ยังไม่กรอก
 - RECORDED — Owner กรอกแล้ว
 
-OWNER กรอก Actual Hardware/Material Cost ระดับ Project หรือ Job optional โดยมี Amount, Cost Type, SMEMOVE Reference optional, Date, Note, Entered By/At Approved Entry สร้าง Cost Ledger
+OWNER กรอก Actual Hardware/Material Cost ระดับ Project หรือ Job optional โดยมี Amount, Cost Type, Provider/External Reference optional, Date, Note, Entered By/At Approved Entry สร้าง Cost Ledger
 
-SMEMOVE Reference เป็นเพียง Purchase/Receiving/Invoice/Document Number หรือ Link เพื่อย้อนกลับไปดูรายละเอียดใน SMEMOVE
+External Reference เป็นเพียง Purchase/Receiving/Invoice/Document Number หรือ Link พร้อม provider และ connection/company scope เพื่อย้อนกลับไปดูระบบต้นทาง ไม่ใช่ identity ภายในของ Core
 
 Core เก็บ Commercial Reference:
 
@@ -396,11 +404,11 @@ Core เก็บ Commercial Reference:
 - CUSTOMER_PO
 - INVOICE
 
-ข้อมูลขั้นต่ำ: Type, Number, Date, Project, Job optional, SMEMOVE Reference/Link optional, Note
+ข้อมูลขั้นต่ำ: Type, Number, Date, Project, Job optional, Provider/External Reference/Link optional, Note
 
 Core ไม่ Copy Item Lines, ไม่ทำ Billing, AR, Collection หรือ Payment Tracking Selling Price ให้ OWNER กรอกตรง ไม่ Auto-calculate จากเอกสารเหล่านี้
 
-ต้อง Reconcile ป้องกัน Hardware/Material รายการเดียวถูกนับทั้ง Expense และ SMEMOVE Actual Cost ก่อน Financial Finalization
+ต้อง Reconcile ป้องกัน Hardware/Material รายการเดียวถูกนับทั้ง Expense และ External Actual Cost ก่อน Financial Finalization
 
 ## 9. Cost Ledger
 
@@ -412,11 +420,11 @@ Source:
 - APPROVED_OT_ENTRY
 - APPROVED_EXPENSE
 - WORK_MEAL_ALLOWANCE
-- SMEMOVE_ACTUAL_COST
+- EXTERNAL_ACTUAL_COST
 - OWNER_MANUAL_ADJUSTMENT
 - REVERSAL
 
-เมื่อ Work Approved ให้คำนวณ Labor และ Meal เมื่อ OT Approved ให้คำนวณ OT เมื่อ Expense Approved ให้ลง Expense Cost เมื่อ Owner Approve SMEMOVE Cost ให้ลง Hardware/Material Cost
+เมื่อ Work Approved ให้คำนวณ Labor และ Meal เมื่อ OT Approved ให้คำนวณ OT เมื่อ Expense Approved ให้ลง Expense Cost เมื่อ Owner Approve External Actual Cost ให้ลง Hardware/Material Cost
 
 Unique Idempotency Key ใช้ `source_type + source_id + cost_component` เพราะ Work หนึ่งรายการสร้าง LABOR และ MEAL ได้
 
@@ -591,10 +599,11 @@ ADMIN Dashboard ตอบ Active/Due Projects, Pending Work/OT/Expense, วั�
 - Expense & Evidence
 - Project Financial
 - Cost Ledger
-- SMEMOVE Actual Cost
+- External Actual Cost
 - Commercial References
 - Payroll
 - LINE Integration
+- AccountingConnector / InventoryConnector (future integration boundary; adapters แยกจาก Business Logic)
 - Reporting
 - Audit & Operations
 
@@ -612,7 +621,7 @@ packages/
   ui
 ```
 
-ใช้ TypeScript Strict, PostgreSQL, S3-compatible Object Storage และ Managed-container compatible ต้อง Hosting Agnostic
+ใช้ TypeScript Strict, PostgreSQL, S3-compatible Object Storage และ Managed-container compatible ต้อง Hosting Agnostic และ ERP/Accounting-provider agnostic; Core ใช้ AccountingConnector/InventoryConnector ตาม ADR-013 ไม่เรียก provider โดยตรง
 
 Core entities อย่างน้อย:
 
@@ -623,7 +632,7 @@ Core entities อย่างน้อย:
 - cost_categories, budgets, budget_lines
 - work_entries, overtime_entries
 - expense_submissions, expense_evidence, expense_review_history
-- smemove_actual_cost_entries, commercial_references
+- external_actual_cost_entries, commercial_references
 - cost_ledger
 - holiday_calendars
 - payroll_periods, payroll_runs, payroll_lines, payroll_adjustments, payroll_ledger, payroll_revision_history
@@ -632,7 +641,7 @@ Core entities อย่างน้อย:
 
 Project Transaction มี `project_id NOT NULL`; `job_id` nullable และถ้ามีต้องเป็น Job ใน Project เดียวกัน
 
-Audit อย่างน้อย Project, Job, Work, OT, Expense/Correction, Selling Price, Estimated Cost, Budget, Employee Rate, SMEMOVE Cost, Cost Adjustment, Project Close/Reopen, Financial Finalize/Lock/Unlock และ Payroll โดยเก็บ Before/After, User, Timestamp, Reason และ Correlation ID ตามความเหมาะสม
+Audit อย่างน้อย Project, Job, Work, OT, Expense/Correction, Selling Price, Estimated Cost, Budget, Employee Rate, External Actual Cost, Cost Adjustment, Project Close/Reopen, Financial Finalize/Lock/Unlock และ Payroll โดยเก็บ Before/After, User, Timestamp, Reason และ Correlation ID ตามความเหมาะสม
 
 ## 16. Testing strategy และ Definition of Done
 
@@ -696,7 +705,7 @@ Selling Price, Estimated Cost, optional Budget Breakdown, Profit/Margin, Actual 
 
 Gate: เฉพาะ OWNER เข้าถึง Financial Dashboard ได้และยอด Ledger ตรง
 
-### Milestone 5 — SMEMOVE Actual Cost
+### Milestone 5 — External Actual Cost
 
 Hardware Status, Manual Actual Cost, Project/Job scope, Reference, Duplicate Prevention, Reconciliation และ Completeness
 
@@ -784,7 +793,7 @@ docs/
   EXPENSE_FLOW.md
   COST_LEDGER.md
   FINANCIAL_SECURITY.md
-  SMEMOVE_COST_REFERENCE.md
+  EXTERNAL_COST_REFERENCE.md
   COMMERCIAL_REFERENCES.md
   LINE_INTEGRATION.md
   ACCOUNTING_EVIDENCE.md
@@ -823,6 +832,6 @@ TECH ต้องดูงาน ลง FULL/AM/PM ลง OT ส่ง Expense+E
 
 Release แรกต้องพิสูจน์ Flow ต่อไปนี้จริง:
 
-`ADMIN สร้าง Project → Assign Team → OWNER ใส่ Selling Price/Estimated Cost → TECH ลง Work/OT/Expense+Evidence ผ่าน LINE → ADMIN Review → Backend ลง Labor/Meal/OT/Expense Cost → OWNER ใส่ SMEMOVE Actual เมื่อมี → Cost Ledger → OWNER ดู Actual/Profit/Margin → Payroll Summary → Operational Close → Financial Reconcile → Financial Lock`
+`ADMIN สร้าง Project → Assign Team → OWNER ใส่ Selling Price/Estimated Cost → TECH ลง Work/OT/Expense+Evidence ผ่าน LINE → ADMIN Review → Backend ลง Labor/Meal/OT/Expense Cost → OWNER ใส่ External Actual เมื่อมี → Cost Ledger → OWNER ดู Actual/Profit/Margin → Payroll Summary → Operational Close → Financial Reconcile → Financial Lock`
 
 หาก Flow นี้ยังไม่ผ่านจริง ห้ามขยาย Scope ไป Module อื่น

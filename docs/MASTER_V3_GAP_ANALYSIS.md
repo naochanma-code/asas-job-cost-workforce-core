@@ -1,5 +1,11 @@
 # Master Prompt v3.0 — Gap Analysis
 
+## 25 กันยายน 2026 — Provider agnostic target (D-032)
+
+AccountingConnector/InventoryConnector และ adapter boundary: DESIGNED / NOT_CODED. ตรวจ apps/packages/scripts แล้วไม่พบ SMEMOVE/FlowAccount implementation; แก้ชื่อproviderที่ผูกอยู่ในtargetMaster/schema/permissionให้เป็นกลาง ไม่มีmigrationหรือapplicationchange. FlowAccount OpenAPIเป็นcandidateเท่านั้น MCPoptionalAIไม่ใช่System-of-Recordpath
+
+Stock/Warehouse/SerialPOC และ ReconciliationGate ยังNOT_RUN ไม่อนุมัติเปลี่ยนInventoryMaster ไม่เพิ่มintegrationในM1. Testplanและcutovercriteriaอยู่ [ADR-013](adr/013-provider-agnostic-integrations.md). คงM1LINEgateและข้อห้ามMerge/M2/M3/ProductionตามPROJECT_STATUS
+
 ## 24 กันยายน 2026 — DEPLOYED_STAGING / รอ Owner UAT
 
 Owner อนุมัติ Backup/Recovery และ migration003/grants/Deploy SHA cda461d แล้ว ทั้ง API/Web Online; encrypted backup และ isolated restore PASS; legacy business digest ไม่เปลี่ยน; HTTPS24 checks และ restart persistence PASS; log sample ไม่พบ secret patterns LINE=false ไม่เปลี่ยนแผน ไม่ Merge/M2/M3/Production ดู [หลักฐาน Staging](M1_ALIGNMENT_STAGING_EVIDENCE.md) สถานะรออนุมัติด้านล่างเป็นประวัติที่แก้ไขแล้ว
@@ -56,7 +62,7 @@ Owner อนุมัติ Backup/Recovery และ migration003/grants/Deploy
 | M2 Work & OT | Work/OT tables, flow, approval, conflict, rate snapshot และ hidden cost posting |
 | M3 Expense & Evidence | Typed parser, concurrent draft, private object storage, review history, signed URL, evidence export |
 | M4 Owner Financial | แยก financial tables/service/API, Selling Price, Estimated Cost, Budget, Profit/Margin/Forecast |
-| M5 SMEMOVE Cost | Hardware status, manual actual, references, reconciliation และ completeness |
+| M5 External Actual Cost | Hardware status, manual actual, references, reconciliation และ completeness |
 | M6 Commercial References | Quotation/PO/Invoice references |
 | M7 Payroll Summary | Rate/holiday/policy versions, periods, adjustments, lock/revision/paid |
 | M8 Pilot | 2–3 Projects จริง, Real LINE, backup/restore และคู่ขนานกับวิธีเดิม |
@@ -64,7 +70,7 @@ Owner อนุมัติ Backup/Recovery และ migration003/grants/Deploy
 ## จุดเสี่ยงที่ต้องควบคุม
 
 1. **Financial leakage:** ต้องแยก operational/financial query และ serializer ตั้งแต่ M2 ห้ามส่งข้อมูลเงินแล้วซ่อนใน UI
-2. **Double cost:** Work/OT/Expense/SMEMOVE ใช้ immutable ledger และ idempotency component key; Payroll total ห้าม post เข้า Project Cost ซ้ำ
+2. **Double cost:** Work/OT/Expense/External Actual Cost ใช้ immutable ledger และ idempotency component key; Payroll total ห้าม post เข้า Project Cost ซ้ำ
 3. **Expense self-approval:** ตาม D-022 ADMIN/OWNER อนุมัติรายการตนเองได้ PM/TECH อนุมัติไม่ได้ ต้องทดสอบ actor/time/audit และ correction/reversal หลัง approval
 4. **Admin aggregate:** Admin เห็น transaction amount ได้ แต่ API/export ต้องไม่มี Project financial total หรือ profitability projection
 5. **Evidence retention:** ห้ามเปิด auto-delete จนกำหนดวันเริ่มนับ การพักลบ (legal hold) และได้รับการยืนยันจาก Owner/ผู้ทำบัญชี ระหว่างนี้เก็บโดยไม่ลบอัตโนมัติ

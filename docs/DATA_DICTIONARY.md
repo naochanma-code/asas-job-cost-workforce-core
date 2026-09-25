@@ -128,3 +128,16 @@ expense_submissions: submitted_by:ref(users) NOT NULL, source_channel:WEB/LINE N
 ## LINE Pilot transient enrollment — ADR-012
 
 ไม่มีตารางหรือmigrationใหม่: process memoryเก็บ hash ของรหัส192bit, kind USER/GROUP, ownerผู้เริ่ม, expiresAt15นาที, captured userId/groupId สูงสุด3คน/1กลุ่ม. ไม่เก็บrawmessage/replyToken; restart/expiryทำให้ข้อมูลอ่านไม่ได้และต้องเริ่มรอบใหม่ ไม่มีFK/สิทธิ์/บัญชีแอปเกิดจากcapture. audit LINE_PILOT_ENROLLMENT_STARTEDมีactor/timeแต่ไม่มีcodes/IDs. Businessqueue schemaและencryptedpayloadเดิมไม่เปลี่ยน
+
+## External integration vocabulary — D-032 (DESIGNED / ไม่มีตารางใหม่)
+
+| คำกลาง | ความหมายและข้อจำกัด |
+| --- | --- |
+| AccountingConnector | contract ของ Expense/Accounting integration; Core approval/financial permission/immutable ledger ไม่ขึ้นกับ provider |
+| InventoryConnector | contract ข้อมูล Product/Stock/Warehouse/Serial จาก Inventory Master ที่เลือก; ไม่สร้าง stock engine ใน Core |
+| external_actual_cost_entries / EXTERNAL_ACTUAL_COST | ชื่อ target entity/source แทนชื่อSMEMOVEเดิมในdesign; OWNER approveก่อนเป็นCost Ledger ไม่ซ้ำExpense |
+| ExternalRecordRef | provider + connection/company scope + entity type + external ID; แยกจากCoreUUID/เลขเอกสาร; ไม่บรรจุcredential |
+| Integration revision / operation | ติดตาม source revision, idempotency key, external result, correlation และ sync status แยกจาก approval; schemaจริงออกแบบเมื่อเริ่มmilestoneที่อนุมัติ |
+| Inventory Master | ระบบหลักที่Ownerเลือก; เปลี่ยนproviderต้องผ่านStock/Warehouse/SerialPOC, reconciliation และcutoverapprovalตามADR-013 |
+
+FlowAccount OpenAPIยังเป็นcandidate; MCPไม่ใช่ช่องทางSystem of Record ไม่มีfield/tableที่ผูกproviderหรือmigrationใหม่จากdecisionนี้ ดู [ADR-013](adr/013-provider-agnostic-integrations.md)

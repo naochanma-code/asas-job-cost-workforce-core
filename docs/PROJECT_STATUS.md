@@ -1,5 +1,13 @@
 # PROJECT STATUS — Milestone 1
 
+## 25 กันยายน 2026 — กำหนดขอบเขตเชื่อมระบบบัญชี/คลัง (D-032)
+
+Owner ยืนยัน Core ต้องไม่ผูกกับผู้ให้บริการ: AccountingConnector และ InventoryConnector เป็น contract กลาง; FlowAccount OpenAPI เป็น candidate ในอนาคต ส่วน FlowAccount MCP เป็น optional AI interface ห้ามใช้เป็นช่องทาง System of Record. เปลี่ยน Inventory Master ต้องผ่าน Stock/Warehouse/Serial POC + Reconciliation Gate และอนุมัติ cutover แยก ตาม [ADR-013](adr/013-provider-agnostic-integrations.md)
+
+สถานะ DESIGNED / NOT_CODED / NOT_DEPLOYED; POC และ provider integration tests NOT_RUN. ปรับ Master v3.0/กติกาagent/schema target/dictionary/permission/export/gap ให้ตรงกัน ไม่เปลี่ยน application, migration, provider หรือข้อมูลจริง ไม่เริ่ม Expense/Inventory/M2/M3. Codexรับผิดชอบเอกสารนี้; ขอบเขตและสถานะ M1 LINE ด้านล่างคงเดิม ยังไม่มีคำถามที่ขวางงานสำหรับ Owner
+
+หลักฐานรอบเอกสาร: ตรวจ apps/packages/scripts ไม่พบการอ้าง SMEMOVE/FlowAccount; check-m0 24/24, check-r2 14/14, check-r4 7/7 รวม45checks PASS และ git diff --check PASS. ไม่มีการแก้โค้ดจึงไม่รัน application/NativePG/container ซ้ำ ไม่ใช้ผลนี้อ้างว่า connector/POC ผ่าน
+
 อัปเดต 24 กันยายน 2026 · Module owner: Codex (Foundation/API/LINE/เอกสาร); task Reviwer ดู design reference · branch codex/milestone-1-foundation · PR #2 ยัง Draft / ไม่ Merge
 
 ## ตอนนี้ถึงไหน
