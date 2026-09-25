@@ -1,5 +1,9 @@
 # M1 LINE Pilot Checklist
 
+## คำสั่งล่าสุด — พัก Admin LINE
+
+Ownerให้ข้ามLINEAdminไปก่อน: DEFERRED_BY_OWNER ไม่ใช่PASS. ใช้Ownerที่เชื่อมแล้วทำgroupbindingตามสิทธิ์OWNER/ADMINเดิมต่อได้ ไม่เพิ่มscopeหรือเปลี่ยนrole. คำสั่งให้Adminเชื่อมในประวัติด้านล่างพักไว้จนOwnerกลับมาทดสอบ รอผลกลุ่ม/TECH/revoke/expiry และRestore gatesก่อนรับM1ทั้งหมด ดู [สถานะกลาง](PROJECT_STATUS.md)
+
 ## สถานะปัจจุบัน — เปิด LINE กลับหลังรับ Admin ใหม่
 
 Adminลงทะเบียนเข้าขอบเขตทดลองแล้วและบันทึกRailwayเรียบร้อย; API/workerLINE=true/enrollment=false. OWNER/TECHเดิมยังเชื่อมอยู่ ไม่ต้องสมัครใหม่. Adminส่ง “เชื่อมบัญชี” แล้วLoginบัญชีADMINของตนและยืนยัน; TECHส่ง “งานของฉัน” ใหม่ต้องเห็นPILOT LINE Aเท่านั้น. Group/revoke/expiryยังไม่ผ่านจริง รายละเอียดและdeploymentล่าสุดดู [สถานะกลาง](PROJECT_STATUS.md). ข้อความพัก/enrollment/รอAdminส่งในส่วนประวัติด้านล่างถูกแทนด้วยสถานะนี้

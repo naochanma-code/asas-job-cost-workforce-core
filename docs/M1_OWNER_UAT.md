@@ -1,5 +1,9 @@
 # M1 Owner UAT — ใบบันทึกการทดลองจริง
 
+## คำสั่งล่าสุด — พัก Admin LINE
+
+Ownerให้ข้ามLINEAdminไปก่อน: DEFERRED_BY_OWNER ไม่ใช่PASS. ใช้Ownerที่เชื่อมแล้วทำgroupbindingตามสิทธิ์OWNER/ADMINเดิมต่อได้ ไม่เพิ่มscopeหรือเปลี่ยนrole. คำสั่งให้Adminเชื่อมในประวัติด้านล่างพักไว้จนOwnerกลับมาทดสอบ รอผลกลุ่ม/TECH/revoke/expiry และRestore gatesก่อนรับM1ทั้งหมด ดู [สถานะกลาง](PROJECT_STATUS.md)
+
 ## สถานะรอบปัจจุบัน — 25 กันยายน 2026
 
 Owner งานของฉันผ่านตามภาพ; runtime ยืนยัน OWNER เชื่อมหนึ่งบัญชี. U05–U08 สำหรับ Admin/TECH/กลุ่มยัง NOT_RUN บนโทรศัพท์ ณ รอบนี้ ใช้ [รอบทดสอบล่าสุด](M1_LINE_PILOT_ROUND_2.md) แทนคำสั่งเก่าที่บอกว่า LINE ปิดด้านล่างซึ่งเป็นประวัติ. Rich Menu พักตาม Owner จนส่วน LINE ครบ ไม่ทำให้ข้าม gate สิทธิ์/expiry/restore หรือรับ M1 ทั้งหมด

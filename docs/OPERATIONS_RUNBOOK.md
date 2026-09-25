@@ -52,7 +52,7 @@ HTTPS reverse proxy route `/api/*` ไป Fastify, ที่เหลือไ�
 
 รัน API และ `pnpm worker` บน PostgreSQL เดียวกัน; worker จะไม่เริ่มถ้าไม่มี HTTPS/allowlists/key ตั้ง webhook ของ OA ไป `/api/line/webhook`; ตรวจ Verify ก่อนให้ผู้ทดสอบส่ง “เชื่อมบัญชี” ในแชทส่วนตัว → login → ยืนยัน → กลับ LINE ส่ง “งานของฉัน”
 
-Admin ที่เชื่อมแล้วสร้าง code ในหน้า Project และส่งคำสั่งในกลุ่มทดสอบภายใน 10 นาที ต้องเป็น LINE ของบัญชีที่สร้างรหัส กลุ่มได้รับเพียงข้อความยืนยัน ไม่มีชื่อพนักงาน/เงิน/รายละเอียด Project
+Admin หรือ Owner ที่เชื่อมแล้วสร้าง code ในหน้า Project และส่งคำสั่งในกลุ่มทดสอบภายใน 10 นาที ต้องเป็น LINE ของบัญชีที่สร้างรหัส กลุ่มได้รับเพียงข้อความยืนยัน ไม่มีชื่อพนักงาน/เงิน/รายละเอียด Project
 
 ตรวจ `/api/line/status` ด้วย Admin/Owner เมื่อ DEAD ให้ตรวจ token/network/expiry โดยไม่พิมพ์ payload ใน log ให้ผู้ใช้ส่งคำสั่งใหม่ ห้าม manual replay reply token หมดอายุหรือ push ไปกลุ่มอื่น การ replay UI ยังไม่มี
 

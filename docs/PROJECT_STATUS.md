@@ -6,7 +6,7 @@
 
 **เปิด LINE Pilot กลับแล้วหลังรับ LINE Admin ใหม่** จำกัดผู้ทดลอง3คน / กลุ่ม1กลุ่ม / Projectสมมติ2รายการตาม D-030 และ D-034. Rich Menu พักตาม Owner จนส่วน LINE ของ Milestone ครบ
 
-API/worker LINE_ENABLED=true และ LINE_ENROLLMENT_ENABLED=false; exact allowlists ตรงกัน. คง OWNER/TECH ที่เชื่อมอยู่สองบัญชี เปลี่ยนเฉพาะช่องเดิมที่ยังไม่มี line_accounts เป็น LINE Admin ที่ Owner ขอและส่งรหัสแล้ว. การลงทะเบียน Admin ผ่าน แต่ยังต้องเชื่อมกับบัญชีแอป ADMIN ด้วยตนเอง ไม่มีการเพิ่มสิทธิ์หรือเปลี่ยน role อัตโนมัติ
+API/worker LINE_ENABLED=true และ LINE_ENROLLMENT_ENABLED=false; exact allowlists ตรงกัน. คง OWNER/TECH ที่เชื่อมอยู่สองบัญชี เปลี่ยนเฉพาะช่องเดิมที่ยังไม่มี line_accounts เป็น LINE Admin ที่ Owner ขอและส่งรหัสแล้ว. การลงทะเบียน Admin ผ่าน แต่ Owner ให้พักขั้นเชื่อมกับบัญชีแอป ADMIN ไว้ก่อน (DEFERRED_BY_OWNER) ไม่มีการเพิ่มสิทธิ์หรือเปลี่ยน role อัตโนมัติ
 
 Release Web/API/worker ยัง **dc289ee3088cd84639cc828b49a6f5c50a665f55** ไม่มี code/schema change. API deployment **81db9569-03bd-4d63-b64f-b36b3b3e5bf2** และ worker **45e3de67-ee8f-44d6-9e2c-3a97d6a3ae2e** SUCCESS / deploymentStopped=false; Webเดิม d3bca251-a686-402e-a0d8-0e5dd2cddbb9. API/workerยัง private ไม่มีpublicdomain
 
@@ -24,17 +24,18 @@ Release Web/API/worker ยัง **dc289ee3088cd84639cc828b49a6f5c50a665f55** �
 | TECH_LINE_LINK | PASS — Ownerรายงานและruntimeยืนยันuser/employeeactive บัญชีเชื่อมอยู่ในallowlist |
 | TECH_PILOT_ASSIGNMENT | PASSด้านApplication/domain — เดิมไม่มีPilot assignmentจึงไม่เห็นงาน; เพิ่มเฉพาะAผ่านApplication มีASSIGNEDauditหนึ่งครั้ง เห็นAไม่เห็นB งานเดิมนอกPilotไม่เปลี่ยน; รอคำขอใหม่บนโทรศัพท์ |
 | ADMIN_ENROLLMENT | PASS — รับรหัสส่วนตัวช่อง1 บันทึกexactIDลงRailway ปิดenrollmentแล้ว ไม่ต้องสมัครOwner/TECH/กลุ่มซ้ำ |
-| ADMIN_ACCOUNT_LINK / GROUP / REVOKE / EXPIRY | NOT_RUNในรอบจริง — Adminส่งเชื่อมบัญชีขั้นต่อไป; groupbinding/revoke/expiry/replayยังไม่ครบ |
+| ADMIN_ACCOUNT_LINK / ADMIN_LINE_UAT | DEFERRED_BY_OWNER — พักตามคำสั่งล่าสุด ไม่ถือPASS ไม่ถอดallowlist/แก้role |
+| GROUP / REVOKE / EXPIRY | WAITING_USER / NOT_RUN — ใช้Ownerผูกกลุ่มตามสิทธิ์เดิม สร้างคำสั่งบนหน้าAแล้ว; ยังรอส่งจริง ส่วนrevoke/expiry/replayยังไม่ครบ |
 | OWNER_UAT_ALL_M1 | PARTIAL — Web/Job/mobile/OwnerLINEผ่านตามหลักฐาน ยังไม่รับM1ทั้งหมด |
-| BACKUP/RESTORE | PASSแบบmanualencrypted/isolatedrecoveryรอบก่อน; scheduledbackup/PITR/restoreWebLoginยังไม่ครบ |
+| BACKUP/RESTORE | PASSแบบmanualencrypted/isolatedrecoveryรอบก่อน; เพิ่มNativeCI restore-login/scope regression รอตรวจ; scheduledbackup/PITR/StagingBrowserRestoreLoginยังไม่ครบ |
 | ERP/ACCOUNTING_CONNECTORS | DESIGNED / NOT_CODED ตามD-032/ADR-013 |
 | MERGE / M2 / M3 / PRODUCTION | NOT_AUTHORIZED — ไม่ดำเนินการ |
 
 ## สิ่งที่ Owner / ผู้ทดลองทำต่อ
 
-1. **Admin:** ใช้LINEใหม่ที่ลงทะเบียนแล้วส่ง **เชื่อมบัญชี** ในแชทส่วนตัว @ASAS-WORK เปิดลิงก์ Loginด้วยบัญชีแอปADMINของตน กดยืนยัน แล้วส่ง **งานของฉัน** คาดเห็นPILOT LINE A/Bตามสิทธิ์Admin
+1. **Owner:** ส่งคำสั่ง “ผูกโครงการ …” ที่สร้างไว้บนหน้าPILOT LINE A จากLINEOwnerไปกลุ่มทดสอบเดิมภายใน10นาที ไม่ส่งรหัสในแชทนี้. ใช้OwnerแทนAdminได้ตามสิทธิ์เดิม ไม่ต้องให้Adminเชื่อมตอนนี้
 2. **TECH:** ส่ง **งานของฉัน** อีกครั้ง คาดเห็นเฉพาะ **PRJ-2609-014 — PILOT LINE A - no Site or Job**; ไม่เห็นBและโครงการจริงอื่นผ่านLINEในรอบจำกัดนี้
-3. แจ้งผลโดยไม่ส่งรหัสผ่าน/ลิงก์/รหัส จากนั้นตรวจผูกกลุ่มและถอนassignmentสมมติตาม [แผนรอบ2](M1_LINE_PILOT_ROUND_2.md). ยังไม่สร้างรหัสกลุ่มล่วงหน้าเพราะอายุ10นาที
+3. แจ้งผลโดยไม่ส่งรหัสผ่าน/ลิงก์/รหัส จากนั้นตรวจผูกกลุ่มและถอนassignmentสมมติตาม [แผนรอบ2](M1_LINE_PILOT_ROUND_2.md). สร้างรหัสของAไว้แล้วในรอบนี้ ถ้าหมดอายุให้สร้างใหม่ผ่านหน้าOwner ไม่ใช้รหัสเดิม
 
 Ownerไม่ต้องเชื่อมบัญชีใหม่. ลิงก์เชื่อมบัญชีหมดอายุหรือrefreshจนtokenหายให้ส่งเชื่อมบัญชีใหม่ ไม่ใช้รหัสลงทะเบียนเก่า
 

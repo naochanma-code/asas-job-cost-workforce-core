@@ -1,5 +1,11 @@
 # M1 Test Evidence — 2026-09-21
 
+## 25 กันยายน 2026 — พัก LINE Admin / เดินหน้ากลุ่มด้วย Owner และ Restore test
+
+Ownerสั่งข้ามLINEAdminไปก่อน: ADMIN_ACCOUNT_LINKและAdminเฉพาะrole UAT = DEFERRED_BY_OWNER ไม่ใช่PASS และไม่ถือM1accepted/readymerge. ไม่ถอดallowlistหรือแก้roleของAdmin. สิทธิ์ผูกกลุ่มเดิมรองรับOWNER/ADMIN จึงใช้Ownerที่เชื่อมแล้วสร้างรหัสของPILOT LINE AบนWebและขอให้ส่งจากLINEOwnerไปกลุ่มเดิม รหัสอยู่หน้าWebเท่านั้น อายุ10นาที; ยังWAITING_USER ไม่ผูกฐานโดยตรงหรือปลอมevent
+
+ตรวจliveแบบอ่านอย่างเดียว: OWNER1/TECH1เชื่อม, groupbinding0, pendingreply0, overduepayload0. เพิ่ม native-restore regression ให้ใช้passwordhashสมมติจริง หลังbackup/restore/reopenเรียกAPI Loginได้, sessionก่อนbackup401, cookieflags, TECHเห็นAไม่มีSiteJob/ไม่เห็นB, ถอนassignmentสมมติแล้ว404, Logoutแล้ว401. ไม่เพิ่มบริการหรือrestoreข้อมูลจริง. TypecheckPASS; NativeCIรอตรวจ. เป็นinjectedAPIบนฐานสมมติ ไม่ใช่StagingBrowserRestore UAT
+
 ## 25 กันยายน 2026 — รับ Admin ใหม่สำเร็จและเปิด LINE กลับ
 
 Ownerแจ้งส่งแล้ว; หน้าOwnerตรวจช่องส่วนตัว1ได้รับจริง. runtimeก่อนเปลี่ยนยืนยันallowlistเดิม3บัญชีและlinked OWNER1/TECH1 มีช่องไม่ผูกเพียง1. เก็บ2บัญชีที่เชื่อมไว้ แทนเฉพาะช่องว่างด้วยAdminใหม่ตามD-034 ไม่เพิ่มจำนวน ไม่แตะline_accountsเดิม. ย้ายIDจากหน้าOwnerเข้าRailwayโดยตรงในmemory ไม่พิมพ์/บันทึกcodeหรือIDsในGit/Chat/Log. ตรวจstagedpatchมีเฉพาะapi.LINE_TEST_USER_IDSแล้วcommit skipDeploys; API/worker user/group/projectallowlistsตรงกัน3/1/2

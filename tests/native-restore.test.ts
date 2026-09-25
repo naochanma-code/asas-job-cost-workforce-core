@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { randomUUID } from "node:crypto";
+import { randomUUID, randomBytes } from "node:crypto";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -12,6 +12,8 @@ import {
 } from "../packages/database/index";
 import { backup, restore } from "../packages/database/backup";
 import { projectsFor } from "../packages/domain/projects";
+import { passwordHash, hashToken } from "../packages/domain/identity";
+import { buildApp } from "../apps/api/src/app";
 
 test(
   "native PostgreSQL: isolated restore preserves scope and excludes transient credentials",
@@ -22,6 +24,7 @@ test(
     const prefix = "restore_" + randomUUID().replaceAll("-", "");
     const schemas = [prefix + "_source", prefix + "_target"];
     let source: Database | undefined, target: Database | undefined;
+    let restoredApp: Awaited<ReturnType<typeof buildApp>> | undefined;
     try {
       for (const schema of schemas)
         await admin.query(`CREATE SCHEMA "${schema}"`);
@@ -41,9 +44,11 @@ test(
         b = randomUUID(),
         site = randomUUID(),
         job = randomUUID();
+      const password = randomBytes(32).toString("base64url");
+      const oldSession = randomBytes(32).toString("base64url");
       await source.query(
-        "INSERT INTO users(id,username,display_name,password_hash,role) VALUES($1,'restore-fixture','Fixture','synthetic-hash','TECH')",
-        [actor],
+        "INSERT INTO users(id,username,display_name,password_hash,role) VALUES($1,'restore-fixture','Fixture',$2,'TECH')",
+        [actor, await passwordHash(password)],
       );
       await source.query(
         "INSERT INTO employees(id,user_id,code,display_name) VALUES($1,$2,'EMP-RESTORE','Fixture')",
@@ -70,8 +75,8 @@ test(
         [randomUUID(), a, employee, actor],
       );
       await source.query(
-        "INSERT INTO sessions(token_hash,user_id,expires_at) VALUES('synthetic-session',$1,now()+interval '1 hour')",
-        [actor],
+        "INSERT INTO sessions(token_hash,user_id,expires_at) VALUES($2,$1,now()+interval '1 hour')",
+        [actor, hashToken(oldSession)],
       );
       await source.query(
         "INSERT INTO line_link_nonces(nonce_hash,user_id,expires_at) VALUES('synthetic-nonce',$1,now()+interval '1 hour')",
@@ -138,6 +143,63 @@ test(
         ).map((p) => p.id),
         [a],
       );
+      // Exercise the restored application, not just database counts. This is
+      // an injected API test on CI PostgreSQL, not provider HTTPS/browser UAT.
+      const origin = "https://restore.example.test";
+      restoredApp = await buildApp(target, origin);
+      const stale = await restoredApp.inject({
+        method: "GET",
+        url: "/api/me",
+        headers: { cookie: `sid=${oldSession}` },
+      });
+      assert.equal(stale.statusCode, 401);
+      const login = await restoredApp.inject({
+        method: "POST",
+        url: "/api/login",
+        headers: { origin },
+        payload: { username: "restore-fixture", password },
+      });
+      assert.equal(login.statusCode, 200);
+      const setCookie = String(login.headers["set-cookie"]);
+      assert.match(setCookie, /Secure/i);
+      assert.match(setCookie, /HttpOnly/i);
+      assert.match(setCookie, /SameSite=Strict/i);
+      const headers = { origin, cookie: setCookie.split(";")[0] };
+      const me = await restoredApp.inject({
+        method: "GET",
+        url: "/api/me",
+        headers,
+      });
+      assert.equal(me.statusCode, 200);
+      assert.equal(me.json().role, "TECH");
+      const visible = await restoredApp.inject({
+        method: "GET",
+        url: "/api/projects",
+        headers,
+      });
+      assert.equal(visible.statusCode, 200);
+      assert.deepEqual(
+        visible.json().map((p: { id: string }) => p.id),
+        [a],
+      );
+      const own = await restoredApp.inject({
+        method: "GET",
+        url: `/api/projects/${a}`,
+        headers,
+      });
+      assert.equal(own.statusCode, 200);
+      assert.equal(own.json().site_id, null);
+      assert.deepEqual(own.json().jobs, []);
+      assert.equal(
+        (
+          await restoredApp.inject({
+            method: "GET",
+            url: `/api/projects/${b}`,
+            headers,
+          })
+        ).statusCode,
+        404,
+      );
       await target.query(
         "UPDATE job_assignments SET revoked_at=now() WHERE employee_id=$1",
         [employee],
@@ -149,6 +211,31 @@ test(
           display_name: "Fixture",
         }),
         [],
+      );
+      assert.equal(
+        (
+          await restoredApp.inject({
+            method: "GET",
+            url: `/api/projects/${a}`,
+            headers,
+          })
+        ).statusCode,
+        404,
+      );
+      assert.equal(
+        (
+          await restoredApp.inject({
+            method: "POST",
+            url: "/api/logout",
+            headers,
+          })
+        ).statusCode,
+        200,
+      );
+      assert.equal(
+        (await restoredApp.inject({ method: "GET", url: "/api/me", headers }))
+          .statusCode,
+        401,
       );
       for (const table of [
         "sessions",
@@ -164,6 +251,7 @@ test(
         );
       await assert.rejects(restore(target, file), /empty/);
     } finally {
+      await restoredApp?.close();
       await source?.close();
       await target?.close();
       // Only random schemas created by this test, never public or a user-supplied name.
