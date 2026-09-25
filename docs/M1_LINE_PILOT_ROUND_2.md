@@ -1,5 +1,14 @@
 # M1 LINE — รอบทดสอบ Admin / ช่าง / กลุ่ม
 
+## 25 กันยายน 2026 — Owner ยืนยัน LINE เห็นเฉพาะ B ถูกต้อง
+
+Owner ยืนยันผลคำขอใหม่ “งานของฉัน” หลังมอบหมาย Job B ว่าถูกต้องตามผลที่คาด: เห็นเฉพาะ PILOT LINE B. R2-06 ถอน A / เพิ่ม Job B = UAT_PASSED สำหรับผลโครงการใน LINE จากรายงาน Owner ร่วมกับ backend/audit ที่ตรวจไว้ ไม่ใช่การตรวจภาพโทรศัพท์โดยระบบ
+
+ผลย่อย: ถอน A แล้วไม่พบโครงการ PASS; มอบหมาย Job B แล้วเห็นเฉพาะ B ไม่เห็น A PASS; scope ของ assignment และ ASSIGNED audit PASS; assignment นอก Pilot ไม่เปลี่ยน. ยังไม่อ้างว่าหน้ารายละเอียด Job บน Web ผ่าน UAT จากคำยืนยันนี้
+
+ไม่ต้องส่ง “งานของฉัน” ซ้ำสำหรับขั้นนี้. งานที่ยังเหลือ: R2-05 replay, R2-07 expiry บน LINE จริง และ Staging browser restore / backup gates. ยังไม่รับ M1 ทั้งหมดหรือ Merge PR #2. ไม่มีการเปลี่ยนข้อมูล/code/schema/deploy ในรอบบันทึกผลนี้; ตรวจเอกสาร 45 checks และ diff check ผ่าน
+
+
 ## 25 กันยายน 2026 — มอบหมาย Job B หลังถอน A
 
 Owner อนุญาตทดสอบต่อ หลังยืนยันคำขอ LINE หลังถอน A ไม่พบโครงการแล้ว. มอบหมายเฉพาะ Job สมมติใน PILOT LINE B (PRJ-2609-015) ให้ TECH ผู้ทดลองผ่าน deployed Application สำเร็จ ไม่เพิ่ม assignment ระดับ Project. ตรวจ project/job scope ตรงกัน, domain projection เห็นเฉพาะ B ไม่เห็น A, ASSIGNED audit 1 ครั้ง และ assignment นอก Pilot ไม่เปลี่ยน. ปิด operator สมมติและหมดอายุ session หลังตรวจ เก็บ audit ไว้
