@@ -15,8 +15,8 @@ Web/API/worker exact **dc289ee3088cd84639cc828b49a6f5c50a665f55** ไม่ม�
 | รายการ | ผลและหลักฐาน |
 | --- | --- |
 | CODED | PASS — M1เดิม + D-033 fragmentlink,24hqueuepayloadexpiry,workerDBTLS/leastprivilege |
-| TESTED_LOCAL | PASS — 48PASS/2nativeSKIP; targeted10/10; typecheck/build; M0เอกสาร45checks |
-| TESTED_CI | PASS — CI36102233232 NativePostgreSQL50/50; typecheck/build/API+Webcontainers/smoke/M0 |
+| TESTED_LOCAL | PASS — รอบล่าสุด 50PASS/2nativeSKIP รวม group isolation/queued creator revocation; typecheck และ M0เอกสาร45checks; application build เดิมไม่เปลี่ยน |
+| TESTED_CI | PASS — CI36105399785 commit07dab28: NativePostgreSQL52/52, typecheck/build/API+Webcontainers/smoke/M0; ไม่มี app/schema change หรือ Deploy ใหม่ |
 | DEPLOYED_STAGING | PASS — API/Web/worker exactdc289ee; ไม่มีmigrationหรือserviceใหม่ |
 | HTTPS/PILOT_FIXTURES | PASS — 24checks: injectสร้างAไม่มีSiteJob/BมีSiteJob, publichealth200/HTTPredirect และ11loginrequestsได้401x10/429พร้อมRetry-Afterแม้ปลอมforwardedheader |
 | HTTPS_THREE_ROLES | PASS — 21checksกับOwner/Admin/TECHสมมติ: Login/Secure,HttpOnly,SameSitecookie/CSRF/logout; ปิดบัญชีทดสอบแล้ว |
@@ -52,11 +52,11 @@ Owner ยืนยันผลบนโทรศัพท์วันที่25
 - OwnerอนุมัติqueuepayloadTTL24hตามD-033; สำเร็จล้างทันที หมดอายุไม่ถูกclaimและworkerล้างทุกloop เก็บstatus/audit. หากprovider/workerdown การล้างphysicalรอstartup ต้องตรวจoverduecountก่อนresume ไม่อ้างphysicaldeletionตรงเวลาในช่วงoutage
 - EdgeHTTPquerylogรอบนี้ไม่แสดงแถว จึงคงข้อจำกัดobservability; tokenใหม่ไม่อยู่ในCoreAppquery และไม่มีrequestbodyloggingในแอป ห้ามแนบHAR/rawlog/secret
 - workerrestartPolicy=NEVERเพื่อไม่วนrestartไม่จำกัด; ต้องตรวจสถานะเมื่อไม่มีreplyและหยุดpilotหากworkerหรือcleanupผิดปกติ หลังจบรอบให้ปิดAPI/workerและยืนยันdeploymentStopped ไม่ใช้การปิดAPIแทนหยุดworker
-- Trialล่าสุดยังtrue เหลือประมาณUSD4.7354/28วันก่อนเปิดbusinessmode ไม่มีupgrade/บริการใหม่ หากไม่พอหยุดแจ้งOwner
+- Trialล่าสุดยังtrue เหลือประมาณUSD4.7334/28วัน ณ รอบตรวจนี้ ไม่มีupgrade/บริการใหม่ หากไม่พอหยุดแจ้งOwner
 - ไม่เปลี่ยนข้อมูลจริง มีเฉพาะfixtureบัญชีสมมติที่ปิดแล้ว, ProjectA/Bใหม่และqueueสมมติที่ล้างpayloadแล้ว การเชื่อมบัญชีผู้ทดลองจริงเป็นขั้นที่Ownerอนุมัติแยกจากfixtures
 
 ## หลักฐาน
 
-[CI36102233232](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36102233232) · [Test Evidence](M1_TEST_EVIDENCE.md) · [Readiness](M1_LINE_PILOT_READINESS.md) · [Test Matrix](M1_STAGING_TEST_MATRIX.md) · [D-033](DECISION_LOG.md)
+[CI รอบล่าสุด36105399785](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36105399785) · [Test Evidence](M1_TEST_EVIDENCE.md) · [Readiness](M1_LINE_PILOT_READINESS.md) · [Test Matrix](M1_STAGING_TEST_MATRIX.md) · [D-033](DECISION_LOG.md)
 
 M1อยู่ใน.local/m1-staging; rootM2ยังพักไว้ อัปเดตเฉพาะpointerไม่รวมM2source/schema

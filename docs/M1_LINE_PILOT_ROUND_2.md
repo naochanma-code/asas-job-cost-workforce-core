@@ -31,6 +31,10 @@ Owner ให้พัก Rich Menu จนส่วน LINE ของ Milestone �
 
 Local ใช้ฐานในหน่วยความจำ; CI ใช้ Native PostgreSQL ที่ทิ้งได้ ห้ามตั้ง TEST_DATABASE_URL ไปยัง Staging หรือสำเนาข้อมูลจริง ผลนี้ไม่แทน UAT บนโทรศัพท์
 
+## ผล automated รอบนี้
+
+Local50PASS/2NativeSKIP, typecheck และ M0เอกสาร45checksผ่าน. CI36105399785 NativePG52PASS/0SKIP พร้อม production build, containers และ smoke ผ่านบน commit07dab28. ไม่มีการ Deploy app/schema ในรอบนี้; R2-01–R2-07 ยัง NOT_RUN บนโทรศัพท์ ณ เวลาบันทึก
+
 ## จบรอบ
 
 จด PASS/FAIL/NOT_RUN ต่อข้อใน M1_TEST_EVIDENCE และ PROJECT_STATUS พร้อม release SHA; ไม่แนบ payload/token หรือภาพลิงก์ กรณีมีปัญหาข้อมูล/secret/เครดิตให้หยุดตาม OPERATIONS_RUNBOOK เมื่อจบรอบปิดทั้ง API/worker LINE flags และยืนยัน worker หยุดจริง ไม่เพิ่มแผน/บริการ ไม่ Merge PR #2 หรือเริ่ม M2
