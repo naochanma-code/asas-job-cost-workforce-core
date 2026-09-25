@@ -635,6 +635,122 @@ test("Foundation: real sessions, database constraints, scope and durable LINE co
       },
     );
     await t.test(
+      "bound group does not grant TECH project access or silently switch projects",
+      async () => {
+        const before = (
+          await db.query(
+            "SELECT count(*)::int n FROM audit_logs WHERE action='LINE_GROUP_BOUND'",
+          )
+        ).rows[0].n;
+        const another = await ok(
+          "ADMIN",
+          "POST",
+          `/api/projects/${b}/line-code`,
+        );
+        await enqueue(
+          "group-switch-denied",
+          "line-admin",
+          another.command,
+          "group",
+          "group-1",
+        );
+        await processLineEvent(db);
+        assert.equal(
+          (
+            await db.query(
+              "SELECT project_id FROM line_group_bindings WHERE group_id='group-1'",
+            )
+          ).rows[0].project_id,
+          a,
+        );
+        assert.equal(
+          (
+            await db.query(
+              "SELECT count(*)::int n FROM audit_logs WHERE action='LINE_GROUP_BOUND'",
+            )
+          ).rows[0].n,
+          before,
+        );
+        // TECH participated in this group above, but its assignment was revoked.
+        assert.equal(
+          (await req("TECH", "GET", `/api/projects/${a}`)).statusCode,
+          404,
+        );
+        assert.equal(
+          (await req("TECH", "POST", `/api/projects/${a}/line-code`))
+            .statusCode,
+          403,
+        );
+        await enqueue("group-member-private-jobs", "line-tech", "งานของฉัน");
+        await processLineEvent(db);
+        // Each delivery is captured locally; no LINE transport or credentials.
+        const captured: string[] = [];
+        while (
+          await deliverLine(
+            db,
+            {
+              linkToken: async () => "synthetic-unused",
+              reply: async (_, text) => {
+                captured.push(text);
+              },
+            },
+            "https://test.invalid",
+          )
+        ) {}
+        assert.equal(captured.length, 2);
+        assert.ok(captured.includes("ยังไม่มีโครงการที่ได้รับมอบหมาย"));
+        for (const text of captured)
+          assert.doesNotMatch(text, /Project|fixture|payroll|บาท/i);
+      },
+    );
+    await t.test(
+      "deactivated binding-code creator cannot bind a group from a queued event",
+      async () => {
+        const code = await ok("ADMIN", "POST", `/api/projects/${b}/line-code`);
+        await enqueue(
+          "disabled-admin-bind",
+          "line-admin",
+          code.command,
+          "group",
+          "group-2",
+        );
+        await ok("owner", "PATCH", `/api/users/${users.ADMIN.id}`, {
+          active: false,
+        });
+        try {
+          await processLineEvent(db);
+          assert.equal(
+            (
+              await db.query(
+                "SELECT project_id FROM line_group_bindings WHERE group_id='group-2'",
+              )
+            ).rows.length,
+            0,
+          );
+          const captured: string[] = [];
+          await deliverLine(
+            db,
+            {
+              linkToken: async () => "synthetic-unused",
+              reply: async (_, text) => {
+                captured.push(text);
+              },
+            },
+            "https://test.invalid",
+          );
+          assert.deepEqual(captured, [
+            "กรุณาเปิดแชทส่วนตัวกับบัญชีนี้เพื่อดูงานของคุณ",
+          ]);
+        } finally {
+          await ok("owner", "PATCH", `/api/users/${users.ADMIN.id}`, {
+            active: true,
+          });
+          assert.equal((await req("ADMIN", "GET", "/api/me")).statusCode, 401);
+          await login("ADMIN", "test-admin");
+        }
+      },
+    );
+    await t.test(
       "unlink, deactivate and logout immediately revoke access; health",
       async () => {
         await ok("TECH", "DELETE", "/api/line/link");

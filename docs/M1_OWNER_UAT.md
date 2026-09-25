@@ -1,5 +1,9 @@
 # M1 Owner UAT — ใบบันทึกการทดลองจริง
 
+## สถานะรอบปัจจุบัน — 25 กันยายน 2026
+
+Owner งานของฉันผ่านตามภาพ; runtime ยืนยัน OWNER เชื่อมหนึ่งบัญชี. U05–U08 สำหรับ Admin/TECH/กลุ่มยัง NOT_RUN บนโทรศัพท์ ณ รอบนี้ ใช้ [รอบทดสอบล่าสุด](M1_LINE_PILOT_ROUND_2.md) แทนคำสั่งเก่าที่บอกว่า LINE ปิดด้านล่างซึ่งเป็นประวัติ. Rich Menu พักตาม Owner จนส่วน LINE ครบ ไม่ทำให้ข้าม gate สิทธิ์/expiry/restore หรือรับ M1 ทั้งหมด
+
 ## 24 กันยายน 2026 — Owner ยืนยัน Job create ผ่าน / เตรียม LINE Pilot
 
 Ownerแจ้งเพิ่มJobได้แล้ว ปิดปัญหาseedType validation400เป็น OWNER_UAT_JOB_CREATE=PASS; ไม่ถือเป็นรับM1ทั้งหมด. ตรวจread-only: health200, branchตรงorigin/ไม่ตกmain, LINE=false, APIยังไม่มีLINEconfigและยังไม่มีworker (มีWeb/API/Postgres3services). เตรียม [LINE Readiness](M1_LINE_PILOT_READINESS.md) แต่ยังไม่เปิดจริง ไม่Merge/M2/Production. ไม่มีapplication/schema/deployment changeรอบนี้

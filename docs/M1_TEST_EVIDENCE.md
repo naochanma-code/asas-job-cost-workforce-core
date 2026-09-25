@@ -1,5 +1,13 @@
 # M1 Test Evidence — 2026-09-21
 
+## 25 กันยายน 2026 — เตรียมรอบ Admin/TECH และพัก Rich Menu
+
+25 กันยายน 2026 — ตรวจฐาน Staging แบบอ่านอย่างเดียว: runtime schema/TLS/least privilege ผ่าน; release dc289ee คงเดิม, LINE เปิดแบบจำกัดขอบเขตและ enrollment ปิด. พบ OWNER เชื่อมหนึ่งบัญชี; Admin/TECH ยังไม่เชื่อม, กลุ่มยังไม่ผูก. Inbox DONE5 / outbox SENT3 และ DEAD1 เดิมจาก mock drill; ไม่มีคิว pending/retry และ overdue payload=0. Trial ยังใช้งานได้ เหลือประมาณ USD4.7334/28วัน ไม่เพิ่มบริการหรือเปลี่ยนแผน
+
+Owner ให้รอทำ Rich Menu จนส่วน LINE ของ Milestone ครบ: DEFERRED ตามคำสั่ง ไม่ใช่ blocker ของการทดสอบคำสั่งข้อความ. เตรียม [รอบทดสอบ Admin/TECH/กลุ่ม](M1_LINE_PILOT_ROUND_2.md) แล้ว ขั้นเชื่อมตัวตนต้องทำจาก LINE ของแต่ละคน; ส่งขั้นตอนให้ทำครั้งเดียว ไม่ขอ password/token หรือให้ Owner สลับบัญชีเพื่อ technical tests
+
+เพิ่ม automated regression สองกรณีใน foundation.test.ts: กลุ่มไม่เพิ่มสิทธิ์ TECH/ไม่เปลี่ยน Project เดิมเงียบ ๆ และผู้สร้าง group code ถูกปิดบัญชีหลังเข้าคิวต้องผูกไม่ได้. ใช้ฐานสมมติ/recording transport เท่านั้น ไม่เปลี่ยน app/schema หรือ Deploy. Local regression PASS50 / SKIP2 (Native เฉพาะ CI), typecheck PASS และ M0เอกสาร45checks/diff check PASS. รอบ targeted ครั้งแรกพบ fixture Admin session ถูกเพิกถอนตามที่ระบบออกแบบหลังปิดบัญชี; แก้ test ให้ยืนยัน old session401 และ Login ใหม่ก่อนกรณีถัดไปแล้วรวมผ่าน ไม่แก้ application. Native CI รอตรวจ; R2 real UAT ยัง NOT_RUN
+
 ## 25 กันยายน 2026 — Owner เห็นงานผ่าน LINE แล้ว / เมนูเดิมยังค้าง
 
 Owner แจ้งและแสดงผลบนโทรศัพท์ว่า “งานของฉัน” ตอบกลับโครงการสมมติ PILOT LINE A/B ถูกต้อง: OWNER_LINE_JOBS = UAT_PASSED (Owner-reported visual evidence). ไม่เก็บภาพหรือลิงก์เชื่อมบัญชีลง Repository. หลักฐานนี้ยืนยันผลเรียกงาน ไม่ใช้แทนการตรวจขั้นเชื่อมบัญชีทุกขั้นหรือ expiry/replay; Admin/TECH, group binding และ revoke ยัง NOT_RUN ในรอบจริง

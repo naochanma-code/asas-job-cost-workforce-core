@@ -1,5 +1,9 @@
 # M1 LINE Pilot — Readiness 25 September 2026
 
+## รอบถัดไป — Admin/TECH/กลุ่ม
+
+Owner ยืนยันให้พัก Rich Menu จนส่วน LINE ของ Milestone ครบ. รันคำสั่งข้อความต่อได้ ดู [รอบทดสอบล่าสุด](M1_LINE_PILOT_ROUND_2.md). Runtime ยืนยัน OWNER เชื่อมหนึ่งบัญชี; Admin/TECH ยังไม่เชื่อมและกลุ่มยังไม่ผูก ณ เวลาตรวจ ไม่ต้องให้ Owner เชื่อมซ้ำ
+
 สถานะ **BOUNDED_LINE_ENABLED / OWNER_JOBS_UAT_PASSED** ภายในTrialเดิมตามD-030/ADR-012และD-033
 
 API/Web/worker exactdc289ee3088cd84639cc828b49a6f5c50a665f55 SUCCESS; CI NativePG50/50/container PASS;24fixture/HTTPS/ratechecks,21HTTPSrolechecks,16worker/runtime/mockqueuechecks PASS. Providerworkerstop/startผ่านและofficialLINEVerify200หลังเปิดbusinessmode. ไม่มีmigrationหรือpaidserviceใหม่
@@ -12,7 +16,7 @@ Owner แจ้งพร้อมภาพว่า “งานของฉั�
 
 ## วิธีเชื่อมสำหรับผู้ทดลองคนถัดไป
 
-ส่ง “เชื่อมบัญชี” ในแชทส่วนตัว @ASAS-WORK เปิดลิงก์ LoginOwnerของโอ๋ กด “ยืนยันเชื่อมบัญชี” แล้วกลับLINEส่ง “งานของฉัน” คาดเห็นPILOT LINE A/Bเท่านั้น แจ้งผลโดยไม่ส่งลิงก์มีรหัส/Secret/Password. ทำOwnerก่อนหนึ่งคน แล้วAdmin/TECHใช้บัญชีตนตามรอบถัดไป ไม่ต้องสมัครใหม่
+ส่ง “เชื่อมบัญชี” ในแชทส่วนตัว @ASAS-WORK เปิดลิงก์ Loginด้วยบัญชีแอปของผู้ทดลองคนนั้น กด “ยืนยันเชื่อมบัญชี” แล้วกลับLINEส่ง “งานของฉัน” คาดเห็นPILOT LINE A/Bเท่านั้น แจ้งผลโดยไม่ส่งลิงก์มีรหัส/Secret/Password. Ownerผ่านแล้ว ให้Admin/TECHใช้บัญชีตนในรอบนี้ ไม่ต้องสมัครใหม่
 
 ## ข้อจำกัดที่คงไว้
 

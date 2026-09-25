@@ -38,7 +38,11 @@ Owner ยืนยันผลบนโทรศัพท์วันที่25
 
 ไม่ต้องทดสอบ “งานของฉัน” ซ้ำตอนนี้ ขั้นต่อไปคือ Admin/TECH ใช้บัญชีของตนและตรวจสิทธิ์โครงการสมมติ รวมกลุ่ม/revoke/expiry โดย Codex เตรียมรอบทดสอบต่อ ไม่ถือว่ารับ M1 ทั้งหมด
 
-Rich Menu ในภาพยังเป็นรุ่นเก่า จึงมีปุ่มไม่ตรงกับคำสั่งปัจจุบัน. เสนอเปลี่ยนบน OA เดิมเป็น งานของฉัน / เชื่อมบัญชี / เปิดเว็บ สำหรับ M1 และทดลองเฉพาะผู้ร่วม Pilot ก่อน; ยังไม่ได้สร้างหรือ Deploy เมนูใหม่. ไม่เพิ่มเมนูลงวัน/OT/Expense/Leave ใน M1
+**Rich Menu: DEFERRED ตามคำสั่ง Owner** — รอส่วน LINE ของ Milestone ครบก่อนทำเมนู ใช้คำสั่งข้อความทดสอบต่อ ไม่มีการสร้างหรือเปลี่ยน Rich Menu
+
+25 กันยายน 2026 — ตรวจฐาน Staging แบบอ่านอย่างเดียว: runtime schema/TLS/least privilege ผ่าน; release dc289ee คงเดิม, LINE เปิดแบบจำกัดขอบเขตและ enrollment ปิด. พบ OWNER เชื่อมหนึ่งบัญชี; Admin/TECH ยังไม่เชื่อม, กลุ่มยังไม่ผูก. Inbox DONE5 / outbox SENT3 และ DEAD1 เดิมจาก mock drill; ไม่มีคิว pending/retry และ overdue payload=0. Trial ยังใช้งานได้ เหลือประมาณ USD4.7334/28วัน ไม่เพิ่มบริการหรือเปลี่ยนแผน
+
+ดู [แผนรอบ Admin/TECH/กลุ่ม](M1_LINE_PILOT_ROUND_2.md). ส่งคำขอให้ Admin/TECH เชื่อมจาก LINE ของตนแล้ว; ระหว่างรอเพิ่ม regression กลุ่มไม่ให้สิทธิ์และบัญชีที่ถูกปิดระหว่างรอคิว ผล Local/CI แยกในหลักฐาน ไม่แทน real UAT
 
 [Web Staging](https://web-staging-cb6f.up.railway.app/) · [Owner Setup](M1_LINE_OWNER_SETUP.md)
 
