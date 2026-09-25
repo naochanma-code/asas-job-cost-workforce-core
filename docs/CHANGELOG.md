@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 25 กันยายน 2026 — ออกรหัสผูกกลุ่มใหม่ตาม Owner
+
+Ownerขอรหัสใหม่ เปิดPILOT LINE AในsessionOwnerและกดสร้างรหัสผ่านWebสำเร็จ หน้าแสดงคำสั่งใหม่อายุ10นาที. รหัสอยู่เฉพาะหน้าเว็บ ไม่คัดลอกลงGit/Chat. ยังรอOwnerส่งจากLINEที่เชื่อมไปกลุ่มทดสอบเดิม ไม่ถือgroupbindingผ่านจากการออกรหัส ไม่มีการเปลี่ยนallowlist/role/schema/deployment
+
 ## 25 กันยายน 2026 — พัก LINE Admin / เดินหน้ากลุ่มด้วย Owner และ Restore test
 
 Ownerสั่งข้ามLINEAdminไปก่อน: ADMIN_ACCOUNT_LINKและAdminเฉพาะrole UAT = DEFERRED_BY_OWNER ไม่ใช่PASS และไม่ถือM1accepted/readymerge. ไม่ถอดallowlistหรือแก้roleของAdmin. สิทธิ์ผูกกลุ่มเดิมรองรับOWNER/ADMIN จึงใช้Ownerที่เชื่อมแล้วสร้างรหัสของPILOT LINE AบนWebและขอให้ส่งจากLINEOwnerไปกลุ่มเดิม รหัสอยู่หน้าWebเท่านั้น อายุ10นาที; ยังWAITING_USER ไม่ผูกฐานโดยตรงหรือปลอมevent

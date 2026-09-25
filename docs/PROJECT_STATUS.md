@@ -1,5 +1,9 @@
 # PROJECT STATUS — Milestone 1
 
+## 25 กันยายน 2026 — ออกรหัสผูกกลุ่มใหม่ตาม Owner
+
+Ownerขอรหัสใหม่ เปิดPILOT LINE AในsessionOwnerและกดสร้างรหัสผ่านWebสำเร็จ หน้าแสดงคำสั่งใหม่อายุ10นาที. รหัสอยู่เฉพาะหน้าเว็บ ไม่คัดลอกลงGit/Chat. ยังรอOwnerส่งจากLINEที่เชื่อมไปกลุ่มทดสอบเดิม ไม่ถือgroupbindingผ่านจากการออกรหัส ไม่มีการเปลี่ยนallowlist/role/schema/deployment
+
 อัปเดต 25 กันยายน 2026 · Module owner: Codex · branch codex/milestone-1-foundation · PR #2 ยัง Draft / ไม่ Merge
 
 ## ตอนนี้ถึงไหน
