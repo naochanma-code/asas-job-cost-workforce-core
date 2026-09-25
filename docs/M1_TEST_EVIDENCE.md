@@ -1,5 +1,12 @@
 # M1 Test Evidence — 2026-09-21
 
+## 25 กันยายน 2026 — ยืนยันผลถอนสิทธิ์บน LINE
+
+Owner รายงานคำตอบใหม่ว่า “ไม่มีโครงการที่รับมอบหมาย” หลังถอน assignment สมมติ A. R2-06 REVOKE = UAT_PASSED จากรายงานบนโทรศัพท์ร่วมกับหลักฐาน backend รอบก่อน: visible Pilot projects 0, assignment นอก Pilot ไม่เปลี่ยน และมี ASSIGNMENT_REVOKED audit. ไม่ได้ตรวจภาพโทรศัพท์โดยตรง
+
+ขั้นต่อไปคือมอบหมาย Job ใน Project B ให้ TECH แล้วตรวจคำขอใหม่เห็นเฉพาะ B; ยังไม่ได้มอบหมายในรอบบันทึกนี้. Replay/expiry และ Staging browser restore ยังไม่ครบ ไม่ถือ M1 accepted. ไม่มีการเปลี่ยน code/schema/deployment/ข้อมูลในรอบนี้
+
+
 ## 25 กันยายน 2026 — Admin/TECH เห็นงานแล้ว และเริ่มตรวจถอนสิทธิ์
 
 Owner ยืนยัน TECH เห็นงานและ ADMIN เห็น A/B; runtime ตรวจบัญชี active/เชื่อม LINE/อยู่ใน allowlist ตรงกัน โดย TECH เห็นเฉพาะ PRJ-2609-014 และ ADMIN เห็น PRJ-2609-014/015 ก่อนถอนสิทธิ์. ADMIN_ACCOUNT_LINK / ADMIN_LINE_JOBS และ TECH_LINE_JOBS ก่อนถอน = UAT_PASSED จากรายงาน Owner ร่วมกับ runtime ไม่ใช่ภาพโทรศัพท์ที่ระบบตรวจเอง. A/B เป็น Project ทดสอบ ไม่ใช่ Job สองรายการ. สถานะนี้แทนการพัก Admin ก่อนหน้า
