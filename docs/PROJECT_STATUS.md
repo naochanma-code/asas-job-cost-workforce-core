@@ -16,7 +16,7 @@ Release Web/API/worker ยัง **dc289ee3088cd84639cc828b49a6f5c50a665f55** �
 | --- | --- |
 | CODED | PASS — Foundation/M1 Alignment และ D-033 fragment link / queue retention24ชั่วโมง |
 | TESTED_LOCAL | PASS — ล่าสุด50PASS/2NativeSKIP, typecheck, M0เอกสาร45checks |
-| TESTED_CI | PASS — CI36105399785 commit07dab28: NativePostgreSQL52/52, typecheck/build/API+Webcontainers/smoke/M0; ไม่ใช่ real LINE UAT |
+| TESTED_CI | PASS — CI36109173357 commit8ea5ed9: NativePostgreSQL52/52 รวมrestore-login/scope/sessionเดิมใช้ไม่ได้, typecheck/build/API+Webcontainers/smoke/M0; ไม่ใช่ real LINE UAT |
 | DEPLOYED_STAGING | PASS — exactdc289ee; รอบนี้เปลี่ยนเฉพาะ enrollment/allowlist/flagsและrestart API/worker |
 | HTTPS/ROLE/WORKER | PASSจากรอบก่อน — 24fixture/HTTPS checks,21rolechecks,16runtime/mockqueuechecks และ providerstop/start; ไม่ใช้แทนUATจริง |
 | RESUME_SECURITY | PASS — runtime schema/TLS/leastprivilege, คงOWNER/TECHทั้งคู่, allowlists/API-workerflags/commitตรงกัน, sweepก่อนresumeสำเร็จ (overdue0), HTTPShealth200 |
@@ -27,7 +27,7 @@ Release Web/API/worker ยัง **dc289ee3088cd84639cc828b49a6f5c50a665f55** �
 | ADMIN_ACCOUNT_LINK / ADMIN_LINE_UAT | DEFERRED_BY_OWNER — พักตามคำสั่งล่าสุด ไม่ถือPASS ไม่ถอดallowlist/แก้role |
 | GROUP / REVOKE / EXPIRY | WAITING_USER / NOT_RUN — ใช้Ownerผูกกลุ่มตามสิทธิ์เดิม สร้างคำสั่งบนหน้าAแล้ว; ยังรอส่งจริง ส่วนrevoke/expiry/replayยังไม่ครบ |
 | OWNER_UAT_ALL_M1 | PARTIAL — Web/Job/mobile/OwnerLINEผ่านตามหลักฐาน ยังไม่รับM1ทั้งหมด |
-| BACKUP/RESTORE | PASSแบบmanualencrypted/isolatedrecoveryรอบก่อน; เพิ่มNativeCI restore-login/scope regression รอตรวจ; scheduledbackup/PITR/StagingBrowserRestoreLoginยังไม่ครบ |
+| BACKUP/RESTORE | PASSแบบmanualencrypted/isolatedrecoveryรอบก่อน; NativeCI restore-login/scope regression PASS; scheduledbackup/PITR/StagingBrowserRestoreLoginยังไม่ครบ |
 | ERP/ACCOUNTING_CONNECTORS | DESIGNED / NOT_CODED ตามD-032/ADR-013 |
 | MERGE / M2 / M3 / PRODUCTION | NOT_AUTHORIZED — ไม่ดำเนินการ |
 
@@ -53,6 +53,6 @@ Ownerไม่ต้องเชื่อมบัญชีใหม่. ลิ�
 
 ## หลักฐาน
 
-[CI36105399785](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36105399785) · [Test Evidence](M1_TEST_EVIDENCE.md) · [Readiness](M1_LINE_PILOT_READINESS.md) · [D-034](DECISION_LOG.md)
+[CI36109173357](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36109173357) · [Test Evidence](M1_TEST_EVIDENCE.md) · [Readiness](M1_LINE_PILOT_READINESS.md) · [D-034](DECISION_LOG.md)
 
 M1อยู่ใน.local/m1-staging; rootM2พักไว้ อัปเดตเฉพาะpointerไม่รวมM2source/schema
