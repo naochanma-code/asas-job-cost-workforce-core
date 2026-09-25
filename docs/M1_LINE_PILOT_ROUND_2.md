@@ -1,5 +1,9 @@
 # M1 LINE — รอบทดสอบ Admin / ช่าง / กลุ่ม
 
+## R2-04 ล่าสุด — กลุ่มผูก A แล้ว
+
+Ownerส่งคำสั่งแล้ว ตรวจmappingกลุ่มที่อนุมัติชี้PRJ-2609-014และaudit1ครั้ง: PASSด้านruntime. R2-05 replay / R2-06 revoke / R2-07 expiry ยังNOT_RUNจริง ไม่ถือว่าPASSตามR2-04. รอTECHยืนยันเห็นAก่อนถอนassignment
+
 ## ผลล่าสุดหลังรับ Admin ใหม่
 
 TECHเชื่อมสำเร็จและผลไม่มีโครงการก่อนมอบหมายตรงกับR2-02 (ไม่มีPilot assignment). R2-03มอบหมายAผ่านApplication/domainแล้ว รอTECHเรียกงานใหม่บนโทรศัพท์. AdminลงทะเบียนLINEใหม่ตามD-034แล้ว แต่R2-01ยังPARTIALจนAdminเชื่อมกับบัญชีแอปADMIN; R2-04–07ยังNOT_RUN. เปิดbusinessAPI/workerกลับแล้ว รหัสลงทะเบียนเก่าใช้ต่อไม่ได้ ดูPROJECT_STATUS

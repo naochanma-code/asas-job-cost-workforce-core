@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 25 กันยายน 2026 — ผูกกลุ่มกับ PILOT LINE A สำเร็จ
+
+Ownerแจ้งส่งคำสั่งใหม่แล้ว; ตรวจฐานแบบอ่านอย่างเดียวพบกลุ่มที่อนุมัติผูกกับ PRJ-2609-014 (PILOT LINE A) และ LINE_GROUP_BOUND audit1ครั้ง: REAL_GROUP_BINDING = PASS ด้านmapping/audit. inboxDONE17/outboxSENT13/DEAD1เดิมจากmockdrill ไม่มีpending/retry. จำนวนSENTเป็นaggregate ไม่แทนการยืนยันอ่านข้อความเฉพาะรายการบนโทรศัพท์. ไม่เก็บgroup/userIDหรือรหัสในGit/Chat
+
+ยังไม่ถือว่าreplay/expiry/revokeหรือM1รวมผ่าน. LINE AdminพักตามOwner. ขั้นต่อไปยืนยันTECHเรียกงานใหม่เห็นเฉพาะAก่อนทดสอบถอนassignmentสมมติ ไม่เปลี่ยนassignmentในรอบตรวจนี้ ไม่มีcode/schema/Deploy/Merge
+
 ## 25 กันยายน 2026 — ออกรหัสผูกกลุ่มใหม่ตาม Owner
 
 Ownerขอรหัสใหม่ เปิดPILOT LINE AในsessionOwnerและกดสร้างรหัสผ่านWebสำเร็จ หน้าแสดงคำสั่งใหม่อายุ10นาที. รหัสอยู่เฉพาะหน้าเว็บ ไม่คัดลอกลงGit/Chat. ยังรอOwnerส่งจากLINEที่เชื่อมไปกลุ่มทดสอบเดิม ไม่ถือgroupbindingผ่านจากการออกรหัส ไม่มีการเปลี่ยนallowlist/role/schema/deployment

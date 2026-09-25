@@ -1,5 +1,11 @@
 # PROJECT STATUS — Milestone 1
 
+## 25 กันยายน 2026 — ผูกกลุ่มกับ PILOT LINE A สำเร็จ
+
+Ownerแจ้งส่งคำสั่งใหม่แล้ว; ตรวจฐานแบบอ่านอย่างเดียวพบกลุ่มที่อนุมัติผูกกับ PRJ-2609-014 (PILOT LINE A) และ LINE_GROUP_BOUND audit1ครั้ง: REAL_GROUP_BINDING = PASS ด้านmapping/audit. inboxDONE17/outboxSENT13/DEAD1เดิมจากmockdrill ไม่มีpending/retry. จำนวนSENTเป็นaggregate ไม่แทนการยืนยันอ่านข้อความเฉพาะรายการบนโทรศัพท์. ไม่เก็บgroup/userIDหรือรหัสในGit/Chat
+
+ยังไม่ถือว่าreplay/expiry/revokeหรือM1รวมผ่าน. LINE AdminพักตามOwner. ขั้นต่อไปยืนยันTECHเรียกงานใหม่เห็นเฉพาะAก่อนทดสอบถอนassignmentสมมติ ไม่เปลี่ยนassignmentในรอบตรวจนี้ ไม่มีcode/schema/Deploy/Merge
+
 ## 25 กันยายน 2026 — ออกรหัสผูกกลุ่มใหม่ตาม Owner
 
 Ownerขอรหัสใหม่ เปิดPILOT LINE AในsessionOwnerและกดสร้างรหัสผ่านWebสำเร็จ หน้าแสดงคำสั่งใหม่อายุ10นาที. รหัสอยู่เฉพาะหน้าเว็บ ไม่คัดลอกลงGit/Chat. ยังรอOwnerส่งจากLINEที่เชื่อมไปกลุ่มทดสอบเดิม ไม่ถือgroupbindingผ่านจากการออกรหัส ไม่มีการเปลี่ยนallowlist/role/schema/deployment
@@ -29,7 +35,8 @@ Release Web/API/worker ยัง **dc289ee3088cd84639cc828b49a6f5c50a665f55** �
 | TECH_PILOT_ASSIGNMENT | PASSด้านApplication/domain — เดิมไม่มีPilot assignmentจึงไม่เห็นงาน; เพิ่มเฉพาะAผ่านApplication มีASSIGNEDauditหนึ่งครั้ง เห็นAไม่เห็นB งานเดิมนอกPilotไม่เปลี่ยน; รอคำขอใหม่บนโทรศัพท์ |
 | ADMIN_ENROLLMENT | PASS — รับรหัสส่วนตัวช่อง1 บันทึกexactIDลงRailway ปิดenrollmentแล้ว ไม่ต้องสมัครOwner/TECH/กลุ่มซ้ำ |
 | ADMIN_ACCOUNT_LINK / ADMIN_LINE_UAT | DEFERRED_BY_OWNER — พักตามคำสั่งล่าสุด ไม่ถือPASS ไม่ถอดallowlist/แก้role |
-| GROUP / REVOKE / EXPIRY | WAITING_USER / NOT_RUN — ใช้Ownerผูกกลุ่มตามสิทธิ์เดิม สร้างคำสั่งบนหน้าAแล้ว; ยังรอส่งจริง ส่วนrevoke/expiry/replayยังไม่ครบ |
+| REAL_GROUP_BINDING | PASS — Ownerส่งคำสั่งแล้ว runtimeยืนยันกลุ่มที่อนุมัติชี้A และLINE_GROUP_BOUND audit1ครั้ง |
+| REVOKE / EXPIRY / REPLAY | NOT_RUNในรอบจริง — ยังไม่เปลี่ยนassignmentเพื่อรอผลTECHเห็นAบนโทรศัพท์ |
 | OWNER_UAT_ALL_M1 | PARTIAL — Web/Job/mobile/OwnerLINEผ่านตามหลักฐาน ยังไม่รับM1ทั้งหมด |
 | BACKUP/RESTORE | PASSแบบmanualencrypted/isolatedrecoveryรอบก่อน; NativeCI restore-login/scope regression PASS; scheduledbackup/PITR/StagingBrowserRestoreLoginยังไม่ครบ |
 | ERP/ACCOUNTING_CONNECTORS | DESIGNED / NOT_CODED ตามD-032/ADR-013 |
@@ -37,13 +44,9 @@ Release Web/API/worker ยัง **dc289ee3088cd84639cc828b49a6f5c50a665f55** �
 
 ## สิ่งที่ Owner / ผู้ทดลองทำต่อ
 
-1. **Owner:** ส่งคำสั่ง “ผูกโครงการ …” ที่สร้างไว้บนหน้าPILOT LINE A จากLINEOwnerไปกลุ่มทดสอบเดิมภายใน10นาที ไม่ส่งรหัสในแชทนี้. ใช้OwnerแทนAdminได้ตามสิทธิ์เดิม ไม่ต้องให้Adminเชื่อมตอนนี้
-2. **TECH:** ส่ง **งานของฉัน** อีกครั้ง คาดเห็นเฉพาะ **PRJ-2609-014 — PILOT LINE A - no Site or Job**; ไม่เห็นBและโครงการจริงอื่นผ่านLINEในรอบจำกัดนี้
-3. แจ้งผลโดยไม่ส่งรหัสผ่าน/ลิงก์/รหัส จากนั้นตรวจผูกกลุ่มและถอนassignmentสมมติตาม [แผนรอบ2](M1_LINE_PILOT_ROUND_2.md). สร้างรหัสของAไว้แล้วในรอบนี้ ถ้าหมดอายุให้สร้างใหม่ผ่านหน้าOwner ไม่ใช้รหัสเดิม
+กลุ่มผูกAสำเร็จแล้ว ไม่ต้องส่งรหัสใหม่. ให้TECHส่ง **งานของฉัน** และยืนยันว่าเห็นเฉพาะ **PILOT LINE A** จากนั้นจึงทดสอบถอนA/มอบหมายJob Bตามแผนรอบ2โดยแตะเฉพาะassignmentสมมติ. LINEAdminพักตามOwner ไม่ต้องเชื่อมตอนนี้
 
-Ownerไม่ต้องเชื่อมบัญชีใหม่. ลิงก์เชื่อมบัญชีหมดอายุหรือrefreshจนtokenหายให้ส่งเชื่อมบัญชีใหม่ ไม่ใช้รหัสลงทะเบียนเก่า
-
-[Web Staging](https://web-staging-cb6f.up.railway.app/) · [Owner Setup](M1_LINE_OWNER_SETUP.md)
+[Web Staging](https://web-staging-cb6f.up.railway.app/) · [แผนรอบ2](M1_LINE_PILOT_ROUND_2.md)
 
 ## ข้อจำกัดและการหยุดทดลอง
 
