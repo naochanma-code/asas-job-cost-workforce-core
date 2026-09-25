@@ -1,5 +1,17 @@
 # PROJECT STATUS — Milestone 1
 
+## 25 กันยายน 2026 — Admin/TECH เห็นงานแล้ว และเริ่มตรวจถอนสิทธิ์
+
+Owner ยืนยัน TECH เห็นงานและ ADMIN เห็น A/B; runtime ตรวจบัญชี active/เชื่อม LINE/อยู่ใน allowlist ตรงกัน โดย TECH เห็นเฉพาะ PRJ-2609-014 และ ADMIN เห็น PRJ-2609-014/015 ก่อนถอนสิทธิ์. ADMIN_ACCOUNT_LINK / ADMIN_LINE_JOBS และ TECH_LINE_JOBS ก่อนถอน = UAT_PASSED จากรายงาน Owner ร่วมกับ runtime ไม่ใช่ภาพโทรศัพท์ที่ระบบตรวจเอง. A/B เป็น Project ทดสอบ ไม่ใช่ Job สองรายการ. สถานะนี้แทนการพัก Admin ก่อนหน้า
+
+R2-06 ถอนเฉพาะ assignment ระดับ Project ของ TECH ใน PILOT LINE A ผ่าน deployed Application แล้ว: backend PASS, เหลือ Pilot project ที่มองเห็น 0, assignment นอก Pilot ไม่เปลี่ยน, audit ASSIGNED 1 / ASSIGNMENT_REVOKED 1. ปิด operator สมมติและ session หลังตรวจ เก็บ audit ไว้ ไม่แก้ข้อมูลจริง ไม่เก็บชื่อบัญชีหรือรหัสลับในเอกสาร
+
+**ขั้นต่อไป:** ให้ TECH ส่ง “งานของฉัน” ใหม่ ต้องไม่แสดงโครงการที่ได้รับมอบหมายใน Pilot; ข้อความเก่าในแชทไม่ถูกลบ. ผลหลังถอนบนโทรศัพท์ = WAITING_USER. ยังไม่มอบหมาย Job B จนตรวจขั้นนี้ผ่าน. ADMIN ยังคงเห็น A/B. Replay/expiry และ Staging browser restore ยังไม่ผ่านครบ จึงยังไม่รับ M1 ทั้งหมด
+
+ไม่มี code/schema/deploy/merge หรือค่าใช้จ่ายเพิ่ม. CI เดิม 36109173357: Native PostgreSQL 52/52 PASS; รอบนี้ตรวจเอกสารและ diff เท่านั้น
+
+## ประวัติก่อนผลล่าสุด (ไม่ใช่คำสั่งปัจจุบัน)
+
 ## 25 กันยายน 2026 — ผูกกลุ่มกับ PILOT LINE A สำเร็จ
 
 Ownerแจ้งส่งคำสั่งใหม่แล้ว; ตรวจฐานแบบอ่านอย่างเดียวพบกลุ่มที่อนุมัติผูกกับ PRJ-2609-014 (PILOT LINE A) และ LINE_GROUP_BOUND audit1ครั้ง: REAL_GROUP_BINDING = PASS ด้านmapping/audit. inboxDONE17/outboxSENT13/DEAD1เดิมจากmockdrill ไม่มีpending/retry. จำนวนSENTเป็นaggregate ไม่แทนการยืนยันอ่านข้อความเฉพาะรายการบนโทรศัพท์. ไม่เก็บgroup/userIDหรือรหัสในGit/Chat
@@ -34,9 +46,9 @@ Release Web/API/worker ยัง **dc289ee3088cd84639cc828b49a6f5c50a665f55** �
 | TECH_LINE_LINK | PASS — Ownerรายงานและruntimeยืนยันuser/employeeactive บัญชีเชื่อมอยู่ในallowlist |
 | TECH_PILOT_ASSIGNMENT | PASSด้านApplication/domain — เดิมไม่มีPilot assignmentจึงไม่เห็นงาน; เพิ่มเฉพาะAผ่านApplication มีASSIGNEDauditหนึ่งครั้ง เห็นAไม่เห็นB งานเดิมนอกPilotไม่เปลี่ยน; รอคำขอใหม่บนโทรศัพท์ |
 | ADMIN_ENROLLMENT | PASS — รับรหัสส่วนตัวช่อง1 บันทึกexactIDลงRailway ปิดenrollmentแล้ว ไม่ต้องสมัครOwner/TECH/กลุ่มซ้ำ |
-| ADMIN_ACCOUNT_LINK / ADMIN_LINE_UAT | DEFERRED_BY_OWNER — พักตามคำสั่งล่าสุด ไม่ถือPASS ไม่ถอดallowlist/แก้role |
+| ADMIN_ACCOUNT_LINK / ADMIN_LINE_UAT | UAT_PASSED — Owner ยืนยันและ runtime ตรวจการเชื่อม/ขอบเขต A/B ตรงกัน |
 | REAL_GROUP_BINDING | PASS — Ownerส่งคำสั่งแล้ว runtimeยืนยันกลุ่มที่อนุมัติชี้A และLINE_GROUP_BOUND audit1ครั้ง |
-| REVOKE / EXPIRY / REPLAY | NOT_RUNในรอบจริง — ยังไม่เปลี่ยนassignmentเพื่อรอผลTECHเห็นAบนโทรศัพท์ |
+| REVOKE / EXPIRY / REPLAY | REVOKE backend PASS / phone WAITING_USER; EXPIRY / REPLAY NOT_RUN จริง |
 | OWNER_UAT_ALL_M1 | PARTIAL — Web/Job/mobile/OwnerLINEผ่านตามหลักฐาน ยังไม่รับM1ทั้งหมด |
 | BACKUP/RESTORE | PASSแบบmanualencrypted/isolatedrecoveryรอบก่อน; NativeCI restore-login/scope regression PASS; scheduledbackup/PITR/StagingBrowserRestoreLoginยังไม่ครบ |
 | ERP/ACCOUNTING_CONNECTORS | DESIGNED / NOT_CODED ตามD-032/ADR-013 |
