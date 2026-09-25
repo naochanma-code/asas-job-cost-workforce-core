@@ -1,14 +1,20 @@
 # PROJECT STATUS — Milestone 1
 
+## 25 กันยายน 2026 — TECH เชื่อมแล้ว / รับ Admin ใหม่
+
+ตรวจ TECH ผู้ทดลอง: user/employee active, LINEเชื่อมและอยู่allowlist แต่ไม่มีassignmentในProjectPilot จึงไม่แสดงโครงการ; งานเดิมนอกPilotไม่ถูกเปิดผ่านLINE. มอบหมายเฉพาะPILOT LINE A PRJ-2609-014 ผ่านdeployedApplication/app.injectด้วยoperatorสมมติแล้ว: domain projectionเห็นAไม่เห็นB, ASSIGNED auditหนึ่งครั้ง, assignmentนอกPilotไม่เปลี่ยน. ปิดoperator/sessionหลังตรวจ ไม่บันทึกชื่อบัญชีหรือLINE IDในเอกสาร. ผลคำขอใหม่บนโทรศัพท์ยังWAITING_USER
+
+Ownerขอรับ LINE Admin ใหม่ตามD-034. Worker flag=false และ deployment a4e694c8-9ba8-412b-a7cc-2cc8b592c1e7 หยุดจริง deploymentStopped=true ก่อนเปิดenrollment. Auto-reviewปฏิเสธการเปิดAPI enrollmentก่อนหยุดworker จึงแก้ลำดับตามrunbookโดยไม่ข้ามการปฏิเสธ. API enrollment deployment50de5f09-83d8-44af-8d12-278ee9d29447 SUCCESS releaseเดิม dc289ee. runtimeตรวจLINE=false/enrollment=true, OWNER1/TECH1คงอยู่, ช่องยังไม่เชื่อม1, inbox/outboxคิวรอ0, schema/TLS/privilegeและHTTPShealth200ผ่าน. OwnerLoginแล้ว ออกรหัสบนหน้าเว็บเวลา14:16อายุ15นาที ใช้เฉพาะช่องส่วนตัว1; ยังรอAdminส่ง ไม่เก็บcode/IDในเอกสาร. ไม่มีapp/schema change; TrialUSD4.7314/28วัน ไม่Merge/Production/RichMenu
+
 อัปเดต 25 กันยายน 2026 · Module owner: Codex (Foundation/API/LINE/เอกสาร) · branch codex/milestone-1-foundation · PR #2 ยัง Draft / ไม่ Merge
 
 ## ตอนนี้ถึงไหน
 
-**เปิด bounded LINE Pilot แล้ว — Owner ยืนยันเห็นโครงการทดสอบผ่าน “งานของฉัน” แล้ว** ผู้ทดลอง3คน/กลุ่ม1กลุ่มจากenrollmentเดิมถูกบันทึกในRailwayแล้ว ไม่ต้องลงทะเบียนซ้ำ
+**พักคำสั่ง LINE ชั่วคราวเพื่อรับบัญชี Admin ใหม่ — Owner/TECH เชื่อมแล้ว** ผู้ทดลอง3คน/กลุ่ม1กลุ่มจากenrollmentเดิมถูกบันทึกในRailwayแล้ว ไม่ต้องลงทะเบียนซ้ำ
 
-API/worker LINE_ENABLED=true, LINE_ENROLLMENT_ENABLED=false; จำกัดLINEเฉพาะ2Projectสมมติที่สร้างรอบนี้: **PILOT LINE A - no Site or Job**, **PILOT LINE B - Site and Job**. สิทธิ์ปกติยังบังคับร่วมกับallowlist จึงไม่เปิดโครงการจริงแม้OWNER
+สถานะขณะรับ Admin: API LINE_ENABLED=false / LINE_ENROLLMENT_ENABLED=true; worker LINE_ENABLED=false และหยุด deployment แล้ว. เมื่อปิด enrollment และตรวจขอบเขตครบจึงเปิดกลับ; จำกัดLINEเฉพาะ2Projectสมมติที่สร้างรอบนี้: **PILOT LINE A - no Site or Job**, **PILOT LINE B - Site and Job**. สิทธิ์ปกติยังบังคับร่วมกับallowlist จึงไม่เปิดโครงการจริงแม้OWNER
 
-Web/API/worker exact **dc289ee3088cd84639cc828b49a6f5c50a665f55** ไม่มีmigration. Web d3bca251-a686-402e-a0d8-0e5dd2cddbb9; API c4d8f20b-9524-4b59-bc15-3c86b0558737; worker a4e694c8-9ba8-412b-a7cc-2cc8b592c1e7 SUCCESS. API/workerไม่มีpublicdomain; WebHTTPSเป็นทางเข้า
+Web/API/worker exact **dc289ee3088cd84639cc828b49a6f5c50a665f55** ไม่มีmigration. Web d3bca251-a686-402e-a0d8-0e5dd2cddbb9; API 50de5f09-83d8-44af-8d12-278ee9d29447 SUCCESS; worker a4e694c8-9ba8-412b-a7cc-2cc8b592c1e7 หยุดแล้ว (deploymentStopped=true). API/workerไม่มีpublicdomain; WebHTTPSเป็นทางเข้า
 
 ## สถานะตาม Definition of Done
 
@@ -36,7 +42,7 @@ Owner ยืนยันผลบนโทรศัพท์วันที่25
 
 ## สิ่งที่ Owner ทำต่อ
 
-ไม่ต้องทดสอบ “งานของฉัน” ซ้ำตอนนี้ ขั้นต่อไปคือ Admin/TECH ใช้บัญชีของตนและตรวจสิทธิ์โครงการสมมติ รวมกลุ่ม/revoke/expiry โดย Codex เตรียมรอบทดสอบต่อ ไม่ถือว่ารับ M1 ทั้งหมด
+ขณะนี้ให้ส่งเฉพาะคำสั่งลงทะเบียนช่อง1จาก LINE Admin ใหม่ตามหน้าเว็บ แล้วแจ้งว่าส่งแล้ว. Owner/TECH ไม่ต้องลงทะเบียนซ้ำ เมื่อ Codex เปิดโหมดใช้งานกลับ ให้ TECH เรียกงานใหม่ต้องเห็น A เท่านั้น และ Admin ส่งเชื่อมบัญชีเพื่อLoginบัญชีAdminของตน. Group/revoke/expiry ยังไม่ครบ ไม่ถือว่ารับ M1 ทั้งหมด
 
 **Rich Menu: DEFERRED ตามคำสั่ง Owner** — รอส่วน LINE ของ Milestone ครบก่อนทำเมนู ใช้คำสั่งข้อความทดสอบต่อ ไม่มีการสร้างหรือเปลี่ยน Rich Menu
 

@@ -1,5 +1,9 @@
 # M1 LINE Pilot — Readiness 25 September 2026
 
+## สถานะปัจจุบัน — รับ Admin ใหม่ตาม D-034
+
+พักbusiness LINE: API false/enrollment true; worker falseและหยุดแล้ว. OWNER/TECHเชื่อมคงเดิม ช่างได้รับเฉพาะassignmentสมมติAแล้ว. OwnerขอLINEAdminใหม่ที่ยังไม่เคยสมัคร ใช้รหัสส่วนตัวช่อง1จากหน้าOwnerเท่านั้น ไม่ต้องส่งอีก2ช่องหรือกลุ่ม. หลังรับเก็บ2บัญชีที่เชื่อมแล้ว + Adminใหม่ รวม3คนก่อนปิดenrollment/เปิดbusiness. ระหว่างนี้ไม่มีreplyของงาน/เชื่อมบัญชี ไม่ใช่รหัสเสีย. ผลท้ายรอบดูPROJECT_STATUS
+
 ## รอบถัดไป — Admin/TECH/กลุ่ม
 
 Owner ยืนยันให้พัก Rich Menu จนส่วน LINE ของ Milestone ครบ. รันคำสั่งข้อความต่อได้ ดู [รอบทดสอบล่าสุด](M1_LINE_PILOT_ROUND_2.md). Runtime ยืนยัน OWNER เชื่อมหนึ่งบัญชี; Admin/TECH ยังไม่เชื่อมและกลุ่มยังไม่ผูก ณ เวลาตรวจ ไม่ต้องให้ Owner เชื่อมซ้ำ

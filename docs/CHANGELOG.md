@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 25 กันยายน 2026 — TECH เชื่อมแล้ว / รับ Admin ใหม่
+
+ตรวจ TECH ผู้ทดลอง: user/employee active, LINEเชื่อมและอยู่allowlist แต่ไม่มีassignmentในProjectPilot จึงไม่แสดงโครงการ; งานเดิมนอกPilotไม่ถูกเปิดผ่านLINE. มอบหมายเฉพาะPILOT LINE A PRJ-2609-014 ผ่านdeployedApplication/app.injectด้วยoperatorสมมติแล้ว: domain projectionเห็นAไม่เห็นB, ASSIGNED auditหนึ่งครั้ง, assignmentนอกPilotไม่เปลี่ยน. ปิดoperator/sessionหลังตรวจ ไม่บันทึกชื่อบัญชีหรือLINE IDในเอกสาร. ผลคำขอใหม่บนโทรศัพท์ยังWAITING_USER
+
+Ownerขอรับ LINE Admin ใหม่ตามD-034. Worker flag=false และ deployment a4e694c8-9ba8-412b-a7cc-2cc8b592c1e7 หยุดจริง deploymentStopped=true ก่อนเปิดenrollment. Auto-reviewปฏิเสธการเปิดAPI enrollmentก่อนหยุดworker จึงแก้ลำดับตามrunbookโดยไม่ข้ามการปฏิเสธ. API enrollment deployment50de5f09-83d8-44af-8d12-278ee9d29447 SUCCESS releaseเดิม dc289ee. runtimeตรวจLINE=false/enrollment=true, OWNER1/TECH1คงอยู่, ช่องยังไม่เชื่อม1, inbox/outboxคิวรอ0, schema/TLS/privilegeและHTTPShealth200ผ่าน. OwnerLoginแล้ว ออกรหัสบนหน้าเว็บเวลา14:16อายุ15นาที ใช้เฉพาะช่องส่วนตัว1; ยังรอAdminส่ง ไม่เก็บcode/IDในเอกสาร. ไม่มีapp/schema change; เอกสาร45checksและgit diff --checkผ่าน ไม่รันapplicationtestsซ้ำ (CIเดิม52/52ยังใช้กับreleasecode). TrialUSD4.7314/28วัน ไม่Merge/Production/RichMenu
+
 ## 25 กันยายน 2026 — เตรียมรอบ Admin/TECH และพัก Rich Menu
 
 25 กันยายน 2026 — ตรวจฐาน Staging แบบอ่านอย่างเดียว: runtime schema/TLS/least privilege ผ่าน; release dc289ee คงเดิม, LINE เปิดแบบจำกัดขอบเขตและ enrollment ปิด. พบ OWNER เชื่อมหนึ่งบัญชี; Admin/TECH ยังไม่เชื่อม, กลุ่มยังไม่ผูก. Inbox DONE5 / outbox SENT3 และ DEAD1 เดิมจาก mock drill; ไม่มีคิว pending/retry และ overdue payload=0. Trial ยังใช้งานได้ เหลือประมาณ USD4.7334/28วัน ไม่เพิ่มบริการหรือเปลี่ยนแผน

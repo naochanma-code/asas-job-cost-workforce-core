@@ -1,5 +1,13 @@
 # DECISION LOG
 
+## D-034 — รับ LINE Admin ใหม่ในช่อง Pilot ที่ยังไม่เชื่อม (25 กันยายน 2026)
+
+Owner ขอรหัส Admin และยืนยันว่าใช้ LINE อีกบัญชีที่ยังไม่ลงทะเบียน. รับบัญชีนี้ในขอบเขตเดิมรวม3คน ไม่เพิ่มจำนวน: เก็บ OWNER/TECH ที่เชื่อมแล้วและกลุ่ม/Project allowlist เดิม เปลี่ยนเฉพาะช่องเดิมที่ตรวจว่าไม่มี line_accounts ผูกอยู่ หากมีบัญชีผูกครบหรือไม่เหลือช่องว่างให้หยุดการเปลี่ยน allowlist
+
+ใช้ enrollment เดิมรับเฉพาะคำสั่งส่วนตัวช่องแรกผ่านหน้า Owner. ปิด worker flag และหยุด deployment โดยตรวจ deploymentStopped=true ก่อนเปลี่ยน API เป็น LINE_ENABLED=false/LINE_ENROLLMENT_ENABLED=true. หน้ายังแสดง3คน1กลุ่ม แต่รอบรับเสริมใช้1คำสั่งเท่านั้น Owner/TECH/กลุ่มไม่ต้องสมัครซ้ำ. เมื่อได้1IDใหม่ที่ไม่ซ้ำ รวมกับ2IDที่เชื่อมอยู่เป็นexact3 แล้วเก็บตรงRailwayไม่ผ่านChat/Git/Log ปิดenrollmentก่อนเปิดbusiness และเปิดworkerหลังตรวจขอบเขตตรงกัน
+
+ความครบตรวจจากขอบเขตรวม ไม่ใช้ complete ของรอบรับเสริม1ช่องเป็นเกณฑ์. ลายเซ็น/expiry/one-use/Owner-onlyยังเดิม ไม่มีAPI/schema/code change. ห้ามรีสตาร์ท API หลังออกรหัสจนเก็บผลจากmemory. ไม่ส่งรหัสในแชทและไม่ออกlinkTokenแทนผู้ใช้; Adminต้องเชื่อมบัญชีด้วยnonceflowหลังเปิดbusiness การรับIDไม่เพิ่มสิทธิ์Project
+
 ## D-033 — LINE link privacy และ queue retention (Accepted, 2026-09-25)
 
 Ownerอนุมัติ24ชั่วโมงตามคำถาม: เก็บเนื้อหาคิวเข้ารหัสไม่เกิน24ชั่วโมง ล้างเฉพาะpayloadหมดอายุ คงสถานะ/event identity/Audit ไม่ลบemployee/project/linkedaccount. Workerตรวจและล้างก่อนแต่ละรอบ; claimปฏิเสธeventอายุ24ชั่วโมงขึ้นไปทั้งinbox/outbox ไม่ส่งย้อนหลัง. สำเร็จยังล้างpayloadทันทีตามเดิม; ไม่มีmigrationใหม่. หากworkerหยุด ต้องsweepตอนstartupก่อนรับงานและตรวจbacklog; retentionเป็นTTLงานและactivecleanup ไม่ใช่การรับรองphysicaldeletionตรงเวลาเมื่อprovider/workerdown ห้ามเปิดทิ้งโดยไม่มีoperatorตรวจ
