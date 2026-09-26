@@ -1,5 +1,14 @@
 # M1 LINE — รอบทดสอบ Admin / ช่าง / กลุ่ม
 
+## 26 กันยายน 2026 — ตรวจต่อหลัง usage limit / จัดสถานะ M1 ใหม่
+
+Ownerแจ้งส่งคำสั่งซ้ำแล้วแต่รอบก่อน remote check ไม่ได้รันเพราะ approval usage limit. ครั้งนี้12:22:13Zตรวจได้: code B expiry25ก.ย.14:40:07.715Z expired=true, bindingยังAหนึ่งรายการ, auditรวมA/Bคง1. R2-07 PARTIAL ไม่อ้าง isolated expiry PASS เพราะไม่มีเวลาของeventนั้นและกลุ่มมีoverwrite guard. ไม่ขอให้Ownerทำคำสั่งเดิมซ้ำ
+
+ตรวจqueueaggregate: inboxDONE33/outboxSENT28/DEAD1เดิม, overduepayload24h inbox0/outbox0 ไม่มีpending; ไม่อ่านpayload. Subagentหนึ่งตัวตรวจเอกสารแบบread-only พบsummary/actionเก่าขัดกับผลใหม่ จึงเขียนPROJECT_STATUSใหม่ให้เป็นสถานะปัจจุบัน ไม่เพิ่มcode/schema/deploy/บริการ ไม่Merge. เหลือWebJobscope/browserrestore/livechecksตามrunbook; PITRแยกเป็นproduction-readiness ไม่แอบเพิ่มบริการ
+
+ตรวจเอกสาร45checksและdiffcheckผ่าน; ไม่รันapplicationtestsซ้ำเพราะรอบนี้เปลี่ยนเอกสารเท่านั้น. CIหลักเดิม36109173357 Native52/52
+
+
 ## 25 กันยายน 2026 — ส่งรหัสก่อนหมดอายุ ยังไม่ผ่าน R2-07
 
 Owner แจ้งส่งแล้ว แต่ตรวจ database clock เวลา 2026-09-25T14:32:48.363Z พบรหัส B ล่าสุด expires_at 14:40:07.715Z และ expired=false. จึงไม่ถือเป็น expiry UAT และคง R2-07 WAITING_USER จนส่งคำสั่งเดิมหลัง 21:41 เวลาไทย ไม่ต้องสร้างรหัสใหม่
