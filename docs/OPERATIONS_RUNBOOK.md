@@ -81,3 +81,8 @@ No migration in ADR-012; roll back API/Web to previous known-good commits with b
 Deploy Web+API+worker from tested code before enabling business LINE. Links use fragment only, client strips it; legacyquerytoken must request new link. Core usesno-referrer; never inspect/log rawaccountLinkredirect orbody/token. Testedge with syntheticcanary only.
 
 Worker sweeps encrypted queuepayload atstartup/eachloop forinboxreceived_at olderthan24h, noevent/auditrowdeletion. Claimsrejectexpiredworkevenbeforesweep. Ifworker/providerdown,physicalcleanupwaitsrestart: inspectoverduepayloadcountonly andrunexpireLinePayloads beforebusinessresumes. Never claimexactwallclockphysicaldeletionduringoutage; stoppilotifcleanupfails. ExistingEmployee/Project/AccountLinkunaffected.
+
+## Daily Backup / Owner-only Restore — D-035
+
+Ownerกำหนดbackupทุกวัน. ข้อเสนอRailwayDailyทุก24ชั่วโมง/retention6วันยังไม่เปิด รอยืนยันค่าstorageที่ใช้Trialcredit. Restoreให้เฉพาะOwnerสั่ง; provideraccessและoperatorcredentialsต้องจำกัดต่างหากจากCoreApproles. ก่อนRestoreตรวจsource/target/schema/backupintegrityและOwnerapproval ไม่เขียนทับStagingโดยอัตโนมัติ. บันทึกผลและauditไม่บันทึกsecrets. Scheduledbackupต้องตรวจว่ามีรอบสำเร็จจริงก่อนPASS
+

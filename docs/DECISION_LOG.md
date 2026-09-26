@@ -1,5 +1,16 @@
 # DECISION LOG
 
+## D-035 — Daily Backup และ Restore เฉพาะ OWNER (Accepted requirement, 26 กันยายน 2026)
+
+Ownerกำหนดให้สำรองข้อมูลอัตโนมัติทุกวัน และให้เฉพาะOWNERสั่งRestore. ADMIN/PM/TECHไม่มีสิทธิ์สั่งหรืออนุมัติRestore. บัญชีอัตโนมัติสำรองต้องมีสิทธิ์เท่าที่จำเป็นและไม่มีสิทธิ์Restore. เก็บผู้สั่ง เวลา backup/source/target ผลและauditโดยไม่เก็บcredentialsหรือเนื้อหาฐานลงlog
+
+สถานะ DESIGNED / NOT_DEPLOYED: ปัจจุบันมีoperator CLI ไม่มีRestore API/UIที่ตรวจroleOWNER. สิทธิ์CoreAppไม่ควบคุมผู้ดูแลRailway/DB/CLIโดยอัตโนมัติ ต้องจำกัดprovider/secret/operatoraccessให้Owner และไม่แจกrestorecredentialsให้Admin. การกู้คืนผ่านoperatorทำได้เฉพาะคำสั่งOwnerสำหรับครั้งนั้น ไม่ถือว่าCLIบังคับRBACแล้ว
+
+ข้อเสนอเปิดRailway Daily volume backupทุก24ชั่วโมง เก็บ6วัน ตามเอกสารprovider. มีค่าใช้จ่ายstorageส่วนเพิ่ม จึงรอยืนยันการใช้Trialcreditก่อนเปิด ไม่อัปเกรดหรือเพิ่มบริการ; ไม่ตั้งเวลาเฉพาะเจาะจงที่providerไม่ได้รับรอง. ความถี่dailyอนุมัติแล้ว แต่retention6วันเป็นข้อเสนอ ไม่สับสนกับหลักฐานบัญชีเก็บ2ปี. ค่าใช้จ่าย/สิทธิ์จริงยังต้องตรวจหน้าprovider. ห้ามrestoreทับStagingโดยไม่มีOwnerอนุมัติเป้าหมายแยก
+
+อ้างอิง https://docs.railway.com/volumes/backups และ https://docs.railway.com/guides/postgres-backups-restores ตรวจ26ก.ย.2026
+
+
 ## D-034 — รับ LINE Admin ใหม่ในช่อง Pilot ที่ยังไม่เชื่อม (25 กันยายน 2026)
 
 Owner ขอรหัส Admin และยืนยันว่าใช้ LINE อีกบัญชีที่ยังไม่ลงทะเบียน. รับบัญชีนี้ในขอบเขตเดิมรวม3คน ไม่เพิ่มจำนวน: เก็บ OWNER/TECH ที่เชื่อมแล้วและกลุ่ม/Project allowlist เดิม เปลี่ยนเฉพาะช่องเดิมที่ตรวจว่าไม่มี line_accounts ผูกอยู่ หากมีบัญชีผูกครบหรือไม่เหลือช่องว่างให้หยุดการเปลี่ยน allowlist

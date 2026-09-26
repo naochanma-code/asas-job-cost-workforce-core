@@ -81,3 +81,8 @@ Project lock serializes PM grant/revoke with team operations. Target employee/us
 
 
 D-032: AccountingConnector/InventoryConnector และ optionalAIinterface ต้องบังคับ permission/scope เดิม ไม่ให้servicecredentialหรือproviderresponseขยายสิทธิ์ actor. เปลี่ยนproviderไม่เปลี่ยนสิทธิ์OWNER/ADMIN/PM/TECH และไม่ทำauto-approval; ดู [ADR-013](adr/013-provider-agnostic-integrations.md)
+
+## D-035 — Backup/Restore (target policy ยังไม่ใช่ deployed RBAC)
+
+Backupอัตโนมัติทุกวันโดยservice identityจำกัดสิทธิ์. Restore: OWNER allow; ADMIN/PM/TECH deny. Provider/DB/CLI accessต้องจำกัดแยก ไม่อ้างว่าการซ่อนปุ่มหรือCoreApproleควบคุมRailwayได้. ปัจจุบันยังไม่มีRestore API/UI. ดูD-035
+

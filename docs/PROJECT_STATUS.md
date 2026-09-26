@@ -1,5 +1,10 @@
 # PROJECT STATUS — Milestone 1
 
+## นโยบาย Backup ล่าสุด
+
+26กันยายน — D-035 รับrequirementBackupทุกวัน/RestoreเฉพาะOWNERแล้ว. Dailybackupยังไม่เปิด: เสนอRailway24ชั่วโมงเก็บ6วัน มีstorageusageรอOwnerยืนยันใช้Trialcredit ไม่อัปเกรด/เสียเงินเพิ่ม. CoreApproleยังไม่บังคับoperatorCLIหรือproviderpermission; บันทึกแยกDESIGNED/NOT_DEPLOYED. ตรวจเอกสาร45checksและdiffcheck ไม่มีapp/schema/deploy
+
+
 อัปเดต 26 กันยายน 2026 · ผู้ดูแล M1: Codex · branch codex/milestone-1-foundation · PR #2 Draft / ห้าม Merge
 
 ## ตอนนี้ถึงไหน

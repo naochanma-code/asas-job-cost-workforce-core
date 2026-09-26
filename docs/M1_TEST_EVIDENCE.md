@@ -1,5 +1,10 @@
 # M1 Test Evidence — 2026-09-21
 
+## นโยบาย Backup ล่าสุด
+
+26กันยายน — D-035 รับrequirementBackupทุกวัน/RestoreเฉพาะOWNERแล้ว. Dailybackupยังไม่เปิด: เสนอRailway24ชั่วโมงเก็บ6วัน มีstorageusageรอOwnerยืนยันใช้Trialcredit ไม่อัปเกรด/เสียเงินเพิ่ม. CoreApproleยังไม่บังคับoperatorCLIหรือproviderpermission; บันทึกแยกDESIGNED/NOT_DEPLOYED. ตรวจเอกสาร45checksและdiffcheck ไม่มีapp/schema/deploy
+
+
 ## 26 กันยายน 2026 — เพิ่มหลักฐาน Restore + Job isolation ผ่าน HTTP
 
 เพิ่ม tests/job-restore-http.test.ts: ข้อมูลสมมติสองโครงการ/สองงานย่อย มอบหมาย TECH เพียงงานเดียว สำรอง/Restore/ปิดและเปิดฐานใหม่ แล้วทดสอบผ่าน HTTP loopback จริง: Sessionเดิม401, Loginใหม่200, เห็นโครงการเดียวและJobที่มอบหมายเท่านั้น, อีกโครงการ404, revokeมีผลโดยไม่Loginใหม่, logoutแล้ว401. Local targeted PASS และ typecheck PASS; Local regression 51PASS/2NativeSKIP/0FAIL ส่วน [CI36242156339](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36242156339) commit e9700b6: NativePostgreSQL53PASS/0SKIP/0FAIL, embedded51PASS/2NativeSKIP, typecheck/productionbuild/API+Webcontainer/smoke/เอกสาร PASS
