@@ -5,7 +5,7 @@
 | Gate | มีหลักฐานอะไรแล้ว | ยังต้องพิสูจน์อะไร | ทางดำเนินการ |
 | --- | --- | --- | --- |
 | TECH Job scope | LINEเห็นเฉพาะB; restored HTTP/APIแสดงเฉพาะJobที่มอบหมาย ไม่แสดงsibling | หน้าจอWebด้วยTECHบนStaging | ใช้บัญชีสมมติที่ได้รับอนุญาต ไม่เปลี่ยนบัญชี/รหัสจริง; Sessionปัจจุบันเป็นLogin |
-| Browser recovery | encrypted isolated recoveryเดิม, Native/API regression และ Local browser บนฐานสมมติ PASS | BrowserLoginหลังrestore, Sessionเก่าถูกปฏิเสธ, scope/logout บน provider recovery ที่แยก | ทำตามM1_BROWSER_RECOVERY_CHECKLIST; localไม่แทนprovider |
+| Browser recovery | encrypted isolated recoveryเดิม, Native/API regression และ Local browser บนฐานสมมติ PASS | BrowserLoginหลังrestore, Sessionเก่าถูกปฏิเสธ, scope/logout บน provider recovery ที่แยก | ตรวจพบ Railway มี staging environment เดียว ไม่มี recovery Web/API แยก; ฐาน recovery เดิมมีข้อมูลจริง. ดู M1_PROVIDER_RECOVERY_PROPOSAL; localไม่แทนprovider |
 | LINE expiry | รหัสหมดอายุจริง, Ownerแจ้งส่ง, binding/auditไม่เปลี่ยน | เชื่อมโยงการลองหลังexpiryกับผลปฏิเสธโดยไม่สับสนกับoverwriteguard | คงPARTIAL; ไม่อ่านpayloadย้อนหลังหรือปลอมeventเพื่อเติมPASS |
 | LINE replay | ส่งเดิมซ้ำไม่เปลี่ยนbinding/audit | แยกsingle-useจากexpiryในprovider | automatedแยกกรณีผ่าน; providerยังไม่อ้างisolatedPASS |
 | LINE identity lifecycle | accountlink/jobsของสามroleผ่าน; automatedunlink/nonceผ่าน | providerunlink/relink, nonceซ้ำ/หมดอายุ, wrongactorตามrunbook | ต้องใช้LINEของผู้ทดลองจริงและวางรอบเดียวให้ชัด ไม่ขอpassword |

@@ -6,6 +6,8 @@ Local browser บนฐาน Restore สมมติผ่าน: session เ�
 
 Commit `926f840` push ไป Draft PR #2 แล้ว; [CI run 36249633023](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36249633023) verify SUCCESS. Local typecheck PASS และ regression 51 PASS / 2 native-only SKIP / 0 FAIL. PR ยัง Draft ไม่ Merge; deployment ล่าสุดยัง `dc289ee`.
 
+ตรวจ Railway แบบอ่านอย่างเดียวหลัง Owner ตอบว่าไม่แน่ใจเรื่อง resource: มี environment `staging` เดียว, Web/API/worker/Postgres ออนไลน์; ไม่มี Web/API recovery แยก. ฐาน recovery เดิมมีสำเนาข้อมูลจริง ไม่ใช้ทดสอบสมมติ. Trial เหลือประมาณ USD 4.54 / 26 วัน ณ เวลาตรวจ. จัด [ข้อเสนอปลายทาง recovery](M1_PROVIDER_RECOVERY_PROPOSAL.md); C2 ยัง `NOT_READY / NOT_RUN` และไม่ได้สร้างบริการหรือแก้ข้อมูล.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว
