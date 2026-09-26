@@ -1,5 +1,14 @@
 # M1 — แผน UAT รอบรวมครั้งเดียว
 
+## 26 กันยายน 2026 — C3 Owner unlink/relink ผ่านรอบจริง
+
+Owner กดยกเลิกการเชื่อมด้วยตนเอง แล้วรายงานว่าส่ง “งานของฉัน” และระบบให้เชื่อมบัญชีก่อน ไม่แสดงงาน. หลังเปิดลิงก์ใหม่ เชื่อมกลับบัญชี Owner เดิม และส่ง “งานของฉัน” Owner ยืนยันเห็น PILOT LINE A/B ถูกต้อง. สถานะ C3 = UAT_PASSED เฉพาะ lifecycle รอบนี้ ตามรายงาน Owner.
+
+Codex ตรวจฐานแบบอ่านอย่างเดียว: LINE_UNLINKED เวลา 2026-09-26T16:50:56.073Z และ LINE_LINKED เวลา 16:52:41.260Z มี actor เดียวกันซึ่งเป็น OWNER; currently_linked=true. ไม่อ่านหรือบันทึก LINE ID/token/payload. ยืนยันกลับ Core account เดิมจาก audit; ตัวตน LINE เดิมยึดตามรายงาน Owner ไม่อ้าง raw-ID comparison.
+
+C4 nonce expiry/reuse และ C5 isolated group-code wrong actor/expiry/replay ยัง PARTIAL/NOT_RUN ตามข้อจำกัดเดิม ไม่ใช้ C3 แทนผลเหล่านี้. ไม่ต้องทำ unlink/relink ซ้ำ. ยังไม่รับ M1 ทั้งหมด ไม่ Merge/M2/Production; ไม่มี app/schema/deployment เปลี่ยนจากการบันทึกนี้.
+
+
 ## ใบทดสอบสำหรับโอ๋ — ใช้ LINE บนมือถือได้
 
 Owner ให้พักรอบ LINE ไว้ก่อนวันที่ 26 กันยายน เพราะเข้า LINE ผ่านเว็บไม่ได้. ไม่จำเป็นต้องใช้ LINE Web: ใช้แอป LINE บนมือถือคุยกับ @ASAS-WORK และเปิด CoreApp ผ่านเบราว์เซอร์มือถือได้. คำอนุญาต unlink/relink เดิมยังอยู่ แต่ยังไม่ยกเลิกบัญชีจน Owner พร้อมเชื่อมกลับ.

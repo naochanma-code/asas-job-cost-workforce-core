@@ -1,5 +1,14 @@
 # M1 — ชุดหลักฐานให้ Owner พิจารณารับงาน
 
+## 26 กันยายน 2026 — C3 Owner unlink/relink ผ่านรอบจริง
+
+Owner กดยกเลิกการเชื่อมด้วยตนเอง แล้วรายงานว่าส่ง “งานของฉัน” และระบบให้เชื่อมบัญชีก่อน ไม่แสดงงาน. หลังเปิดลิงก์ใหม่ เชื่อมกลับบัญชี Owner เดิม และส่ง “งานของฉัน” Owner ยืนยันเห็น PILOT LINE A/B ถูกต้อง. สถานะ C3 = UAT_PASSED เฉพาะ lifecycle รอบนี้ ตามรายงาน Owner.
+
+Codex ตรวจฐานแบบอ่านอย่างเดียว: LINE_UNLINKED เวลา 2026-09-26T16:50:56.073Z และ LINE_LINKED เวลา 16:52:41.260Z มี actor เดียวกันซึ่งเป็น OWNER; currently_linked=true. ไม่อ่านหรือบันทึก LINE ID/token/payload. ยืนยันกลับ Core account เดิมจาก audit; ตัวตน LINE เดิมยึดตามรายงาน Owner ไม่อ้าง raw-ID comparison.
+
+C4 nonce expiry/reuse และ C5 isolated group-code wrong actor/expiry/replay ยัง PARTIAL/NOT_RUN ตามข้อจำกัดเดิม ไม่ใช้ C3 แทนผลเหล่านี้. ไม่ต้องทำ unlink/relink ซ้ำ. ยังไม่รับ M1 ทั้งหมด ไม่ Merge/M2/Production; ไม่มี app/schema/deployment เปลี่ยนจากการบันทึกนี้.
+
+
 ## ผล C1 ล่าสุด — 26 กันยายน 2026
 
 C1 ทดสอบโดย Codex บน Web Staging แล้ว: บัญชี TECH สมมติเห็นเฉพาะ B/Job ที่มอบหมาย ไม่เห็น A/sibling/ปุ่มจัดการ; refresh ผ่าน และหลังปิดบัญชี/expire session กลับหน้า Login. Injected deployed API ให้ A404/B200/users403. Browser direct API URL ถูกเครื่องมือบล็อก จึงไม่ใช้ผล injected API อ้างเป็น browser HTTP. หลักฐานใน M1_TEST_EVIDENCE.md; ไม่ขอ Owner ทำ C1 ซ้ำ. ข้อความ C1 NOT_RUN ด้านล่างเป็นแผนก่อนผลนี้ ส่วน C3–C5 ยังต้องใช้ LINE ผู้ทดลองจริง.
