@@ -1,6 +1,6 @@
 # M1 — Browser recovery checklist
 
-Status: LOCAL_BROWSER_PASS / STAGING_NOT_RUN. The local synthetic drill result is recorded in [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md); this checklist alone creates no PASS evidence. Module owner: Codex. Use the current M1 checkout and record its exact commit. Main evidence remains in [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md), [PROJECT_STATUS](PROJECT_STATUS.md), and [S05](M1_STAGING_TEST_MATRIX.md).
+Status: LOCAL_BROWSER_PASS / PROVIDER_DEFERRED_BY_OWNER_AFTER_M3 / PROVIDER_NOT_RUN (D-037). The local synthetic drill result is recorded in [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md); this checklist alone creates no PASS evidence. Module owner: Codex. Use the checkout current at the post-M3 drill and record its exact commit. Main evidence remains in [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md), [PROJECT_STATUS](PROJECT_STATUS.md), and [S05](M1_STAGING_TEST_MATRIX.md).
 
 ## Evidence boundaries
 

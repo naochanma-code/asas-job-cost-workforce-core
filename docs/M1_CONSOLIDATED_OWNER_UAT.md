@@ -8,7 +8,7 @@ Owner ต้องการทดลองเป็นรอบใหญ่ค�
 
 เกณฑ์ M1 ใน `MASTER_PROMPT.md` ระบุ Foundation และ Gate ว่า ADMIN สร้าง Project/Job กับมอบหมายทีมได้, TECH เห็นงานจริงใน LINE และ Project ที่ไม่มี Site/Job ทำ flow ได้ครบ. หลักฐานของ Gate นี้ต้องตรวจแยกจากรายการทดสอบความทนทานใน Testing Strategy รวม และจาก Backup/Restore ของ Pilot (M8). C1 เป็นการยืนยันขอบเขต Web TECH เพิ่มเติมก่อนรับงาน; ไม่ใช้ผล LINE หรือ local แทนผลหน้าจอ Staging.
 
-C2 เป็นการทดสอบ provider browser recovery เพิ่มจาก local/CI ที่ผ่านแล้ว และยัง `NOT_RUN`. Owner ถามให้พิจารณาเลื่อนไปช่วงหลัง; การเลื่อนเป็นข้อยกเว้นในการรับ M1 ยัง **รอคำตอบ Owner**. ระหว่างนี้ไม่เตรียมบริการ Railway เพิ่ม ไม่ย้าย C2 เป็น PASS และไม่บังคับให้ Owner ทำ C2 ในรอบ UAT ที่ยังไม่มีปลายทางแยก. C3–C5 เป็น live security checks ที่ต้องตกลงขอบเขตผู้ทดลองและหลักฐานก่อนรัน; ผล automated ที่ผ่านแล้วไม่เปลี่ยนเป็น provider UAT PASS.
+C2 เป็นการทดสอบ provider browser recovery เพิ่มจาก local/CI ที่ผ่านแล้ว. Owner เลื่อนไป **หลัง M3 และก่อน Pilot (M8)** ตาม D-037; สถานะ `DEFERRED_BY_OWNER / NOT_RUN` และไม่อยู่ในรอบ UAT M1 นี้. การรับ M1 ต้องระบุข้อยกเว้น ไม่ย้าย C2 เป็น PASS. หากจำเป็นในรอบหลัง M3 Owner อนุญาตให้พิจารณา environment เพิ่มภายใต้ข้อจำกัดด้าน Trial/ข้อมูลสมมติใน D-037; ตอนนี้ไม่สร้าง. C3–C5 เป็น live security checks ที่ต้องตกลงขอบเขตผู้ทดลองและหลักฐานก่อนรัน; ผล automated ที่ผ่านแล้วไม่เปลี่ยนเป็น provider UAT PASS.
 
 ## ผลเดิมที่ไม่ต้องทำซ้ำ
 
@@ -23,14 +23,14 @@ C2 เป็นการทดสอบ provider browser recovery เพิ่�
 | --- | --- |
 | Release/ระบบ | ระบุ SHA ของ Web/API/worker และ CI ที่รองรับจริง ตรวจ health, flags/allowlists, queue/overdue payload และ Trial ตามขอบเขตเดิม ไม่ deploy/เพิ่มบริการเพื่อเตรียมรอบโดยอัตโนมัติ |
 | Staging Web TECH | เตรียมบัญชีและ Project/Job สมมติที่อนุมัติไว้ มี Job ที่รับผิดชอบและ sibling ที่ไม่รับผิดชอบ ตรวจ browser scope โดย Codex ก่อน ไม่ใช้ session ของ Owner แทน TECH |
-| Provider browser recovery | ระบุฐานสมมติว่างแยก + วิธีเปิด Web/API แยกที่อนุมัติแล้วจริง ตรวจ schema/สิทธิ์/TLS และ Login fixture ได้ ทำตาม [recovery checklist](M1_BROWSER_RECOVERY_CHECKLIST.md) ห้ามชี้ Pilot ไปฐานอื่นหรือ restore ทับฐานหลัก; ถ้ายังไม่มี environment ให้คง NOT_RUN |
+| Provider browser recovery หลัง M3 | ไม่ใช่เงื่อนไขนัด UAT M1 ตาม D-037; ก่อนรอบหลัง M3 ต้องระบุฐานสมมติว่างแยก + วิธีเปิด Web/API แยก ตรวจ schema/สิทธิ์/TLS และ Login fixture ตาม [recovery checklist](M1_BROWSER_RECOVERY_CHECKLIST.md). ห้ามชี้ Pilot ไปฐานอื่นหรือ restore ทับฐานหลัก |
 | LINE identity lifecycle | เตรียมแผนใช้บัญชีผู้ทดลองคนเดิมและวิธีกู้การเชื่อมกลับ ขอบเขต unlink/relink ของบัญชีจริงต้องได้รับความยินยอมเฉพาะรายการก่อนทำ ไม่สลับ role/บัญชีหรือขอรหัสผ่าน |
 | วิธีพิสูจน์ nonce/code | ตรวจว่าหน้าจอ provider เปิดทางให้ทดลอง expiry/reuse ได้จริง และเก็บเฉพาะเวลา/status/audit โดยไม่เก็บ token/payload การรอก่อนกดยืนยันบน Core อาจยังไม่ได้สร้าง nonce จึงไม่ถือเป็นการรอ nonce หมดอายุ |
 | กรณีแยกสาเหตุไม่ได้ | กลุ่มที่ผูก A อยู่แล้วมี overwrite guard; TECH มีคนเดียว จัดรายการ wrong actor/single-use/expiry/T1–T2 ที่พิสูจน์แยกไม่ได้ให้ Owner ตัดสินขอบเขตครั้งเดียวก่อนนัด ห้ามลบ binding หรือเพิ่มกลุ่ม/allowlistเอง |
 
 ถ้าต้องเปลี่ยนขอบเขต ให้เสนอชื่อกรณี ผลกระทบ วิธีคืนสถานะ และค่าใช้จ่ายรวมครั้งเดียวก่อนรอบจริง การยินยอมทำ UAT โดยทั่วไปไม่เท่ากับอนุญาต unlink บัญชีจริง เพิ่มผู้ทดลอง/กลุ่ม หรือเปิดบริการใหม่ รายการที่ยังไม่ได้อนุญาตคง BLOCKED/NOT_RUN และไม่รวมเป็นขั้นที่ให้ Owner กดทันที
 
-ผลตรวจ resource วันที่ 26 กันยายน: มี Railway environment `staging` เพียงชุดเดียว; ยังไม่มี Web/API recovery แยก. ฐาน recovery เดิมมีสำเนาข้อมูลจริงจึงใช้เป็น fixture ไม่ได้. Owner สั่งไม่สร้าง environment เพิ่มตาม D-036; [ข้อเสนอปลายทาง provider](M1_PROVIDER_RECOVERY_PROPOSAL.md) ระบุทางเลือก service เดียว/ฐานสมมติแยกใน environment เดิมที่ยังไม่อนุมัติ. C2 คง `NOT_READY` จนมีปลายทางว่างและอนุมัติค่าใช้จ่าย/ขอบเขตจริง.
+ผลตรวจ resource วันที่ 26 กันยายน: มี Railway environment `staging` เพียงชุดเดียว; ยังไม่มี Web/API recovery แยก. ฐาน recovery เดิมมีสำเนาข้อมูลจริงจึงใช้เป็น fixture ไม่ได้. D-037 เลื่อน C2 ไปหลัง M3 และเปิดทางเลือก environment ใหม่เมื่อจำเป็น; [ข้อเสนอปลายทาง provider](M1_PROVIDER_RECOVERY_PROPOSAL.md) เป็นข้อมูลเตรียมรอบหลัง. C2 คง `DEFERRED_BY_OWNER / NOT_RUN`.
 
 ## ใบทดลองของ Owner/ผู้ทดลองในรอบเดียว
 
@@ -39,7 +39,7 @@ C2 เป็นการทดสอบ provider browser recovery เพิ่�
 | ลำดับ | ผู้ทำและขั้นตอน | ผลที่ต้องเห็น / หลักฐานที่ Codex เก็บ |
 | --- | --- | --- |
 | C1 Web TECH บน Staging | TECH เปิด Project B ปัจจุบันจาก Web แล้วดู Jobs/refresh/logout ไม่เปลี่ยน assignment | เห็นเฉพาะ Job ที่ได้รับมอบหมาย; sibling และ direct URL นอกสิทธิ์เข้าไม่ได้; logout แล้ว session ใช้ต่อไม่ได้ บันทึก UI และ HTTP status โดยไม่เก็บ cookie |
-| C2 Browser หลัง recovery | เมื่อ Codex เตรียม isolated provider recovery แล้ว ผู้ทดลองใช้บัญชีสมมติใน URL ที่แยกชัดเจน | session ก่อน restore ใช้ไม่ได้; login ใหม่ได้ ข้อมูล/scope ตรง fixture; refresh/logout ผ่าน แยกจากผล local และไม่ทดลองด้วยบัญชีจริง |
+| C2 Browser หลัง recovery — เลื่อนหลัง M3 | ไม่รันใน UAT M1; เมื่อถึงรอบหลัง M3 และมี isolated provider recovery ที่ตรวจแล้ว ผู้ทดลองใช้บัญชีสมมติใน URL ที่แยกชัดเจน | session ก่อน restore ใช้ไม่ได้; login ใหม่ได้ ข้อมูล/scope ตรง fixture; refresh/logout ผ่าน แยกจากผล local และไม่ทดลองด้วยบัญชีจริง |
 | C3 Unlink/relink | เฉพาะบัญชีที่เจ้าของยินยอมในแผน: ยกเลิกเชื่อมจาก Web ตรวจคำขอ LINE ใหม่ แล้วเชื่อมบัญชีเดิมกลับ | หลัง unlink ไม่มีสิทธิ์เรียกงานผ่านตัวตนเดิม; กลับมาเชื่อมกับบัญชีเดิมได้ มี audit และไม่มีการสวมบัญชีอื่น การเรียกงานหลัง relink ใช้ตรวจ lifecycle เฉพาะจุด ไม่ทำ A/revoke/B ซ้ำ |
 | C4 Nonce expiry/reuse | ใช้ลิงก์ทดสอบใหม่ตามวิธีที่ตรวจว่า provider รองรับแล้ว รอเกิน expiry จริงหรือใช้รายการสำเร็จซ้ำตามกรณีที่เตรียมไว้ | ต้องยืนยันว่าคำขอถึงระบบในช่วงที่ต้องการ และไม่เกิดการเชื่อมใหม่ผิดเงื่อนไข; ถ้า provider ปฏิเสธก่อนถึง Core บันทึกได้เฉพาะ provider rejection ไม่อ้าง Core nonce PASS |
 | C5 Group code security | เฉพาะกรณีที่แยก wrong actor/replay/expiry ได้ใน scope ที่อนุมัติ ใช้รหัสใหม่และเวลาที่บันทึกไว้; ไม่ใช้รหัสเก่าซ้ำเพื่อเติมหลักฐาน | รหัสของผู้สร้างผิดคน/ใช้แล้ว/หมดอายุไม่สร้าง binding หรือ successful audit เพิ่ม หลักฐานต้องแยกจาก overwrite guard; ถ้ายังแยกไม่ได้คง PARTIAL/NOT_RUN |
@@ -48,7 +48,7 @@ C2 เป็นการทดสอบ provider browser recovery เพิ่�
 
 ## สรุปครั้งเดียวหลังจบรอบ
 
-Codex บันทึก C1–C5 แยก PASS/FAIL/PARTIAL/NOT_RUN พร้อม SHA, เวลา, environment, หลักฐาน UI/status/count/audit และข้อจำกัด ห้ามแนบภาพที่มีรหัส ลิงก์เชื่อม cookie, HAR หรือข้อมูลส่วนบุคคล ใช้รายงาน Owner แยกจากภาพที่ Codex ตรวจเอง ทดสอบซ้ำเฉพาะข้อที่ผิดหรือได้รับผลกระทบจริง
+Codex บันทึก C1 และ C3–C5 ที่รันจริงแยก PASS/FAIL/PARTIAL/NOT_RUN พร้อม SHA, เวลา, environment, หลักฐาน UI/status/count/audit และข้อจำกัด; C2 ระบุ `DEFERRED_BY_OWNER / NOT_RUN` ตาม D-037. ห้ามแนบภาพที่มีรหัส ลิงก์เชื่อม cookie, HAR หรือข้อมูลส่วนบุคคล ใช้รายงาน Owner แยกจากภาพที่ Codex ตรวจเอง ทดสอบซ้ำเฉพาะข้อที่ผิดหรือได้รับผลกระทบจริง
 
 ส่งผลรวมและ blocker ให้ Owner พิจารณารับ M1 ครั้งเดียว รายการที่ยังไม่ครบห้ามเปลี่ยนเป็น PASS จากการรับทราบข้อจำกัด; หากจะปรับเกณฑ์ acceptance ต้องบันทึกการตัดสินใจชัดเจน การรับ M1 กับการอนุญาต Merge เป็นคนละรายการ
 

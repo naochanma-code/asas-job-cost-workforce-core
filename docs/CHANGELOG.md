@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 26 กันยายน 2026 — Owner เลื่อน Railway recovery หลัง M3
+
+บันทึก D-037: C2 provider browser recovery เป็น `DEFERRED_BY_OWNER / NOT_RUN` จนหลัง M3 และก่อน Pilot. Owner เปิดทางให้ใช้ environment ใหม่เมื่อจำเป็นในรอบนั้น แต่ยังไม่สร้าง resource ตอนนี้. ปรับ UAT/remaining gates/status ให้ M1 ระบุข้อยกเว้นชัด ไม่ใช้ local/CI เป็น provider PASS; PR #2 ยัง Draft ไม่ Merge/Deploy.
+
 ## 26 กันยายน 2026 — แยก Gate M1 จากการทดสอบ recovery เพิ่มเติม
 
 ปรับเอกสาร UAT และรายการค้างให้ระบุ Gate M1 ตาม Master แยกจาก provider browser recovery/รายการ live security ที่ต้องตกลงขอบเขต. C2 ยัง NOT_RUN และการเลื่อนเป็นข้อยกเว้นยังรอคำตอบ Owner; ไม่สร้าง resource, deploy หรือแก้ข้อมูลจริง.

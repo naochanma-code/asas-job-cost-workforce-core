@@ -1,8 +1,12 @@
 # PROJECT STATUS — Milestone 1
 
+## 26 กันยายน 2026 — Owner เลื่อน C2 ไปหลัง M3
+
+ตาม D-037 Owner ให้ทดสอบ provider browser recovery หลังจบ M3 และก่อน Pilot (M8); อนุญาตให้พิจารณา Railway environment ใหม่เมื่อจำเป็นในรอบนั้น. C2 = `DEFERRED_BY_OWNER / NOT_RUN`, ไม่ใช่ PASS และไม่อยู่ใน UAT M1 รอบนี้. ก่อนรอบหลัง M3 ต้องตรวจ Trial limit/topology/ค่าใช้จ่ายและข้อมูลสมมติแยก; ไม่สร้าง environment/service ตอนนี้ ไม่คัดลอกข้อมูลจริงหรือเปลี่ยน Staging. การรับ M1 ต้องระบุข้อยกเว้นนี้ให้ Owner ทราบ และ PR #2 ยัง Draft/ไม่ Merge. งาน M1 ที่เหลือดำเนินต่อโดยเน้น Web TECH staging scope กับ LINE/security live checks ตามขอบเขตที่ได้รับอนุญาต.
+
 ## 26 กันยายน 2026 — ทบทวนขอบเขตการทดสอบ M1
 
-ตรวจ `MASTER_PROMPT.md` อีกครั้ง: Gate M1 ระบุ ADMIN สร้าง Project/Job และ Assign Team, TECH เห็นงานจริงใน LINE, และ Project ที่ไม่มี Site/Job ทำ flow ได้ครบ. Provider Restore อยู่ใน Testing Strategy รวม และ Backup/Restore ปรากฏชัดใน Gate Pilot (M8). จัด [แผน UAT รอบรวม](M1_CONSOLIDATED_OWNER_UAT.md) กับ [รายการค้าง](M1_REMAINING_ACCEPTANCE_GATES.md) ให้แยกข้อความ Gate นี้ออกจากการตรวจความมั่นใจเพิ่ม. C2 provider browser recovery ยัง `NOT_RUN`; Owner ยังไม่ได้ตอบว่าจะเลื่อนพร้อมบันทึกข้อยกเว้นหรือคงเป็นเงื่อนไขก่อนรับ M1. หยุดงาน provision recovery resource; ไม่มีการสร้าง service/environment, deploy, restore หรือเปลี่ยนข้อมูลจริง.
+ตรวจ `MASTER_PROMPT.md` อีกครั้ง: Gate M1 ระบุ ADMIN สร้าง Project/Job และ Assign Team, TECH เห็นงานจริงใน LINE, และ Project ที่ไม่มี Site/Job ทำ flow ได้ครบ. Provider Restore อยู่ใน Testing Strategy รวม และ Backup/Restore ปรากฏชัดใน Gate Pilot (M8). จัด [แผน UAT รอบรวม](M1_CONSOLIDATED_OWNER_UAT.md) กับ [รายการค้าง](M1_REMAINING_ACCEPTANCE_GATES.md) ให้แยกข้อความ Gate นี้ออกจากการตรวจความมั่นใจเพิ่ม. ณ ตอนทบทวน Owner ยังไม่ได้ตอบเรื่องการเลื่อน; คำตอบต่อมาบันทึกใน D-037 ข้างบน.
 
 ## 26 กันยายน 2026 — ปิด Local browser recovery drill
 
@@ -72,7 +76,7 @@ Foundation และ M1 Alignment เปิดใช้งานบน Staging �
 ## งานถัดไปของ Codex
 
 1. ตรวจ Web TECH เห็นเฉพาะ Job ที่ได้รับมอบหมาย โดยใช้บัญชีสมมติและไม่แก้บัญชีจริง
-2. เตรียมปลายทาง recovery บน provider ที่เป็นฐานสมมติแยกสำหรับ browser restore/login; Local browser ผ่านแล้ว แต่ยังไม่เขียนทับ Staging หรือใช้ข้อมูลจริงเพิ่ม
+2. Provider browser recovery (C2) เลื่อนไปหลัง M3/ก่อน Pilot ตาม D-037; M1 ไม่สร้างปลายทางเพิ่ม. Local browser ผ่านแล้ว แต่ยังไม่อ้าง provider PASS
 3. จัดรายการ live checks ที่ยังไม่รัน ได้แก่ unlink/nonce replay-expiry/wrong actor และข้อจำกัดหนึ่งกลุ่ม/TECHหนึ่งคน ให้ Owner เห็นก่อนรับ M1
 4. ตรวจแผนสำรองข้อมูลประจำวัน ผู้รับผิดชอบ ระยะเก็บ และ restore. PITR เป็น production-readiness requirement ตาม runbook ไม่อ้างว่าเปิดแล้วหรือซื้อเพิ่มโดยอัตโนมัติ
 

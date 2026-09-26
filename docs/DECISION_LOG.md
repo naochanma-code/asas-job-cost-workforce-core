@@ -1,5 +1,11 @@
 # DECISION LOG
 
+## D-037 — เลื่อน Provider Recovery ไปหลัง M3 (Owner instruction, 26 กันยายน 2026)
+
+Owner ยืนยันให้เลื่อนการทดสอบ browser/restore บน Railway provider (C2) ไป **หลังจบ Milestone 3 และก่อน Pilot (M8)**. M1 ใช้หลักฐาน local/CI synthetic recovery ที่มีอยู่ตามขอบเขตจริง; C2 คง `DEFERRED_BY_OWNER / NOT_RUN` ไม่อ้างเป็น provider PASS และไม่สร้าง recovery resource ใน M1. การรับ M1 ต้องแจ้งข้อยกเว้นนี้ชัดเจนพร้อมสถานะงานอื่นและให้ Owner ตัดสินแยกจากการ Merge PR #2.
+
+Owner อนุญาตให้พิจารณาสร้าง Railway environment เพิ่มเมื่อจำเป็นสำหรับ C2 ในช่วงหลัง M3; คำตอบนี้แทนข้อห้ามเพิ่ม environment ของ D-036 **เฉพาะช่วงเวลานั้น**. ก่อนทำจริงต้องตรวจ Trial limit/topology/ค่าใช้จ่ายและแผนข้อมูลสมมติแยกอีกครั้ง; ไม่ถือเป็นอนุญาตให้ upgrade แพ็กเกจ ใช้บริการเสียเงินนอก Trial, คัดลอก variables/ข้อมูลจริง, restore ทับ staging หรือเปิด Daily Backup ตอนนี้. หากสร้าง ให้เลือก Empty แทนค่าเริ่มต้น Duplicate และพิสูจน์ isolation ก่อนทดสอบ. D-035 เรื่อง Restore เฉพาะ OWNER ยังมีผล.
+
 ## D-036 — ไม่เพิ่ม Railway environment สำหรับ M1 recovery (Owner instruction, 26 กันยายน 2026)
 
 หลังตรวจพบว่า Project `asas-m1-staging` มี environment เดียวและยังไม่มี recovery Web/API ที่แยก Owner ตอบ **ไม่สร้าง environment เพิ่ม**. ไม่สร้าง/duplicate environment หรือคัดลอก services/variables จาก staging. ทางเลือกใช้ service ทดสอบตัวที่ 5 ใน environment เดิมและฐานสมมติแยกใน Postgres เดิมเป็นเพียงข้อเสนอใน [M1_PROVIDER_RECOVERY_PROPOSAL](M1_PROVIDER_RECOVERY_PROPOSAL.md); ยังไม่อนุมัติให้สร้าง service/ฐานหรือใช้เครดิตเพิ่ม. C2 provider browser recovery คง NOT_RUN. ไม่ลดระดับ gate โดยอัตโนมัติ.
