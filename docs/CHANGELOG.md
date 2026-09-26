@@ -8,6 +8,8 @@
 
 ตรวจ Railway resource แบบอ่านอย่างเดียว: มี staging environment เดียวและบริการออนไลน์ 4 ตัว ไม่มี Web/API recovery แยก; ฐาน recovery เดิมมีข้อมูลจริง. เพิ่ม `M1_PROVIDER_RECOVERY_PROPOSAL.md` เพื่อกำหนดปลายทางสมมติและ gate ค่าใช้จ่ายก่อน C2. ไม่สร้าง resource, ไม่เปลี่ยน Pilot, ไม่เปิด Daily Backup.
 
+ตรวจ dialog `New Environment` เพิ่ม: default Duplicate จะคัดลอก services/variables; มีตัวเลือก Empty. ปิด dialog โดยไม่สร้าง environment และบันทึกเงื่อนไขเลือก Empty ในแผน recovery.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว

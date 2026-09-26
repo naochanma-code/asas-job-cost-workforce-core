@@ -6,6 +6,7 @@
 
 - Railway Workspace ใน browser มี Project `asas-m1-staging` หนึ่งรายการ และ environment `staging` เพียงรายการเดียว. มีบริการออนไลน์ 4 ตัว: `web`, `api`, `line-worker`, `Postgres`. ไม่พบ environment หรือ Web/API recovery ที่แยกและพร้อมใช้.
 - Usage แสดง Limited Trial เหลือประมาณ USD 4.54 / 26 วัน ณ เวลาตรวจ; เป็นยอด ณ ขณะนั้น ไม่ใช่การอนุมัติใช้เครดิตเพิ่มหรือประมาณการค่าใช้จ่ายปลายทางใหม่. Trial แสดงขีดจำกัด RAM 1 GB, CPU 2 vCPU, Disk 1 GB.
+- เมนู `New Environment` มีตัวเลือก `Empty Environment` ที่ไม่คัดลอกบริการหรือ variables; ค่าเริ่มต้นคือ `Duplicate Environment` ซึ่งคัดลอกทั้งสองอย่างจาก staging. ตรวจตัวเลือกแล้วปิด dialog โดย **ไม่ได้สร้าง environment**. หากอนุมัติให้สร้าง ต้องเลือก Empty และตรวจว่าไม่มีบริการ/variables ก่อนทำขั้นถัดไป.
 - ฐาน `m1_recovery_20260924_alignment` ตาม [หลักฐานเดิม](M1_ALIGNMENT_STAGING_EVIDENCE.md) เป็นสำเนาข้อมูล Staging ที่มีข้อมูลจริงและ runtime CONNECT=false. ใช้เป็น fixture สมมติหรือเชื่อม Web/API ทดสอบไม่ได้.
 - [Local browser drill](M1_TEST_EVIDENCE.md) ผ่านแล้ว แต่ไม่แทน HTTPS/provider recovery. Staging health ตอบ `status=ok, database=ready` แบบอ่านอย่างเดียว; ไม่ได้พิสูจน์ปลายทาง recovery.
 
