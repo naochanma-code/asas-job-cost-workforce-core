@@ -1,5 +1,7 @@
 # Accounting Evidence Export Specification
 
+ข้อกำหนดปัจจุบัน D-032: ชุดหลักฐานใช้กับproviderบัญชีใดก็ได้ Coreprivate storageยังเป็นแหล่งหลัก. การsyncในอนาคตผ่านAccountingConnector ไม่ส่งBusinessLogicเข้าSMEMOVE/FlowAccountโดยตรง; FlowAccountOpenAPIเป็นcandidate MCPไม่ใช่System-of-Recordpath. ข้อความSMEMOVEด้านล่างเป็นประวัติระบบที่Ownerใช้อยู่ ไม่ใช่รูปแบบexportเฉพาะprovider ดู [ADR-013](adr/013-provider-agnostic-integrations.md)
+
 DESIGNED; baseline MASTER §10/13, D-003; รายละเอียด revision/schema Proposed ADR-005; Q-06 เดือนอ้างอิงยังเป็นรายละเอียดออกแบบ; retention2ปียืนยันแล้วตาม ADR-008 ผู้ใช้ของ spec คือ OWNER หลายบัญชีเท่านั้น (Admin เปิดเงิน/รูปexpenseรายรายการที่ตรวจได้ แต่ไม่มี monthly total/ZIP; PM เปิดexpenseของตนได้ แต่ไม่มี monthly total/ZIP) ไม่ใช่การ export สรุปค่าจ้าง
 
 ## ขอบเขตรอบ2ที่ Owner ยืนยัน

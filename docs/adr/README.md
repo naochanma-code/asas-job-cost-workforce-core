@@ -17,3 +17,9 @@ ADR เหล่านี้บันทึก baseline ที่มีอยู
 | [008](008-admin-review-ot-retention.md) | Adminตรวจเงิน/รูปexpenseรายรายการ, เวลาอนุมัติครั้งเดียว, OT0.5, เก็บ2ปี | Accepted; supersedes007ส่วนที่ระบุ |
 
 | [009](009-delegated-entry-and-expense-review.md) | ลงเวลาแทน ทุกroleส่งexpense LINEรอตรวจทุกครั้ง | Accepted รอบ4; supersedes008เฉพาะsubmission/PM own expense |
+| [010](010-foundation-implementation.md) | M1 implementation, authentication/schema/LINE/backup | Accepted implementation; deployment pending |
+
+| [011](011-m1-v3-alignment.md) | M1 v3 types, fields, code reservation, PM assignment และ recovery | Implementation ตาม D-021–023; Staging approval pending |
+
+| [012](012-bounded-line-pilot.md) | Bounded LINE project scope, signed private enrollment, worker guards | Owner bounded pilot approved; runtime evidence in PROJECT_STATUS |
+| [013](013-provider-agnostic-integrations.md) | AccountingConnector/InventoryConnector, OpenAPI candidate, MCP boundary และ Inventory cutover gates | Accepted D-032; DESIGNED / NOT_IMPLEMENTED |

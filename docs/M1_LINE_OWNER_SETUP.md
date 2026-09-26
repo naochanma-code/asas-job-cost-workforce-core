@@ -1,0 +1,56 @@
+# เริ่ม LINE Pilot — สำหรับ Owner
+
+## 25 กันยายน 2026 — Admin/TECH เห็นงานแล้ว และเริ่มตรวจถอนสิทธิ์
+
+Owner ยืนยัน TECH เห็นงานและ ADMIN เห็น A/B; runtime ตรวจบัญชี active/เชื่อม LINE/อยู่ใน allowlist ตรงกัน โดย TECH เห็นเฉพาะ PRJ-2609-014 และ ADMIN เห็น PRJ-2609-014/015 ก่อนถอนสิทธิ์. ADMIN_ACCOUNT_LINK / ADMIN_LINE_JOBS และ TECH_LINE_JOBS ก่อนถอน = UAT_PASSED จากรายงาน Owner ร่วมกับ runtime ไม่ใช่ภาพโทรศัพท์ที่ระบบตรวจเอง. A/B เป็น Project ทดสอบ ไม่ใช่ Job สองรายการ. สถานะนี้แทนการพัก Admin ก่อนหน้า
+
+R2-06 ถอนเฉพาะ assignment ระดับ Project ของ TECH ใน PILOT LINE A ผ่าน deployed Application แล้ว: backend PASS, เหลือ Pilot project ที่มองเห็น 0, assignment นอก Pilot ไม่เปลี่ยน, audit ASSIGNED 1 / ASSIGNMENT_REVOKED 1. ปิด operator สมมติและ session หลังตรวจ เก็บ audit ไว้ ไม่แก้ข้อมูลจริง ไม่เก็บชื่อบัญชีหรือรหัสลับในเอกสาร
+
+**ขั้นต่อไป:** ให้ TECH ส่ง “งานของฉัน” ใหม่ ต้องไม่แสดงโครงการที่ได้รับมอบหมายใน Pilot; ข้อความเก่าในแชทไม่ถูกลบ. ผลหลังถอนบนโทรศัพท์ = WAITING_USER. ยังไม่มอบหมาย Job B จนตรวจขั้นนี้ผ่าน. ADMIN ยังคงเห็น A/B. Replay/expiry และ Staging browser restore ยังไม่ผ่านครบ จึงยังไม่รับ M1 ทั้งหมด
+
+ไม่มี code/schema/deploy/merge หรือค่าใช้จ่ายเพิ่ม. CI เดิม 36109173357: Native PostgreSQL 52/52 PASS; รอบนี้ตรวจเอกสารและ diff เท่านั้น
+
+## ประวัติก่อนผลล่าสุด (ไม่ใช่คำสั่งปัจจุบัน)
+
+## คำสั่งล่าสุด — พัก Admin LINE
+
+Ownerให้ข้ามLINEAdminไปก่อน: DEFERRED_BY_OWNER ไม่ใช่PASS. ใช้Ownerที่เชื่อมแล้วทำgroupbindingตามสิทธิ์OWNER/ADMINเดิมต่อได้ ไม่เพิ่มscopeหรือเปลี่ยนrole. คำสั่งให้Adminเชื่อมในประวัติด้านล่างพักไว้จนOwnerกลับมาทดสอบ รอผลกลุ่ม/TECH/revoke/expiry และRestore gatesก่อนรับM1ทั้งหมด ดู [สถานะกลาง](PROJECT_STATUS.md)
+
+## สถานะปัจจุบัน — เปิด LINE กลับหลังรับ Admin ใหม่
+
+Adminลงทะเบียนเข้าขอบเขตทดลองแล้วและบันทึกRailwayเรียบร้อย; API/workerLINE=true/enrollment=false. OWNER/TECHเดิมยังเชื่อมอยู่ ไม่ต้องสมัครใหม่. Adminส่ง “เชื่อมบัญชี” แล้วLoginบัญชีADMINของตนและยืนยัน; TECHส่ง “งานของฉัน” ใหม่ต้องเห็นPILOT LINE Aเท่านั้น. Group/revoke/expiryยังไม่ผ่านจริง รายละเอียดและdeploymentล่าสุดดู [สถานะกลาง](PROJECT_STATUS.md). ข้อความพัก/enrollment/รอAdminส่งในส่วนประวัติด้านล่างถูกแทนด้วยสถานะนี้
+
+## รอบถัดไป — Admin/TECH/กลุ่ม
+
+Owner ยืนยันให้พัก Rich Menu จนส่วน LINE ของ Milestone ครบ. รันคำสั่งข้อความต่อได้ ดู [รอบทดสอบล่าสุด](M1_LINE_PILOT_ROUND_2.md). Runtime ยืนยัน OWNER เชื่อมหนึ่งบัญชี; Admin/TECH ยังไม่เชื่อมและกลุ่มยังไม่ผูก ณ เวลาตรวจ ไม่ต้องให้ Owner เชื่อมซ้ำ
+
+สถานะล่าสุด25กันยายน: Owner ยืนยันพร้อมภาพว่า “งานของฉัน” แสดงโครงการสมมติ PILOT LINE A/B แล้ว (UAT_PASSED เฉพาะ flow นี้). ไม่ต้องทำซ้ำหรือสมัครใหม่; Admin/TECH/group/revoke/expiry ยังรอทดสอบจริง. Rich Menu เดิมยังค้างและยังไม่ได้เปลี่ยนเมนูใหม่ ดู [สถานะกลาง](PROJECT_STATUS.md). ยังไม่ใช่การรับ M1 ทั้งหมด
+
+ใช้เฉพาะ OA/กลุ่มทดสอบที่อนุมัติ ผู้ทดลอง3คน: Owner, Admin, ช่าง1คน ไม่มีค่าแรง/Payroll/Expense ในรอบนี้
+
+## 1. กรอกค่าลับสองจุด (ไม่ส่งในแชท)
+
+เปิด Railway project asas-m1-staging แล้ว:
+
+- บริการ api → Variables → New Variable: ชื่อ LINE_CHANNEL_SECRET คัดลอกค่าจาก LINE Developers → OAทดสอบ → Basic settings → Channel secret
+- บริการ line-worker → Variables → New Variable: ชื่อ LINE_CHANNEL_ACCESS_TOKEN คัดลอกค่าจาก LINE Developers → OAทดสอบ → Messaging API → Channel access token
+
+ใช้ค่าปัจจุบันที่ถูกต้อง ไม่กด Issue ของ Channel secret เพื่อเปลี่ยนค่าโดยไม่จำเป็น เพราะทำให้ระบบที่ใช้ค่าเดิมหยุดทำงาน หากยังไม่มี access token ให้ทำขั้นออก token ใน Console โดยตรง ห้ามส่งค่า/ภาพค่าลับใน Chat/GitHub
+
+แจ้งเพียงว่า “กรอกแล้ว” ไม่ต้องเปลี่ยน LINE_ENABLED หรือกด Deploy เอง ผู้ดูแลระบบตรวจเฉพาะว่าตั้งค่าแล้วและตรวจความตรงของ OA โดยไม่แสดงค่า
+
+## 2. เมื่อ Codex ยืนยันว่าหน้าลงทะเบียนพร้อม
+
+Login เว็บด้วย Owner แล้วเปิด [ลงทะเบียนผู้ทดลอง](https://web-staging-cb6f.up.railway.app/line-pilot) กดเริ่มรอบหนึ่งครั้ง ได้รหัสส่วนตัว3ชุดและกลุ่ม1ชุด อายุ15นาที
+
+ให้แต่ละคนส่งคำสั่งของตนหา OA ในแชทส่วนตัว (LINEคนละบัญชีและคนละรหัส ส่งทั้งคำสั่งหรือเฉพาะตัวรหัสก็ได้ ห้ามส่ง3รหัสจากLINEบัญชีเดียว) จากนั้นให้หนึ่งในผู้ลงทะเบียนส่งรหัสกลุ่มในกลุ่มทดสอบที่มี OA อยู่ กดตรวจผลลงทะเบียนบนเว็บจนได้รับครบ3คน/1กลุ่ม ไม่ต้องส่งรหัสเหล่านี้ในแชทกับ Codex
+
+ขั้นนี้เป็นการลงทะเบียนผู้ร่วมทดลองเท่านั้น ยังไม่เชื่อมบัญชีหรือเปิดดูโครงการ หากหมดอายุหรือบริการรีสตาร์ท ให้เริ่มรอบใหม่ รหัสเดิมใช้ต่อไม่ได้ หน้านี้ทำงานเฉพาะเมื่อ operator เปิดโหมด enrollment
+
+## 3. หลัง Codex เปิดรอบทดลองที่จำกัดสิทธิ์แล้ว
+
+ในแชทส่วนตัว OA: พิมพ์ “เชื่อมบัญชี” แล้ว Login ด้วยบัญชีทดลองของแต่ละคน จากนั้นลอง “งานของฉัน”. Admin/Ownerผูกกลุ่มกับProjectสมมติด้วยรหัสครั้งเดียวที่หน้าProject ตาม checklist ไม่ใช้โครงการจริง
+
+Codexตรวจสิทธิ์ถอนAssignment/ส่งซ้ำ/หยุดworkerและบันทึกผล ก่อนแจ้งสิ่งที่ Ownerต้องตรวจรับเพิ่มเติม ไม่ให้สลับบัญชีทดสอบเทคนิคทีละขั้นเอง
+
+อ้างอิง: [วิธีดู Channel secret และตรวจ signature ของ LINE](https://developers.line.biz/en/docs/messaging-api/verify-webhook-signature/) ไม่ถือว่าหน้านี้หรือการตั้งค่าผ่านแล้วหมายถึง UAT ผ่าน

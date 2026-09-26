@@ -1,0 +1,39 @@
+{
+  "purpose": "M1 synthetic pilot manifest; not an automatic seed or real customer dataset",
+  "customer": "PILOT — ลูกค้าสมมติ",
+  "projects": [
+    {
+      "label": "A",
+      "name": "PILOT — Project A ไม่มี Site/Job",
+      "site": null,
+      "jobs": [],
+      "initialAssignees": ["T1"],
+      "groupBinding": "TEST_GROUP"
+    },
+    {
+      "label": "B",
+      "name": "PILOT — Project B มี Site/Job",
+      "site": "PILOT — Site B",
+      "jobs": ["PILOT — Job B"],
+      "initialAssignees": [],
+      "secondRoundAssignment": { "employee": "T1", "job": "PILOT — Job B" }
+    }
+  ],
+  "accounts": [
+    { "alias": "OWNER", "role": "OWNER", "operator": "Owner" },
+    { "alias": "ADMIN", "role": "ADMIN", "operator": "Admin" },
+    { "alias": "T1", "role": "TECH", "operator": "Technician participant" },
+    {
+      "alias": "TECH-unassigned",
+      "role": "TECH",
+      "operator": "Codex synthetic negative control; no LINE account required"
+    },
+    {
+      "alias": "PM-B",
+      "role": "PM",
+      "operator": "Codex synthetic role test; membership B only"
+    }
+  ],
+  "secrets": "Passwords and LINE IDs are entered privately after approval, never in this manifest",
+  "creation": "Admin creates via UAT steps to prove the no-job flow; do not import into production"
+}

@@ -2,7 +2,7 @@
 
 ระบบใหม่สำหรับจัดการต้นทุน Project งานภาคสนาม หลักฐานค่าใช้จ่าย และสรุปค่าจ้างพนักงานรายวันของ ASAS IT
 
-สถานะปัจจุบัน: `DESIGNED / REPOSITORY_BOOTSTRAPPED` — ยังไม่มี application code, database หรือ production deployment
+สถานะปัจจุบัน: `M0 MERGED / M1 IN_PROGRESS` — เริ่ม Foundation ตามคำอนุมัติ Owner มี Web/API และฐานข้อมูลทดสอบบนเครื่อง ยังไม่ deploy หรือผ่าน LINE จริง ดู [วิธีรัน](docs/OPERATIONS_RUNBOOK.md), [สถานะ](docs/PROJECT_STATUS.md) และ [ผลทดสอบ M1](docs/M1_TEST_EVIDENCE.md)
 
 ## เป้าหมาย Release แรก
 
@@ -21,4 +21,4 @@
 
 Admin ตรวจexpenseรายรายการรวมเงิน/รูปได้ ไม่เห็นต้นทุนรวม/ค่าแรง; PM เห็นคน/วัน/ชั่วโมงและexpenseของตน ทุกบทบาทลงexpenseได้ PM/Admin/Ownerลงเวลาแทนได้ Owner3บัญชีดูเงินและดาวน์โหลดfolderบิลรายเดือน (ZIP) รายละเอียด [คำตอบโอ๋](docs/OWNER_QUESTIONS.md) และ [หลักฐานตรวจ](docs/TEST_EVIDENCE.md) ยังไม่ใช่Production/LINEจริง
 
-Milestone 0: OWNER_ACCEPTED / MERGED ตาม [ผลตรวจรับ](docs/M0_ACCEPTANCE.md) Merge PR#1 เข้า main แล้ว ยังไม่เริ่ม Milestone 1
+Milestone 0: OWNER_ACCEPTED / MERGED ตาม [ผลตรวจรับ](docs/M0_ACCEPTANCE.md) Merge PR#1 เข้า main แล้ว Milestone 1 พัฒนาบน branch แยกตาม [ขอบเขตที่ Owner อนุมัติ](docs/M1_FOUNDATION_PROPOSAL.md)

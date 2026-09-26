@@ -1,5 +1,7 @@
 # Test Evidence — Milestone 0
 
+หลักฐาน implementation Milestone 1 แยกใน [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md) ไม่ใช้ผล M0 แทน server/database/LINE integration
+
 ## ตรวจหลัง Merge PR#1
 
 Ownerสั่งmergeแล้ว commit a7e5c9e08a4d2c8185a12ef65f705a190c243a8d; git diff PRhead22b8f32706396cbac31bfb87f77598613b1bc857 กับorigin/main -- AGENTS.md README.md docs ให้exit0 ไม่มีความต่างก่อนเพิ่มบันทึกนี้ เอกสารและprototypeครบ

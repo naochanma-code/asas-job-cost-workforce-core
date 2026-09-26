@@ -18,3 +18,10 @@ tmp/
 uploads/
 evidence/
 
+
+# Foundation local PostgreSQL and private backups
+.local/
+backups/
+*.tsbuildinfo
+.pnpm-store/
+apps/web/next-env.d.ts

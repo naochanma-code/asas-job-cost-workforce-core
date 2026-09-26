@@ -1,5 +1,18 @@
 # Data Dictionary — logical design M0
 
+## Executable M1 Alignment 003 — แยกจาก target design ด้านล่าง
+
+| Entity | Fields / constraints |
+| --- | --- |
+| project_types / job_types | id UUID PK; code UNIQUE immutable uppercase; display_name 1–160; sort_order int; enabled bool; version; created_at; rename/order/enable audited |
+| projects | code immutable; customer required/site optional same customer; project_type_id FK default Other; type_name_snapshot; project_manager_id nullable users PM; start_date/target_completion_date nullable ordered; status PLANNED/ACTIVE/COMPLETED/CLOSED; priority LOW/NORMAL/HIGH/URGENT; description; progress int0–100; created_by/created_at/version; code_namespace UNIQUE |
+| jobs | project_id required; code immutable; job_type_id default Other; type_name_snapshot; name/description; responsible_person_id optional FK employees scoped to team; planned_date optional; status PLANNED/ACTIVE/BLOCKED/DONE/CANCELLED; progress0–100; created_by/created_at/version |
+| code_counters | scope PK PROJECT:YYMM or JOB:projectUUID; last_value bigint atomic increment |
+| code_reservations | code PK/entity_id UNIQUE/kind/issued_at; old codes backfilled; runtime SELECT/INSERT only; no reset API |
+| project_members / job_assignments | existing nullable Job scope and unique active assignment; PM targets TECH only in own project; all success audited |
+
+Project seed5 / Job seed10 ตาม D-023. Disabled type retains old records/snapshot. Legacy Job creator/date inherits Project as explicit fallback; unknown dates/responsible person stayNULL. No financial data. See [migration plan](M1_ALIGNMENT_MIGRATION_PLAN.md) and [API](M1_API_CONTRACT.md).
+
 DESIGNED / PROPOSED implementation; business decisions ล่าสุดตาม [ADR-007](adr/007-owner-decisions-m0-r2.md) Accepted; ไม่ใช่ SQL migration อ้าง MASTER §7 และ [ADR](adr/README.md) ชื่อ field ด้านล่างเป็น contract proposal ที่ต้อง review ก่อน M1 รายการตัวอย่างทุกค่าคือข้อมูลสมมติ
 
 ## ประเภทและการอ่าน
@@ -111,3 +124,20 @@ Won สร้าง Project.source_opportunity_id ใหม่; ไม่ย้�
 work_entries/overtime_entries: employee_id เป็นผู้ทำงาน; เพิ่ม submitted_by:ref(users) NOT NULL, source_channel:WEB/LINE NOT NULL และ submitted_at ตามเดิม แยกผู้กรอกออกจากพนักงาน ตรวจassignment/overlapตามemployee_id ไม่ใช้submitted_by
 
 expense_submissions: submitted_by:ref(users) NOT NULL, source_channel:WEB/LINE NOT NULL; employee_id ต้องnullableเมื่อผู้ส่งไม่ใช่พนักงานที่มีemployee record ไม่ปลอมพนักงาน TECH/PM query own ตามsubmitted_by ทุกroleเข้าPENDING_REVIEW reviewed_by/atแยกจากsubmitted_by/at ก่อนลงledger
+
+## LINE Pilot transient enrollment — ADR-012
+
+ไม่มีตารางหรือmigrationใหม่: process memoryเก็บ hash ของรหัส192bit, kind USER/GROUP, ownerผู้เริ่ม, expiresAt15นาที, captured userId/groupId สูงสุด3คน/1กลุ่ม. ไม่เก็บrawmessage/replyToken; restart/expiryทำให้ข้อมูลอ่านไม่ได้และต้องเริ่มรอบใหม่ ไม่มีFK/สิทธิ์/บัญชีแอปเกิดจากcapture. audit LINE_PILOT_ENROLLMENT_STARTEDมีactor/timeแต่ไม่มีcodes/IDs. Businessqueue schemaและencryptedpayloadเดิมไม่เปลี่ยน
+
+## External integration vocabulary — D-032 (DESIGNED / ไม่มีตารางใหม่)
+
+| คำกลาง | ความหมายและข้อจำกัด |
+| --- | --- |
+| AccountingConnector | contract ของ Expense/Accounting integration; Core approval/financial permission/immutable ledger ไม่ขึ้นกับ provider |
+| InventoryConnector | contract ข้อมูล Product/Stock/Warehouse/Serial จาก Inventory Master ที่เลือก; ไม่สร้าง stock engine ใน Core |
+| external_actual_cost_entries / EXTERNAL_ACTUAL_COST | ชื่อ target entity/source แทนชื่อSMEMOVEเดิมในdesign; OWNER approveก่อนเป็นCost Ledger ไม่ซ้ำExpense |
+| ExternalRecordRef | provider + connection/company scope + entity type + external ID; แยกจากCoreUUID/เลขเอกสาร; ไม่บรรจุcredential |
+| Integration revision / operation | ติดตาม source revision, idempotency key, external result, correlation และ sync status แยกจาก approval; schemaจริงออกแบบเมื่อเริ่มmilestoneที่อนุมัติ |
+| Inventory Master | ระบบหลักที่Ownerเลือก; เปลี่ยนproviderต้องผ่านStock/Warehouse/SerialPOC, reconciliation และcutoverapprovalตามADR-013 |
+
+FlowAccount OpenAPIยังเป็นcandidate; MCPไม่ใช่ช่องทางSystem of Record ไม่มีfield/tableที่ผูกproviderหรือmigrationใหม่จากdecisionนี้ ดู [ADR-013](adr/013-provider-agnostic-integrations.md)

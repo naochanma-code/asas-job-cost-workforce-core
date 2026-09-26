@@ -1,0 +1,112 @@
+# M1 Owner UAT — ใบบันทึกการทดลองจริง
+
+## 25 กันยายน 2026 — Owner ยืนยัน LINE เห็นเฉพาะ B ถูกต้อง
+
+Owner ยืนยันผลคำขอใหม่ “งานของฉัน” หลังมอบหมาย Job B ว่าถูกต้องตามผลที่คาด: เห็นเฉพาะ PILOT LINE B. R2-06 ถอน A / เพิ่ม Job B = UAT_PASSED สำหรับผลโครงการใน LINE จากรายงาน Owner ร่วมกับ backend/audit ที่ตรวจไว้ ไม่ใช่การตรวจภาพโทรศัพท์โดยระบบ
+
+ผลย่อย: ถอน A แล้วไม่พบโครงการ PASS; มอบหมาย Job B แล้วเห็นเฉพาะ B ไม่เห็น A PASS; scope ของ assignment และ ASSIGNED audit PASS; assignment นอก Pilot ไม่เปลี่ยน. ยังไม่อ้างว่าหน้ารายละเอียด Job บน Web ผ่าน UAT จากคำยืนยันนี้
+
+ไม่ต้องส่ง “งานของฉัน” ซ้ำสำหรับขั้นนี้. งานที่ยังเหลือ: R2-05 replay, R2-07 expiry บน LINE จริง และ Staging browser restore / backup gates. ยังไม่รับ M1 ทั้งหมดหรือ Merge PR #2. ไม่มีการเปลี่ยนข้อมูล/code/schema/deploy ในรอบบันทึกผลนี้; ตรวจเอกสาร 45 checks และ diff check ผ่าน
+
+
+## 25 กันยายน 2026 — มอบหมาย Job B หลังถอน A
+
+Owner อนุญาตทดสอบต่อ หลังยืนยันคำขอ LINE หลังถอน A ไม่พบโครงการแล้ว. มอบหมายเฉพาะ Job สมมติใน PILOT LINE B (PRJ-2609-015) ให้ TECH ผู้ทดลองผ่าน deployed Application สำเร็จ ไม่เพิ่ม assignment ระดับ Project. ตรวจ project/job scope ตรงกัน, domain projection เห็นเฉพาะ B ไม่เห็น A, ASSIGNED audit 1 ครั้ง และ assignment นอก Pilot ไม่เปลี่ยน. ปิด operator สมมติและหมดอายุ session หลังตรวจ เก็บ audit ไว้
+
+**R2-06 Job B: backend PASS / phone WAITING_USER.** ให้ TECH ส่ง “งานของฉัน” ใหม่ ควรเห็นเฉพาะ PILOT LINE B. ผลนี้ยังไม่แทนการตรวจหน้ารายละเอียด Job บน Web หรือการตอบจริงบนโทรศัพท์. ไม่ต้องลงทะเบียน LINE ใหม่. ขั้นถอน A บนโทรศัพท์ UAT_PASSED แล้ว; replay/expiry และ Staging browser restore ยังไม่ครบ
+
+ไม่มี code/schema/deploy/merge/บริการเพิ่ม. Release เดิม dc289ee; CI เดิม 36109173357 Native PostgreSQL 52/52 PASS. รอบนี้ตรวจเอกสาร 45 checks และ git diff --check ผ่าน ไม่รัน application tests ซ้ำ
+
+
+## 25 กันยายน 2026 — ยืนยันผลถอนสิทธิ์บน LINE
+
+Owner รายงานคำตอบใหม่ว่า “ไม่มีโครงการที่รับมอบหมาย” หลังถอน assignment สมมติ A. R2-06 REVOKE = UAT_PASSED จากรายงานบนโทรศัพท์ร่วมกับหลักฐาน backend รอบก่อน: visible Pilot projects 0, assignment นอก Pilot ไม่เปลี่ยน และมี ASSIGNMENT_REVOKED audit. ไม่ได้ตรวจภาพโทรศัพท์โดยตรง
+
+ขั้นต่อไปคือมอบหมาย Job ใน Project B ให้ TECH แล้วตรวจคำขอใหม่เห็นเฉพาะ B; ยังไม่ได้มอบหมายในรอบบันทึกนี้. Replay/expiry และ Staging browser restore ยังไม่ครบ ไม่ถือ M1 accepted. ไม่มีการเปลี่ยน code/schema/deployment/ข้อมูลในรอบนี้
+
+
+## 25 กันยายน 2026 — Admin/TECH เห็นงานแล้ว และเริ่มตรวจถอนสิทธิ์
+
+Owner ยืนยัน TECH เห็นงานและ ADMIN เห็น A/B; runtime ตรวจบัญชี active/เชื่อม LINE/อยู่ใน allowlist ตรงกัน โดย TECH เห็นเฉพาะ PRJ-2609-014 และ ADMIN เห็น PRJ-2609-014/015 ก่อนถอนสิทธิ์. ADMIN_ACCOUNT_LINK / ADMIN_LINE_JOBS และ TECH_LINE_JOBS ก่อนถอน = UAT_PASSED จากรายงาน Owner ร่วมกับ runtime ไม่ใช่ภาพโทรศัพท์ที่ระบบตรวจเอง. A/B เป็น Project ทดสอบ ไม่ใช่ Job สองรายการ. สถานะนี้แทนการพัก Admin ก่อนหน้า
+
+R2-06 ถอนเฉพาะ assignment ระดับ Project ของ TECH ใน PILOT LINE A ผ่าน deployed Application แล้ว: backend PASS, เหลือ Pilot project ที่มองเห็น 0, assignment นอก Pilot ไม่เปลี่ยน, audit ASSIGNED 1 / ASSIGNMENT_REVOKED 1. ปิด operator สมมติและ session หลังตรวจ เก็บ audit ไว้ ไม่แก้ข้อมูลจริง ไม่เก็บชื่อบัญชีหรือรหัสลับในเอกสาร
+
+**ขั้นต่อไป:** ให้ TECH ส่ง “งานของฉัน” ใหม่ ต้องไม่แสดงโครงการที่ได้รับมอบหมายใน Pilot; ข้อความเก่าในแชทไม่ถูกลบ. ผลหลังถอนบนโทรศัพท์ = WAITING_USER. ยังไม่มอบหมาย Job B จนตรวจขั้นนี้ผ่าน. ADMIN ยังคงเห็น A/B. Replay/expiry และ Staging browser restore ยังไม่ผ่านครบ จึงยังไม่รับ M1 ทั้งหมด
+
+ไม่มี code/schema/deploy/merge หรือค่าใช้จ่ายเพิ่ม. CI เดิม 36109173357: Native PostgreSQL 52/52 PASS; รอบนี้ตรวจเอกสารและ diff เท่านั้น
+
+## ประวัติก่อนผลล่าสุด (ไม่ใช่คำสั่งปัจจุบัน)
+
+## คำสั่งล่าสุด — พัก Admin LINE
+
+Ownerให้ข้ามLINEAdminไปก่อน: DEFERRED_BY_OWNER ไม่ใช่PASS. ใช้Ownerที่เชื่อมแล้วทำgroupbindingตามสิทธิ์OWNER/ADMINเดิมต่อได้ ไม่เพิ่มscopeหรือเปลี่ยนrole. คำสั่งให้Adminเชื่อมในประวัติด้านล่างพักไว้จนOwnerกลับมาทดสอบ รอผลกลุ่ม/TECH/revoke/expiry และRestore gatesก่อนรับM1ทั้งหมด ดู [สถานะกลาง](PROJECT_STATUS.md)
+
+## สถานะรอบปัจจุบัน — 25 กันยายน 2026
+
+Owner งานของฉันผ่านตามภาพ; runtime ยืนยัน OWNER เชื่อมหนึ่งบัญชี. U05–U08 สำหรับ Admin/TECH/กลุ่มยัง NOT_RUN บนโทรศัพท์ ณ รอบนี้ ใช้ [รอบทดสอบล่าสุด](M1_LINE_PILOT_ROUND_2.md) แทนคำสั่งเก่าที่บอกว่า LINE ปิดด้านล่างซึ่งเป็นประวัติ. Rich Menu พักตาม Owner จนส่วน LINE ครบ ไม่ทำให้ข้าม gate สิทธิ์/expiry/restore หรือรับ M1 ทั้งหมด
+
+## 24 กันยายน 2026 — Owner ยืนยัน Job create ผ่าน / เตรียม LINE Pilot
+
+Ownerแจ้งเพิ่มJobได้แล้ว ปิดปัญหาseedType validation400เป็น OWNER_UAT_JOB_CREATE=PASS; ไม่ถือเป็นรับM1ทั้งหมด. ตรวจread-only: health200, branchตรงorigin/ไม่ตกmain, LINE=false, APIยังไม่มีLINEconfigและยังไม่มีworker (มีWeb/API/Postgres3services). เตรียม [LINE Readiness](M1_LINE_PILOT_READINESS.md) แต่ยังไม่เปิดจริง ไม่Merge/M2/Production. ไม่มีapplication/schema/deployment changeรอบนี้
+
+
+## วิธีส่งตรวจล่าสุด — 23 กันยายน 2026
+
+Owner ขอให้ทดสอบระบบให้เป็นชุดก่อน จึงพักการขอ Login สลับบทบาททีละขั้น Codex รัน regression ด้วยบัญชีและข้อมูลสมมติอัตโนมัติ แล้วส่ง Owner ตรวจ flow ลูกค้า → Project ไม่มี/มี Job → มอบหมาย → ช่างเห็นงาน เป็นรอบเดียวเมื่อรุ่นพร้อม ไม่ใช้ automated PASS แทน Owner UAT และไม่ปิด live gate ที่ยัง NOT_RUN
+
+## 23 กันยายน 2026 — Admin และชุด PILOT A/B
+
+PASS บน Web Staging release 4fcb29e: reload แล้วยืนยันบทบาท ADMIN; Admin สร้างลูกค้า PILOT-20260923-Customer และ Project A โดยไม่กรอก Site/Job ได้ มอบหมายช่างสมมติที่เคย Login ให้ A โดยแบบฟอร์มมีเฉพาะพนักงาน ไม่มีช่อง Job หลังบันทึกพบช่างสมมติและปุ่มถอนมอบหมาย
+
+PASS: สร้าง Site B เลือก Site นี้ตอนสร้าง Project B และเพิ่ม Job B ได้ ตรวจพบ Job B ในรายละเอียด และ B ไม่มี assignment ช่าง ทั้งหมดใช้ชื่อขึ้นต้น PILOT-20260923 ไม่แก้รายการจริงเดิม Owner ยืนยันเพิ่มเติมว่า Admin เลือกช่างได้ถูกต้อง
+
+ขั้นที่รอ Owner: Login ด้วยช่างสมมติคนเดิมเพื่อตรวจ A มองเห็น/B มองไม่เห็น ยังไม่ลง PASS ให้ cross-project, ถอนสิทธิ์, PM หรือ security live ที่เหลือ LINE ยังคงปิด ไม่มี deploy/merge/M2/ค่าใช้จ่ายเพิ่ม
+
+## ผลที่ Owner ยืนยันแล้ว — 22 กันยายน 2026
+
+PASS ตามรายงาน Owner: Login, สร้างพนักงาน, สร้างลูกค้า, สร้างโครงการ และมอบหมายคนเข้าโครงการ บน [Web Staging](https://web-staging-cb6f.up.railway.app/) release 4fcb29e ไม่ใช่การรับ M1 ทั้งหมด และยังไม่ยืนยันผลแยก Admin/PM/ช่าง
+
+Owner แจ้งว่ามีข้อมูลจริงปน: ไม่ใช้รายการเดิมทำกรณีทดสอบถอนสิทธิ์/แก้ไข/backup/restore ใช้บัญชีและโครงการสมมติขึ้นต้น PILOT เท่านั้น ห้ามส่งรหัสผ่านหรือรายละเอียดข้อมูลจริงในรายงาน
+
+## รอบที่ขอให้โอ๋ทดสอบต่อ (ยังไม่ใช้ LINE)
+
+1. Admin สมมติสร้างลูกค้าสมมติและ Project A โดยเว้น Site/Job แล้วมอบหมายช่างสมมติ ต้องไม่ถาม Job
+2. ช่าง Login ผ่านอีก browser profile/มือถือ ต้องเห็น A แต่ไม่เห็น B สมมติที่ไม่ได้รับมอบหมาย; ให้ Admin เก็บ URL ของ B เพื่อลองเปิดตรง ต้องถูกปฏิเสธ
+3. Admin ถอนเฉพาะ assignment สมมติ A; ช่าง refresh/เปิด URL เดิมต้องเข้าไม่ได้ จากนั้น Logout แล้วกลับเข้าหน้าที่ต้อง Login ต้องเห็นหน้าเข้าสู่ระบบ
+
+รายงานเป็นข้อ 1/2/3 ผ่านหรือไม่ผ่าน; ไม่จำเป็นต้องส่ง screenshot ที่มีข้อมูลจริง Site/Job/PM และ Restart/Restore ให้บันทึกเพิ่มตามตารางด้านล่าง LINE U05–U07 ยังพักตามคำสั่ง Owner
+
+## ตารางตรวจรับเต็ม (เก็บแยกผลตามหลักฐาน)
+
+คำว่า PARTIAL หมายถึงทดลองได้บางส่วนตาม Owner รายงาน แต่ยังไม่ครบเงื่อนไขในแถวนั้น ห้ามเติม PASS จาก automated tests
+
+วันรายงาน Owner: 22 กันยายน 2026 · Staging URL: https://web-staging-cb6f.up.railway.app/ · release SHA: 4fcb29e · ผู้ช่วยเทคนิค: Codex
+
+ผู้ตรวจ: Owner โอ๋ / Admin ฟ้า / ช่าง T1 (ใช้รหัสแทนชื่อจริงใน Git) · [Checklist ก่อนเริ่ม](M1_LINE_PILOT_CHECKLIST.md)
+
+ก่อนเริ่มทุกคนออกจากบัญชีอื่น ห้ามสลับ role ในหน้า prototype ใช้ browser profile/โทรศัพท์แยกและ login จริง บัญชี PM และ TECH-unassigned เป็นบัญชีสมมติให้ operator ตรวจด้านลบ ไม่ต้องเพิ่มผู้ทดลองจริงอีกคน
+
+| ข้อ | ใครทำ / ขั้นตอน | สิ่งที่ควรได้ | ผลจริง / หลักฐาน |
+| --- | --- | --- | --- |
+| U01 Login ตามบทบาท | โอ๋เข้า OWNER ฟ้าเข้า ADMIN ช่างเข้า TECH; operator ใช้ PM ทดสอบที่มีสิทธิ์ B | บทบาทตรงบัญชี; TECH/PM เปิดหน้าสร้างผู้ใช้หรือ directory ไม่ได้; ADMIN ไม่เห็นค่าแรง/Payroll; logout แล้ว URL ที่ต้อง login เข้าไม่ได้ | PARTIAL — Owner/ADMIN/TECH Login และ Logout-reload PASS; PM และข้อจำกัดข้อมูลเงินยังไม่ยืนยันครบ |
+| U02 Project A ไม่มี Site/Job | ฟ้าสร้างลูกค้าสมมติ แล้วสร้าง A โดยไม่เพิ่ม Site/Job | บันทึกได้ มีรหัส A; ไม่บังคับ/ไม่ถาม Job ตอนมอบหมาย ไม่มี Job ปลอม | PASS — Admin สร้างลูกค้าและ PILOT A ไม่มี Site/Job และมอบหมายโดยไม่มีช่อง Job บน Web 2026-09-23 |
+| U03 มอบหมายช่าง | ฟ้าเลือก A แล้วมอบหมาย T1 ระดับ Project | T1 เห็น A บน Web; บัญชี TECH-unassigned มองไม่เห็น A รวม URL ตรง; ส่งซ้ำไม่สร้าง assignment ซ้ำ | PARTIAL — Admin มอบหมายช่างสมมติให้ PILOT A PASS; Owner ยืนยันเลือกช่างถูกต้อง; รอ TECH ตรวจ A/B, URL ตรง และ duplicate |
+| U04 Project B มี Site/Job | ฟ้าสร้าง Site B, B ใต้ลูกค้าเดียวกัน และ Job B | B มี Site/Job ถูกต้อง; ในรอบแรกยังไม่มอบหมาย T1 จึงไม่เห็น B; operatorลองส่ง Job B ใต้ A ต้องถูกปฏิเสธ | PARTIAL — Admin สร้าง Site B/Project B/Job B PASS บน Web; B ไม่มี assignment; TECH isolation/Job ข้าม Project ยังไม่ยืนยัน |
+| U05 เชื่อม LINE | ฟ้าและ T1 พิมพ์ “เชื่อมบัญชี” ส่วนตัว เปิดลิงก์ login บัญชีตนและยืนยัน | บัญชีถูกคู่; ไม่มีการเปลี่ยนเจ้าของ LINE เดิมเงียบๆ; ลิงก์หมดอายุ/ใช้แล้วเชื่อมใหม่ไม่ได้ ต้องขอลิงก์ใหม่ | NOT_RUN |
+| U06 งานของฉัน | T1 พิมพ์ “งานของฉัน”; operatorตรวจบัญชีไม่รับมอบหมายแยกบน Web | T1 ได้ A ไม่มี B; ก่อนเชื่อม LINE ไม่ได้รับชื่อโครงการ; รหัส Project ของคนอื่นใช้เดาเปิดผ่าน Web ไม่ได้ | NOT_RUN |
+| U07 ผูกกลุ่ม | ฟ้าสร้าง code ของ A แล้วใช้ LINE ฟ้าส่งในกลุ่ม; ลองผู้ส่งผิด/หมดอายุ/ใช้ซ้ำแยกเป็นกรณีลบ | mapping กลุ่ม→A ถูกต้อง ตรวจหลังบ้านโดย Codex; กรณีลบไม่ผูก; ในกลุ่มไม่มีชื่อคน/รายละเอียดงาน/เงิน; เป็นสมาชิกกลุ่มไม่ได้รับสิทธิ์ A อัตโนมัติ | NOT_RUN |
+| U08 ถอนสิทธิ์ | ฟ้าถอน A ของ T1 แล้ว T1 refresh Web/เปิด URL เดิม/พิมพ์งานใหม่ จากนั้นฟ้ามอบหมาย T1 ให้ Job B | A หายและ URL ถูกปฏิเสธ; หลังมอบหมาย B เห็น B เท่านั้น การตรวจรวมช่วงคิวข้อความด้วยผล automated recheck | NOT_RUN |
+| U09 Restart | Codex จด counts และ IDs แล้ว restart Web/API/worker บน provider โดยไม่ลบ DB; T1 login ใหม่ถ้าจำเป็น | A/B/Site/Job/assignment/audit/LINE binding อยู่ครบ ส่งงานใหม่ได้ ไม่มีข้อความเก่าถูกส่งซ้ำ | PARTIAL — Web/API Restart และ checksum IDs คงเดิม PASS 2026-09-23; LINE/worker ยังปิด |
+| U10 Restore | Codex backup → restore ฐานใหม่ว่างและแยกระบบ ปิด LINE worker; ฟ้า/โอ๋ login ระบบ restore | จำนวน/IDs/ความสัมพันธ์ตรงเดิม T1 ยังเห็นเฉพาะ B; sessions/codes เก่าใช้ไม่ได้; รหัสผ่านทดสอบใหม่ใช้ login ได้ จดเวลาสำรอง/กู้คืนและ checksum | PARTIAL — native restore ชุดสมมติแยก/data comparison PASS; Web Login บนฐาน restore NOT_RUN ดู M1_STAGING_RESTORE_DRILL |
+
+U05/U07 กรณีหมดอายุ: ใช้ลิงก์/รหัสใหม่รอเกิน 10 นาทีแล้วลอง ต้องปฏิเสธ จากนั้นขอรหัสใหม่ อย่าปรับนาฬิกาฐาน staging เพื่อเร่งทดสอบ; กรณีใช้ซ้ำทดสอบกับรายการที่สำเร็จแล้วโดยไม่เปิดเผยค่าในรายงาน
+
+U09: ข้อความที่ส่งไปแล้วในประวัติ LINE ไม่ถูกลบเมื่อถอนสิทธิ์ เกณฑ์คือคำขอใหม่/ข้อความที่ยังไม่ส่งต้องตรวจสิทธิ์ปัจจุบัน ไม่รับประกันการถอนภาพหน้าจอหรือข้อความย้อนหลัง
+
+U10: ใช้ฐานกู้คืนชั่วคราวตามงบที่อนุมัติ ไม่ restore ทับฐานหลัก หากใช้ provider PITR แทน logical tool ต้องจัดการ transient credentials/queues ตาม Staging plan ก่อนเปิด LINE; บันทึกเป็นคนละผลกับ logical restore
+
+เกณฑ์จบ: U01–U10 PASS, security matrix รายการ staging ผ่าน, ไม่มี blocker ข้อมูลข้าม Project/secret/restore และ Owner ยืนยันรับ M1 โดยระบุ SHA หาก FAIL ให้บันทึกขั้นตอนที่ทำ สิ่งที่คาด สิ่งที่พบ และผู้แก้ แล้วทดสอบซ้ำเฉพาะผลกระทบ ไม่ถือว่า UAT ผ่านจน Owner ตรวจ
+
+ข้อสังเกต/ปัญหา: ____
+
+Owner ยืนยันผลเมื่อทดลองจริง: ____ · วันที่: ____ · สถานะ M1: NOT_ACCEPTED_YET

@@ -1,5 +1,136 @@
 # DECISION LOG
 
+## D-037 — เลื่อน Provider Recovery ไปหลัง M3 (Owner instruction, 26 กันยายน 2026)
+
+Owner ยืนยันให้เลื่อนการทดสอบ browser/restore บน Railway provider (C2) ไป **หลังจบ Milestone 3 และก่อน Pilot (M8)**. M1 ใช้หลักฐาน local/CI synthetic recovery ที่มีอยู่ตามขอบเขตจริง; C2 คง `DEFERRED_BY_OWNER / NOT_RUN` ไม่อ้างเป็น provider PASS และไม่สร้าง recovery resource ใน M1. การรับ M1 ต้องแจ้งข้อยกเว้นนี้ชัดเจนพร้อมสถานะงานอื่นและให้ Owner ตัดสินแยกจากการ Merge PR #2.
+
+Owner อนุญาตให้พิจารณาสร้าง Railway environment เพิ่มเมื่อจำเป็นสำหรับ C2 ในช่วงหลัง M3; คำตอบนี้แทนข้อห้ามเพิ่ม environment ของ D-036 **เฉพาะช่วงเวลานั้น**. ก่อนทำจริงต้องตรวจ Trial limit/topology/ค่าใช้จ่ายและแผนข้อมูลสมมติแยกอีกครั้ง; ไม่ถือเป็นอนุญาตให้ upgrade แพ็กเกจ ใช้บริการเสียเงินนอก Trial, คัดลอก variables/ข้อมูลจริง, restore ทับ staging หรือเปิด Daily Backup ตอนนี้. หากสร้าง ให้เลือก Empty แทนค่าเริ่มต้น Duplicate และพิสูจน์ isolation ก่อนทดสอบ. D-035 เรื่อง Restore เฉพาะ OWNER ยังมีผล.
+
+## D-036 — ไม่เพิ่ม Railway environment สำหรับ M1 recovery (Owner instruction, 26 กันยายน 2026)
+
+หลังตรวจพบว่า Project `asas-m1-staging` มี environment เดียวและยังไม่มี recovery Web/API ที่แยก Owner ตอบ **ไม่สร้าง environment เพิ่ม**. ไม่สร้าง/duplicate environment หรือคัดลอก services/variables จาก staging. ทางเลือกใช้ service ทดสอบตัวที่ 5 ใน environment เดิมและฐานสมมติแยกใน Postgres เดิมเป็นเพียงข้อเสนอใน [M1_PROVIDER_RECOVERY_PROPOSAL](M1_PROVIDER_RECOVERY_PROPOSAL.md); ยังไม่อนุมัติให้สร้าง service/ฐานหรือใช้เครดิตเพิ่ม. C2 provider browser recovery คง NOT_RUN. ไม่ลดระดับ gate โดยอัตโนมัติ.
+
+เตรียม container/entrypoint ที่ fail-closed สำหรับทางเลือก service เดียวใน branch M1 แล้ว (`CODED/TESTED_LOCAL`), แต่ยัง `NOT_DEPLOYED`; การมี code ไม่เปลี่ยนคำสั่ง Owner หรืออนุมัติ provision.
+
+## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
+
+Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว
+
+การเลื่อนนี้ไม่เลื่อนการทดสอบRestoreด้วยข้อมูลสมมติหรืออนุญาตให้Restoreทับข้อมูลจริง. งานM1อื่นทำต่อได้ตามscopeเดิม
+
+
+## D-035 — Daily Backup และ Restore เฉพาะ OWNER (Accepted requirement, 26 กันยายน 2026)
+
+Ownerกำหนดให้สำรองข้อมูลอัตโนมัติทุกวัน และให้เฉพาะOWNERสั่งRestore. ADMIN/PM/TECHไม่มีสิทธิ์สั่งหรืออนุมัติRestore. บัญชีอัตโนมัติสำรองต้องมีสิทธิ์เท่าที่จำเป็นและไม่มีสิทธิ์Restore. เก็บผู้สั่ง เวลา backup/source/target ผลและauditโดยไม่เก็บcredentialsหรือเนื้อหาฐานลงlog
+
+สถานะ DESIGNED / NOT_DEPLOYED: ปัจจุบันมีoperator CLI ไม่มีRestore API/UIที่ตรวจroleOWNER. สิทธิ์CoreAppไม่ควบคุมผู้ดูแลRailway/DB/CLIโดยอัตโนมัติ ต้องจำกัดprovider/secret/operatoraccessให้Owner และไม่แจกrestorecredentialsให้Admin. การกู้คืนผ่านoperatorทำได้เฉพาะคำสั่งOwnerสำหรับครั้งนั้น ไม่ถือว่าCLIบังคับRBACแล้ว
+
+ข้อเสนอเปิดRailway Daily volume backupทุก24ชั่วโมง เก็บ6วัน ตามเอกสารprovider. มีค่าใช้จ่ายstorageส่วนเพิ่ม จึงรอยืนยันการใช้Trialcreditก่อนเปิด ไม่อัปเกรดหรือเพิ่มบริการ; ไม่ตั้งเวลาเฉพาะเจาะจงที่providerไม่ได้รับรอง. ความถี่dailyอนุมัติแล้ว แต่retention6วันเป็นข้อเสนอ ไม่สับสนกับหลักฐานบัญชีเก็บ2ปี. ค่าใช้จ่าย/สิทธิ์จริงยังต้องตรวจหน้าprovider. ห้ามrestoreทับStagingโดยไม่มีOwnerอนุมัติเป้าหมายแยก
+
+อ้างอิง https://docs.railway.com/volumes/backups และ https://docs.railway.com/guides/postgres-backups-restores ตรวจ26ก.ย.2026
+
+
+## D-034 — รับ LINE Admin ใหม่ในช่อง Pilot ที่ยังไม่เชื่อม (25 กันยายน 2026)
+
+Owner ขอรหัส Admin และยืนยันว่าใช้ LINE อีกบัญชีที่ยังไม่ลงทะเบียน. รับบัญชีนี้ในขอบเขตเดิมรวม3คน ไม่เพิ่มจำนวน: เก็บ OWNER/TECH ที่เชื่อมแล้วและกลุ่ม/Project allowlist เดิม เปลี่ยนเฉพาะช่องเดิมที่ตรวจว่าไม่มี line_accounts ผูกอยู่ หากมีบัญชีผูกครบหรือไม่เหลือช่องว่างให้หยุดการเปลี่ยน allowlist
+
+ใช้ enrollment เดิมรับเฉพาะคำสั่งส่วนตัวช่องแรกผ่านหน้า Owner. ปิด worker flag และหยุด deployment โดยตรวจ deploymentStopped=true ก่อนเปลี่ยน API เป็น LINE_ENABLED=false/LINE_ENROLLMENT_ENABLED=true. หน้ายังแสดง3คน1กลุ่ม แต่รอบรับเสริมใช้1คำสั่งเท่านั้น Owner/TECH/กลุ่มไม่ต้องสมัครซ้ำ. เมื่อได้1IDใหม่ที่ไม่ซ้ำ รวมกับ2IDที่เชื่อมอยู่เป็นexact3 แล้วเก็บตรงRailwayไม่ผ่านChat/Git/Log ปิดenrollmentก่อนเปิดbusiness และเปิดworkerหลังตรวจขอบเขตตรงกัน
+
+ความครบตรวจจากขอบเขตรวม ไม่ใช้ complete ของรอบรับเสริม1ช่องเป็นเกณฑ์. ลายเซ็น/expiry/one-use/Owner-onlyยังเดิม ไม่มีAPI/schema/code change. ห้ามรีสตาร์ท API หลังออกรหัสจนเก็บผลจากmemory. ไม่ส่งรหัสในแชทและไม่ออกlinkTokenแทนผู้ใช้; Adminต้องเชื่อมบัญชีด้วยnonceflowหลังเปิดbusiness การรับIDไม่เพิ่มสิทธิ์Project
+
+## D-033 — LINE link privacy และ queue retention (Accepted, 2026-09-25)
+
+Ownerอนุมัติ24ชั่วโมงตามคำถาม: เก็บเนื้อหาคิวเข้ารหัสไม่เกิน24ชั่วโมง ล้างเฉพาะpayloadหมดอายุ คงสถานะ/event identity/Audit ไม่ลบemployee/project/linkedaccount. Workerตรวจและล้างก่อนแต่ละรอบ; claimปฏิเสธeventอายุ24ชั่วโมงขึ้นไปทั้งinbox/outbox ไม่ส่งย้อนหลัง. สำเร็จยังล้างpayloadทันทีตามเดิม; ไม่มีmigrationใหม่. หากworkerหยุด ต้องsweepตอนstartupก่อนรับงานและตรวจbacklog; retentionเป็นTTLงานและactivecleanup ไม่ใช่การรับรองphysicaldeletionตรงเวลาเมื่อprovider/workerdown ห้ามเปิดทิ้งโดยไม่มีoperatorตรวจ
+
+ลิงก์CoreAppที่ส่งจากLINEใช้fragment #linkToken แทนquery เพื่อลดการนำtokenเข้าHTTP/edgeaccesslog; Webอ่านเก็บในmemoryและลบออกจากaddressbarทันที ไม่ใช้local/sessionstorage และไม่รับlegacyquerytoken. POSTยืนยันและLINEofficialaccountLinkredirectยังใช้protocolเดิมพร้อมno-referrer ไม่มีrequestbody/URLloggingในแอป. WorkerตรวจDBTLS/runtimeprivilegesเท่าAPIก่อนเริ่ม ทุกข้อทดสอบด้วยข้อมูลสมมติก่อนเปิดpilot
+
+## D-032 — Provider-agnostic ERP/Accounting boundary (Accepted, 2026-09-25)
+
+Ownerกำหนดให้ ASAS Core ไม่ผูก Business Logic กับ SMEMOVE/FlowAccount ต้องมี AccountingConnector และ InventoryConnector แยก integration boundary. FlowAccount OpenAPI เป็น candidate สำหรับ Expense/Accounting และ Inventory ในอนาคต; FlowAccount MCP เป็น optional AI interface ห้ามใช้เป็น System-of-Record integration path
+
+การเปลี่ยน Inventory Master ไป FlowAccount ต้องผ่าน Stock+Warehouse+Serial POC และ Reconciliation Gate ก่อน พร้อม Owner อนุมัติ cutoverแยก ตาม [ADR-013](adr/013-provider-agnostic-integrations.md). ใช้ชื่อกลาง External Actual Cost ใน target design แทนชื่อSMEMOVE โดยไม่แก้migrationเก่า. Supersedes D-021/Masterเดิมเฉพาะการผูกชื่อprovider ไม่เปลี่ยนCorefinancialpermissions/approval/ledger/หลักฐานต้นฉบับ และไม่อนุมัติintegration/ย้ายข้อมูล/เริ่มM2/M3/deploy/ค่าใช้จ่าย
+
+## D-031 — Enrollment รับรหัสอย่างเดียวได้ (24 กันยายน 2026)
+
+จากpilotจริงพบผู้ทดลองส่งbarecodeที่ตรงกับรหัสในเว็บ แต่ตัวรับต้องการprefix จึงได้Webhook200โดยยังไม่ลงทะเบียน รับbarecode32ตัวอักษรหรือคำสั่ง “ลงทะเบียนทดลอง <รหัส>” ที่มีwhitespaceคั่นได้; ไม่รับข้อความอื่นที่เพียงมีcodeแทรก ห้ามลดentropy/hash/expiry/one-use/source/distinct-user checks. ไม่มีschema/permission expansion นอกADR-012 ใช้OAเดิมต่อได้ ข้อผิดพลาดนี้ไม่ต้องสร้างOAใหม่
+
+## D-030 — Owner อนุมัติ bounded LINE Pilot (24 กันยายน 2026)
+
+Owner ตอบ “ได้เลยค่ะ” ต่อขอบเขต OA/กลุ่มทดสอบ Owner/Admin/TECH1คน ภายใน Railway Trial และยืนยันภายหลังว่าใช้ OA ที่แจ้งทดสอบและเปลี่ยน Webhook เดิมได้ การอนุมัตินี้ไม่ครอบคลุม Production/Merge/M2/เพิ่มค่าบริการ
+
+ตาม [ADR-012](adr/012-bounded-line-pilot.md) เพิ่ม exact Project allowlist กันข้อมูลจริงบน Staging ออกจาก LINE รวม OWNER, recheck source ก่อน process, worker fail-closed และ private signed enrollment 3คน1กลุ่มใน memory15นาที ไม่แก้ schema ไม่เก็บ raw webhook ไม่ใช้ wildcard ไม่มีสิทธิ์อัตโนมัติจาก enrollment ก่อนเปิดจริงต้องผ่าน CI/deploy/security และใช้ credentials ผ่าน Railway โดยตรงเท่านั้น
+
+
+## D-024 — Owner ให้เริ่ม Staging Alignment ตามแผน (2026-09-23)
+
+หลังส่งผล Local/CI และแผน Backup/maintenance/migration003/Deploy คู่กัน Owner ตอบ “เริ่ม process ต่อไปได้เลยค่ะ” ถือเป็นการอนุมัติให้ดำเนินการตามแผนภายใน Railway Trial เดิม โดยยังต้องมี recoverable private/encrypted backup ก่อน migration ไม่อนุมัติ Pro/ค่าใช้จ่ายเพิ่ม/ข้าม Backup/เปิด LINE/Merge/M2/M3/Production
+
+Provider Backup/PITR ถูกจำกัดไว้ที่ Pro จึงเตรียม manual encrypted backup ภายใน Trial แทน ต้องยืนยัน CLI authentication และการดาวน์โหลดที่ปลอดภัยก่อนใช้ข้อมูลจริง หากไม่สามารถทำได้ภายใต้ Trial ให้หยุดและรายงาน ไม่ลด Backup gate เพื่อ Deploy
+
+## D-023 — M1 Alignment และ seed 5 ประเภท (2026-09-23)
+
+Owner ยืนยัน “เริ่ม 5 ประเภทตามข้อความรอบนี้”: Installation, Service, Survey, POC, Other แทน seed 10 รายการใน Master เดิม Job Type คง 10 ประเภท ปรับ Master ให้ตรงคำตอบ
+
+Implementation ตาม [ADR-011](adr/011-m1-v3-alignment.md): append-only 003, stable type code+snapshot, nullable primary PM และคง legacy memberships, PM role+membership เท่านั้นที่ assign/revoke TECH ได้, Job-level TECH เห็นเฉพาะ Job เกี่ยวข้อง, atomic code counter+reservation รวมใน backup format2 ห้าม reuse รหัสเก่าไม่เปลี่ยน No M2/M3 tables/menus Expense D-022 ยังเป็น specification เท่านั้น ต้องรอ Owner อนุมัติ Staging migration/deploy
+
+## D-022 — PM assignment และ Expense self-approval (Accepted, 2026-09-23)
+
+Owner ยืนยันให้ PM เพิ่ม/ถอน TECH ได้เฉพาะ Project ที่ PM รับผิดชอบ ห้าม PM สร้างผู้ใช้ เปลี่ยน Role มอบสิทธิ์ OWNER/ADMIN หรือแต่งตั้ง PM คนอื่น ทุก action ต้องมี Audit
+
+ADMIN อนุมัติ Expense ได้ทั้งหมดในขอบเขต รวมรายการที่ ADMIN กรอกเอง เพื่อไม่ให้งานกองที่ OWNER; OWNER อนุมัติ Expense ได้ทั้งหมดรวมรายการที่ OWNER กรอกเอง PM/TECH อนุมัติไม่ได้ Expense ทุกช่องทางยังต้องผ่าน PENDING_REVIEW ก่อนเป็น Actual และเก็บ approver/time/audit
+
+ADMIN แก้ Expense หลัง Approved ได้ก่อน Financial Lock ผ่าน correction/revision พร้อมเหตุผลและ before/after หาก post Cost Ledger แล้วต้อง reversal ก่อน corrected posting ห้ามแก้ source/ledger เดิมแบบเงียบ เมื่อ Financial Status=LOCKED ต้องให้ OWNER unlock/สร้าง financial revision ก่อน
+
+## D-021 — Master Prompt v3.0 เป็น Canonical Product Specification (2026-09-23)
+
+Owner ส่งขอบเขต Product ใหม่เพื่อให้ Core เน้น Project/Job/Workforce/Work/OT/Expense/Evidence/Cost/Owner Financial/Payroll Summary และไม่สร้าง ERP ซ้ำ SMEMOVE รับเป็น Master v3.0 แทนชื่อร่าง v2.4 เพราะ Repository มี v2.5 แล้ว เอกสารใหม่มีอำนาจเหนือเอกสารเก่าเฉพาะส่วนที่ขัดกัน
+
+ยืนยัน Admin เห็น Amount/Evidence ระดับ Expense transaction แต่ไม่เห็น Project financial aggregate; PM ส่งและเห็น Expense ของตนแต่ไม่เป็น reviewer; Financial data แยก operational query/service/API/export; typed text เป็น primary expense input; Core private storage เป็น source of truth; SMEMOVE Actual/Commercial data เป็น manual reference; Cost Ledger immutable และ Payroll ห้ามบวก Project Cost ซ้ำ
+
+Foundation ปัจจุบันใช้ต่อได้ ไม่แก้ migration ที่ apply แล้ว เพิ่ม schema ด้วย append-only migration ตาม [Gap Analysis](MASTER_V3_GAP_ANALYSIS.md) Master change ไม่อนุญาตให้ข้าม M1 gate, Merge PR #2, เปิด LINE, เริ่ม M2 หรือ Deploy Production โดยอัตโนมัติ
+
+## D-020 — Project context และรอบทดสอบอัตโนมัติ (2026-09-23)
+
+Owner พบว่าไม่เห็นลูกค้าของโครงการและหา Job ไม่พบ พร้อมขอให้พัฒนา/ทดสอบให้เป็นชุดก่อนส่ง UAT API GET projects และ projects/:id เพิ่ม customer_name กับ site_name (nullable) เฉพาะ Project ที่ actor มีสิทธิ์ตาม scope เดิม ไม่เปิด customer/site directory ให้ TECH/PM และไม่ส่ง contact/เงิน/ข้อมูลโครงการอื่น LINE formatter คงเดิม ไม่เปลี่ยน schema
+
+Web แสดง customer/site ของโครงการ, รายการ Job และแบบฟอร์มเพิ่ม Job ชัดเจน เมื่อมี Job ให้เลือกทั้งโครงการหรือ Job ในการมอบหมาย; ไม่มี Job ต้องไม่มีช่องเลือก Job ใช้ scope Project ได้ทันที Job อยู่ใต้ Project ไม่สร้างเมนูหรือ module M2 ใหม่
+
+ชุดทดสอบสร้างบัญชีและ password สุ่มในฐานสมมติแยกในหน่วยความจำ ใช้ session/API จริงภายใน test process ไม่ขอ Owner login ทีละ role ไม่สร้างบัญชีหรือแก้รหัสบนฐาน Staging จริงโดยปริยาย ผล Local/CI แยกจาก Live/UAT และยังต้องพิสูจน์ provider/LINE ตาม gate เดิม Owner ตรวจเป็นรอบรวมหลังเตรียมรุ่นพร้อม
+
+## D-019 — ข้อมูลจริงปนใน Staging; แยกชุดซ้อม (2026-09-22)
+
+Owner ยืนยันว่ารายการที่สร้างบน Web มีข้อมูลจริงปนอยู่ จึงไม่เข้าเงื่อนไข Phase D/E เดิมที่อนุญาตเฉพาะข้อมูลสมมติ หยุดเฉพาะการ backup/copy/restore ชุดข้อมูลนี้ ไม่ใช้คำสั่งให้ดำเนินการต่อเป็นการอนุมัติใช้ข้อมูลจริง ไม่แก้ ลบ หรือถอนสิทธิ์ของรายการเดิม และไม่บันทึกชื่อ/รายละเอียดจริงลงเอกสาร
+
+งานที่เดินหน้าต่อได้: สถานะและ UAT ภาษาไทย, read-only health/security checks, การซ้อมด้วยฐานข้อมูลสมมติที่แยกชัดภายใน PostgreSQL/Trial เดิม โดยไม่ clone แถวข้อมูลจากฐานปัจจุบัน ไม่เพิ่มบริการเสียเงิน ไม่เปลี่ยน business schema/API/permission การสร้างฐานใหม่ต้องตรวจชื่อและความว่าง; ห้าม drop/overwrite เพื่อรันซ้ำ ผลซ้อมแยกไม่ใช่หลักฐานว่ามี backup ของข้อมูลจริงปัจจุบัน
+
+## D-018 — M1 Staging A–E and isolated database roles (2026-09-22)
+
+Owner authorizes only the existing Railway Trial for database security, API/Web, synthetic functional tests and isolated restore. LINE remains false even after those phases pass. No upgrade, paid service, PR #2 merge, M2 or production. Stop on credit exhaustion, exposure risk or required staging data deletion/overwrite.
+
+Provision runtime/migrator roles using a reviewed one-time transaction. Migrator owns schema/tables and is NOLOGIN, operated through the existing administrator's SET ROLE. Runtime starts NOLOGIN until Owner enters a credential privately; no schema ownership/DDL/TEMP or migration-history mutation; audit append/read only. Explicit table grants avoid granting future modules automatically. No business schema or HTTP contract change. See [database security procedure](M1_DATABASE_SECURITY.md).
+
+Browser credential entry requires Owner handoff. Verified TLS inside the Postgres console does not substitute for testing TLS from the deployed API. Preserve phase-level NOT_RUN until each live check is performed.
+
+Production-mode PostgreSQL now always verifies TLS. `DATABASE_SSL_CA` supplies a private provider's **public CA certificate**, otherwise the system trust store applies. Reject URL SSL parameters and disabled verification rather than letting pg replace the explicit SSL policy. Local non-production tests can use plaintext disposable databases. Startup/background logs emit fixed error categories; container CI uses a synthetic CA, not Railway credentials.
+
+API startup also rejects elevated role flags, membership, object ownership, database/schema CREATE/TEMP and writes to migration history or existing audit rows. The one-shot runtime verification uses the same checks plus schema checksum and pg_stat_ssl without opening HTTP. This prevents accidentally restoring the administrator URL to the API.
+
+## D-017 — Railway Trial และ runtime schema verification (2026-09-22)
+
+Accepted: Owner เลือก Railway ตัวเริ่มต้นและอนุญาตเริ่มกระบวนการ ใช้ Trial credits เท่านั้น ห้ามเปลี่ยนแพ็กเกจ/เพิ่มขนาด/ค่าใช้จ่ายเอง ต้องแจ้งและรออนุมัติใหม่ ไม่อนุญาต Production/Merge PR #2/M2
+
+Staging ใช้ Docker Web/API และ PostgreSQL ใหม่แยกจาก local M2. Production-mode API/worker ตรวจชื่อ/checksum/จำนวน migration ให้ตรง release ก่อนเริ่ม ไม่ apply DDL; operator รัน migrate/bootstrap ก่อนด้วย credential แยก Runtime ต้องใช้ role ที่ไม่มี CREATE/ALTER; ยังต้องทดสอบ role จริง Local ยัง auto-migrate ไม่มีการเปลี่ยน business schema/API/สิทธิ์ผู้ใช้
+
+ป้องกัน runtime ถือ credential ผู้ดูแลและชี้ไปฐาน M2/รุ่นอื่นโดยไม่รู้ตัว Docker CI ไม่ใช่ deployment/UAT; LINE ปิดจนผ่าน checklist
+
+## D-016 — เตรียม M1 Staging; พัก M2 (2026-09-22)
+
+Owner สั่งตรวจ Draft PR #2 และเตรียม Staging/Real LINE Pilot โดยไม่ Merge ไม่เริ่ม M2 ไม่ deploy หรือสมัครเสียเงินจนอนุมัติ แยกงาน M2 ที่ค้างใน local working tree ไม่รวม PR นี้ แผน [M1_STAGING_PLAN](M1_STAGING_PLAN.md) เสนอ Render paid และ Railway Trial/Hobby ยังไม่เลือกแทน Owner ไม่มีการเปลี่ยน schema/API/permission ของ M1 รอบนี้ เพิ่มเฉพาะ tests และเอกสาร เกณฑ์ UAT/HTTPS/provider restore/real LINE ต้องพิสูจน์จริง ไม่ใช้ผลจำลองแทน
+
+## D-014 — เริ่ม Milestone 1 Foundation (2026-09-21)
+
+Owner สั่ง “เริ่มได้เลยค่ะ” หลังข้อเสนอ M1 และยืนยันว่ามี OA/กลุ่มทดสอบแยกแล้ว Codex รับผิดชอบ codex/milestone-1-foundation ตาม [ADR-010](adr/010-foundation-implementation.md) อนุญาต implementation และ local tests ไม่ใช่การอนุมัติ production/ส่ง LINE จริงหรือเริ่ม M2 สถานะ D-013 ที่ยังไม่เริ่ม M1 เป็นประวัติก่อนคำสั่งนี้ Gate LINE จริงยังคงเดิม
+
 ## D-001 — สร้างระบบใหม่แยกจากแอปเก่า
 
 - สถานะ: Accepted
@@ -76,3 +207,25 @@ Owner ยืนยัน “ยืนยันผ่านทั้ง 7 งา�
 ## D-013 — Owner อนุญาต Merge M0
 
 วันที่2026-09-21 OwnerยืนยันรับMilestone0และสั่งMerge PR#1เข้าmain; merged a7e5c9e08a4d2c8185a12ef65f705a190c243a8d สำเร็จ ตรวจเอกสาร/prototypeครบและ45checks+ZIPผ่าน ยังไม่เริ่มMilestone1 ขอบเขตใน M1_FOUNDATION_PROPOSAL เป็นข้อเสนอเท่านั้น ไม่ได้เปลี่ยนGate MASTER หรืออนุญาตimplementation/deploy/LINEจริง
+
+## D-025 — อนุมัติ Backup/Recovery และ Deploy Alignment (Accepted, 2026-09-24)
+
+Owner อนุมัติสำรอง Staging ที่มีข้อมูลจริงแบบเข้ารหัสบน Railway เดิม ดาวน์โหลดเฉพาะไฟล์เข้ารหัสไป local AppData/ASAS-CoreApp/backups/m1-20260924 นอก OneDrive/Git และ restore ลงฐานใหม่ m1_recovery_20260924_alignment โดยไม่เขียนทับฐานเดิมและไม่ให้ runtime เข้าได้
+
+หลัง Backup/Recovery PASS Owner อนุมัติ 003_m1_alignment.sql, runtime grants สำหรับ types/counters/registry และ maintenance เพื่อ Deploy API/Web exact cda461dd3ca540f91b5857e245304aa2c1fe41f7 ไม่เปลี่ยนแผน ไม่เปิด LINE ไม่ Merge/Production การอนุมัตินี้ไม่ครอบคลุม destructive rollback หรือใช้ข้อมูลจริงเป็น test fixture ผลจริงดู M1_ALIGNMENT_STAGING_EVIDENCE.md
+
+## D-026 — LINE disabled ต้องปิดขั้นตอนใน Web/API (2026-09-24)
+
+เมื่อ LINE_ENABLED ไม่เท่ากับ true แบบตรงตัว API link/unlink/group binding code ต้องปฏิเสธ503ก่อนเขียนข้อมูล และ Web ไม่เสนอ controls ทั้งสามรายการ /api/me เพิ่ม line_enabled boolean สำหรับทุกบทบาทที่ login แล้ว ไม่เปิด operational LINE counters หรือ secret ให้ PM/TECH เดิม group-code ยังตรวจ manage ก่อน feature gate (PM/TECH403) ไม่มี schema change และไม่เปิด LINE จริง
+
+## D-027 — อนุมัติ Staging follow-up80c2868 (2026-09-24)
+
+หลังแจ้ง CI ผ่านและเสนอ Deploy API/Web80c2868ไม่มี migration ใหม่ Owner ตอบให้ทำ process ต่อ พร้อมรายงานว่า Job ยังไม่ปรากฏ จึง Deploy รุ่นที่ระบุภายใน Trial เดิมและตรวจผล ไม่เปลี่ยนแผน ไม่เปิดLINE/Merge/Production ไม่ถือคำอนุมัติ Deploy เป็นการผ่าน Owner UAT ของ Job
+
+## D-028 — Preserve deterministic seed Type IDs (2026-09-24)
+
+003 seeds use md5::uuid values valid in PostgreSQL but not necessarily RFC UUID version/variant bits. Accept canonical hexadecimal 8-4-4-4-12 identifiers only for Project/Job Type references and master type PATCH; keep all existing IDs, FK/existence/enabled checks, role/scope guards and strict UUID validators for other entities. Do not rewrite deployed migration or backfill IDs. This fixes Web dropdown validation400 while preserving historical references; regression uses all15 shipped types and actual form serializers.
+
+## D-029 — Owner ยืนยัน Job hotfix และขั้นถัดไป (2026-09-24)
+
+Owner ยืนยันเพิ่มJobได้หลังhotfixและให้ทำขั้นถัดไป จึงปิดissueJob validation400เป็นOwner UAT PASSเฉพาะflowนี้ เตรียมM1LINEPilot/readinessต่อได้ แต่ไม่ถือเป็นยืนยันทุกUATหรืออนุมัติข้ามข้อห้ามRealLINE/Merge/M2/Production. ต้องยืนยันขอบเขตOA/กลุ่ม/ผู้ร่วมทดลองและปิดtechnicalgatesก่อนlive ข้อมูลลับกรอกในsecretmanagerเท่านั้น
