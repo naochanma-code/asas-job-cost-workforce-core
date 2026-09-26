@@ -1,5 +1,9 @@
 # PROJECT STATUS — Milestone 1
 
+## 26 กันยายน 2026 — เตรียมชุดหลักฐานรับ M1
+
+จัด [M1_OWNER_ACCEPTANCE_PACKET](M1_OWNER_ACCEPTANCE_PACKET.md) เทียบข้อใน Master กับหลักฐาน Web/LINE/Staging/CI และข้อจำกัดที่ต้องให้ Owner เห็นในรอบเดียว. ไม่ใช้ผล CI ของ head แทน release บน Staging; C1 Web TECH ยัง NOT_RUN, flow Admin→TECH LINE ใน Project เดียวไม่พิสูจน์, C3–C5 live security ยัง PARTIAL/NOT_RUN, C2 เลื่อนตาม D-037 และ Daily Backup เลื่อนตามคำสั่ง Owner. PR #2 ยัง Draft/ไม่ Merge; ไม่มี deployment หรือข้อมูลจริงเปลี่ยนจากการจัดชุดนี้.
+
 ## 26 กันยายน 2026 — Owner เลื่อน C2 ไปหลัง M3
 
 ตาม D-037 Owner ให้ทดสอบ provider browser recovery หลังจบ M3 และก่อน Pilot (M8); อนุญาตให้พิจารณา Railway environment ใหม่เมื่อจำเป็นในรอบนั้น. C2 = `DEFERRED_BY_OWNER / NOT_RUN`, ไม่ใช่ PASS และไม่อยู่ใน UAT M1 รอบนี้. ก่อนรอบหลัง M3 ต้องตรวจ Trial limit/topology/ค่าใช้จ่ายและข้อมูลสมมติแยก; ไม่สร้าง environment/service ตอนนี้ ไม่คัดลอกข้อมูลจริงหรือเปลี่ยน Staging. การรับ M1 ต้องระบุข้อยกเว้นนี้ให้ Owner ทราบ และ PR #2 ยัง Draft/ไม่ Merge. งาน M1 ที่เหลือดำเนินต่อโดยเน้น Web TECH staging scope กับ LINE/security live checks ตามขอบเขตที่ได้รับอนุญาต.

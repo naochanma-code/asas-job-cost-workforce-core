@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 26 กันยายน 2026 — เตรียมชุดหลักฐานรับ M1
+
+เพิ่ม `M1_OWNER_ACCEPTANCE_PACKET.md` สรุปเกณฑ์ Master, หลักฐานแยก CODED/TESTED/DEPLOYED/UAT, รายการที่ยังต้อง Owner ตัดสิน และคำสั่งเลื่อน C2/Daily Backup. อัปเดต PROJECT_STATUS; ไม่มี code/schema/deploy/LINE/data/resource change.
+
 ## 26 กันยายน 2026 — ตรวจ role ของ Pilot A แบบอ่านอย่างเดียว
 
 Railway Postgres SELECT เฉพาะ code/role/boolean/count ยืนยัน Pilot LINE A ไม่มี Site/Job, เคยมี TECH assignment ระดับ Project, และ creator/assignment actor เป็น OWNER. จึงไม่อ้างว่า Admin Web fixture วันที่ 23 ก.ย. กับ TECH LINE Pilot A เป็น flow เดียว. ปรับ evidence/UAT/status/gates ให้ตรง; ไม่แก้ข้อมูล, assignment, LINE allowlist หรือบริการ.
