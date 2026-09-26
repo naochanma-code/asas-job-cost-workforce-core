@@ -4,6 +4,8 @@
 
 Local browser บนฐาน Restore สมมติผ่าน: session เดิมถูกปฏิเสธ, Login ใหม่ได้, TECH เห็นเฉพาะ Project/Job ที่มอบหมาย และ Logout ผ่าน. หลักฐานอยู่ใน [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md). สคริปต์และ [แผน UAT รอบรวม](M1_CONSOLIDATED_OWNER_UAT.md) เตรียมแล้ว. Staging browser recovery และ Web TECH บน Staging ยัง NOT_RUN; ไม่ใช้ Local PASS แทนสอง gate นี้. งานนี้ไม่เปลี่ยนแอป, schema, Staging, LINE หรือ Daily Backup.
 
+Commit `926f840` push ไป Draft PR #2 แล้ว; [CI run 36249633023](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36249633023) verify SUCCESS. Local typecheck PASS และ regression 51 PASS / 2 native-only SKIP / 0 FAIL. PR ยัง Draft ไม่ Merge; deployment ล่าสุดยัง `dc289ee`.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว
@@ -47,7 +49,7 @@ Foundation และ M1 Alignment เปิดใช้งานบน Staging �
 
 ## งานรอบต่อเนื่อง 26 กันยายน
 
-เพิ่ม automated Restore/Job isolation ผ่าน HTTP loopback ด้วยข้อมูลสมมติ: targeted test/typecheck PASS; full regression 51PASS/2NativeSKIP/0FAIL; [CI36242156339](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36242156339) commit e9700b6: NativePostgreSQL53PASS/0SKIP/0FAIL, embedded51PASS/2NativeSKIP, typecheck/productionbuild/API+Webcontainer/smoke/เอกสาร PASS. ไม่แทน browser Staging UAT. ขั้นตอน browser recovery อยู่ [checklist](M1_BROWSER_RECOVERY_CHECKLIST.md) PREPARED/NOT_RUN. ฝากคำถามเรื่องผู้รับผิดชอบ backup ประจำวันไว้ ยังไม่เปิดบริการหรือเพิ่มค่าใช้จ่าย
+เพิ่ม automated Restore/Job isolation ผ่าน HTTP loopback ด้วยข้อมูลสมมติ: targeted test/typecheck PASS; full regression 51PASS/2NativeSKIP/0FAIL; [CI36242156339](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36242156339) commit e9700b6: NativePostgreSQL53PASS/0SKIP/0FAIL, embedded51PASS/2NativeSKIP, typecheck/productionbuild/API+Webcontainer/smoke/เอกสาร PASS. ไม่แทน browser Staging UAT. ขั้นตอน browser recovery อยู่ [checklist](M1_BROWSER_RECOVERY_CHECKLIST.md); ต่อมา Local browser PASS แต่ provider ยัง NOT_RUN. ฝากคำถามเรื่องผู้รับผิดชอบ backup ประจำวันไว้ ยังไม่เปิดบริการหรือเพิ่มค่าใช้จ่าย
 
 รายการที่ยังต้องพิสูจน์และขอบเขตอยู่ใน [Remaining acceptance gates](M1_REMAINING_ACCEPTANCE_GATES.md). ไม่ให้ Owner ทำขั้นที่ผ่านแล้วซ้ำโดยไม่มีเหตุผล
 

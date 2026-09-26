@@ -2,6 +2,8 @@
 
 ## 26 กันยายน 2026 — Local browser recovery drill หลังงานถูกขัดจังหวะ
 
+Commit `926f840` (เอกสารและสคริปต์ drill): local `pnpm typecheck` PASS; `pnpm test` PASS 51 / SKIP 2 native-only / FAIL 0 หลังรันนอก Windows sandbox ที่ `os.userInfo()` ล้มก่อนเริ่มทดสอบ. [CI run 36249633023](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36249633023) บน PR #2: verify SUCCESS รวม typecheck, embedded/native test, production build, container build/smoke และ M0/R2/R4 docs checks. ไม่ได้ deploy จาก CI รอบนี้.
+
 ใช้ `scripts/local-browser-recovery-drill.mjs` กับฐาน PGlite สองชุดใน TEMP, API/Web บน loopback เท่านั้น และ LINE ทั้งสองโหมดปิด. Browser ใช้บัญชี TECH ที่สร้างใหม่ในชุดสมมติ; ไม่ใช้ข้อมูลหรือบัญชี Staging. ก่อน Restore: Login สำเร็จ, เห็น RECOVERY B เพียงโครงการเดียว, เห็น ASSIGNED JOB แต่ไม่เห็น HIDDEN SIBLING และไม่มีปุ่มจัดทีม. หลังสั่ง Restore ผ่าน helper loopback POST ได้ HTTP 200 พร้อมผล `SYNTHETIC RESTORE COMPLETE`; reload แล้ว session เดิมกลับหน้า Login, Login ใหม่สำเร็จ, scope โครงการ/Job ยังตรงเดิม และ Logout กลับหน้า Login. ปิด browser tabs และตรวจว่าไม่มี listener บนพอร์ต 3400–3402 หลังทดสอบ.
 
 ผล **TESTED_LOCAL_BROWSER = PASS** สำหรับ Login/Job scope/session หลัง Restore ด้วยข้อมูลสมมติ. ปุ่มส่งฟอร์ม Restore ใน in-app browser ไม่เปลี่ยนหน้า จึงใช้คำขอ POST ไปยัง helper loopback แทน; ข้อนี้เป็นข้อจำกัดของวิธี trigger ใน drill และไม่ได้ใช้เป็นหลักฐานว่ามีหน้า Restore ในผลิตภัณฑ์. **DEPLOYED_STAGING_BROWSER_RECOVERY = NOT_RUN** เพราะยังไม่มีปลายทาง recovery ที่แยกและอนุมัติ. ไม่อ้าง scheduled backup, PITR, LINE จริง หรือการกู้คืนข้อมูลจริงจากผลนี้.

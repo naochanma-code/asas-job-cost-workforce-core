@@ -4,6 +4,8 @@
 
 เพิ่ม `scripts/local-browser-recovery-drill.mjs` สำหรับฐานสมมติ/loopback และ `docs/M1_CONSOLIDATED_OWNER_UAT.md` เพื่อรวมขั้นที่ Owner ต้องทดลองเป็นรอบเดียว. Local browser ตรวจ Session เดิมหลัง Restore, Login ใหม่, TECH Job scope และ Logout ผ่าน; ดู [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md). Staging recovery ยัง NOT_RUN. ไม่มี app/schema/deployment change หรือการเปิด Daily Backup.
 
+ผลตรวจ commit `926f840`: local typecheck PASS, tests 51PASS/2NativeSKIP/0FAIL; [CI36249633023](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36249633023) verify SUCCESS ครบ test/build/container smoke/docs. PR #2 ยัง Draft และไม่ deploy เพิ่ม.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว
