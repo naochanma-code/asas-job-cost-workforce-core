@@ -1,5 +1,9 @@
 # M1 Test Evidence — 2026-09-21
 
+## 26 กันยายน 2026 — Staging health สำหรับเตรียม UAT
+
+เวลา 16:17 UTC ส่งคำขออ่านอย่างเดียวไปยัง Web Staging: `HEAD /` ได้ HTTP 200 และ `GET /api/health` ได้ `{"status":"ok","database":"ready"}`. เป็นหลักฐานว่า Web endpoint และ API/ฐานตอบ health ณ เวลาตรวจเท่านั้น; ไม่ยืนยัน TECH session, LINE provider, release SHA หรือ UAT PASS. ไม่มี login หรือการแก้ข้อมูล.
+
 ## 26 กันยายน 2026 — Synthetic Admin → TECH LINE ใน Project เดียว
 
 `tests/m1-admin-line-flow.test.ts` ใช้ฐานในหน่วยความจำและ fake LINE transport: Admin สร้าง Customer/Project ที่ไม่มี Site และ Job, มอบหมาย TECH, audit ระบุ actor เป็น Admin; TECH ที่ผูก LINE fixture ส่ง “งานของฉัน” แล้ว worker ตอบเฉพาะ Project ที่ได้รับมอบหมาย ไม่แสดง Project อีกอันที่ไม่ได้รับสิทธิ์ และ outbox เป็น SENT. Targeted test 1/1 PASS และ typecheck PASS. ผลนี้เป็น `TESTED_LOCAL_SYNTHETIC` สำหรับเส้นทางโค้ดใน fixture เดียว ไม่ใช่ `UAT_PASSED` บน LINE provider และไม่เชื่อม Admin Web fixture กับ Pilot A ที่มีอยู่.

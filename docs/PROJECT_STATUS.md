@@ -1,5 +1,9 @@
 # PROJECT STATUS — Milestone 1
 
+## 26 กันยายน 2026 — ตรวจ Staging health แบบอ่านอย่างเดียว
+
+16:17 UTC Web Staging `HEAD /` = HTTP 200; `GET /api/health` = `status=ok, database=ready`. ระบบตอบ ณ เวลาตรวจ แต่ C1 TECH Web และ UAT LINE ยังไม่ผ่านจาก health check นี้. ไม่ login/แก้ข้อมูล/deploy; ตรวจซ้ำก่อน UAT รอบรวม.
+
 ## 26 กันยายน 2026 — เพิ่ม positive synthetic Admin → TECH LINE flow
 
 เพิ่ม `tests/m1-admin-line-flow.test.ts` ด้วยฐาน memory/fake transport: Admin สร้าง Project ไม่มี Site/Job, assign TECH, ตรวจ actor ใน audit และ LINE worker ตอบเฉพาะ Project ที่มอบหมายใน fixture เดียว. Targeted 1/1 PASS, typecheck PASS. สถานะ `TESTED_LOCAL_SYNTHETIC`; ไม่แทน live LINE UAT หรือปิดข้อจำกัด Admin Web กับ Pilot A ที่เป็นคนละ fixture. ไม่แตะ Staging, LINE provider หรือข้อมูลจริง.

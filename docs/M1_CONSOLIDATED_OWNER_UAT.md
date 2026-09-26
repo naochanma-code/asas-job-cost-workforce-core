@@ -23,6 +23,8 @@ C2 เป็นการทดสอบ provider browser recovery เพิ่�
 
 ## Codex ต้องเตรียมก่อนนัด Owner
 
+Health snapshot 26 ก.ย. 16:17 UTC: Web Staging `HEAD /` HTTP 200 และ `GET /api/health` ตอบ `status=ok, database=ready`. ตรวจซ้ำใกล้รอบ UAT เพราะผลนี้เป็นสถานะชั่วขณะ ไม่พิสูจน์ release SHA หรือ TECH/LINE flow.
+
 | รายการ | เกณฑ์พร้อม และสิ่งที่ยังห้ามอ้าง |
 | --- | --- |
 | Release/ระบบ | ระบุ SHA ของ Web/API/worker และ CI ที่รองรับจริง ตรวจ health, flags/allowlists, queue/overdue payload และ Trial ตามขอบเขตเดิม ไม่ deploy/เพิ่มบริการเพื่อเตรียมรอบโดยอัตโนมัติ |

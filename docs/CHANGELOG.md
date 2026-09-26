@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 26 กันยายน 2026 — บันทึก Staging health ก่อน UAT
+
+Web Staging ตอบ HEAD 200 และ API health ตอบ status ok/database ready เวลา 16:17 UTC. เพิ่ม snapshot ใน evidence/UAT/status; ไม่ใช้แทน TECH/LINE UAT และไม่มี code, deploy หรือข้อมูลจริงเปลี่ยน.
+
 ## 26 กันยายน 2026 — ทดสอบ synthetic Admin → TECH LINE ใน Project เดียว
 
 เพิ่ม regression test สำหรับ Admin สร้าง Project ไม่มี Site/Job และ assign TECH แล้ว LINE worker จำลองตอบเฉพาะ Project นั้น พร้อม audit actor และ outbox SENT. Targeted test/typecheck ผ่าน; ไม่เปลี่ยนแอป, schema, Staging, LINE จริงหรือข้อมูลจริง. บันทึกผลแยกจาก live UAT ใน evidence/status/acceptance packet/remaining gates.
