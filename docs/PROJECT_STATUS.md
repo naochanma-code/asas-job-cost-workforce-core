@@ -1,5 +1,9 @@
 # PROJECT STATUS — Milestone 1
 
+## 26 กันยายน 2026 — ปิด Local browser recovery drill
+
+Local browser บนฐาน Restore สมมติผ่าน: session เดิมถูกปฏิเสธ, Login ใหม่ได้, TECH เห็นเฉพาะ Project/Job ที่มอบหมาย และ Logout ผ่าน. หลักฐานอยู่ใน [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md). สคริปต์และ [แผน UAT รอบรวม](M1_CONSOLIDATED_OWNER_UAT.md) เตรียมแล้ว. Staging browser recovery และ Web TECH บน Staging ยัง NOT_RUN; ไม่ใช้ Local PASS แทนสอง gate นี้. งานนี้ไม่เปลี่ยนแอป, schema, Staging, LINE หรือ Daily Backup.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว
@@ -32,7 +36,7 @@ Foundation และ M1 Alignment เปิดใช้งานบน Staging �
 | R2-05 ส่งคำสั่งเดิมซ้ำ | PASS เฉพาะไม่เปลี่ยน mapping/audit; ไม่แยกพิสูจน์ single-use จาก expiry |
 | R2-07 รหัสหมดอายุ | PARTIAL — Ownerแจ้งส่งซ้ำแล้ว; ตรวจ26ก.ย.พบรหัส B หมดอายุ กลุ่มยังA/audit1. ไม่มีหลักฐานระบุเวลา event ของคำสั่งนั้น จึงยังไม่อ้าง isolated expiry UAT PASS |
 | Queue retention24h | PASS ณ26ก.ย.: overdue inbox/outbox0, inboxDONE33, outboxSENT28/DEAD1เดิม; ไม่มี pending. ไม่ได้อ่าน payload |
-| Backup/Restore | manual encrypted backup/isolated recovery PASS เดิม; synthetic NativeCI restore-login PASS; Staging browser restore-login ยัง NOT_RUN |
+| Backup/Restore | manual encrypted backup/isolated recovery PASS เดิม; synthetic NativeCI และ Local browser restore-login PASS; Staging browser restore-login ยัง NOT_RUN |
 | Owner acceptance ทั้ง M1 / Merge | NOT_AUTHORIZED |
 
 ## ผลตรวจล่าสุด
@@ -50,7 +54,7 @@ Foundation และ M1 Alignment เปิดใช้งานบน Staging �
 ## งานถัดไปของ Codex
 
 1. ตรวจ Web TECH เห็นเฉพาะ Job ที่ได้รับมอบหมาย โดยใช้บัญชีสมมติและไม่แก้บัญชีจริง
-2. เตรียมขั้นตอน browser restore/login บนฐานสมมติแยก ไม่เขียนทับ Staging หรือใช้ข้อมูลจริงเพิ่ม
+2. เตรียมปลายทาง recovery บน provider ที่เป็นฐานสมมติแยกสำหรับ browser restore/login; Local browser ผ่านแล้ว แต่ยังไม่เขียนทับ Staging หรือใช้ข้อมูลจริงเพิ่ม
 3. จัดรายการ live checks ที่ยังไม่รัน ได้แก่ unlink/nonce replay-expiry/wrong actor และข้อจำกัดหนึ่งกลุ่ม/TECHหนึ่งคน ให้ Owner เห็นก่อนรับ M1
 4. ตรวจแผนสำรองข้อมูลประจำวัน ผู้รับผิดชอบ ระยะเก็บ และ restore. PITR เป็น production-readiness requirement ตาม runbook ไม่อ้างว่าเปิดแล้วหรือซื้อเพิ่มโดยอัตโนมัติ
 

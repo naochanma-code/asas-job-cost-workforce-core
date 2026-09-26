@@ -1,5 +1,11 @@
 # M1 Test Evidence — 2026-09-21
 
+## 26 กันยายน 2026 — Local browser recovery drill หลังงานถูกขัดจังหวะ
+
+ใช้ `scripts/local-browser-recovery-drill.mjs` กับฐาน PGlite สองชุดใน TEMP, API/Web บน loopback เท่านั้น และ LINE ทั้งสองโหมดปิด. Browser ใช้บัญชี TECH ที่สร้างใหม่ในชุดสมมติ; ไม่ใช้ข้อมูลหรือบัญชี Staging. ก่อน Restore: Login สำเร็จ, เห็น RECOVERY B เพียงโครงการเดียว, เห็น ASSIGNED JOB แต่ไม่เห็น HIDDEN SIBLING และไม่มีปุ่มจัดทีม. หลังสั่ง Restore ผ่าน helper loopback POST ได้ HTTP 200 พร้อมผล `SYNTHETIC RESTORE COMPLETE`; reload แล้ว session เดิมกลับหน้า Login, Login ใหม่สำเร็จ, scope โครงการ/Job ยังตรงเดิม และ Logout กลับหน้า Login. ปิด browser tabs และตรวจว่าไม่มี listener บนพอร์ต 3400–3402 หลังทดสอบ.
+
+ผล **TESTED_LOCAL_BROWSER = PASS** สำหรับ Login/Job scope/session หลัง Restore ด้วยข้อมูลสมมติ. ปุ่มส่งฟอร์ม Restore ใน in-app browser ไม่เปลี่ยนหน้า จึงใช้คำขอ POST ไปยัง helper loopback แทน; ข้อนี้เป็นข้อจำกัดของวิธี trigger ใน drill และไม่ได้ใช้เป็นหลักฐานว่ามีหน้า Restore ในผลิตภัณฑ์. **DEPLOYED_STAGING_BROWSER_RECOVERY = NOT_RUN** เพราะยังไม่มีปลายทาง recovery ที่แยกและอนุมัติ. ไม่อ้าง scheduled backup, PITR, LINE จริง หรือการกู้คืนข้อมูลจริงจากผลนี้.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว
