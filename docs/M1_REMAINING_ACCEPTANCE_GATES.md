@@ -15,3 +15,5 @@
 | M1 acceptance | ผลUATบางflowผ่าน | Ownerรับข้อจำกัด/ผลครบตามDoDและยืนยันMerge | ยังไม่MergePR2หรือเริ่มM2 |
 
 อย่าแก้ gate เป็นPASSจากการมีหน้า/API/testfileหรือจากคำตอบข้อความทั่วไปเพียงอย่างเดียว. สรุปแยก CODED / TESTED / DEPLOYED / UAT_PASSED เสมอ. ห้ามลบbindingจริง สลับroleจริง หรือกู้คืนทับStagingเพื่อทำให้testครบ
+
+26กันยายน: DailyBackupถูกOwnerเลื่อนจนงานใกล้เสร็จ (DEFERRED_BY_OWNER/NOT_ENABLED) ไม่ถือPASSและไม่บล็อกงานพัฒนาปัจจุบัน; RestoreเฉพาะOWNERยังคงเดิม

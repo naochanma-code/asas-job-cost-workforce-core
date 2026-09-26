@@ -86,3 +86,6 @@ Worker sweeps encrypted queuepayload atstartup/eachloop forinboxreceived_at olde
 
 Ownerกำหนดbackupทุกวัน. ข้อเสนอRailwayDailyทุก24ชั่วโมง/retention6วันยังไม่เปิด รอยืนยันค่าstorageที่ใช้Trialcredit. Restoreให้เฉพาะOwnerสั่ง; provideraccessและoperatorcredentialsต้องจำกัดต่างหากจากCoreApproles. ก่อนRestoreตรวจsource/target/schema/backupintegrityและOwnerapproval ไม่เขียนทับStagingโดยอัตโนมัติ. บันทึกผลและauditไม่บันทึกsecrets. Scheduledbackupต้องตรวจว่ามีรอบสำเร็จจริงก่อนPASS
 
+
+26กันยายน Ownerเลื่อนการเปิดDailyBackupจนใกล้เสร็จ: DEFERRED_BY_OWNER/NOT_ENABLED. ไม่เปิดscheduleตอนนี้; RestoreเฉพาะOwnerยังเป็นrequirementตามD-035
+

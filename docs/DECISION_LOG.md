@@ -1,5 +1,12 @@
 # DECISION LOG
 
+## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
+
+Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว
+
+การเลื่อนนี้ไม่เลื่อนการทดสอบRestoreด้วยข้อมูลสมมติหรืออนุญาตให้Restoreทับข้อมูลจริง. งานM1อื่นทำต่อได้ตามscopeเดิม
+
+
 ## D-035 — Daily Backup และ Restore เฉพาะ OWNER (Accepted requirement, 26 กันยายน 2026)
 
 Ownerกำหนดให้สำรองข้อมูลอัตโนมัติทุกวัน และให้เฉพาะOWNERสั่งRestore. ADMIN/PM/TECHไม่มีสิทธิ์สั่งหรืออนุมัติRestore. บัญชีอัตโนมัติสำรองต้องมีสิทธิ์เท่าที่จำเป็นและไม่มีสิทธิ์Restore. เก็บผู้สั่ง เวลา backup/source/target ผลและauditโดยไม่เก็บcredentialsหรือเนื้อหาฐานลงlog
