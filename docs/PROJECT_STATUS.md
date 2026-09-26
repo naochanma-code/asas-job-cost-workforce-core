@@ -4,6 +4,8 @@
 
 ตาม D-037 Owner ให้ทดสอบ provider browser recovery หลังจบ M3 และก่อน Pilot (M8); อนุญาตให้พิจารณา Railway environment ใหม่เมื่อจำเป็นในรอบนั้น. C2 = `DEFERRED_BY_OWNER / NOT_RUN`, ไม่ใช่ PASS และไม่อยู่ใน UAT M1 รอบนี้. ก่อนรอบหลัง M3 ต้องตรวจ Trial limit/topology/ค่าใช้จ่ายและข้อมูลสมมติแยก; ไม่สร้าง environment/service ตอนนี้ ไม่คัดลอกข้อมูลจริงหรือเปลี่ยน Staging. การรับ M1 ต้องระบุข้อยกเว้นนี้ให้ Owner ทราบ และ PR #2 ยัง Draft/ไม่ Merge. งาน M1 ที่เหลือดำเนินต่อโดยเน้น Web TECH staging scope กับ LINE/security live checks ตามขอบเขตที่ได้รับอนุญาต.
 
+ตรวจหลักฐาน Gate M1 ร่วมกับ subagent: Admin Web สร้าง/มอบหมาย Project A ไม่มี Site/Job และสร้าง Job B ผ่าน; TECH เห็น PILOT LINE A ไม่มี Site/Job ผ่านจริง แต่เป็นคนละ fixture/date. ยังไม่อ้างว่า flow Admin-create/assign → TECH-LINE ผ่านใน Project เดียว. ให้ตรวจ creator/assignment/audit ของ Pilot Project แบบอ่านอย่างเดียวก่อนกำหนด UAT เพิ่ม; ดู [Remaining acceptance gates](M1_REMAINING_ACCEPTANCE_GATES.md). ห้ามขยาย LINE allowlist เพื่อเติมหลักฐานเอง.
+
 ## 26 กันยายน 2026 — ทบทวนขอบเขตการทดสอบ M1
 
 ตรวจ `MASTER_PROMPT.md` อีกครั้ง: Gate M1 ระบุ ADMIN สร้าง Project/Job และ Assign Team, TECH เห็นงานจริงใน LINE, และ Project ที่ไม่มี Site/Job ทำ flow ได้ครบ. Provider Restore อยู่ใน Testing Strategy รวม และ Backup/Restore ปรากฏชัดใน Gate Pilot (M8). จัด [แผน UAT รอบรวม](M1_CONSOLIDATED_OWNER_UAT.md) กับ [รายการค้าง](M1_REMAINING_ACCEPTANCE_GATES.md) ให้แยกข้อความ Gate นี้ออกจากการตรวจความมั่นใจเพิ่ม. ณ ตอนทบทวน Owner ยังไม่ได้ตอบเรื่องการเลื่อน; คำตอบต่อมาบันทึกใน D-037 ข้างบน.
@@ -14,13 +16,13 @@ Local browser บนฐาน Restore สมมติผ่าน: session เ�
 
 Commit `926f840` push ไป Draft PR #2 แล้ว; [CI run 36249633023](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36249633023) verify SUCCESS. Local typecheck PASS และ regression 51 PASS / 2 native-only SKIP / 0 FAIL. PR ยัง Draft ไม่ Merge; deployment ล่าสุดยัง `dc289ee`.
 
-ตรวจ Railway แบบอ่านอย่างเดียวหลัง Owner ตอบว่าไม่แน่ใจเรื่อง resource: มี environment `staging` เดียว, Web/API/worker/Postgres ออนไลน์; ไม่มี Web/API recovery แยก. ฐาน recovery เดิมมีสำเนาข้อมูลจริง ไม่ใช้ทดสอบสมมติ. Trial เหลือประมาณ USD 4.54 / 26 วัน ณ เวลาตรวจ. จัด [ข้อเสนอปลายทาง recovery](M1_PROVIDER_RECOVERY_PROPOSAL.md); C2 ยัง `NOT_READY / NOT_RUN` และไม่ได้สร้างบริการหรือแก้ข้อมูล.
+ประวัติ ณ เวลาตรวจ resource ก่อน D-037: มี environment `staging` เดียว, Web/API/worker/Postgres ออนไลน์; ไม่มี Web/API recovery แยก. ฐาน recovery เดิมมีสำเนาข้อมูลจริง ไม่ใช้ทดสอบสมมติ. Trial เหลือประมาณ USD 4.54 / 26 วัน ณ เวลาตรวจ. จัด [ข้อเสนอปลายทาง recovery](M1_PROVIDER_RECOVERY_PROPOSAL.md); C2 ขณะนั้น `NOT_READY / NOT_RUN` และไม่ได้สร้างบริการหรือแก้ข้อมูล. สถานะปัจจุบันอยู่หัว D-037 ด้านบน.
 
 เมนูสร้าง Railway environment ค่าเริ่มต้นเป็น Duplicate ซึ่งคัดลอกบริการและ variables ของ staging; ตรวจพบตัวเลือก Empty แล้วปิด dialog โดยไม่ได้สร้าง. ต่อมา Owner ปฏิเสธการสร้าง environment เพิ่ม จึงไม่ดำเนินเส้นทางนี้.
 
 Owner ตอบว่า **ไม่สร้าง environment เพิ่ม** จึงหยุดทางเลือกนั้นตาม D-036. Trial จำกัด 5 services/project โดย staging ใช้ 4; เสนอทางเลือก service ทดสอบตัวเดียวพร้อมฐานสมมติแยกใน Postgres เดิมตาม [M1_PROVIDER_RECOVERY_PROPOSAL](M1_PROVIDER_RECOVERY_PROPOSAL.md), ยังไม่ provision/ใช้เครดิต. C2 ยัง NOT_RUN.
 
-เตรียม `Dockerfile.recovery` และ `recovery-server.mjs` แบบ fail-closed สำหรับ Web+API ใน service เดียวแล้ว; test guard local 1PASS และ typecheck PASS. สถานะ `CODED/TESTED_LOCAL`, `NOT_DEPLOYED`; ต้องรอ CI และการอนุมัติ resource/Trial credit ก่อนใช้บน Railway.
+ประวัติ ณ ตอนเตรียม runtime: `Dockerfile.recovery` และ `recovery-server.mjs` แบบ fail-closed สำหรับ Web+API ใน service เดียว; test guard local 1PASS และ typecheck PASS. ขณะนั้น `CODED/TESTED_LOCAL`, `NOT_DEPLOYED` และ CI ยังรอผล; ผล CI ที่ผ่านแล้วบันทึกด้านล่าง. ตาม D-037 ไม่ใช้ resource นี้ใน M1.
 
 Review พบและแก้ launcher exit code กับเพิ่มการตรวจ private host/role/date ของฐานสมมติ; CI guard ต้องยืนยันข้อความปฏิเสธก่อน DB access. ACL ของ role และ positive startup/shutdown บน provider ยัง NOT_RUN; ไม่อ้างว่าเพียงชื่อฐานทำให้แยกจาก Pilot ได้.
 

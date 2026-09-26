@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 26 กันยายน 2026 — ตรวจความครบของหลักฐาน Gate M1
+
+subagent ตรวจ read-only พบว่า Admin Web create/assign และ TECH LINE no-Site/no-Job ผ่านคนละ fixture จึงเพิ่มรายการตรวจความเชื่อมโยงจาก audit/creator ก่อนอ้าง flow เดียวหรือขอ UAT ซ้ำ. ปรับ PROJECT_STATUS ให้ข้อความ C2/CI ในประวัติไม่สับสนกับสถานะล่าสุด D-037. ไม่เปลี่ยน code, Staging, LINE scope หรือข้อมูลจริง.
+
 ## 26 กันยายน 2026 — Owner เลื่อน Railway recovery หลัง M3
 
 บันทึก D-037: C2 provider browser recovery เป็น `DEFERRED_BY_OWNER / NOT_RUN` จนหลัง M3 และก่อน Pilot. Owner เปิดทางให้ใช้ environment ใหม่เมื่อจำเป็นในรอบนั้น แต่ยังไม่สร้าง resource ตอนนี้. ปรับ UAT/remaining gates/status ให้ M1 ระบุข้อยกเว้นชัด ไม่ใช้ local/CI เป็น provider PASS; PR #2 ยัง Draft ไม่ Merge/Deploy.
