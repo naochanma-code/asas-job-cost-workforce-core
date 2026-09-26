@@ -1,5 +1,14 @@
 # M1 Test Evidence — 2026-09-21
 
+## 26 กันยายน 2026 — เพิ่มหลักฐาน Restore + Job isolation ผ่าน HTTP
+
+เพิ่ม tests/job-restore-http.test.ts: ข้อมูลสมมติสองโครงการ/สองงานย่อย มอบหมาย TECH เพียงงานเดียว สำรอง/Restore/ปิดและเปิดฐานใหม่ แล้วทดสอบผ่าน HTTP loopback จริง: Sessionเดิม401, Loginใหม่200, เห็นโครงการเดียวและJobที่มอบหมายเท่านั้น, อีกโครงการ404, revokeมีผลโดยไม่Loginใหม่, logoutแล้ว401. Local targeted PASS และ typecheck PASS; Local regression 51PASS/2NativeSKIP/0FAIL ส่วน Native CI รอผลหลังpush
+
+ใช้ TEMP directory นอกGit/OneDrive และ TEST_DATABASE_URL เฉพาะฐาน CI ที่ทิ้งได้ ไม่อ่าน DATABASE_URL ของStaging. ไม่ใช่browser/HTTPS/provider recovery evidence. ไม่มีapp/schema/deployหรือข้อมูลStagingเปลี่ยน. Subagentเตรียม M1_BROWSER_RECOVERY_CHECKLIST.md แบบ PREPARED/NOT_RUN แยกlocal/Stagingชัดเจน
+
+คำถามที่ฝากOwner: ผู้รับผิดชอบตรวจbackupประจำวัน ยังไม่เลือก/เปิดบริการเสียเงิน. ยังไม่Merge/M2/Production
+
+
 ## 26 กันยายน 2026 — ตรวจต่อหลัง usage limit / จัดสถานะ M1 ใหม่
 
 Ownerแจ้งส่งคำสั่งซ้ำแล้วแต่รอบก่อน remote check ไม่ได้รันเพราะ approval usage limit. ครั้งนี้12:22:13Zตรวจได้: code B expiry25ก.ย.14:40:07.715Z expired=true, bindingยังAหนึ่งรายการ, auditรวมA/Bคง1. R2-07 PARTIAL ไม่อ้าง isolated expiry PASS เพราะไม่มีเวลาของeventนั้นและกลุ่มมีoverwrite guard. ไม่ขอให้Ownerทำคำสั่งเดิมซ้ำ

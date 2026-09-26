@@ -29,6 +29,10 @@ Foundation และ M1 Alignment เปิดใช้งานบน Staging �
 
 กลุ่มที่ผูกอยู่แล้วมีการป้องกันเขียนทับอีกชั้น จึงไม่ใช้ผล mapping คงเดิมพิสูจน์ expiry เพียงอย่างเดียว. ไม่อ่านรหัสหรือข้อความย้อนหลังเพื่อสร้างหลักฐานเพิ่ม. แยก automated security tests ที่ผ่านออกจาก live provider UAT ที่ยังไม่ครบ
 
+## งานรอบต่อเนื่อง 26 กันยายน
+
+เพิ่ม automated Restore/Job isolation ผ่าน HTTP loopback ด้วยข้อมูลสมมติ: targeted test/typecheck PASS; full regression 51PASS/2NativeSKIP/0FAIL; Native CI รอผล. ไม่แทน browser Staging UAT. ขั้นตอน browser recovery อยู่ [checklist](M1_BROWSER_RECOVERY_CHECKLIST.md) PREPARED/NOT_RUN. ฝากคำถามเรื่องผู้รับผิดชอบ backup ประจำวันไว้ ยังไม่เปิดบริการหรือเพิ่มค่าใช้จ่าย
+
 ## งานถัดไปของ Codex
 
 1. ตรวจ Web TECH เห็นเฉพาะ Job ที่ได้รับมอบหมาย โดยใช้บัญชีสมมติและไม่แก้บัญชีจริง
