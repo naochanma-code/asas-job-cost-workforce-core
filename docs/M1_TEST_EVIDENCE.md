@@ -1,5 +1,9 @@
 # M1 Test Evidence — 2026-09-21
 
+## 26 กันยายน 2026 — ตรวจ Project ที่ Owner เคยรายงานว่า Job ไม่แสดง
+
+เวลา 15:52 UTC ตรวจ Railway Postgres UI ด้วย SELECT แบบอ่านอย่างเดียวที่จำกัด `PRJ-3511fa71` และคืนเพียง code/count: พบ `jobs=1` และ `JOB_CREATED audit=1`. จึงมีหลักฐานว่าอย่างน้อยหนึ่ง Job ถูกบันทึกสำเร็จใน Project นี้แล้ว ต่างจากการตรวจครั้งก่อนที่ count/audit เป็น 0. ไม่อ่านชื่อ Job/ผู้สร้าง/ข้อมูลธุรกิจ ไม่แก้ข้อมูล. ผลฐานนี้ **ไม่ยืนยัน** ว่าหน้า Owner แสดง Job ถูกต้องหลัง refresh และไม่ระบุสาเหตุที่การกดครั้งแรกไม่เกิดแถว; คง UI verification แยกจาก backend persistence.
+
 ## 26 กันยายน 2026 — ตรวจความเชื่อมโยง Gate M1 บน Pilot แบบอ่านอย่างเดียว
 
 เวลา 15:38 UTC ตรวจ Railway Postgres UI ด้วย SELECT เฉพาะ Project code/role/boolean/count ไม่อ่านชื่อผู้ใช้ รายละเอียดงาน secret หรือ payload และไม่แก้ข้อมูล. `PRJ-2609-014` (PILOT LINE A) มี creator role `OWNER`, `site_id IS NULL=true`, ไม่มี Job=true, มี assignment ระดับ Project ให้ TECH 1 รายการในประวัติ และ assignment creator role `OWNER`. ผลนี้สอดคล้องกับ TECH เห็น A ผ่าน LINE จริงตามรายงาน Owner แต่ **ไม่ใช่** หลักฐานว่า Admin สร้าง/มอบหมาย Project เดียวกัน. Admin Web create/assign/Job ที่ผ่านวันที่ 23 ก.ย. เป็น fixture อีกชุด. ยังไม่อ้าง end-to-end Admin→TECH LINE ใน Project เดียว; ไม่เปลี่ยน allowlist/assignment หรือขอผู้ทดลองทำซ้ำ.

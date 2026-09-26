@@ -1,5 +1,9 @@
 # PROJECT STATUS — Milestone 1
 
+## 26 กันยายน 2026 — Project Job ที่เคยไม่แสดงมีแถวในฐานแล้ว
+
+SELECT read-only บน Railway Postgres เวลา 15:52 UTC ของ `PRJ-3511fa71` คืน `jobs=1` และ `JOB_CREATED audit=1`, เทียบการตรวจครั้งก่อน 0/0. มีหลักฐาน backend persistence อย่างน้อยหนึ่งครั้งแล้ว แต่ยังไม่ได้เห็นหน้าจอ Owner หลัง refresh จึงไม่อ้างว่า UI display ผ่านหรือทราบสาเหตุการกดครั้งแรก. เพิ่มขั้นดูอย่างเดียวใน [ชุดหลักฐานรับ M1](M1_OWNER_ACCEPTANCE_PACKET.md); ไม่สร้าง Job ซ้ำ ไม่แก้ข้อมูลจริง.
+
 ## 26 กันยายน 2026 — เตรียมชุดหลักฐานรับ M1
 
 จัด [M1_OWNER_ACCEPTANCE_PACKET](M1_OWNER_ACCEPTANCE_PACKET.md) เทียบข้อใน Master กับหลักฐาน Web/LINE/Staging/CI และข้อจำกัดที่ต้องให้ Owner เห็นในรอบเดียว. ไม่ใช้ผล CI ของ head แทน release บน Staging; C1 Web TECH ยัง NOT_RUN, flow Admin→TECH LINE ใน Project เดียวไม่พิสูจน์, C3–C5 live security ยัง PARTIAL/NOT_RUN, C2 เลื่อนตาม D-037 และ Daily Backup เลื่อนตามคำสั่ง Owner. PR #2 ยัง Draft/ไม่ Merge; ไม่มี deployment หรือข้อมูลจริงเปลี่ยนจากการจัดชุดนี้.

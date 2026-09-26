@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 26 กันยายน 2026 — ตรวจ Job ใน Project ที่ Owner แจ้ง
+
+Railway SELECT แบบอ่านอย่างเดียวเฉพาะ `PRJ-3511fa71` พบ Job 1 และ JOB_CREATED audit 1 เทียบครั้งก่อน 0/0. บันทึก backend persistence แยกจาก UI display ที่ยังไม่ยืนยัน; เพิ่มขั้น Owner refresh ดูรายการโดยไม่สร้างซ้ำใน acceptance packet. ไม่มีข้อมูลจริงเปลี่ยน.
+
 ## 26 กันยายน 2026 — เตรียมชุดหลักฐานรับ M1
 
 เพิ่ม `M1_OWNER_ACCEPTANCE_PACKET.md` สรุปเกณฑ์ Master, หลักฐานแยก CODED/TESTED/DEPLOYED/UAT, รายการที่ยังต้อง Owner ตัดสิน และคำสั่งเลื่อน C2/Daily Backup. อัปเดต PROJECT_STATUS; ไม่มี code/schema/deploy/LINE/data/resource change.
