@@ -8,7 +8,11 @@ Commit `926f840` push ไป Draft PR #2 แล้ว; [CI run 36249633023](http
 
 ตรวจ Railway แบบอ่านอย่างเดียวหลัง Owner ตอบว่าไม่แน่ใจเรื่อง resource: มี environment `staging` เดียว, Web/API/worker/Postgres ออนไลน์; ไม่มี Web/API recovery แยก. ฐาน recovery เดิมมีสำเนาข้อมูลจริง ไม่ใช้ทดสอบสมมติ. Trial เหลือประมาณ USD 4.54 / 26 วัน ณ เวลาตรวจ. จัด [ข้อเสนอปลายทาง recovery](M1_PROVIDER_RECOVERY_PROPOSAL.md); C2 ยัง `NOT_READY / NOT_RUN` และไม่ได้สร้างบริการหรือแก้ข้อมูล.
 
-เมนูสร้าง Railway environment ค่าเริ่มต้นเป็น Duplicate ซึ่งคัดลอกบริการและ variables ของ staging; ตรวจพบตัวเลือก Empty แล้วปิด dialog โดยไม่ได้สร้าง. หากทำต่อให้เลือก Empty เท่านั้นและตรวจ scope/cost ก่อน provisioning.
+เมนูสร้าง Railway environment ค่าเริ่มต้นเป็น Duplicate ซึ่งคัดลอกบริการและ variables ของ staging; ตรวจพบตัวเลือก Empty แล้วปิด dialog โดยไม่ได้สร้าง. ต่อมา Owner ปฏิเสธการสร้าง environment เพิ่ม จึงไม่ดำเนินเส้นทางนี้.
+
+Owner ตอบว่า **ไม่สร้าง environment เพิ่ม** จึงหยุดทางเลือกนั้นตาม D-036. Trial จำกัด 5 services/project โดย staging ใช้ 4; เสนอทางเลือก service ทดสอบตัวเดียวพร้อมฐานสมมติแยกใน Postgres เดิมตาม [M1_PROVIDER_RECOVERY_PROPOSAL](M1_PROVIDER_RECOVERY_PROPOSAL.md), ยังไม่ provision/ใช้เครดิต. C2 ยัง NOT_RUN.
+
+เตรียม `Dockerfile.recovery` และ `recovery-server.mjs` แบบ fail-closed สำหรับ Web+API ใน service เดียวแล้ว; test guard local 1PASS และ typecheck PASS. สถานะ `CODED/TESTED_LOCAL`, `NOT_DEPLOYED`; ต้องรอ CI และการอนุมัติ resource/Trial credit ก่อนใช้บน Railway.
 
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 

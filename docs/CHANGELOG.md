@@ -10,6 +10,10 @@
 
 ตรวจ dialog `New Environment` เพิ่ม: default Duplicate จะคัดลอก services/variables; มีตัวเลือก Empty. ปิด dialog โดยไม่สร้าง environment และบันทึกเงื่อนไขเลือก Empty ในแผน recovery.
 
+Owner ไม่ให้สร้าง environment เพิ่ม (D-036). ปรับข้อเสนอ C2 เป็น service ทดสอบตัวเดียวใน staging environment ที่ใช้ฐานสมมติ/role แยก โดยยังไม่สร้าง service/ฐานและไม่ใช้ Trial credit เพิ่ม. Provider browser gate คง NOT_RUN.
+
+เพิ่ม `deploy/Dockerfile.recovery`, `scripts/recovery-server.mjs`, guard test และ CI build สำหรับทางเลือก Web+API ใน service เดียว. ปฏิเสธฐานชื่อไม่ใช่ synthetic, LINE เปิด และ HTTP origin ก่อนเริ่ม; local guard test/typecheck ผ่าน. ยังไม่ deploy หรือสร้าง resource; C2 คง NOT_RUN.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว

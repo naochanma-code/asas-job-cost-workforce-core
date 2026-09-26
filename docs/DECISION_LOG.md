@@ -1,5 +1,11 @@
 # DECISION LOG
 
+## D-036 — ไม่เพิ่ม Railway environment สำหรับ M1 recovery (Owner instruction, 26 กันยายน 2026)
+
+หลังตรวจพบว่า Project `asas-m1-staging` มี environment เดียวและยังไม่มี recovery Web/API ที่แยก Owner ตอบ **ไม่สร้าง environment เพิ่ม**. ไม่สร้าง/duplicate environment หรือคัดลอก services/variables จาก staging. ทางเลือกใช้ service ทดสอบตัวที่ 5 ใน environment เดิมและฐานสมมติแยกใน Postgres เดิมเป็นเพียงข้อเสนอใน [M1_PROVIDER_RECOVERY_PROPOSAL](M1_PROVIDER_RECOVERY_PROPOSAL.md); ยังไม่อนุมัติให้สร้าง service/ฐานหรือใช้เครดิตเพิ่ม. C2 provider browser recovery คง NOT_RUN. ไม่ลดระดับ gate โดยอัตโนมัติ.
+
+เตรียม container/entrypoint ที่ fail-closed สำหรับทางเลือก service เดียวใน branch M1 แล้ว (`CODED/TESTED_LOCAL`), แต่ยัง `NOT_DEPLOYED`; การมี code ไม่เปลี่ยนคำสั่ง Owner หรืออนุมัติ provision.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว

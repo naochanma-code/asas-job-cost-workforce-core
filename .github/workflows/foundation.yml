@@ -35,6 +35,11 @@ jobs:
         run: |
           docker build -f deploy/Dockerfile.api -t asas-api:ci .
           docker build -f deploy/Dockerfile.web --build-arg API_URL=http://api.railway.internal:3001 -t asas-web:ci .
+          docker build -f deploy/Dockerfile.recovery -t asas-recovery:ci .
+          if docker run --rm -e RECOVERY_SYNTHETIC_ONLY=true -e WEB_ORIGIN=https://recovery.example.test -e DATABASE_URL=postgres://synthetic@localhost/pilot asas-recovery:ci; then
+            echo 'Synthetic recovery container accepted pilot database name'
+            exit 1
+          fi
       - name: Smoke staging web container (no public deployment)
         run: |
           docker run -d --name asas-web-ci -p 127.0.0.1:3100:3000 asas-web:ci
