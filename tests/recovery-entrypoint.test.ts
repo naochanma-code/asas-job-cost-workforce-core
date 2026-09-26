@@ -15,6 +15,14 @@ test("synthetic recovery service rejects pilot database and LINE before starting
   for (const variables of [
     { DATABASE_URL: "postgres://pilot@localhost/pilot" },
     {
+      DATABASE_URL:
+        "postgres://m1_synthetic_runtime_20260926@localhost/m1_synthetic_source_20260926",
+    },
+    {
+      DATABASE_URL:
+        "postgres://pilot@postgres.railway.internal/m1_synthetic_source_20260926",
+    },
+    {
       DATABASE_URL: "postgres://synthetic@localhost/m1_synthetic_source_20260926",
       LINE_ENABLED: "true",
     },

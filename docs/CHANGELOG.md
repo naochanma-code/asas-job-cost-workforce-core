@@ -14,6 +14,8 @@ Owner ไม่ให้สร้าง environment เพิ่ม (D-036). ป
 
 เพิ่ม `deploy/Dockerfile.recovery`, `scripts/recovery-server.mjs`, guard test และ CI build สำหรับทางเลือก Web+API ใน service เดียว. ปฏิเสธฐานชื่อไม่ใช่ synthetic, LINE เปิด และ HTTP origin ก่อนเริ่ม; local guard test/typecheck ผ่าน. ยังไม่ deploy หรือสร้าง resource; C2 คง NOT_RUN.
 
+ตาม read-only review แก้ exit code เมื่อ child ล้ม, บังคับ private host/role/date ของฐานสมมติ และให้ CI ยืนยันข้อความ guard ก่อนแตะ DB. ยังคงต้องพิสูจน์ ACL/positive startup/shutdown บน provider; ไม่ deploy.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว

@@ -21,11 +21,20 @@ try {
 } catch {
   reject();
 }
+let dbName;
+let dbUser;
+try {
+  dbName = decodeURIComponent(database.pathname.slice(1));
+  dbUser = decodeURIComponent(database.username);
+} catch {
+  reject();
+}
+const synthetic = /^m1_synthetic_(source|target)_([0-9]{8})$/.exec(dbName);
 if (
   !["postgres:", "postgresql:"].includes(database.protocol) ||
-  !/^m1_synthetic_(source|target)_[0-9]{8}$/.test(
-    decodeURIComponent(database.pathname.slice(1)),
-  )
+  !database.hostname.endsWith(".railway.internal") ||
+  !synthetic ||
+  dbUser !== `m1_synthetic_runtime_${synthetic[2]}`
 ) reject();
 
 const webPort = Number(env.PORT || 3000);
@@ -36,11 +45,12 @@ let api;
 let web;
 let stopping = false;
 function stop(exitCode = 0) {
+  if (exitCode) process.exitCode = exitCode;
   if (stopping) return;
   stopping = true;
   web?.kill("SIGTERM");
   api?.kill("SIGTERM");
-  setTimeout(() => process.exit(exitCode), 8000).unref();
+  setTimeout(() => process.exit(process.exitCode || 0), 8000).unref();
 }
 for (const signal of ["SIGINT", "SIGTERM"])
   process.on(signal, () => stop(0));
@@ -49,7 +59,7 @@ api = spawn(process.execPath, ["--import", "tsx", "apps/api/src/main.ts"], {
   env: { ...env, HOST: "127.0.0.1", PORT: "3001" },
   stdio: "inherit",
 });
-api.on("exit", () => stop(1));
+api.on("exit", () => stop(stopping ? 0 : 1));
 
 let ready = false;
 for (let attempt = 0; attempt < 60 && !stopping; attempt++) {
@@ -75,5 +85,5 @@ if (!ready) {
       stdio: "inherit",
     },
   );
-  web.on("exit", () => stop(1));
+  web.on("exit", () => stop(stopping ? 0 : 1));
 }
