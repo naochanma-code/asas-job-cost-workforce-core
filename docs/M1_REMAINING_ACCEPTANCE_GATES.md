@@ -16,7 +16,7 @@ C1 ทดสอบโดย Codex บน Web Staging แล้ว: บัญช�
 | Browser recovery (หลัง M3) | encrypted isolated recoveryเดิม, Native/API regression และ Local browser บนฐานสมมติ PASS | BrowserLoginหลังrestore, Sessionเก่าถูกปฏิเสธ, scope/logout บน provider recovery ที่แยก | D-037 เลื่อน C2 ก่อน Pilot; `DEFERRED_BY_OWNER / NOT_RUN`. ตรวจ Trial/topology/ข้อมูลสมมติใหม่เมื่อถึงเวลา; localไม่แทนprovider |
 | LINE expiry | รหัสหมดอายุจริง, Ownerแจ้งส่ง, binding/auditไม่เปลี่ยน | เชื่อมโยงการลองหลังexpiryกับผลปฏิเสธโดยไม่สับสนกับoverwriteguard | คงPARTIAL; ไม่อ่านpayloadย้อนหลังหรือปลอมeventเพื่อเติมPASS |
 | LINE replay | ส่งเดิมซ้ำไม่เปลี่ยนbinding/audit | แยกsingle-useจากexpiryในprovider | automatedแยกกรณีผ่าน; providerยังไม่อ้างisolatedPASS |
-| LINE identity lifecycle | accountlink/jobsของสามroleผ่าน; automatedunlink/nonceผ่าน | providerunlink/relink, nonceซ้ำ/หมดอายุ, wrongactorตามrunbook | ต้องใช้LINEของผู้ทดลองจริงและวางรอบเดียวให้ชัด ไม่ขอpassword |
+| LINE identity lifecycle | C3 Owner unlink/relink UAT ผ่าน พร้อม audit actor เดิม 16:50:56Z / 16:52:41Z; accountlink/jobs สาม role ผ่าน | Core nonceซ้ำ/หมดอายุและ wrong actor ยังแยกจาก provider token checks | ดำเนิน C4 กับ Owner โดยไม่ unlink ซ้ำ; ไม่ขอ password/token |
 | Scope beyond bounded pilot | automatedสองTECH/หลายprojectผ่าน | providerT1/T2แยกกันภายใต้ผู้ทดลองที่อนุมัติ | ขอบเขตปัจจุบันTECHหนึ่งคน ห้ามเพิ่มallowlistเอง |
 | Backup operations | manualbackup/restoreผ่าน | ผู้รับผิดชอบ ตารางสำรอง ระยะเก็บ ทดสอบกู้คืน และหลักฐานแจ้งเตือน | ฝากคำถามOwnerแล้ว; ตรวจค่าใช้จ่ายก่อนเสนอเปิดจริง |
 | Production resilience | boundedtrialเท่านั้น | PITR/off-providerDR/scale/observabilityครบ | ยังนอกการDeployProduction ไม่ซื้อหรือเปิดโดยอัตโนมัติ |

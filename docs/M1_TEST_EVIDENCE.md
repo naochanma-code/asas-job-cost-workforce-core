@@ -1,5 +1,12 @@
 # M1 Test Evidence — 2026-09-21
 
+## 26 กันยายน 2026 — ดำเนิน C4 ต่อหลัง C3 ผ่าน
+
+C3 unlink/relink = UAT_PASSED พร้อม audit ของ Owner เดิม. เริ่ม C4 provider link-token checks: เปิดลิงก์ที่เคยใช้แล้ว และขอลิงก์ใหม่เก็บไว้เกิน10นาทีก่อนเปิด โดยไม่ unlink อีก. รอผล Owner; ยัง NOT_RUN/PARTIAL ไม่เปลี่ยนเป็น PASS จากการส่งขั้นตอน.
+
+ตรวจ [LINE account linking documentation](https://developers.line.biz/en/docs/messaging-api/linking-accounts/): link token ใช้ครั้งเดียว/อายุ10นาที; token ใช้แล้วหรือหมดอายุจะ error ที่ LINE และไม่ส่ง webhook. การเปิดลิงก์ Core ใหม่สร้าง nonce ใหม่ จึงทดสอบ provider token reuse ไม่ใช่ Core nonce reuse. Core nonce expiry/reuse มี automated proof เดิม แต่ live isolated proof ยังไม่ครบ. ถ้าลิงก์ใช้แล้วเกิน10นาทีด้วย ให้บันทึก invalid old token ไม่แยก single-use จาก expiry. ไม่ต้องส่ง secret/link ให้ Codex.
+
+
 ## 26 กันยายน 2026 — C3 Owner unlink/relink ผ่านรอบจริง
 
 Owner กดยกเลิกการเชื่อมด้วยตนเอง แล้วรายงานว่าส่ง “งานของฉัน” และระบบให้เชื่อมบัญชีก่อน ไม่แสดงงาน. หลังเปิดลิงก์ใหม่ เชื่อมกลับบัญชี Owner เดิม และส่ง “งานของฉัน” Owner ยืนยันเห็น PILOT LINE A/B ถูกต้อง. สถานะ C3 = UAT_PASSED เฉพาะ lifecycle รอบนี้ ตามรายงาน Owner.
