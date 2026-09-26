@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 26 กันยายน 2026 — พักขั้น LINE ที่ต้องใช้ Owner; ทำงานตรวจอื่นต่อ
+
+Owner ให้ฝากใบทดสอบไว้และทำส่วนอื่นก่อน เพราะเข้า LINE Web ไม่ได้. เตรียมคำแนะนำใช้แอป LINE มือถือใน [UAT รอบรวม](M1_CONSOLIDATED_OWNER_UAT.md). ไม่ unlink บัญชีระหว่างที่ Owner ยังไม่พร้อมเชื่อมกลับ; คำอนุญาตเดิมยังอยู่ ไม่ต้องขอซ้ำ. C3–C5 ยัง PARTIAL/NOT_RUN ไม่ใช่ PASS หรือยกเลิก requirement.
+
+ตรวจ health สาธารณะรอบนี้ได้ status=ok/database=ready. [CI commit 211f405 run36256380353](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36256380353) completed/success แล้ว. เอกสารรอบนี้ตรวจ45checksและ scoped diff-check ผ่าน. C1 ตรวจแล้วตามหลักฐานเดิม; ไม่มี app/schema/deploy/assignment จริงเปลี่ยน. ขอบเขตที่ยังค้างเป็น live identity/provider tests และการรับงาน ไม่เพิ่ม M2 เพื่อทดแทน.
+
+
 26 กันยายน: Owner อนุญาตใช้ LINE ของตนเองทดสอบ unlink/relink กลับบัญชีเดิมแล้ว; รอ Owner Login Web เพื่อระบุตัวตน ไม่ขยายผู้ทดลองหรือกลุ่ม. Targeted LINE security regression 20 PASS / 0 FAIL / 0 SKIP (embedded PostgreSQL, fake transport), เอกสาร M0 45 checks PASS. ไม่แทน live provider UAT.
 
 ## 2026-09-26 — C1 Staging TECH scope evidence
