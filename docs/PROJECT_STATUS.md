@@ -1,5 +1,9 @@
 # PROJECT STATUS — Milestone 1
 
+## 26 กันยายน 2026 — ทบทวนขอบเขตการทดสอบ M1
+
+ตรวจ `MASTER_PROMPT.md` อีกครั้ง: Gate M1 ระบุ ADMIN สร้าง Project/Job และ Assign Team, TECH เห็นงานจริงใน LINE, และ Project ที่ไม่มี Site/Job ทำ flow ได้ครบ. Provider Restore อยู่ใน Testing Strategy รวม และ Backup/Restore ปรากฏชัดใน Gate Pilot (M8). จัด [แผน UAT รอบรวม](M1_CONSOLIDATED_OWNER_UAT.md) กับ [รายการค้าง](M1_REMAINING_ACCEPTANCE_GATES.md) ให้แยกข้อความ Gate นี้ออกจากการตรวจความมั่นใจเพิ่ม. C2 provider browser recovery ยัง `NOT_RUN`; Owner ยังไม่ได้ตอบว่าจะเลื่อนพร้อมบันทึกข้อยกเว้นหรือคงเป็นเงื่อนไขก่อนรับ M1. หยุดงาน provision recovery resource; ไม่มีการสร้าง service/environment, deploy, restore หรือเปลี่ยนข้อมูลจริง.
+
 ## 26 กันยายน 2026 — ปิด Local browser recovery drill
 
 Local browser บนฐาน Restore สมมติผ่าน: session เดิมถูกปฏิเสธ, Login ใหม่ได้, TECH เห็นเฉพาะ Project/Job ที่มอบหมาย และ Logout ผ่าน. หลักฐานอยู่ใน [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md). สคริปต์และ [แผน UAT รอบรวม](M1_CONSOLIDATED_OWNER_UAT.md) เตรียมแล้ว. Staging browser recovery และ Web TECH บน Staging ยัง NOT_RUN; ไม่ใช้ Local PASS แทนสอง gate นี้. งานนี้ไม่เปลี่ยนแอป, schema, Staging, LINE หรือ Daily Backup.

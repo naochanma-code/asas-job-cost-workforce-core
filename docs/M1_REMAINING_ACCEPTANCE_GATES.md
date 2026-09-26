@@ -2,6 +2,8 @@
 
 วันที่26กันยายน2026 · ผู้ดูแลCodex · ไม่ใช่การอนุมัติปิดMilestone
 
+เกณฑ์ M1 ตาม `MASTER_PROMPT.md` อยู่ที่ Foundation, ADMIN สร้าง Project/Job และ Assign Team, TECH เห็นงานจริงใน LINE, และ Project ไม่มี Site/Job ทำ flow ได้ครบ. ตารางนี้รวมการตรวจความมั่นใจและรายการข้าม Milestone ด้วย ไม่ได้แปลว่าทุกแถวเป็นข้อความ Gate ของ M1. Owner กำลังพิจารณาเลื่อน provider browser recovery ไปก่อน Pilot/Production; ยังไม่บันทึกเป็นข้อยกเว้นที่ได้รับอนุมัติ และยังคง `NOT_RUN`.
+
 | Gate | มีหลักฐานอะไรแล้ว | ยังต้องพิสูจน์อะไร | ทางดำเนินการ |
 | --- | --- | --- | --- |
 | TECH Job scope | LINEเห็นเฉพาะB; restored HTTP/APIแสดงเฉพาะJobที่มอบหมาย ไม่แสดงsibling | หน้าจอWebด้วยTECHบนStaging | ใช้บัญชีสมมติที่ได้รับอนุญาต ไม่เปลี่ยนบัญชี/รหัสจริง; Sessionปัจจุบันเป็นLogin |

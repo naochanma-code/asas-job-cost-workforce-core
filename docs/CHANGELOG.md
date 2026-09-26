@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 26 กันยายน 2026 — แยก Gate M1 จากการทดสอบ recovery เพิ่มเติม
+
+ปรับเอกสาร UAT และรายการค้างให้ระบุ Gate M1 ตาม Master แยกจาก provider browser recovery/รายการ live security ที่ต้องตกลงขอบเขต. C2 ยัง NOT_RUN และการเลื่อนเป็นข้อยกเว้นยังรอคำตอบ Owner; ไม่สร้าง resource, deploy หรือแก้ข้อมูลจริง.
+
 ## 26 กันยายน 2026 — บันทึก Local browser recovery และแผน UAT รอบรวม
 
 เพิ่ม `scripts/local-browser-recovery-drill.mjs` สำหรับฐานสมมติ/loopback และ `docs/M1_CONSOLIDATED_OWNER_UAT.md` เพื่อรวมขั้นที่ Owner ต้องทดลองเป็นรอบเดียว. Local browser ตรวจ Session เดิมหลัง Restore, Login ใหม่, TECH Job scope และ Logout ผ่าน; ดู [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md). Staging recovery ยัง NOT_RUN. ไม่มี app/schema/deployment change หรือการเปิด Daily Backup.
