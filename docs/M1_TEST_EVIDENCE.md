@@ -1,5 +1,16 @@
 # M1 Test Evidence — 2026-09-21
 
+26 กันยายน: Owner อนุญาตใช้ LINE ของตนเองทดสอบ unlink/relink กลับบัญชีเดิมแล้ว; รอ Owner Login Web เพื่อระบุตัวตน ไม่ขยายผู้ทดลองหรือกลุ่ม. Targeted LINE security regression 20 PASS / 0 FAIL / 0 SKIP (embedded PostgreSQL, fake transport), เอกสาร M0 45 checks PASS. ไม่แทน live provider UAT.
+
+## 26 กันยายน 2026 — C1 Web TECH Staging ตรวจจริงแล้ว
+
+Codex สร้างบัญชี TECH สมมติผ่าน Owner Web และใช้ application API มอบหมายเฉพาะ Job B ใน Pilot B; เพิ่ม sibling ชื่อ PILOT C1 HIDDEN SIBLING เป็นข้อมูลสมมติ ไม่เปลี่ยน assignment ของผู้ใช้จริง. Browser login สำเร็จ เห็น Project B เพียงหนึ่งรายการ ไม่เห็น A; ภายใน B เห็น Job ที่มอบหมายหนึ่งรายการ ไม่เห็น sibling และไม่มีปุ่มมอบหมายงาน/เมนูผู้ใช้. Reload แล้วยังตรง scope.
+
+ตรวจ route ของ application ที่ deploy อยู่ด้วย injected request/session ของ TECH สมมติ: Project A 404, B 200, jobs 1, sibling false, users 403. แยกจาก browser direct API navigation ซึ่งเครื่องมือบล็อก ERR_BLOCKED_BY_CLIENT จึง NOT_RUN สำหรับ HTTP ผ่าน browser โดยตรง ไม่อ้างว่าเป็น HTTP404 จาก browser.
+
+ปิดบัญชีสมมติและหมดอายุ session หลังทดสอบด้วย operator maintenance; เก็บ audit ไว้. Browser reload กลับหน้า Login และไม่มีปุ่มเปิดโครงการ. ไม่ลบ fixture/audit ไม่เปลี่ยนบัญชีจริง ไม่ deploy/เปิด LINE scope/เพิ่มบริการ. สถานะ C1: TESTED_STAGING โดย Codex สำหรับ UI scope/refresh/session rejection และ deployed application route; ไม่ใช่ Owner UAT รอบใหม่. รหัสผ่านสุ่มอยู่ใน RAM ไม่บันทึกเอกสาร.
+
+
 ## 26 กันยายน 2026 — Staging health สำหรับเตรียม UAT
 
 เวลา 16:17 UTC ส่งคำขออ่านอย่างเดียวไปยัง Web Staging: `HEAD /` ได้ HTTP 200 และ `GET /api/health` ได้ `{"status":"ok","database":"ready"}`. เป็นหลักฐานว่า Web endpoint และ API/ฐานตอบ health ณ เวลาตรวจเท่านั้น; ไม่ยืนยัน TECH session, LINE provider, release SHA หรือ UAT PASS. ไม่มี login หรือการแก้ข้อมูล.

@@ -1,5 +1,14 @@
 # PROJECT STATUS — Milestone 1
 
+26 กันยายน: Owner อนุญาตใช้ LINE ของตนเองทดสอบ unlink/relink กลับบัญชีเดิมแล้ว; รอ Owner Login Web เพื่อระบุตัวตน ไม่ขยายผู้ทดลองหรือกลุ่ม. Targeted LINE security regression 20 PASS / 0 FAIL / 0 SKIP (embedded PostgreSQL, fake transport), เอกสาร M0 45 checks PASS. ไม่แทน live provider UAT.
+
+## 26 กันยายน 2026 — ข้อ 1 Web TECH ผ่าน; ข้อ 2 LINE security กำลังปิดหลักฐาน
+
+C1 ตรวจ browser Staging ด้วย TECH สมมติแล้ว: เห็นเฉพาะ B และ Job ที่มอบหมาย ไม่เห็น sibling/เมนูจัดการ; refresh ผ่าน. Injected deployed API คืน A404/B200/users403. ปิดบัญชีทดสอบและ session แล้ว browser กลับ Login. Direct API URL ผ่าน browser ถูกเครื่องมือบล็อก จึงแยก NOT_RUN จาก API result. ดูรายละเอียดใน M1_TEST_EVIDENCE.md. ไม่ต้องให้ Owner ทดลอง C1 ชุดนี้ซ้ำ.
+
+C3–C5 live LINE ยัง PARTIAL/NOT_RUN: เตรียมรอบ unlink/relink ด้วยบัญชี Owner เดิมและรอคำตอบเฉพาะการยกเลิกชั่วคราว; รหัสกลุ่มในกลุ่มที่ผูกแล้วแยก expiry/reuse จาก overwrite guard ไม่ได้. ไม่เปลี่ยน binding จริงหรือขยาย allowlistเพื่อให้ผลผ่าน. C2/Daily Backup ยังเลื่อนตาม Owner; ไม่ Merge/M2/Production.
+
+
 ## 26 กันยายน 2026 — ตรวจ Staging health แบบอ่านอย่างเดียว
 
 16:17 UTC Web Staging `HEAD /` = HTTP 200; `GET /api/health` = `status=ok, database=ready`. ระบบตอบ ณ เวลาตรวจ แต่ C1 TECH Web และ UAT LINE ยังไม่ผ่านจาก health check นี้. ไม่ login/แก้ข้อมูล/deploy; ตรวจซ้ำก่อน UAT รอบรวม.
@@ -75,7 +84,7 @@ Foundation และ M1 Alignment เปิดใช้งานบน Staging �
 | LINE Owner/Admin งานของฉัน | UAT_PASSED — เห็น A/B ตามสิทธิ์ |
 | LINE TECH งานของฉัน | UAT_PASSED — ก่อนถอนเห็น A; หลังถอน A ไม่พบโครงการ; หลังมอบหมาย Job B เห็นเฉพาะ B |
 | Assignment/Audit | PASS — มอบหมายระดับ Job B มี audit; assignment นอก Pilot ไม่เปลี่ยน |
-| Web TECH เฉพาะ Job ที่มอบหมาย | NOT_RUN สำหรับหน้าจอรอบ Job B; ไม่ใช้ผล LINE แทน |
+| Web TECH เฉพาะ Job ที่มอบหมาย | TESTED_STAGING โดย Codex — TECH สมมติ, B/assigned Job เท่านั้น, refresh/session rejection ผ่าน; direct browser API tool-blocked |
 | กลุ่มผูกโครงการ | PASS — กลุ่มทดสอบผูก A, audit การผูกสำเร็จ1 |
 | R2-05 ส่งคำสั่งเดิมซ้ำ | PASS เฉพาะไม่เปลี่ยน mapping/audit; ไม่แยกพิสูจน์ single-use จาก expiry |
 | R2-07 รหัสหมดอายุ | PARTIAL — Ownerแจ้งส่งซ้ำแล้ว; ตรวจ26ก.ย.พบรหัส B หมดอายุ กลุ่มยังA/audit1. ไม่มีหลักฐานระบุเวลา event ของคำสั่งนั้น จึงยังไม่อ้าง isolated expiry UAT PASS |

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+26 กันยายน: Owner อนุญาตใช้ LINE ของตนเองทดสอบ unlink/relink กลับบัญชีเดิมแล้ว; รอ Owner Login Web เพื่อระบุตัวตน ไม่ขยายผู้ทดลองหรือกลุ่ม. Targeted LINE security regression 20 PASS / 0 FAIL / 0 SKIP (embedded PostgreSQL, fake transport), เอกสาร M0 45 checks PASS. ไม่แทน live provider UAT.
+
+## 2026-09-26 — C1 Staging TECH scope evidence
+
+- Browser TECH สมมติเห็นเฉพาะ Project/Job ที่มอบหมาย, sibling/management ซ่อน, refresh ผ่าน.
+- Deployed injected API A404/B200/users403; browser direct API navigation tool-blocked แยกหลักฐานชัดเจน.
+- ปิดบัญชี/session สมมติหลังตรวจและยืนยันกลับหน้า Login; คง fixture/audit ไม่เปลี่ยน assignment จริง.
+- อัปเดตชุดรับงานและรายการค้าง; LINE live security ยังไม่อ้าง PASS.
+
+
 ## 26 กันยายน 2026 — บันทึก Staging health ก่อน UAT
 
 Web Staging ตอบ HEAD 200 และ API health ตอบ status ok/database ready เวลา 16:17 UTC. เพิ่ม snapshot ใน evidence/UAT/status; ไม่ใช้แทน TECH/LINE UAT และไม่มี code, deploy หรือข้อมูลจริงเปลี่ยน.

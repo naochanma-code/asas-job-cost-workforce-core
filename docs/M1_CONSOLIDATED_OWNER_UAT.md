@@ -1,5 +1,10 @@
 # M1 — แผน UAT รอบรวมครั้งเดียว
 
+## ผล C1 ล่าสุด — 26 กันยายน 2026
+
+C1 ทดสอบโดย Codex บน Web Staging แล้ว: บัญชี TECH สมมติเห็นเฉพาะ B/Job ที่มอบหมาย ไม่เห็น A/sibling/ปุ่มจัดการ; refresh ผ่าน และหลังปิดบัญชี/expire session กลับหน้า Login. Injected deployed API ให้ A404/B200/users403. Browser direct API URL ถูกเครื่องมือบล็อก จึงไม่ใช้ผล injected API อ้างเป็น browser HTTP. หลักฐานใน M1_TEST_EVIDENCE.md; ไม่ขอ Owner ทำ C1 ซ้ำ. ข้อความ C1 NOT_RUN ด้านล่างเป็นแผนก่อนผลนี้ ส่วน C3–C5 ยังต้องใช้ LINE ผู้ทดลองจริง.
+
+
 26 กันยายน 2026 · ผู้เตรียม: Codex · สถานะ PREPARED / NOT_RUN สำหรับรายการรอบนี้
 
 Owner ต้องการทดลองเป็นรอบใหญ่ครั้งเดียว ให้ Codex เตรียม technical gates และวิธีเก็บหลักฐานให้พร้อมก่อนนัด ไม่ส่งคำขอทดลองทีละขั้นระหว่างพัฒนา เอกสารนี้ไม่ใช่การรับ M1 หรืออนุญาต Merge/Deploy/ขยาย LINE scope
@@ -44,7 +49,7 @@ Health snapshot 26 ก.ย. 16:17 UTC: Web Staging `HEAD /` HTTP 200 และ `
 
 | ลำดับ | ผู้ทำและขั้นตอน | ผลที่ต้องเห็น / หลักฐานที่ Codex เก็บ |
 | --- | --- | --- |
-| C1 Web TECH บน Staging | TECH เปิด Project B ปัจจุบันจาก Web แล้วดู Jobs/refresh/logout ไม่เปลี่ยน assignment | เห็นเฉพาะ Job ที่ได้รับมอบหมาย; sibling และ direct URL นอกสิทธิ์เข้าไม่ได้; logout แล้ว session ใช้ต่อไม่ได้ บันทึก UI และ HTTP status โดยไม่เก็บ cookie |
+| C1 Web TECH บน Staging — ตรวจแล้ว | Codex ใช้ TECH สมมติ ไม่ต้องให้ Owner ทำซ้ำ | UI scope/refresh/session rejection ผ่าน; injected API A404/B200/users403; direct browser API tool-blocked แยก NOT_RUN |
 | C2 Browser หลัง recovery — เลื่อนหลัง M3 | ไม่รันใน UAT M1; เมื่อถึงรอบหลัง M3 และมี isolated provider recovery ที่ตรวจแล้ว ผู้ทดลองใช้บัญชีสมมติใน URL ที่แยกชัดเจน | session ก่อน restore ใช้ไม่ได้; login ใหม่ได้ ข้อมูล/scope ตรง fixture; refresh/logout ผ่าน แยกจากผล local และไม่ทดลองด้วยบัญชีจริง |
 | C3 Unlink/relink | เฉพาะบัญชีที่เจ้าของยินยอมในแผน: ยกเลิกเชื่อมจาก Web ตรวจคำขอ LINE ใหม่ แล้วเชื่อมบัญชีเดิมกลับ | หลัง unlink ไม่มีสิทธิ์เรียกงานผ่านตัวตนเดิม; กลับมาเชื่อมกับบัญชีเดิมได้ มี audit และไม่มีการสวมบัญชีอื่น การเรียกงานหลัง relink ใช้ตรวจ lifecycle เฉพาะจุด ไม่ทำ A/revoke/B ซ้ำ |
 | C4 Nonce expiry/reuse | ใช้ลิงก์ทดสอบใหม่ตามวิธีที่ตรวจว่า provider รองรับแล้ว รอเกิน expiry จริงหรือใช้รายการสำเร็จซ้ำตามกรณีที่เตรียมไว้ | ต้องยืนยันว่าคำขอถึงระบบในช่วงที่ต้องการ และไม่เกิดการเชื่อมใหม่ผิดเงื่อนไข; ถ้า provider ปฏิเสธก่อนถึง Core บันทึกได้เฉพาะ provider rejection ไม่อ้าง Core nonce PASS |
