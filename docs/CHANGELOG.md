@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 26 กันยายน 2026 — ตรวจ Owner UI ของ Job เดิม
+
+Web Staging session OWNER แสดง Job 1 รายการของ `PRJ-3511fa71` ในสองส่วนของหน้าโครงการ ก่อนและหลัง reload/เปิดใหม่. บันทึกเป็นผล Codex read-only ไม่ใช่ Owner UAT ใหม่; สาเหตุการกดสร้างครั้งแรกยังไม่ทราบ. ปรับ evidence/UAT/status/acceptance packet โดยไม่แก้ข้อมูลหรือ deploy.
+
 ## 26 กันยายน 2026 — ตรวจ Job ใน Project ที่ Owner แจ้ง
 
 Railway SELECT แบบอ่านอย่างเดียวเฉพาะ `PRJ-3511fa71` พบ Job 1 และ JOB_CREATED audit 1 เทียบครั้งก่อน 0/0. บันทึก backend persistence แยกจาก UI display ที่ยังไม่ยืนยัน; เพิ่มขั้น Owner refresh ดูรายการโดยไม่สร้างซ้ำใน acceptance packet. ไม่มีข้อมูลจริงเปลี่ยน.

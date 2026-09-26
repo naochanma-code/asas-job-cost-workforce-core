@@ -1,5 +1,9 @@
 # PROJECT STATUS — Milestone 1
 
+## 26 กันยายน 2026 — ตรวจ Owner UI ของ Job เดิมผ่านแล้ว
+
+เวลา 15:59 UTC Web Staging session OWNER เปิด `PRJ-3511fa71` แบบอ่านอย่างเดียว: Job 1 รายการแสดงทั้งในรายละเอียดโครงการและรายการงานย่อย; reload แล้วเปิดโครงการใหม่ยังแสดงเหมือนเดิม. สถานะ `CURRENT_OWNER_UI_DISPLAY_VERIFIED_BY_CODEX` สอดคล้องกับ jobs/audit 1/1; ไม่ใช่ Owner UAT รอบใหม่และยังไม่รู้สาเหตุการกดครั้งแรกที่ไม่บันทึก. ไม่แก้ข้อมูลจริงหรือสร้าง Job ซ้ำ. ปรับ [ชุดหลักฐานรับ M1](M1_OWNER_ACCEPTANCE_PACKET.md) ไม่ให้ขอ Owner ทำขั้นดูรายการซ้ำโดยไม่มีเหตุผล.
+
 ## 26 กันยายน 2026 — Project Job ที่เคยไม่แสดงมีแถวในฐานแล้ว
 
 SELECT read-only บน Railway Postgres เวลา 15:52 UTC ของ `PRJ-3511fa71` คืน `jobs=1` และ `JOB_CREATED audit=1`, เทียบการตรวจครั้งก่อน 0/0. มีหลักฐาน backend persistence อย่างน้อยหนึ่งครั้งแล้ว แต่ยังไม่ได้เห็นหน้าจอ Owner หลัง refresh จึงไม่อ้างว่า UI display ผ่านหรือทราบสาเหตุการกดครั้งแรก. เพิ่มขั้นดูอย่างเดียวใน [ชุดหลักฐานรับ M1](M1_OWNER_ACCEPTANCE_PACKET.md); ไม่สร้าง Job ซ้ำ ไม่แก้ข้อมูลจริง.

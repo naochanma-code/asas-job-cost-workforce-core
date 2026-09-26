@@ -14,6 +14,8 @@ C2 เป็นการทดสอบ provider browser recovery เพิ่�
 
 ## ผลเดิมที่ไม่ต้องทำซ้ำ
 
+- Codex ตรวจ Web Staging ใน session OWNER ที่มีอยู่: `PRJ-3511fa71` แสดง Job 1 รายการในรายละเอียดโครงการและรายการงานย่อย ทั้งก่อนและหลัง reload/เปิดโครงการใหม่. ไม่ขอ Owner สร้าง Job ซ้ำเพื่อพิสูจน์ display; สาเหตุการกดครั้งแรกยังไม่ทราบและผลนี้ไม่ใช่ Owner UAT รอบใหม่
+
 - Owner/Admin เห็น A/B ใน LINE; TECH เห็น A ก่อนถอน ไม่พบโครงการหลังถอน และเห็นเฉพาะ B หลังมอบหมาย Job B ผ่านแล้วตามหลักฐานเดิม ไม่สร้าง/ถอน assignment ชุดนี้ซ้ำ เว้นแต่มี regression ที่ระบุผลกระทบชัดเจน
 - กลุ่มเดิมผูก A แล้ว; replay เดิมไม่เปลี่ยน mapping/audit ผ่านเฉพาะพฤติกรรม ไม่ใช่ isolated single-use PASS
 - Local browser บนฐาน restore สมมติ: TECH login เห็น B/เฉพาะ Job ที่มอบหมาย refresh และ logout ผ่าน; บันทึกหลักฐานแล้วใน [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md) แยกจาก provider และยังไม่แทน Staging browser recovery
