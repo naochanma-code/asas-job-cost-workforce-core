@@ -1,5 +1,9 @@
 # M1 Test Evidence — 2026-09-21
 
+## 26 กันยายน 2026 — ตรวจความเชื่อมโยง Gate M1 บน Pilot แบบอ่านอย่างเดียว
+
+เวลา 15:38 UTC ตรวจ Railway Postgres UI ด้วย SELECT เฉพาะ Project code/role/boolean/count ไม่อ่านชื่อผู้ใช้ รายละเอียดงาน secret หรือ payload และไม่แก้ข้อมูล. `PRJ-2609-014` (PILOT LINE A) มี creator role `OWNER`, `site_id IS NULL=true`, ไม่มี Job=true, มี assignment ระดับ Project ให้ TECH 1 รายการในประวัติ และ assignment creator role `OWNER`. ผลนี้สอดคล้องกับ TECH เห็น A ผ่าน LINE จริงตามรายงาน Owner แต่ **ไม่ใช่** หลักฐานว่า Admin สร้าง/มอบหมาย Project เดียวกัน. Admin Web create/assign/Job ที่ผ่านวันที่ 23 ก.ย. เป็น fixture อีกชุด. ยังไม่อ้าง end-to-end Admin→TECH LINE ใน Project เดียว; ไม่เปลี่ยน allowlist/assignment หรือขอผู้ทดลองทำซ้ำ.
+
 ## 26 กันยายน 2026 — Single-service recovery runtime (ยังไม่ deploy)
 
 Commit `94d1815`: `scripts/recovery-server.mjs` และ `deploy/Dockerfile.recovery` สำหรับ Web+API ของฐานสมมติใน service เดียว. Guard ปฏิเสธ LINE เปิด, origin HTTP, ชื่อฐาน/role ไม่ตรง และ host นอก private network ก่อนเริ่ม API; เมื่อ child ล้ม launcher คืน exit code ไม่สำเร็จ. `tests/recovery-entrypoint.test.ts` local PASS, typecheck PASS, full local regression 52 PASS / 2 native-only SKIP / 0 FAIL. [CI run 36251281768](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36251281768) verify SUCCESS รวม native/embedded tests, build, recovery container build/guard, Web/API smoke และ docs checks.

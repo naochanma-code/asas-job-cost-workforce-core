@@ -6,7 +6,7 @@
 
 | Gate | มีหลักฐานอะไรแล้ว | ยังต้องพิสูจน์อะไร | ทางดำเนินการ |
 | --- | --- | --- | --- |
-| M1 flow correlation | Admin Web สร้าง/มอบหมาย A และสร้าง Job B ผ่าน; TECH LINE เห็น A ไม่มี Site/Job ผ่าน แต่เป็นคนละ fixture/date | หลักฐาน Admin-create/assign → TECH-LINE ใน Project เดียว ถ้าจะอ้าง flow เดียวครบ | ตรวจ creator/assignment/audit ของ Pilot Project แบบอ่านอย่างเดียวก่อน; ไม่เพิ่ม allowlistหรือทำซ้ำโดยไม่มีเหตุผล; ถ้าพิสูจน์ไม่ได้ให้ระบุข้อจำกัดต่อ Owner |
+| M1 flow correlation | Admin Web สร้าง/มอบหมาย A และสร้าง Job B ผ่าน; TECH LINE เห็น Pilot A ไม่มี Site/Job ผ่าน แต่เป็นคนละ fixture/date. SELECT read-only ยืนยัน Pilot A creator/assignment เป็น OWNER | หลักฐาน Admin-create/assign → TECH-LINE ใน Project เดียว หากจะอ้าง flow เดียวครบ | ระบุข้อจำกัดต่อ Owner ในรอบรับ M1; ไม่เพิ่ม allowlistหรือทำซ้ำเอง. หาก Owner ต้องการ proof เพิ่มให้วางขั้น UAT รวมภายใน scope ที่อนุมัติ |
 | TECH Job scope | LINEเห็นเฉพาะB; restored HTTP/APIแสดงเฉพาะJobที่มอบหมาย ไม่แสดงsibling | หน้าจอWebด้วยTECHบนStaging | ใช้บัญชีสมมติที่ได้รับอนุญาต ไม่เปลี่ยนบัญชี/รหัสจริง; Sessionปัจจุบันเป็นLogin |
 | Browser recovery (หลัง M3) | encrypted isolated recoveryเดิม, Native/API regression และ Local browser บนฐานสมมติ PASS | BrowserLoginหลังrestore, Sessionเก่าถูกปฏิเสธ, scope/logout บน provider recovery ที่แยก | D-037 เลื่อน C2 ก่อน Pilot; `DEFERRED_BY_OWNER / NOT_RUN`. ตรวจ Trial/topology/ข้อมูลสมมติใหม่เมื่อถึงเวลา; localไม่แทนprovider |
 | LINE expiry | รหัสหมดอายุจริง, Ownerแจ้งส่ง, binding/auditไม่เปลี่ยน | เชื่อมโยงการลองหลังexpiryกับผลปฏิเสธโดยไม่สับสนกับoverwriteguard | คงPARTIAL; ไม่อ่านpayloadย้อนหลังหรือปลอมeventเพื่อเติมPASS |

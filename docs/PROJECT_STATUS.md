@@ -4,7 +4,7 @@
 
 ตาม D-037 Owner ให้ทดสอบ provider browser recovery หลังจบ M3 และก่อน Pilot (M8); อนุญาตให้พิจารณา Railway environment ใหม่เมื่อจำเป็นในรอบนั้น. C2 = `DEFERRED_BY_OWNER / NOT_RUN`, ไม่ใช่ PASS และไม่อยู่ใน UAT M1 รอบนี้. ก่อนรอบหลัง M3 ต้องตรวจ Trial limit/topology/ค่าใช้จ่ายและข้อมูลสมมติแยก; ไม่สร้าง environment/service ตอนนี้ ไม่คัดลอกข้อมูลจริงหรือเปลี่ยน Staging. การรับ M1 ต้องระบุข้อยกเว้นนี้ให้ Owner ทราบ และ PR #2 ยัง Draft/ไม่ Merge. งาน M1 ที่เหลือดำเนินต่อโดยเน้น Web TECH staging scope กับ LINE/security live checks ตามขอบเขตที่ได้รับอนุญาต.
 
-ตรวจหลักฐาน Gate M1 ร่วมกับ subagent: Admin Web สร้าง/มอบหมาย Project A ไม่มี Site/Job และสร้าง Job B ผ่าน; TECH เห็น PILOT LINE A ไม่มี Site/Job ผ่านจริง แต่เป็นคนละ fixture/date. ยังไม่อ้างว่า flow Admin-create/assign → TECH-LINE ผ่านใน Project เดียว. ให้ตรวจ creator/assignment/audit ของ Pilot Project แบบอ่านอย่างเดียวก่อนกำหนด UAT เพิ่ม; ดู [Remaining acceptance gates](M1_REMAINING_ACCEPTANCE_GATES.md). ห้ามขยาย LINE allowlist เพื่อเติมหลักฐานเอง.
+ตรวจหลักฐาน Gate M1 ร่วมกับ subagent: Admin Web สร้าง/มอบหมาย Project A ไม่มี Site/Job และสร้าง Job B ผ่าน; TECH เห็น PILOT LINE A ไม่มี Site/Job ผ่านจริง แต่เป็นคนละ fixture/date. SELECT แบบอ่านอย่างเดียวเวลา 15:38 UTC ยืนยัน PILOT LINE A ผู้สร้างและผู้มอบหมายมี role OWNER จึง **ไม่ใช่** flow Admin-create/assign → TECH-LINE ใน Project เดียว; รายละเอียดจำกัดอยู่ใน [M1_TEST_EVIDENCE](M1_TEST_EVIDENCE.md). ให้ Owner เห็นข้อจำกัดนี้ในการรับ M1 รอบรวม ไม่ขยาย LINE allowlist หรือเปลี่ยน assignment เพื่อเติมหลักฐานเอง.
 
 ## 26 กันยายน 2026 — ทบทวนขอบเขตการทดสอบ M1
 

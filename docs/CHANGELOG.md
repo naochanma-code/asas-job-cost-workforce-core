@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 26 กันยายน 2026 — ตรวจ role ของ Pilot A แบบอ่านอย่างเดียว
+
+Railway Postgres SELECT เฉพาะ code/role/boolean/count ยืนยัน Pilot LINE A ไม่มี Site/Job, เคยมี TECH assignment ระดับ Project, และ creator/assignment actor เป็น OWNER. จึงไม่อ้างว่า Admin Web fixture วันที่ 23 ก.ย. กับ TECH LINE Pilot A เป็น flow เดียว. ปรับ evidence/UAT/status/gates ให้ตรง; ไม่แก้ข้อมูล, assignment, LINE allowlist หรือบริการ.
+
 ## 26 กันยายน 2026 — ตรวจความครบของหลักฐาน Gate M1
 
 subagent ตรวจ read-only พบว่า Admin Web create/assign และ TECH LINE no-Site/no-Job ผ่านคนละ fixture จึงเพิ่มรายการตรวจความเชื่อมโยงจาก audit/creator ก่อนอ้าง flow เดียวหรือขอ UAT ซ้ำ. ปรับ PROJECT_STATUS ให้ข้อความ C2/CI ในประวัติไม่สับสนกับสถานะล่าสุด D-037. ไม่เปลี่ยน code, Staging, LINE scope หรือข้อมูลจริง.
