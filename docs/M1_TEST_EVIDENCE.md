@@ -2,7 +2,7 @@
 
 ## 26 กันยายน 2026 — เพิ่มหลักฐาน Restore + Job isolation ผ่าน HTTP
 
-เพิ่ม tests/job-restore-http.test.ts: ข้อมูลสมมติสองโครงการ/สองงานย่อย มอบหมาย TECH เพียงงานเดียว สำรอง/Restore/ปิดและเปิดฐานใหม่ แล้วทดสอบผ่าน HTTP loopback จริง: Sessionเดิม401, Loginใหม่200, เห็นโครงการเดียวและJobที่มอบหมายเท่านั้น, อีกโครงการ404, revokeมีผลโดยไม่Loginใหม่, logoutแล้ว401. Local targeted PASS และ typecheck PASS; Local regression 51PASS/2NativeSKIP/0FAIL ส่วน Native CI รอผลหลังpush
+เพิ่ม tests/job-restore-http.test.ts: ข้อมูลสมมติสองโครงการ/สองงานย่อย มอบหมาย TECH เพียงงานเดียว สำรอง/Restore/ปิดและเปิดฐานใหม่ แล้วทดสอบผ่าน HTTP loopback จริง: Sessionเดิม401, Loginใหม่200, เห็นโครงการเดียวและJobที่มอบหมายเท่านั้น, อีกโครงการ404, revokeมีผลโดยไม่Loginใหม่, logoutแล้ว401. Local targeted PASS และ typecheck PASS; Local regression 51PASS/2NativeSKIP/0FAIL ส่วน [CI36242156339](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36242156339) commit e9700b6: NativePostgreSQL53PASS/0SKIP/0FAIL, embedded51PASS/2NativeSKIP, typecheck/productionbuild/API+Webcontainer/smoke/เอกสาร PASS
 
 ใช้ TEMP directory นอกGit/OneDrive และ TEST_DATABASE_URL เฉพาะฐาน CI ที่ทิ้งได้ ไม่อ่าน DATABASE_URL ของStaging. ไม่ใช่browser/HTTPS/provider recovery evidence. ไม่มีapp/schema/deployหรือข้อมูลStagingเปลี่ยน. Subagentเตรียม M1_BROWSER_RECOVERY_CHECKLIST.md แบบ PREPARED/NOT_RUN แยกlocal/Stagingชัดเจน
 
@@ -539,3 +539,14 @@ Job UI patch จาก task Reviwer: เพิ่มรายการข้า�
 หลักฐานเพิ่ม: code patch de99037 CI [36009851061](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36009851061) SUCCESS ครบ Local/Native PostgreSQL17/typecheck/build/API+Web containers/smoke/M0. เพิ่ม Owner-specific POST Job/GET ซ้ำสองครั้งด้วย Project สมมติไม่มี Site แล้ว targeted alignment10/10 PASS โดย task Reviwer; CI ของ test follow-up80c2868 SUCCESS ตามลิงก์ด้านบน ไม่ใช่การยืนยัน Job จริงที่ Owner รายงานหรือ Deploy patch
 
 รอบบันทึกOwner acceptance/readiness: git diff --check PASS; M0 checks24+14+7=45PASS; ไม่มีapplicationchangeจึงไม่รันfullM1ซ้ำ ผลcodeCIยังอ้าง8e47f04 ไม่อ้างว่าLINEผ่านแล้ว
+
+## สถานะแวดล้อมที่ตรวจ 26 กันยายน
+
+- Fetch origin แล้ว branch ไม่ตกหลัง main (main-only0 / branch-only70 ณ commit e9700b6)
+- Railway read-only: Trial=true เครดิตประมาณ USD4.5588 เหลือ26วัน ไม่เปลี่ยนแผน/บริการ
+- Browser Staging ปัจจุบันเป็นหน้า Login จึงยังไม่ยืนยัน Web TECH Job scope ผ่านหน้าจอ ไม่อ่านหรือเปลี่ยนรหัสบัญชีจริง
+- [CI36242156339](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36242156339) commit e9700b6: NativePostgreSQL53PASS/0SKIP/0FAIL, embedded51PASS/2NativeSKIP, typecheck/productionbuild/API+Webcontainer/smoke/เอกสาร PASS; local regression51PASS/2NativeSKIP/typecheck/เอกสาร45checksผ่าน
+
+เพิ่ม M1_REMAINING_ACCEPTANCE_GATES.md แยกหลักฐานจริง/ส่วนขาด/วิธีเดินหน้าภายใต้scope ไม่ลดDoDหรือเติมPASS
+
+26กันยายน: CIล่าสุดผ่านครบตามลิงก์ข้างต้น ไม่Deploy; browserStagingยังNOT_RUN และคำถามผู้รับผิดชอบbackupยังรอคำตอบ

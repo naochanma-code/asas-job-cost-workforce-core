@@ -9,7 +9,7 @@ Foundation และ M1 Alignment เปิดใช้งานบน Staging �
 | รายการ | สถานะจริง |
 | --- | --- |
 | CODED | PASS — Foundation/Alignment และ D-033 link privacy/queue retention |
-| TESTED_LOCAL / CI | PASS ตามหลักฐานเดิม: CI36109173357 Native PostgreSQL52/52, embedded50PASS/2NativeSKIP, typecheck/build/container/smoke; ไม่ใช่ผล LINE UAT |
+| TESTED_LOCAL / CI | PASS ตามหลักฐานเดิม: [CI36242156339](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36242156339) commit e9700b6: NativePostgreSQL53PASS/0SKIP/0FAIL, embedded51PASS/2NativeSKIP, typecheck/productionbuild/API+Webcontainer/smoke/เอกสาร PASS, typecheck/build/container/smoke; ไม่ใช่ผล LINE UAT |
 | DEPLOYED_STAGING | dc289ee3088cd84639cc828b49a6f5c50a665f55 ตามหลักฐาน deployment เดิม; รอบ26ก.ย.ไม่ได้ deploy ใหม่ |
 | Web Owner / Project / Job / Mobile | UAT_PASSED ตามผล Owner รอบก่อน |
 | LINE Owner/Admin งานของฉัน | UAT_PASSED — เห็น A/B ตามสิทธิ์ |
@@ -31,7 +31,9 @@ Foundation และ M1 Alignment เปิดใช้งานบน Staging �
 
 ## งานรอบต่อเนื่อง 26 กันยายน
 
-เพิ่ม automated Restore/Job isolation ผ่าน HTTP loopback ด้วยข้อมูลสมมติ: targeted test/typecheck PASS; full regression 51PASS/2NativeSKIP/0FAIL; Native CI รอผล. ไม่แทน browser Staging UAT. ขั้นตอน browser recovery อยู่ [checklist](M1_BROWSER_RECOVERY_CHECKLIST.md) PREPARED/NOT_RUN. ฝากคำถามเรื่องผู้รับผิดชอบ backup ประจำวันไว้ ยังไม่เปิดบริการหรือเพิ่มค่าใช้จ่าย
+เพิ่ม automated Restore/Job isolation ผ่าน HTTP loopback ด้วยข้อมูลสมมติ: targeted test/typecheck PASS; full regression 51PASS/2NativeSKIP/0FAIL; [CI36242156339](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36242156339) commit e9700b6: NativePostgreSQL53PASS/0SKIP/0FAIL, embedded51PASS/2NativeSKIP, typecheck/productionbuild/API+Webcontainer/smoke/เอกสาร PASS. ไม่แทน browser Staging UAT. ขั้นตอน browser recovery อยู่ [checklist](M1_BROWSER_RECOVERY_CHECKLIST.md) PREPARED/NOT_RUN. ฝากคำถามเรื่องผู้รับผิดชอบ backup ประจำวันไว้ ยังไม่เปิดบริการหรือเพิ่มค่าใช้จ่าย
+
+รายการที่ยังต้องพิสูจน์และขอบเขตอยู่ใน [Remaining acceptance gates](M1_REMAINING_ACCEPTANCE_GATES.md). ไม่ให้ Owner ทำขั้นที่ผ่านแล้วซ้ำโดยไม่มีเหตุผล
 
 ## งานถัดไปของ Codex
 
@@ -58,3 +60,11 @@ Owner ยังไม่ต้องทำซ้ำขั้นเห็นง�
 [CI36109173357](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36109173357) · [Test Evidence](M1_TEST_EVIDENCE.md) · [รอบLINE](M1_LINE_PILOT_ROUND_2.md) · [Operations](OPERATIONS_RUNBOOK.md)
 
 รอบนี้ใช้ subagent1ตัวตรวจเอกสารแบบอ่านอย่างเดียว ไม่แก้ code/schema/ข้อมูล และไม่เรียกบริการภายนอก. CodexหลักตรวจRailwayและอัปเดตเอกสาร ป้องกันงานซ้ำ. ประวัติผลรายรอบอยู่ใน CHANGELOG และ M1_TEST_EVIDENCE
+## สถานะแวดล้อมที่ตรวจ 26 กันยายน
+
+- Fetch origin แล้ว branch ไม่ตกหลัง main (main-only0 / branch-only70 ณ commit e9700b6)
+- Railway read-only: Trial=true เครดิตประมาณ USD4.5588 เหลือ26วัน ไม่เปลี่ยนแผน/บริการ
+- Browser Staging ปัจจุบันเป็นหน้า Login จึงยังไม่ยืนยัน Web TECH Job scope ผ่านหน้าจอ ไม่อ่านหรือเปลี่ยนรหัสบัญชีจริง
+- [CI36242156339](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36242156339) commit e9700b6: NativePostgreSQL53PASS/0SKIP/0FAIL, embedded51PASS/2NativeSKIP, typecheck/productionbuild/API+Webcontainer/smoke/เอกสาร PASS; local regression51PASS/2NativeSKIP/typecheck/เอกสาร45checksผ่าน
+
+26กันยายน: CIล่าสุดผ่านครบตามลิงก์ข้างต้น ไม่Deploy; browserStagingยังNOT_RUN และคำถามผู้รับผิดชอบbackupยังรอคำตอบ
