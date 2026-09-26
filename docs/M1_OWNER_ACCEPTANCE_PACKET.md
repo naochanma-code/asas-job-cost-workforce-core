@@ -10,7 +10,7 @@
 | Customer, optional Site, Project, optional Job, configurable types | Admin สร้าง Customer/Project ไม่มี Site/Job และอีก Project ที่มี Site/Job ผ่าน Web Staging; Owner ยืนยันสร้าง Job ผ่านหลังแก้ UI; type/Job/Project API และ PostgreSQL regression ผ่าน. `PRJ-3511fa71` มี Job 1/audit 1 และ Codex เห็น Job ในหน้า OWNER ทั้งสองส่วนหลัง refresh | Web UAT เฉพาะรายการสมมติที่บันทึก; การแสดงผลปัจจุบันตรวจด้วย session Owner โดย Codex ไม่ใช่ Owner ยืนยันรอบใหม่; สาเหตุการกดครั้งแรกยังไม่ทราบ |
 | Assignment และ Audit | Admin มอบหมาย TECH ให้ Project ที่ไม่มี Job ผ่าน Web; Job-level assignment/revoke และ audit บน Pilot ผ่าน; automated permission/isolation ผ่าน | Project Web ของ Admin กับ LINE Pilot เป็นคนละ fixture |
 | LINE Account Linking และ Group Binding | Owner/Admin/TECH เชื่อมบัญชีและเห็นงานตามบทบาทใน bounded Pilot; กลุ่มเดียวผูก Pilot A และมี successful audit 1 | UAT จริงภายใน 3 คน/1 กลุ่ม/2 Project สมมติ; isolated negative cases ยัง PARTIAL/NOT_RUN |
-| Gate: TECH เห็นงานจริงใน LINE โดย Project ไม่มี Site/Job ใช้ได้ | TECH เห็น Pilot A ที่ไม่มี Site/Job แล้ว; หลัง revoke ไม่เห็น A และหลัง assign Job B เห็น B ตามรายงาน Owner กับ backend/audit | Pilot A ถูกสร้างและมอบหมายโดย OWNER ตาม SELECT read-only 26 ก.ย.; ยังไม่อ้าง Admin-create/assign → TECH-LINE ใน Project เดียว |
+| Gate: TECH เห็นงานจริงใน LINE โดย Project ไม่มี Site/Job ใช้ได้ | TECH เห็น Pilot A ที่ไม่มี Site/Job แล้ว; หลัง revoke ไม่เห็น A และหลัง assign Job B เห็น B ตามรายงาน Owner กับ backend/audit. Synthetic test ใหม่ตรวจ Admin-create/assign → TECH fake-LINE ใน Project เดียวผ่าน | Pilot A ถูกสร้างและมอบหมายโดย OWNER ตาม SELECT read-only 26 ก.ย.; synthetic test ไม่แทน Admin→TECH LINE จริงใน Project เดียว |
 
 ## รายการที่ต้องตรวจหรือตัดสินขอบเขตในรอบรับ M1
 

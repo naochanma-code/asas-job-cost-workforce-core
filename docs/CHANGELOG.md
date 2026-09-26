@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 26 กันยายน 2026 — ทดสอบ synthetic Admin → TECH LINE ใน Project เดียว
+
+เพิ่ม regression test สำหรับ Admin สร้าง Project ไม่มี Site/Job และ assign TECH แล้ว LINE worker จำลองตอบเฉพาะ Project นั้น พร้อม audit actor และ outbox SENT. Targeted test/typecheck ผ่าน; ไม่เปลี่ยนแอป, schema, Staging, LINE จริงหรือข้อมูลจริง. บันทึกผลแยกจาก live UAT ใน evidence/status/acceptance packet/remaining gates.
+
 ## 26 กันยายน 2026 — ตรวจ Owner UI ของ Job เดิม
 
 Web Staging session OWNER แสดง Job 1 รายการของ `PRJ-3511fa71` ในสองส่วนของหน้าโครงการ ก่อนและหลัง reload/เปิดใหม่. บันทึกเป็นผล Codex read-only ไม่ใช่ Owner UAT ใหม่; สาเหตุการกดสร้างครั้งแรกยังไม่ทราบ. ปรับ evidence/UAT/status/acceptance packet โดยไม่แก้ข้อมูลหรือ deploy.

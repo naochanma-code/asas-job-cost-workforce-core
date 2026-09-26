@@ -1,5 +1,9 @@
 # PROJECT STATUS — Milestone 1
 
+## 26 กันยายน 2026 — เพิ่ม positive synthetic Admin → TECH LINE flow
+
+เพิ่ม `tests/m1-admin-line-flow.test.ts` ด้วยฐาน memory/fake transport: Admin สร้าง Project ไม่มี Site/Job, assign TECH, ตรวจ actor ใน audit และ LINE worker ตอบเฉพาะ Project ที่มอบหมายใน fixture เดียว. Targeted 1/1 PASS, typecheck PASS. สถานะ `TESTED_LOCAL_SYNTHETIC`; ไม่แทน live LINE UAT หรือปิดข้อจำกัด Admin Web กับ Pilot A ที่เป็นคนละ fixture. ไม่แตะ Staging, LINE provider หรือข้อมูลจริง.
+
 ## 26 กันยายน 2026 — ตรวจ Owner UI ของ Job เดิมผ่านแล้ว
 
 เวลา 15:59 UTC Web Staging session OWNER เปิด `PRJ-3511fa71` แบบอ่านอย่างเดียว: Job 1 รายการแสดงทั้งในรายละเอียดโครงการและรายการงานย่อย; reload แล้วเปิดโครงการใหม่ยังแสดงเหมือนเดิม. สถานะ `CURRENT_OWNER_UI_DISPLAY_VERIFIED_BY_CODEX` สอดคล้องกับ jobs/audit 1/1; ไม่ใช่ Owner UAT รอบใหม่และยังไม่รู้สาเหตุการกดครั้งแรกที่ไม่บันทึก. ไม่แก้ข้อมูลจริงหรือสร้าง Job ซ้ำ. ปรับ [ชุดหลักฐานรับ M1](M1_OWNER_ACCEPTANCE_PACKET.md) ไม่ให้ขอ Owner ทำขั้นดูรายการซ้ำโดยไม่มีเหตุผล.

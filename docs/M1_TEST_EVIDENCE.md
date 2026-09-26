@@ -1,5 +1,9 @@
 # M1 Test Evidence — 2026-09-21
 
+## 26 กันยายน 2026 — Synthetic Admin → TECH LINE ใน Project เดียว
+
+`tests/m1-admin-line-flow.test.ts` ใช้ฐานในหน่วยความจำและ fake LINE transport: Admin สร้าง Customer/Project ที่ไม่มี Site และ Job, มอบหมาย TECH, audit ระบุ actor เป็น Admin; TECH ที่ผูก LINE fixture ส่ง “งานของฉัน” แล้ว worker ตอบเฉพาะ Project ที่ได้รับมอบหมาย ไม่แสดง Project อีกอันที่ไม่ได้รับสิทธิ์ และ outbox เป็น SENT. Targeted test 1/1 PASS และ typecheck PASS. ผลนี้เป็น `TESTED_LOCAL_SYNTHETIC` สำหรับเส้นทางโค้ดใน fixture เดียว ไม่ใช่ `UAT_PASSED` บน LINE provider และไม่เชื่อม Admin Web fixture กับ Pilot A ที่มีอยู่.
+
 ## 26 กันยายน 2026 — Owner Web แสดง Job ของ Project ที่แจ้งปัญหาแล้ว
 
 เวลา 15:59 UTC ใช้ session OWNER ที่มีอยู่บน Web Staging release เดิม เปิด `PRJ-3511fa71` แบบอ่านอย่างเดียว: พบ Job 1 รายการในส่วนรายละเอียดด้านบนและรายการงานย่อยด้านล่าง. Reload หน้าแล้วเปิด Project ใหม่ พบ Job เดิมทั้งสองตำแหน่งอีกครั้ง. สถานะ `CURRENT_OWNER_UI_DISPLAY_VERIFIED_BY_CODEX`; สอดคล้องกับ backend `jobs=1/JOB_CREATED audit=1` ที่ตรวจเวลา 15:52 UTC. ไม่กดสร้าง/แก้ไข/มอบหมาย/ถอนสิทธิ์, ไม่เก็บชื่อ Job หรือข้อมูลบุคคลในเอกสาร. การตรวจนี้ไม่ใช่ Owner เป็นผู้ยืนยัน UAT เอง และยังไม่ระบุสาเหตุของการกดสร้างครั้งแรกที่ไม่เกิดแถว.
