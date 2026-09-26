@@ -16,6 +16,8 @@ Owner ไม่ให้สร้าง environment เพิ่ม (D-036). ป
 
 ตาม read-only review แก้ exit code เมื่อ child ล้ม, บังคับ private host/role/date ของฐานสมมติ และให้ CI ยืนยันข้อความ guard ก่อนแตะ DB. ยังคงต้องพิสูจน์ ACL/positive startup/shutdown บน provider; ไม่ deploy.
 
+ผล commit `94d1815`: local regression 52PASS/2NativeSKIP/0FAIL และ typecheck PASS; [CI36251281768](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36251281768) verify SUCCESS รวม recovery container/guard. C2 ยัง NOT_RUN ไม่มี Railway resource ใหม่.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว

@@ -1,5 +1,11 @@
 # M1 Test Evidence — 2026-09-21
 
+## 26 กันยายน 2026 — Single-service recovery runtime (ยังไม่ deploy)
+
+Commit `94d1815`: `scripts/recovery-server.mjs` และ `deploy/Dockerfile.recovery` สำหรับ Web+API ของฐานสมมติใน service เดียว. Guard ปฏิเสธ LINE เปิด, origin HTTP, ชื่อฐาน/role ไม่ตรง และ host นอก private network ก่อนเริ่ม API; เมื่อ child ล้ม launcher คืน exit code ไม่สำเร็จ. `tests/recovery-entrypoint.test.ts` local PASS, typecheck PASS, full local regression 52 PASS / 2 native-only SKIP / 0 FAIL. [CI run 36251281768](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36251281768) verify SUCCESS รวม native/embedded tests, build, recovery container build/guard, Web/API smoke และ docs checks.
+
+ผลนี้เป็น `CODED/TESTED_LOCAL/TESTED_CI` เท่านั้น. ไม่มี recovery service หรือ synthetic database บน Railway; positive startup/shutdown กับ provider, role ACL แยกจาก Pilot และ browser recovery บน HTTPS ยัง `NOT_RUN`. Guard ใน code ไม่แทนการตรวจ ACL ของฐาน/role จริง.
+
 ## 26 กันยายน 2026 — Local browser recovery drill หลังงานถูกขัดจังหวะ
 
 Commit `926f840` (เอกสารและสคริปต์ drill): local `pnpm typecheck` PASS; `pnpm test` PASS 51 / SKIP 2 native-only / FAIL 0 หลังรันนอก Windows sandbox ที่ `os.userInfo()` ล้มก่อนเริ่มทดสอบ. [CI run 36249633023](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36249633023) บน PR #2: verify SUCCESS รวม typecheck, embedded/native test, production build, container build/smoke และ M0/R2/R4 docs checks. ไม่ได้ deploy จาก CI รอบนี้.

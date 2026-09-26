@@ -16,6 +16,8 @@ Owner ตอบว่า **ไม่สร้าง environment เพิ่ม*
 
 Review พบและแก้ launcher exit code กับเพิ่มการตรวจ private host/role/date ของฐานสมมติ; CI guard ต้องยืนยันข้อความปฏิเสธก่อน DB access. ACL ของ role และ positive startup/shutdown บน provider ยัง NOT_RUN; ไม่อ้างว่าเพียงชื่อฐานทำให้แยกจาก Pilot ได้.
 
+Commit `94d1815` local full regression 52PASS/2NativeSKIP/0FAIL, typecheck PASS; [CI36251281768](https://github.com/naochanma-code/asas-job-cost-workforce-core/actions/runs/36251281768) verify SUCCESS รวม recovery container build/guard. สถานะ runtime `TESTED_CI / NOT_DEPLOYED`; C2 ยัง NOT_RUN.
+
 ## 26 กันยายน 2026 — Owner เลื่อนการเปิด Daily Backup
 
 Ownerสั่งยังไม่ตั้งDailyBackupตอนนี้ ให้ตั้งเมื่องานใกล้เสร็จ. สถานะ DAILY_BACKUP = DEFERRED_BY_OWNER / NOT_ENABLED ไม่ใช่PASSหรือการยกเลิกrequirement. ไม่เปิดschedule ไม่เพิ่มstorage/service/ค่าใช้จ่าย และไม่ขออนุมัติเปิดซ้ำระหว่างพัฒนา. เมื่อเตรียมปิดงานให้เสนอค่าใช้จ่าย/retention/สิทธิ์แล้วรอOwnerยืนยันเปิดจริง. ข้อกำหนดRestoreเฉพาะOWNERตามD-035ยังคงเดิม; ไม่อ้างว่าบังคับCLI/providerroleแล้ว
